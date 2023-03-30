@@ -3556,6 +3556,7 @@
     <Folder Include="ApplicantPassports\" />
     <Folder Include="App_Data\" />
     <Folder Include="BusinessImages\" />
+    <Folder Include="Identityuploads\" />
     <Folder Include="MailingList\" />
     <Folder Include="Product_Uploads\" />
     <Folder Include="ProjectImages\" />

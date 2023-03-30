@@ -819,6 +819,7 @@ namespace Myvshoponline.Controllers
                     //if file extension is supported, save file and update database
                     if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".ico")
                     {
+
                         string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
                         newName = newName + ".jpg";
 
@@ -1377,42 +1378,12 @@ namespace Myvshoponline.Controllers
 
         public ActionResult AccountVerification(int? id)
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+              if (Session["UserID"] == null)
+              {
+                return Redirect("~/Home/AccessDenied");
+              }
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
-
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
-
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
-
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
-
-
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+      if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1579,5 +1550,93 @@ namespace Myvshoponline.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+
+    public JsonResult SaveIdentity(string idno, DateTime dissued, DateTime dexpiry, string idtype)
+    {
+        IdentityVerification data=new IdentityVerification();
+        data.UserID =(int)Session["UserID"];
+        data.IDType = idtype;
+        data.IDNumber = idno;
+        data.DateIssued = dissued;
+        data.ExpiryDate = dexpiry;
+        data.DateCreated = DateTime.Now;
+        db.IdentityVerifications.Add(data);
+        db.SaveChanges();
+      var result = "success";
+        return Json(result, JsonRequestBehavior.AllowGet);
     }
+
+    [HttpPost]
+    public ActionResult UploadIdentity()
+    {
+      // Checking no of files injected in Request object  
+      if (Request.Files.Count > 0)
+      {
+        try
+        {
+          int UserID = (int)Session["UserID"];
+
+          string businessname = db.Users.Find(UserID).CompanyName;
+          string hardtoken = db.Users.Find(UserID).HardToken;
+         
+          string efilepath;
+
+          //  Get all files from Request object  
+          HttpFileCollectionBase files = Request.Files;
+          for (int i = 0; i < files.Count; i++)
+          {
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+            //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+            HttpPostedFileBase file = files[i];
+            string fname;
+
+            // Checking for Internet Explorer  
+            if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+            {
+              string[] testfiles = file.FileName.Split(new char[] { '\\' });
+              //fname = testfiles[testfiles.Length - 1];
+              fname = UserID +".jpg";
+            }
+            else
+            {
+              //fname = file.FileName;
+              fname = UserID +"_"+ i + ".jpg";
+             
+            }
+
+            // Get the complete folder path and store the file inside it.  
+            //fname = Path.Combine(Server.MapPath("~/Identityuploads/"), fname);
+            //file.SaveAs(fname);
+            string folder = "Identityuploads";
+            if (!Directory.Exists("~/BusinessImages/" + businessname + hardtoken + "/" + folder))
+            {
+              Directory.CreateDirectory(Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + folder));
+            }
+            efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + folder + "\\" + fname);
+            string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
+            newName = newName + ".jpg";
+            efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + folder + "\\" + newName);
+            file.SaveAs(efilepath);
+            mydata.ResizePicture(efilepath);
+          }
+          // Returns message that successfully uploaded  
+          return Json("File Uploaded Successfully!");
+        }
+        catch (Exception ex)
+        {
+          return Json("Error occurred. Error details: " + ex.Message);
+        }
+      }
+      else
+      {
+        return Json("No files selected.");
+      }
+    }
+
+
+
+  }
 }
