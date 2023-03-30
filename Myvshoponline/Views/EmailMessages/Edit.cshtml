@@ -1,0 +1,73 @@
+﻿@model Myvshoponline.EmailMessage
+
+@{
+    ViewBag.Title = "Edit Message";
+}
+
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+@*<script type="text/javascript" src="http://code.jquery.com/jquery.min.js" charset="utf-8"></script>*@
+<script type="text/javascript" src="~/TextEditor/jquery-te-1.4.0.js"></script>
+<script src="~/TextEditor/jquery-te-1.4.0.min.js"></script>
+<div id="content">
+    <div class="container">
+        <h2 style="font-size:14px">Edit Mail Message</h2>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID)
+                @Html.HiddenFor(model => model.DateCreated)
+
+                
+                <div class="form-group">
+                    @Html.Label("msgKey", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" name="msgKey" value="@Model.msgKey" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <textarea class="textarea" name="Subject" style="width:100%">@Model.Subject</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <textarea class="textarea" name="Message" style="width:100%">@Model.Message</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-common" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$('.Editor').jqte();
+
+// settings of status
+var jqteStatus = true;
+$(".status").click(function () {
+jqteStatus = jqteStatus ? false : true;
+$('.Editor').jqte({ "status": jqteStatus })
+});
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

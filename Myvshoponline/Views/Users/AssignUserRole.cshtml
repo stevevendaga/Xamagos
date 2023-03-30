@@ -1,0 +1,64 @@
+﻿@model Myvshoponline.User
+
+    <title>Assign User Role</title>
+
+    <div id="content">
+        <div class="container">
+            <h3 id="colorHeading" style="font-size:15px;">Assign User Role</h3>
+
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+
+                    <hr />
+                    <div class="form-group">
+                        @Html.Label("Users", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("Users", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("User Role", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("UserRole", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" id="btnColor" class="btn btn-success" onclick="return Validate()" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+</div></div>
+
+
+
+
+            @*<div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>*@
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
+
+            <script type="text/javascript">
+                function Validate() {
+                    var password = document.getElementById("Password").value;
+                    var confirmPassword = document.getElementById("ConfirmPassword").value;
+                    if (password != confirmPassword) {
+                        alert("Passwords do not match.");
+                        return false;
+                    }
+                    return true;
+                }
+            </script>

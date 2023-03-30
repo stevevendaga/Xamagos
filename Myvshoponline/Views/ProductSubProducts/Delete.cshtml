@@ -1,0 +1,80 @@
+﻿@model Myvshoponline.ProductSubProduct
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ProductSubProduct</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Details)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Details)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantityinStock)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuantityinStock)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductStatu.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductStatu.Status)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

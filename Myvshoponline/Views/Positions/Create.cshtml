@@ -1,0 +1,68 @@
+﻿@model Myvshoponline.Position
+
+@{
+    ViewBag.Title = "Create";
+}
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+@*<script type="text/javascript" src="http://code.jquery.com/jquery.min.js" charset="utf-8"></script>*@
+<script type="text/javascript" src="~/TextEditor/jquery-te-1.4.0.js"></script>
+<script src="~/TextEditor/jquery-te-1.4.0.min.js"></script>
+
+<h2 style="font-size:14px;">Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Job Title", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <textarea class="Editor" name="Position1" style="width:100%"></textarea>
+                @Html.ValidationMessageFor(model => model.Position1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <textarea class="Editor" name="Description" style="width:100%"></textarea>
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+              
+                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script type="text/javascript">
+$('.Editor').jqte();
+
+// settings of status
+var jqteStatus = true;
+$(".status").click(function () {
+jqteStatus = jqteStatus ? false : true;
+$('.Editor').jqte({ "status": jqteStatus })
+});
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

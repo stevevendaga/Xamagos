@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Myvshoponline.DeliveryAgentAllocation>
+
+@{
+    ViewBag.Title = "Index";
+}
+<p></p>
+<h2 style="font-size:14px;">Delivery Agent Allocation</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-hover table-responsive" id="zero_config" style="color:black;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayName("State")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayName("State")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+
+            <th></th>
+        </tr>
+    </tfoot>
+</table>

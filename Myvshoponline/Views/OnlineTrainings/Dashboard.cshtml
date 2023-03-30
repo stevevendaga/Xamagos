@@ -1,0 +1,234 @@
+﻿@model Myvshoponline.OnlineTraining
+
+@{
+    ViewBag.Title = "Ecommerce Training Dashboard";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int id = Convert.ToInt32(Request.QueryString["apx"]);
+    decimal amount =Convert.ToDecimal(db.TrainingPricings.Select(s=>s.TrainingAmount).FirstOrDefault());
+}
+@using Myvshoponline.Controllers;
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="panel panel-success">
+                    <div class="panel-heading" style="background-color:#71BE50;opacity:0.9">
+                        <h4 style="font-size:14px;">
+                            <span style="color:blue;"><i class="lni lni-user"></i> WELCOME, @db.OnlineTrainings.Find(id).Surname.ToUpper() @db.OnlineTrainings.Find(id).OtherNames.ToUpper() </span>
+                            <a href="~/OnlineTrainings/LogOff" class="badge badge-primary" style="padding:7px"><i class="glyphicon glyphicon-log-out"></i> Logout</a>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-2">
+                               
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding-left:10px;">
+                            <div class="col-md-10">
+                                <p style="color:black;font-size:14px;" class="alert alert-warning">
+                                    Sell on MarketSquare247 and make money without buying, storing, owning or shipping products.
+                                     NO WEBSITE, ZERO SKILLS REQUIRED.
+                                </p>
+
+                                <p style="color:black;font-size:14px;" class="alert alert-info">
+                                    Details of the training shall be communicated to you via email and on this platform.
+                                    </p>
+                                @if (db.TrainingPricings.Select(s=>s.EnablePayment).FirstOrDefault()==1)
+                                {
+                                <form>
+                                    <p style="color:black;font-size:14px;" class="alert alert">
+                                        Make payment to get access to full training
+                                        <input type="hidden" id="Amount" value="@amount" />
+                                        <input type="hidden" id="Email" value="@Model.Email" />
+                                        <input type="hidden" id="Phone" value="@Model.PhoneNumber" />
+                                        <input type="hidden" id="id" value="@Model.ID" />
+                                        <input type="hidden" id="Name" value="@Model.Surname @Model.OtherNames" />
+                                        <div id="donatebody"></div>
+                                        <br />
+                                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                                        <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystackTraining()">Make Payment@*<span id="buttonamount"></span>*@ <i class="lni lni-arrow-right-circle"></i></button>
+                                    </p>
+                                </form>
+                                }
+                                    <table style="width:100%;color:black;padding:10px;">
+
+
+                                        <tr>
+                                            <th colspan="2">
+                                                <br />
+                                                PERSONAL INFORMATION
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>Applicant's Name</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Surname) @Html.DisplayFor(model => model.OtherNames)
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Sex</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Sex.Sex1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phone Number</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.PhoneNumber)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Email)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Contact Address</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.ContactAddress)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>LGA of Residence</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.LGAResidence)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>City/Town</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.City)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>State of Origin</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.State.Name)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>State of Residence</td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.State1.Name)
+                                            </td>
+                                        </tr>
+                                        @*<tr>
+                    <th colspan="2">
+                        <br />
+                        ATTESTATION<br />
+                        <span style="font-size:12px">
+                            I @Model.Surname @Model.OtherNames hereby attest that the information filled by me on this form is truthfull and accurate.<br /><br />
+                            Signature and Date:.......................................
+                        </span>
+                    </th>
+                </tr>*@
+                                    </table>
+                                    @*<hr style="margin:3px;" />
+            <span style="color:red;font-size:16px;">Note:Only selected applicants will be contacted through email and applicants can also login with their email and password used during application to check selection status. </span>
+            <br />
+            <span style="color:black;font-weight:bold;">Selected applicants are expected to write a Computer Based Test (CBT) Examination from 25th November, 2019 - 30th November, 2019.</span>*@
+                                    <br />
+
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+                        </div>
+
+
+
+                    </div>
+
+  
+
+<script language="javascript" type="text/javascript">
+                    function printDiv(divID) {
+                        //Get the HTML of div
+                        var divElements = document.getElementById(divID).innerHTML;
+                        //Get the HTML of whole page
+                        var oldPage = document.body.innerHTML;
+                        //Reset the page's HTML with div's HTML only
+                        document.body.innerHTML =
+                            "<html><head><title></title></head><body>" +
+                            divElements + "</body>";
+                        var y = document.getElementById("printbutton");
+                        if (y.style.display === "none") {
+                            y.style.display = "block";
+                        } else {
+                            y.style.display = "none";
+                        }
+
+                        //Print Page
+                        window.print();
+                        //Restore orignal HTML
+                        document.body.innerHTML = oldPage;
+                    }
+</script>
+<script>
+                    function payWithPaystackTraining() {
+                        var actualamt = document.getElementById("Amount").value;
+                        var myamt = document.getElementById("Amount").value * 100;
+                        var myname = document.getElementById("Name").value;
+                        var email = document.getElementById("Email").value;
+                        var phone = document.getElementById("Phone").value;
+                        var id = document.getElementById("id").value;
+                            var handler = PaystackPop.setup({
+                                key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                                //key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+                                email: email,
+                                amount: myamt,
+                                ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                firstname: myname,
+                                number: "",
+                                // label: "Optional string that replaces customer email"
+                                label: myname,
+                                metadata: {
+                                    custom_fields: [
+                                       {
+                                           display_name: "Mobile Number",
+                                           variable_name: "mobile_number",
+                                           value: phone
+                                       }
+                                    ]
+                                },
+                                callback: function (response) {
+                                    var url = "/OnlineTrainings/Update_Payment/";
+                                    $.ajax({
+                                        url: url,
+                                        data: { refno: response.reference, amount: actualamt, name: myname, myemail: email,id:id },
+                                        cache: false,
+                                        type: "POST",
+                                    })
+                                    // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+                                    // window.location.href = "/Home/Index/";
+                                    $("#donatebody").html("<span class='alert alert-success'>Payment made successfully");
+                                    $("#okbtn").css("display", "block");
+                                },
+                                onClose: function () {
+                                    alert('Transaction aborted by user. Try again');
+                                }
+                            });
+                            handler.openIframe();
+                        }
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

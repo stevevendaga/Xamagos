@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Myvshoponline.User>
+@{
+    ViewBag.Title = ViewBag.CompanyName;
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    }
+    <link href="~/Content/Panel.css" rel="stylesheet" />
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div id="companydetailsmobile" style="display:none"></div>
+                <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+                    <div class="right-sideabr">
+                        <div class="panel panel-success">
+                            <div class="panel-heading" style="background-color:#0BACE1;">
+                                <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">My Orders</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul style="font-size:13px">
+                                    <li>
+                                        <i class="lni lni-dashboard"></i>
+                                        <a href="~/Users/CustomerDashboard/@ViewBag.CompanyID">Dashboard</a>
+                                        <hr style="padding:1px;margin:5px"  />
+                                    </li>
+                                    <li>
+                                        <a href="~/Orders/MyOrders/@ViewBag.CompanyID" id="orders" onclick="getcontent(this.id)">
+                                            <i class="lni lni-cart"></i>
+                                            Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                        </a>
+                                        <hr style="padding:1px;margin:5px" />
+                                    </li>
+                                    <li>
+                                        <a href="~/Orders/ViewMyNegotiations/@ViewBag.CompanyID" id="orders" onclick="getcontent(this.id)">
+                                            <i class="glyphicon glyphicon-eye-open"></i>
+                                            Open Negotiations (@{
+                                                int CID = Convert.ToInt32(ViewBag.CompanyID);
+                                                int b = db.Orders.Where(k => k.UserID == CID && (k.Negotiated=="Negotiating" || k.Negotiated=="Yes")).Count();}@b)
+                                        </a>
+                                        <hr style="padding:1px;margin:5px" />
+                                    </li>
+
+                                    @*<li>
+                                        <a href="#" id="ppayment" onclick="getcontent(this.id)">
+                                            <i class="lni lni-hourglass"></i>
+                                            Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                        </a>
+                                        <hr style="padding:1px;margin:5px" />
+                                    </li>
+                                    <li>
+                                        <a href="#" id="pdelivery" onclick="getcontent(this.id)">
+                                            <i class="lni lni-ban"></i>
+                                            Pending Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                        </a>
+                                        <hr style="padding:1px;margin:5px" />
+                                    </li>
+                                    <li>
+                                        <a href="#" id="delivered" onclick="getcontent(this.id)">
+                                            <i class="lni lni-cart-full"></i>
+                                            Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                        </a>
+                                        <hr style="padding:1px;margin:5px" />
+                                    </li>*@
+                                </ul>
+                            </div>
+
+                            @*<h4 style="background-color:#71BE50;color:white;opacity:0.6;padding:9px;font-size:14px">
+                              My Patronized Shops
+
+                            </h4>
+                            <ul class="list-item">
+
+                                @foreach (var item in ViewBag.Shops)
+                                {
+                                    if (item.Name != null)
+                                    {
+                                        <li>
+                                            <a style="color:#00B7F4;font-size:12px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
+                                                <b>  <i class="lni-briefcase" style="font-size:12px"></i> @item.Name </b>
+                                            </a>
+                                            <div class="contact-icon">
+                                                <i class="lni-map-marker"></i>
+                                                <a>@item.CountryRegion.Country - @item.StateID</a>
+                                            </div>
+                                        </li>
+                                    }
+
+                                }
+                            </ul>*@
+
+                        </div>
+                    </div>
+                </div>
+
+                        <div class="col-lg-8 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                            <div class="job-alerts-item bookmarked">
+                                @foreach (var item1 in Model)
+                                {
+                                    var passports = item1.ID + ".jpg";
+                                    
+                                    <h6 class="alerts-title" style="margin:0px;padding:0px;font-size:16px"><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>
+                                   
+                            
+                                <div class="col-md-12">
+                                        <div class="contact-right-area wow fadeIn">                                          
+                        <div class="contact-info">
+                        <div class="single-contact">
+                        <div class="contact-icon">
+                        <i class="lni-map-marker"></i>
+                        </div>
+                        <p>@item1.Address</p>
+                        </div>
+                        <div class="single-contact">
+                        <div class="contact-icon">
+                        <i class="lni-envelope"></i>
+                        </div>
+                        <p><a href="#">Email: @item1.Email </a></p>
+
+                        </div>
+                        <div class="single-contact">
+                        <div class="contact-icon">
+                        <i class="lni-phone-handset"></i>
+                        </div>
+                        <p><a href="#">Phone Number: @item1.PhoneNumber</a></p>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        }
+
+                                </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- End Content -->
+

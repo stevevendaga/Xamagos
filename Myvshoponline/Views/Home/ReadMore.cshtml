@@ -1,0 +1,30 @@
+﻿@model Myvshoponline.Project
+
+<title>Home</title>
+<body id="bagroundImage">
+    <div class="row">
+        
+        <div class="col-md-12">            
+
+            <div class="col-md-6" id="readMoreText">
+
+                <p style="font-size:30px; font-family:'Bookman Old Style'; font-weight:bold; padding-top:25px;">
+                    <img style="float:left; margin-right:10px;" src="@Url.Content("~/Images/" +Model.ProjectID  + ".jpg")" height="120" />
+                    <span> @Model.ProjectName</span>
+                </p>
+                <br />
+                <br />
+                <div>
+                    <p>  @Model.Description</p>
+
+                    <p style="text-align:center;">
+                        <a id="readbtn" class="btn btn-default" href="~/Home/Index">Back to Projects</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+   </div>
+       
+</body>
+

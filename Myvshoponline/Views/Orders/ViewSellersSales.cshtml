@@ -1,0 +1,388 @@
+﻿@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "Sales";
+}
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+ 
+ <div id="content">
+    <div class="container">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Sales</h3>
+                        </div>
+                        <input type="hidden" name="shopid" value="@ViewBag.ShopID" id="shopid" />
+                        <div class="panel-body">
+                            @{
+                                int ShopID = ViewBag.ShopID;
+                                int UserID = (int)db.Shops.Find(ShopID).UserID;
+                                var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
+                                var totaldeliverylocations = db.DeliveryLocations.Where(c => c.ShopID == ShopID).Count();
+                            }
+                            <ul style="font-size:13px">
+                                <li>
+                                    <i class="lni lni-dashboard"></i>
+                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                @*<li>
+
+                                    <a href="~/Products/MyProducts/?id=@ViewBag.ShopID">
+                                        <i class="lni lni-files"></i> Products
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                   
+                                <li>
+                                    <a href="~/DeliveryLocations/Index/?sid=@ShopID">
+                                        <i class="lni lni-map-marker"></i>
+                                        Delivery Locations (@totaldeliverylocations)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                        <i class="lni lni-stats-down"></i> Sales
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <a href="~/ShopCustomers/Index/?id=@ShopID">
+                                        <i class="lni lni-users"></i>
+                                        My Customers (@totalCust)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <a href="~/Orders/ShopOrders/@UserID?sid=@ShopID" id="orders">
+                                        <i class="lni lni-cart"></i>
+                                        Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <span id="ppayment" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-hourglass"></i>
+                                        Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="pdelivery" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-ban"></i>
+                                        Pending Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="delivered" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-cart-full"></i>
+                                        Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                    </span>
+
+                                </li>*@
+                            </ul>
+                        </div>
+
+                        @*<h4 style="background-color:#71BE50;color:white;opacity:0.6;padding:9px;font-size:14px">
+                          My Patronized Shops
+
+                        </h4>
+                        <ul class="list-item">
+
+                            @foreach (var item in ViewBag.Shops)
+                            {
+                                if (item.Name != null)
+                                {
+                                    <li>
+                                        <a style="color:#00B7F4;font-size:12px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
+                                            <b>  <i class="lni-briefcase" style="font-size:12px"></i> @item.Name </b>
+                                        </a>
+                                        <div class="contact-icon">
+                                            <i class="lni-map-marker"></i>
+                                            <a>@item.State.Name</a>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>*@
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-6 col-xs-12" id="companydetails" style="display:block;">
+                @*<div class="job-alerts-item bookmarked">*@
+                <div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <span style="margin-top:0px;margin-bottom:3px;color:white;">
+                                <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                    <font style="color:white">
+                                        <i class="fas fa-money-bill"></i>
+                                        Sell to an existing customer <i class="fas fa-money-bill"></i>
+                                    </font>
+                                </a>
+                            </span>
+                        </div>
+
+                        <div class="col-md-6 col-12">
+                            <span style="margin-top:0px;margin-bottom:3px;color:white;">
+                                <a href="~/Orders/MakesalesNewCustomer/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                    <font style="color:white">
+                                        <i class="fas fa-money-bill"></i>
+                                        Sell to a new customer
+                                        <i class="fas fa-money-bill"></i>
+                                    </font>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                   
+                    
+                    @*<span class="badge badge-secondary" style="margin-top:0px;margin-bottom:3px;">
+                        <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-default" style="padding-top:3px;padding-bottom:3px;border-radius:5px;"><font style="color:#1DA6E2">Income</font></a>
+                    </span>
+
+                    <span class="badge badge-secondary" style="margin-top:0px;margin-bottom:3px;">
+                        <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-default" style="padding-top:3px;padding-bottom:3px;border-radius:5px;"><font style="color:#1DA6E2">Expenses</font></a>
+                    </span>*@
+                    <hr />
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px"> 
+                            <i class="lni lni-stats-up"></i> Sales Summary</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    @if (Request.QueryString["fromdate"] != null)
+                                    {
+                                        //var fromdate = Convert.ToDateTime(Request.QueryString["fromdate"]);
+                                        //var todate = Convert.ToDateTime(Request.QueryString["todate"]).ToLocalTime();
+                                        var fromdate = Convert.ToDateTime(Request.QueryString["fromdate"]).Date;
+                                        var todate = Convert.ToDateTime(Request.QueryString["todate"]).Date;
+                                        var fromdateformat = string.Format("{0:MMM dd, yyyy}", fromdate);
+                                        var todateformat = string.Format("{0:MMM dd, yyyy}", todate);
+                                        var query = db.Orders.Where(l =>(l.DatePaid >= fromdate
+                                                                   && l.DatePaid <= todate) && (l.Product.ShopID == ShopID)).ToList();
+                                        var overallcount = db.Orders.Where(l => (l.DatePaid >= fromdate
+
+                                                              && l.DatePaid <= todate) && (l.Product.ShopID == ShopID)).Count();
+                                  <h4 style="font-size:13px;padding:6px;" class="badge badge-secondary">Sales report as at <b>@fromdateformat</b> to <b>@todateformat</b>
+                                    <br />
+                                      <button type="submit" value="Print" class="btn btn-success" style="padding-bottom:3px;padding-top:3px;margin-top:2px;padding-left:3px;padding-right:3px;opacity:0.9" onclick="printDiv('printdiv')"><i class="lni lni-printer"></i> Print Report</button>
+                                    </h4>
+                                <div id="printdiv">
+                                    <div id="header" style="display:none">
+                                        <center>
+                                            <img src="~/Images/logosquare.jpg" style="width:100px;height:30px" />
+
+
+                                            <h3 style="font-size:14px">
+                                                <br />
+                                                @ViewBag.Shopname SHOP
+                                                <br />
+                                                SALES REPORT AS AT <b>@fromdateformat.ToUpper()</b> to <b>@todateformat.ToUpper()</b>
+                                            </h3>
+                                        </center>
+                                    </div> 
+                                    <table class="table" style="color:black">
+                                        <tr>
+                                            <th>
+                                                Date
+                                            </th>
+                                            <th>
+                                                Items Sold
+                                            </th>
+                                            <th>
+                                                Qty Sold
+                                            </th>
+                                            <th>
+                                                Amount (<del class="NairaSign">N</del>)
+                                            </th>
+                                        </tr>
+                                        @{ int i = 1;
+                                            int j = 1;
+                                            foreach (var item in query.OrderByDescending(l => l.DatePaid))
+                                            {
+                                                int counttotalbreak = db.Orders.Where(l => l.DatePaid == item.DatePaid && l.Product.ShopID == ShopID).Count();
+                                                var totalitemssold = db.Orders.Where(l => l.DatePaid == item.DatePaid && l.Product.ShopID == ShopID).Count();
+                                                var totalproductsoldRange = db.Orders.Where(l => l.DatePaid == item.DatePaid && l.Product.ShopID == ShopID).Sum(k => k.Quantity);
+                                                var totalamountRange = db.Orders.Where(l => l.DatePaid == item.DatePaid && l.Product.ShopID == ShopID
+                                                                      ).Sum(k => k.Amount);
+                                                var amountformatedRange = string.Format("{0:#,0}", totalamountRange);
+                                                var dpaid = string.Format("{0:MMM dd, yyyy}", item.DatePaid);
+                                                var date = string.Format("{0:yyyy-MM-dd}", item.DatePaid);
+                                                var dbdate = db.Orders.Where(l => l.DatePaid == item.DatePaid).Select(l => l.DatePaid).FirstOrDefault();
+                                                if (i <= overallcount)
+                                                {
+                                                    if (j == counttotalbreak)
+                                                    {
+                                                        <tr>
+
+                                                            <td>
+                                                                <a href="~/Orders/DailySalesReport/?sid=@Request.QueryString["sid"]&date=@date&dtop=@dpaid&fromdate=@Request.QueryString["fromdate"]&todate=@Request.QueryString["todate"]&Submit=Display+Record" title="Click to view detailed report">@dpaid </a>
+                                                            </td>
+                                                            <td>
+                                                                @totalitemssold
+                                                            </td>
+                                                            <td>
+                                                                @totalproductsoldRange
+                                                            </td>
+                                                            <td>
+                                                                <span style="color:black;font-size:20px;font-weight:bold">@amountformatedRange</span>
+                                                            </td>
+                                                        </tr>
+                                                        j = 0;
+                                                    }
+
+                                                }
+                                                j++;
+                                                i++;
+                                            }
+                                        }
+                                    </table>
+                                </div>
+
+                                            }
+
+
+                                    <p class="badge badge-secondary" style="padding-bottom:8px;font-size:14px;width:90%">
+                                        Today's Sales Report
+                                        <br /><br />
+                                        @{var dat = string.Format("{0:dddd dd MMMM, yyyy}", DateTime.Now);
+                                            var nowdate = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+                                            var totalproductsold = db.Orders.Where(k => k.Product.ShopID == ShopID && k.DatePaid.ToString() == nowdate).Sum(k => k.Quantity);
+                                            var totalamount = db.Orders.Where(k => k.Product.ShopID == ShopID && k.DatePaid.ToString() == nowdate).Sum(k => k.Amount);
+                                            var amountformated = string.Format("{0:#,0}", totalamount);
+                                        }<font style="color:yellow"><a href="~/Orders/DailySalesReport/?sid=@Request.QueryString["sid"]&date=@nowdate&dtop=@dat" title="Click to view detailed report">@dat</a></font>
+
+                                    </p>
+                                    <br /><br />
+
+                                    <span style="color:black;font-size:15px;font-weight:bold"> Quantity Sold = @totalproductsold</span>
+                                    <hr />
+                                    <span style="color:black;font-size:20px;font-weight:bold" class="alert alert-info"> Total Amount = <del class="NairaSign">N</del>@amountformated </span>
+                                    <hr />
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form method="get">
+                                        <h4 style="font-size:12px;" class="badge badge-info">View Sales Report by Date Range</h4>
+
+                                        <br />
+                                        <span class="badge badge-pill" style="padding:10px;font-size:14px">
+                                            From  <input type="date" name="fromdate" class="form-control" required="required" /><br />
+                                            To <input type="date" name="todate" class="form-control" required="required" />
+                                            <input type="hidden" name="sid" value="@ShopID" />
+                                        </span>
+                                        <input type="submit" name="submit" value="Display Report" class="btn btn-common" style="padding-bottom:4px;padding-top:4px;margin-left:9px;" />
+                                    </form>
+                                    </div>
+                               
+                                </div>
+
+</div>
+                        </div>
+
+
+</div>
+                    </div>
+                </div>
+    </div>
+</div>
+<!-- End Content -->
+
+
+<script type="text/javascript">
+function getcontent(_id) {
+                                    var _shopid = document.getElementById("shopid").value;
+                                    var url = "/Orders/Get_ShopOrders/";
+        $.ajax({
+                                        url: url,
+            data: { option: _id, shopid: _shopid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+                                            var html = '<table class="table" style="font-size:12px;"><tr><th>Product Name</th><th>Quantity</th><th>Rate (<del class="NairaSign">N</del>)</th><th>Amount (<del class="NairaSign">N</del>)</th><th>Date Ordered</th>';
+                
+                $.each(data, function (key, item) {
+                                                html += '<tr>';
+                                                if (item.SubProductID != 0) {
+                                                    html += '<td><a href="/Orders/OrderDetails/' + item.ID + '">' + item.SubProductName;
+
+                                                } else {
+                                                    html += '<td><a href="/Orders/OrderDetails/' + item.ID + '">' + item.ProductName;
+                                                }
+                                                html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
+                                            });
+                                            html += "</table>"
+
+               $("#displayordercontent").html(html).show();
+                                        },
+            error: function (reponse) {
+                                            alert("error : " + reponse);
+                                        }
+                                    });
+                                }
+
+   </script>
+
+<script type="text/javascript">
+
+function dateFormat(d) {
+console.log(d);
+return ((d.getMonth() + 1) + "").padStart(2, "0")
++ "/" + (d.getDate() + "").padStart(2, "0")
++ "/" + d.getFullYear();
+                                }
+</script>
+
+
+<script type="text/javascript">
+    function formatNumber(num) {
+ return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+
+</script>
+
+<script language="javascript" type="text/javascript">
+        function printDiv(divID) {
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements + "</body>";
+        var y = document.getElementById("header");
+        if (y.style.display === "none") {
+            y.style.display = "block";
+        } else {
+            y.style.display = "none";
+        }
+
+        //Print Page
+        window.print();
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        }
+
+</script>

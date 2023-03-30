@@ -1,0 +1,252 @@
+﻿@model IEnumerable<Myvshoponline.Product>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+
+@{
+    ViewBag.Title = " Details";
+}
+<div id="content">
+    <h5 class="h5" style="font-size:14px;"><a href="~/Users/BusinessLanding"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a> &raquo; </b><b style="color:black">@ViewBag.CategoryName</b></h5>
+    <!-- Listings Section Start -->
+    <section id="job-listings" class="section" style="padding:10px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6 col-xs-12">
+                            <div class="right-sideabr">
+
+                                <h4><i class="lni-folder"></i> @ViewBag.ShopName 
+                                    &raquo;
+                                    <!-- And user role is shop owner-->
+                                    @if (!string.IsNullOrEmpty((string)Session["username"]))
+                                    {
+                                        foreach (var item in ViewBag.Shop)
+                                        {
+                                            <a href="~/Products/Create/@item.ID" class="btn btn-common" style="height:25px;padding:1px" title="Add Product"><i class="lni-plus"></i>Add New Product</a>
+                                            @*<a href="~/Products/ProductCategoryDetailsUnavailable/@ViewBag.CategoryID?sid=@item.ID" class=" btn btn-link" style="color:blue;">Unavailable Products (@{var av = db.Products.Where(p => p.ProductStatu.Status == "Unavailable").Count();}@av)</a>*@
+                                                    }
+                                                }
+                                </h4>
+                                <ul class="list-item" style="font-size:11px">
+                                    @if (ViewBag.ShopName != null)
+                                    {
+                                        foreach (var item in ViewBag.Shop)
+                                        {
+                                            <li>
+                                                <a style="color:#00B7F4;font-size:16px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
+                                                    <b>  &raquo; @item.Name </b>
+                                                </a>
+                                                <div class="contact-icon">
+                                                    <i class="lni-map-marker"></i>
+                                                    <a> Location:  @item.StateID</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-phone-handset"></i>
+                                                    <a> Phone:&nbsp;&nbsp; @item.PhoneNumber</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-envelope"></i>
+                                                    <a> Email:&nbsp;&nbsp; @item.Email</a>
+                                                </div>
+                                                @*<div class="contact-icon">
+                                                    <i class="lni-link"></i>
+                                                    <a> Shop URL: </a><span style="color:#613bff">myvshoponline.com/Shops/?shopURL=@item.ShopURL</span>
+                                                </div>*@
+                                                <div class="contact-icon">
+                                                    <i class="lni-map-marker"></i>
+                                                    <a> Address: @item.Address </a>
+                                                </div>
+                                                <!-- And user role is shop owner-->
+                                                @*@if (!string.IsNullOrEmpty((string)Session["username"]))
+                                                {
+                                                    <a href="~/Products/Create/@item.ID" class=" btn btn-link" style="color:blue;">Add Products</a>
+                                                    <a href="~/Products/ProductCategoryDetailsUnavailable/@ViewBag.CategoryID?sid=@item.ID" class=" btn btn-link" style="color:blue;">Unavailable Products (@{var av = db.Products.Where(p => p.ProductStatu.Status == "Unavailable").Count();}@av)</a>
+                                                        }*@
+
+
+                                                        @*<a href="~/Shops/Edit/@item.ID" class="btn btn-common">Edit</a>
+                                                            <a href="~/Shops/Delete/@item.ID" class="btn btn-common" onclick="return confirm('Are you sure you want to delete this shop? Deleting this shop will also delete all the products and anything tied to this shop.')">Delete</a>
+                                                            <a href="~/Products/Create/@item.ID" class="btn btn-common" style="opacity:0.6">Add Products</a>*@
+                                                    </li>
+                                                            }
+                                                        }
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-xs-12">
+                    <aside id="sidebar" class="col-lg-12 col-md-12 col-xs-12">
+                        <!-- Search Widget -->
+                        <div class="widget">
+                            <h5 class="widget-title">Search for Items in <b>@ViewBag.CategoryName </b> Category</h5>
+                            <div class="widget-search widget-box">
+                                <form action="~/Products/ProductCategoryDetailsUnavailable/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID" method="get">
+                                    <input type="hidden" name="id" value="@ViewBag.CategoryID" />
+                                    <input type="hidden" name="sid" value="@ViewBag.ShopID" />
+                                    <input class="form-control search" name="search" type="search" placeholder="Enter your keyword" />
+                                    <button class="search-btn"><b><i class="lni-search" style="color:blue"></i></b></button>
+                                </form>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row">
+                    <!-- Start Blog Posts -->
+                    <div class="col-lg-8 col-md-12 col-xs-12">
+                        <!-- Start Post -->
+                        <div class="blog-post">
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                @if (ViewBag.search != null)
+                                {
+                                    <span style="color:black;padding:0px">Search Results</span>
+                                    <h5 style="background-color:white;font-family:'Bookman Old Style';font-size:14px">
+                                        <b style="color:black"><a href="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID">@ViewBag.CategoryName</a></b> <i class="lni-chevron-right" style="font-size:10px"></i> "<b>@ViewBag.search</b>" (@Model.Count() Results)
+                                    </h5>
+                                }
+                                else
+                                {
+                                    <h5 style="background-color:white;font-family:'Bookman Old Style';font-size:25px"> @ViewBag.CategoryName (@Model.Count()) </h5>
+                                }
+                                <!-- Category Section Start -->
+                                <section class="category section">
+                                    <div class="container">
+                                        <div class="row">
+                                            @foreach (var item in Model)
+                                            {
+                                                <div class="col-lg-6 col-md-6 col-xs-12 f-category" style="padding:0px;border-top:3px solid #00B7F4">
+                                                    <div class="right-sideabr">
+                                                        <a href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" title="@item.Name">
+                                                            <div class="icon bg-color-1" style="width:200px; height:120px">
+                                                                @{var passports = item.ID + ".jpg";
+                                                                    <img src="~/BusinessImages/@item.Shop.User.CompanyName@item.Shop.User.HardToken/@item.Shop.Name/@passports" style="width:100%;height:150%" />
+                                                                }
+                                                            </div>
+                                                            <ul class="list-item">
+                                                                <li>
+                                                                </li>
+                                                            </ul>
+                                                            <h4 style="font-size:8px;color:white;background-color:white">Customers</h4>
+                                                            <ul class="list-item">
+
+                                                                <li>
+                                                                    <h3 style="font-size:18px;font-weight:bold">@item.Name</h3>
+                                                                    <p style="color:black;font-family:Arial;line-height:normal;padding:1px 5px">
+                                                                        @{
+                                                                            var det = "";
+                                                                            if (item.Details.Length < 130)
+                                                                            {
+                                                                                det = item.Details;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                det = item.Details.Substring(0, 130) + "...";
+                                                                            }
+                                                                            @det
+                                                                        }
+                                                                    </p>
+                                                                    <hr />
+                                                                    @*<span class="full-time" style="color:white; background-color:#d932d6">Edit</span>
+                                                                        <span class="full-time" style="color:white; background-color:#ff6a00">Delete</span>
+                                                                            <span class="full-time" style="color:white; background-color:#060681;opacity:0.7">(N@{var a = string.Format("{0:#,0.00}", item.Amount);}@a)</span>
+                                                                            <span class="full-time" style="background-color:#00AEE8;color:white;"> (@item.QuantityinStock)</span>*@
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <ul>
+                                                            <li>
+                                                                @if (!string.IsNullOrEmpty((string)Session["username"]))
+                                                                {
+                                                                    <span class="full-time" style="color:white; background-color:white"><a href="~/Products/Edit/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" class="btn btn-warning" style="height:25px;padding:2px" title="Edit Product Details"><i class="lni-pencil"></i></a></span>
+                                                                    <span class="full-time" style="color:white; background-color:white">
+                                                                        <a href="~/Products/Delete/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" onclick="return confirm('Are you sure you want to delete @item.Name? \nIf deleted all related records will be romved!')" class="btn btn-danger" style="height:25px;padding:2px" title="Delete Product"><i class="lni-cut"></i></a>
+                                                                    </span>
+                                                                }
+                                                                <span class="full-time" style="color:white; background-color:#060681;opacity:0.7;font-size:16px">N@{var a = string.Format("{0:#,0}", item.Amount);}@a</span>
+                                                                <span class="full-time" style="background-color:#00AEE8;color:white;">Qty: @item.QuantityinStock</span>
+
+                                                                @*<span class="full-time" style="color:white; background-color:#d932d6"><a href="~/Products/Edit/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" class="btn btn-warning" style="height:25px;padding:2px" title="Edit Product Details"><i class="lni-pencil"></i></a></span>
+                                                                    <span class="full-time" style="color:white; background-color:#ff6a00">
+                                                                        <a href="~/Products/Delete/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" onclick="return confirm('Are you sure you want to delete @item.Name? \nIf deleted all related records will be romved!')" class="btn btn-danger" style="height:25px;padding:2px" title="Delete Product"><i class="lni-cut"></i></a>
+                                                                    </span>
+                                                                    }
+                                                                    <span class="full-time" style="color:white; background-color:#060681;opacity:0.7;font-size:16px">N@{var a = string.Format("{0:#,0}", item.Amount);}@a</span>
+                                                                    <span class="full-time" style="background-color:#00AEE8;color:white;">Qty: @item.QuantityinStock</span>*@
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                                    }
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- Category Section End -->
+
+
+                            </div>
+                            <!-- Post Content -->
+                        </div>
+                        <!-- End Post -->
+                       
+                        <!-- End Comment Area -->
+                    </div>
+                    <!-- End Blog Posts -->
+                    <!--Sidebar-->
+                    <aside id="sidebar" class="col-lg-4 col-md-12 col-xs-12">
+                        <!-- Search Widget -->
+                        @*<div class="widget">
+                              <h5 class="widget-title">Search This Shop</h5>
+                              <div class="widget-search widget-box">
+                                <form action="#">
+                                  <input class="form-control search" type="search" placeholder="Enter your keyword" />
+                                  <button class="search-btn" type="submit"><i class="lni-search"></i></button>
+                                </form>
+                              </div>
+                            </div>*@
+
+                        <!-- Categories Widget -->
+                        <div class="widget ">
+                            <h5 class="widget-title">Product Categories</h5>
+                            <div class="widget-categories widget-box">
+                                <ul class="cat-list">
+                                    @if (ViewBag.Products != null)
+                                    {
+                                        foreach (var item in ViewBag.Products)
+                                        {
+                                            int ShopID = item.Shop.ID;
+                                            int PCID = item.ProductCategoryID;
+                                            int total = db.Products.Where(p => p.ProductCategoryID == PCID && p.ShopID == ShopID && p.ProductStatu.Status == "Available").Count();
+                                            <li>
+                                                <a href="~/Products/ProductCategoryDetails/?id=@item.ProductCategoryID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                                    @item.ProductCategory.Name
+                                                    <span class="num-posts">(@total)</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Popular Posts widget -->
+                        
+
+                        
+                    </aside>
+                    <!--End sidebar-->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- End Content -->

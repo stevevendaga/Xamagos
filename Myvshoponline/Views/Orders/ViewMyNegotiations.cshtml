@@ -1,0 +1,314 @@
+﻿@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "My Negotiations";
+   MyvshoponlineEntities db = new MyvshoponlineEntities();
+    }
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+ 
+ <div id="content">
+    <div class="">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-5 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Open Negotiations</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    <ul style="font-size:13px">
+                        <li>
+                        <i class="lni lni-dashboard"></i>
+                        <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                        <hr style="padding:1px;margin:5px" />
+                        </li>
+                        </ul>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4" style="text-align:right">
+                        <ul style="font-size:13px">
+                        <li>
+                        <a href="#" id="orders" onclick="getcontent(this.id)">
+                        <i class="lni lni-cart"></i>
+                        Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                        </a>
+                        <hr style="padding:1px;margin:5px" />
+                        </li>
+                        </ul>
+
+                        </div>
+                                @*<div class="col-6 col-md-4 col-lg-4">
+                                    <ul style="font-size:13px">
+                                        <li>
+                                            <a href="#" id="delivered" onclick="getcontent(this.id)">
+                                                <i class="lni lni-cart-full"></i>
+                                                Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                            </a>
+                                            <hr style="padding:1px;margin:5px" />
+                                        </li>
+                                    </ul>
+                                </div>
+                               
+                      
+                                <div class="col-6 col-md-6 col-lg-6" style="text-align:right">
+                                    <ul style="font-size:13px">
+
+                                        <li>
+                                            <a href="#" id="ppayment" onclick="getcontent(this.id)">
+                                                <i class="lni lni-hourglass"></i>
+                                                Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                            </a>
+                                            <hr style="padding:1px;margin:5px" />
+                                        </li>
+                                        <li>
+</ul>
+                                </div>
+                                <div class="col-6 col-md-6 col-lg-6" >
+                                    <ul style="font-size:13px">
+                                          
+                                        <li>
+
+                                            <a href="#" id="pdelivery" onclick="getcontent(this.id)">
+                                                <i class="lni lni-ban"></i>
+                                                Awaiting Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                            </a>
+                                            <hr style="padding:1px;margin:5px" />
+                                        </li>
+                                    </ul>
+
+                                </div>*@
+
+
+                               
+                            </div>
+                              
+                               
+                        </div>
+                        @*<h4 style="background-color:#0BACE1;color:white;padding:9px;font-size:14px">
+                          My Patronized Shops
+                        </h4>
+                        <ul class="list-item">
+
+                            @foreach (var item in ViewBag.Shops)
+                            {
+                                if (item.Name != null)
+                                {
+                                    <li>
+                                        <a style="color:#00B7F4;font-size:12px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name">
+                                            <b>  <i class="lni-briefcase" style="font-size:12px"></i> @item.Name </b>
+                                        </a>
+                                        <div class="contact-icon">
+                                            <i class="lni-map-marker"></i>
+                                            @{
+                                                int sid = Convert.ToInt32(item.StateID);
+                                                string State = db.States.Where(st => st.ID == sid).Select(st => st.Name).FirstOrDefault();
+                                            }
+                                            <a>@item.CountryRegion.Country - @State</a>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>*@
+
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="userid" id="userid" value="@ViewBag.CompanyID" />
+            <div class="col-lg-7 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                @*<div class="job-alerts-item bookmarked">*@
+                <div>
+                    <h3 style="font-size:14px" id="orda">Open Negotiations</h3>
+                        @* &raquo;
+                    <a href="~/Orders/PendingPayment">Pending Payments</a> |
+                        <a href="~/Orders/PendingPayment">Pending Delivery</a> |
+                    <a href="~/Orders/PendingPayment">Delivered</a> 
+                    </h3>*@
+                    <div id="displayordercontent">
+                        <table class="table  table-responsive table-hover table-stripped" style="font-size:12px;color:black">
+
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Product Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Quantity)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Rate) (@*<del class="NairaSign">N</del>*@)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Amount) (@*<del class="NairaSign">N</del>*@)
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Date Ordered")
+                                </th>
+                                @*<th>
+                        @Html.DisplayNameFor(model => model.PaymentRef)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PaymentChannel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DatePaid)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeliveryStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateDelivered)
+                    </th>*@
+                                @*<th>
+                        @Html.DisplayName("Payment Status")
+                    </th>*@
+
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="~/OrderNegotiations/OrderNegos/@item.ID?custid=@item.UserID">
+                                            @if (item.SubProductID != 0)
+                                            {
+                                                @*@Html.DisplayFor(modelItem => item.ProductSubProduct.Name)*@
+                                                @Html.DisplayFor(modelItem => item.SubProductName)
+                                            }
+                                            else
+                                            {
+                                                @*@Html.DisplayFor(modelItem => item.Product.Name)*@
+                                                @Html.DisplayFor(modelItem => item.ProductName)
+                                            }
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var am = string.Format("{0:#,0}", item.Rate);
+                                        }
+                                        @am
+                                    </td>
+                                    <td>
+
+                                        @{
+                                            var amount = string.Format("{0:#,0}", item.Amount);
+                                        }
+                                        @amount
+                                    </td>
+                                    <td>
+                                        @{
+                                            var date = string.Format("{0:MMM dd, yyyy}", item.DateOrdered);
+                                            //var date = string.Format("{0:dd MMM, yyyy hh:mm:ss tt}", item.DateOrdered);
+                                        }
+                                        @date
+
+                                    </td>
+                                    @*<td>
+                            @Html.DisplayFor(modelItem => item.PaymentRef)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentChannel)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DatePaid)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeliveryStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateDelivered)
+                        </td>*@
+                                    @*<td>
+                            @Html.DisplayFor(modelItem => item.PaymentStatu.Status)
+                        </td>*@
+                                    @*<td style="font-size:17px" ><i class="lni lni-printer"></i>
+                        </td>*@
+
+                                    @*<td>
+                            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+                        </td>*@
+                                </tr>
+                                            }
+
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+<script type="text/javascript">
+    function getcontent(_id) {
+        var _userid = document.getElementById("userid").value;
+        var url = "/Orders/Get_MyOrders/";
+        $.ajax({
+            url: url,
+            data: { option: _id, userid: _userid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+                var html = '<table class="table table-responsive table-hover table-stripped" style="font-size:12px;color:black"><tr><th>Product Name</th><th>Quantity</th><th>Rate</th><th>Amount</th><th>Date Ordered</th>';
+                var opp = '';
+                $.each(data, function (key, item) {
+                    html += '<tr>';
+                    if (item.SubProductID != 0) {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+
+                    } else {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                    }
+                    html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
+                    if(item.op=="orders")
+                    {
+                        $("#orda").html("My Orders").show();
+                    }
+                    else if(item.op=="ppayment")
+                    {
+                        $("#orda").html("Pending Payments").show();
+                    }
+                    else if (item.op == "pdelivery") {
+                        $("#orda").html("Pending Delivery").show();
+                    }
+                    else if(item.op=="delivered") {
+                        $("#orda").html("Delivered").show();
+                    }
+                    else {
+
+                    }
+                });
+               html += "</table>"
+
+               $("#displayordercontent").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function dateFormat(d) {
+        console.log(d);
+        return ((d.getMonth() + 1) + "").padStart(2, "0")
+            + "/" + (d.getDate() + "").padStart(2, "0")
+            + "/" + d.getFullYear();
+    }
+</script>
+
+
+<script type="text/javascript">
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+</script>

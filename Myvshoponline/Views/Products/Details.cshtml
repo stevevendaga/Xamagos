@@ -1,0 +1,82 @@
+﻿@model Myvshoponline.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Details)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Details)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantityinStock)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuantityinStock)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductCategory.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductCategory.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductStatu.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductStatu.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Shop.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Shop.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

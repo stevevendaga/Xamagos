@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Myvshoponline.Project>
+
+<title>Home - V-Shop</title>
+<body>
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6" style="text-align:center;font-size:16px; width:340px; margin:5px; margin-left:15px;">
+
+
+                <br style="margin:0px;" />
+
+                <div id="homeDiv">
+                    
+                        @if (item.TrainingModules.Where(i => i.ProjectID == item.ProjectID).Count() > 0)
+                        {
+                            <a href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@item.ProjectID&@ViewBag.Random@ViewBag.Random&sx=1&@ViewBag.Random@ViewBag.Random">
+                                <img src="@Url.Content("~/Images/" +@item.ProjectID  + ".jpg")" height="70" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a style="height:70px;" href="#" onclick="javascript:alert('No Training Module Yet')">
+                                <img src="@Url.Content("~/Images/" +@item.ProjectID  + ".jpg")" height="70" />
+                            </a>
+                        }
+                    
+
+
+                    <h4 style="text-align:center;color:#25912e; font-weight:bold; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+
+                        @*
+                            Super Code - Check for Existence Using Model Item
+                        *@
+
+                        @if (item.TrainingModules.Where(i => i.ProjectID == item.ProjectID).Count() > 0)
+                        {
+                            
+                            <a style="color:#FF8A15; height:70px;" href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@item.ProjectID&@ViewBag.Random@ViewBag.Random&sx=1&@ViewBag.Random@ViewBag.Random">  @Html.DisplayFor(modelItem => item.ProjectName) </a>
+                        }
+                        else
+                        {
+                            <a style="height:70px;" href="#" onclick="javascript:alert('No Training Module Yet')">  @Html.DisplayFor(modelItem => item.ProjectName) </a>
+                        }
+                    </h4>
+
+
+
+
+
+                    @* color#f0f3f5 *@
+                    <p>
+                        @*Comparing Items *@
+                        
+                        
+                            @Html.DisplayFor(modelItem => item.Description)
+                        
+
+                        
+                        <br />
+                        <span class="btn btn-default" id="readMore"> <a href="~/Home/ReadMore/?id=@item.ProjectID"> Read More </a></span>
+                        <br />
+
+                        @if (item.LinkProtocol == "http")
+                        {
+                            <a href="http://@Html.DisplayFor(modelItem => item.ProjectLinks)" target="_blank">
+                                @Html.DisplayFor(modelItem => item.ProjectLinks)
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="https://@Html.DisplayFor(modelItem => item.ProjectLinks)" target="_blank">
+                                @Html.DisplayFor(modelItem => item.ProjectLinks)
+                            </a>
+                        }
+                        @*  else
+                            {
+                                <a href="@Html.DisplayFor(modelItem => item.ProjectLinks)" target="_blank">
+                                    @Html.DisplayFor(modelItem => item.ProjectLinks)
+                                </a>
+                            }
+                        *@
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+
+</body>
+
+
+

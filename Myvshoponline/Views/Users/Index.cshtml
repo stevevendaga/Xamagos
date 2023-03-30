@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Myvshoponline.User>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div id="content">
+    <div class="container">
+        <h4 style="font-size:16px;">User [@Model.Count()]</h4>
+
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+        <table id="zero_config" class="table table-responsive" style="color:black;">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateCreated)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserRole.Role)
+                    </th>
+                    <th>Verified</th>
+                    <th>Referal</th>'
+                    <th>Token</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+
+                        <td>
+                            @{ if (item.DateCreated != null)
+                                {
+                                    var date = string.Format("{0:MMM dd,yyy hh:mm tt}", item.DateCreated);
+                                    @date
+                                }
+
+
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserRole.Role)
+                        </td>
+                        <td>
+                            @if (item.EmailVerify == 1)
+                            {
+                                <span class="alert alert-success">Verified</span>
+                            }
+                            else
+                            {
+                                <span class="alert alert-danger">Pending</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReferalID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HardToken)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                        </td>
+                    </tr>
+                                }
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+        </div></div>

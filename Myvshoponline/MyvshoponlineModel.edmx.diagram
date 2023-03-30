@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c108ce2f9c2f44e49c0e41734c98b670" Name="Diagram1">
+        <EntityTypeShape EntityType="MyvshoponlineModel.C__MigrationHistory" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Application" Width="1.5" PointX="14.25" PointY="28.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.AptitudeTestGuideline" Width="1.5" PointX="7.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="3.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="1" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.AspNetUser" Width="1.5" PointX="3" PointY="1.375" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Bank" Width="1.5" PointX="8.25" PointY="36.25" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.BankInformation" Width="1.5" PointX="10.5" PointY="35.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.BillingCycle" Width="1.5" PointX="3.75" PointY="40.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Comment" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.CountryRegion" Width="1.5" PointX="6" PointY="37.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Currency" Width="1.5" PointX="9.75" PointY="4.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.CustomerShop" Width="1.5" PointX="10.5" PointY="47.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.CustomerStatu" Width="1.5" PointX="9.75" PointY="64.375" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.DeliveryAgentAllocation" Width="1.5" PointX="11.25" PointY="43.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.DeliveryCity" Width="1.5" PointX="16.5" PointY="50.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.DeliveryCity_Only" Width="1.5" PointX="11.25" PointY="55.25" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.DeliveryLocation" Width="1.5" PointX="16.5" PointY="47" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Donation" Width="1.5" PointX="7.75" PointY="9.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.EmailMessage" Width="1.5" PointX="5.75" PointY="6.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.EmailMessageLog" Width="1.5" PointX="8" PointY="7.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Gender" Width="1.5" PointX="9.75" PointY="9.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.IdentityVerification" Width="1.5" PointX="8.25" PointY="73.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.MailingListNG" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.MailingListNonNG" Width="1.5" PointX="11.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.NewsletterEmail" Width="1.5" PointX="11.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.OnlineTraining" Width="1.5" PointX="17.25" PointY="28.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Order" Width="1.5" PointX="14.25" PointY="41.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.OrderNegotiation" Width="1.5" PointX="19.5" PointY="46.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.OurLead" Width="1.5" PointX="11.25" PointY="39.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PaymentAccountActivation" Width="1.5" PointX="11.25" PointY="25.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PaymentStatu" Width="1.5" PointX="12" PointY="28.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PlanFeature" Width="1.5" PointX="3" PointY="44.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PlatformBenefit" Width="1.5" PointX="11.75" PointY="9.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PopularProduct" Width="1.5" PointX="18.75" PointY="40.5" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PopularProductPricing" Width="1.5" PointX="9.75" PointY="12.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PopularStore" Width="1.5" PointX="16.5" PointY="34.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PopularStorePricing" Width="1.5" PointX="11.75" PointY="12.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PopularStoreStatu" Width="1.5" PointX="14.25" PointY="35" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Position" Width="1.5" PointX="12" PointY="22.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.PricingPlan" Width="1.5" PointX="0.75" PointY="43.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Product" Width="1.5" PointX="16.5" PointY="40.375" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProductCategory" Width="1.5" PointX="11.25" PointY="32" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProductComment" Width="1.5" PointX="13.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProductStatu" Width="1.5" PointX="14.25" PointY="50.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProductSubProduct" Width="1.5" PointX="18.75" PointY="35" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProductVisit" Width="1.5" PointX="24" PointY="36.25" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Project" Width="1.5" PointX="0.75" PointY="8.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ProjectImage" Width="1.5" PointX="3" PointY="11" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.RequestOnlineOrder" Width="1.5" PointX="10.5" PointY="71.5" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.SearchOptimization" Width="1.5" PointX="21" PointY="32.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.SearchOptimizationPricing" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Setting" Width="1.5" PointX="2.75" PointY="13.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Sex" Width="1.5" PointX="12" PointY="19.5" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ShippingInformation" Width="1.5" PointX="21.5" PointY="38.5" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Shop" Width="1.5" PointX="8.25" PointY="39.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ShopAPIKey" Width="1.5" PointX="10.5" PointY="59.875" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ShopCustomer" Width="1.5" PointX="12" PointY="63.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ShopProductCategory" Width="1.5" PointX="13.5" PointY="38" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.ShopVisit" Width="1.5" PointX="10.5" PointY="51.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.SocialMediaAd" Width="1.5" PointX="23.75" PointY="40" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.SocialMediaAdsStatistic" Width="1.5" PointX="26" PointY="42" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.SocialMediaChannel" Width="1.5" PointX="21.5" PointY="52.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.State" Width="1.5" PointX="9" PointY="31.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.TempPendingPayment" Width="1.5" PointX="21.5" PointY="42.625" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Testimonial" Width="1.5" PointX="13.75" PointY="4.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.TrainingModule" Width="1.5" PointX="3" PointY="7.125" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.TrainingPricing" Width="1.5" PointX="4.75" PointY="13.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.TrialPeriod" Width="1.5" PointX="6.75" PointY="13.75" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.User" Width="1.5" PointX="6" PointY="40" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.UserBonu" Width="1.5" PointX="8.25" PointY="69.25" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.UserRole" Width="1.5" PointX="3.75" PointY="47.375" />
+        <EntityTypeShape EntityType="MyvshoponlineModel.Workdone" Width="1.5" PointX="8.25" PointY="47.75" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Application_Position" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Application_Sex" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Application_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Application_State1" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_BankInformation_Bank" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_BankInformation_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_User_BillingCycle" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShippingInformation_CountryRegion" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Shop_CountryRegion" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_CustomerShop_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_CustomerShop_ShopCustomer" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_CustomerShop_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopCustomer_CustomerStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryAgentAllocation_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryAgentAllocation_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryCity_DeliveryCity_Only" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryCity_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryCity_State1" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryCity_Only_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryLocation_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_DeliveryLocation_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_EmailMessageLog_EmailMessage" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_IdentityVerification_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_IdentityVerification_User1" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OnlineTraining_Sex" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OnlineTraining_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OnlineTraining_State1" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Order_DeliveryAgentAllocation" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Order_PaymentStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Order_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Order_ProductSubProducts" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Order_ShopCustomer" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OrderNegotiation_Order" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShippingInformation_Order" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_TempPendingPayment_Order" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OrderNegotiation_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OrderNegotiation_ShopCustomer" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OrderNegotiation_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OurLead_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_OurLead_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PaymentAccountActivation_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PlanFeatures_PricingPlan" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularProduct_PopularStoreStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularProduct_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularProduct_ProductSubProducts" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularProduct_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularStore_PopularStoreStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_PopularStore_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SearchOptimization_PopularStoreStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SocialMediaAds_PopularStoreStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_User_PricingPlan" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Product_ProductCategory" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Product_ProductStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Product_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ProductSubProducts_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ProductVisit_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SearchOptimization_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SocialMediaAds_Product" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopProductCategory_ProductCategory" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ProductSubProducts_ProductStatus" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ProductVisit_ProductSubProducts" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SearchOptimization_ProductSubProducts" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ProjectImage_Project" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_TrainingModule_Project" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_RequestOnlineOrder_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SearchOptimization_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShippingInformation_State" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Shop_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopAPIKey_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopProductCategory_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopVisit_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SocialMediaAds_Shop" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_ShopCustomer_UserRole" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SocialMediaAds_SocialMediaChannel" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_SocialMediaAdsStatistics_SocialMediaAds" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_TempPendingPayment_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_User_UserRole" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_UserBonus_User" />
+        <AssociationConnector Association="MyvshoponlineModel.FK_Workdone_User" />
+        <AssociationConnector Association="MyvshoponlineModel.AspNetUserRoles" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

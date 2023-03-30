@@ -1,0 +1,841 @@
+﻿@model IEnumerable<Myvshoponline.User>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+   Getdata mydata = new Getdata();
+ }
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+@{
+    ViewBag.Title = ViewBag.CompanyName;
+    }
+    @{
+        int UserID = ViewBag.CompanyID;
+        string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+        int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+        int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+
+        int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+        int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+        int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+        int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+        int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+        int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+        int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+        DateTime lauchd = new DateTime(lYear, lmonth, lday);
+        DateTime prevd = new DateTime(pYear, pmonth, pday);
+        TimeSpan diff = lauchd.Subtract(prevd);
+        ViewBag.diff = diff.Days;
+        ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+        ViewBag.Ndays = db.Users.Find(UserID).NDays;
+
+         var details = from p in db.DeliveryAgentAllocations
+                          where p.UserID == UserID
+                          select new { ID = p.StateID, item = p.State.Name };
+            ViewBag.StateID = new SelectList(details, "ID", "item");
+    }<!-- Start Content -->
+<input type="hidden" value="@UserID" id="userid" />
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div id="companydetailsmobile" style="display:none"></div>
+                    <div class="col-lg-12 col-md-6 col-xs-12" id="shopdetails">
+                        <div class="right-sideabr">
+
+                            @if (!string.IsNullOrEmpty((string)Session["username"]))
+                            {
+
+                                if (((string)Session["UserRole"] == "Site Admin"))
+                                {
+                                    <ul>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/Projects/Index">
+                                                <i class="lni lni-support"></i>
+                                                User Guide
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/MailingListNGs/Index">
+                                                <i class="lni lni-users"></i>
+                                                Mailing List NG
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/MailingListNonNGs/Index">
+                                                <i class="lni lni-users"></i>
+                                                Mailing List NonNG
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/EmailMessages/Index">
+                                                <i class="lni lni-users"></i>
+                                                Email Messages
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/OurLeads/Index/?id=@UserID">
+                                                <i class="lni lni-users"></i>
+                                                Leads/Customers
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/Workdones/Index/?id=@UserID">
+                                                <i class="glyphicon glyphicon-road"></i>
+                                                Workdone
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                }
+
+                                if (((string)Session["UserRole"] == "Delivery Agent"))
+                                {
+                                    <h4>Search by Order ID</h4>
+                                    <form method="get" action="~/Orders/UpdateOrder">
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-6">
+                                                <div class="input-group input-group-md">
+                                                    <input type="text" class="form-control" name="id" style="border-color:#33C6F6" id="orderid" placeholder="Enter Order ID " />
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-common" type="submit" onclick="return checkinput()" style="height:38px;">
+                                                            <span id="process"><i class="lni lni-search"></i>Search</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form><hr />
+                                    <div class="col-12 col-md-6">
+                                        <div class="panel panel-primary" >
+                                            <div class="panel-heading" style="background:white;color:black;">
+                                                <h3 class="panel-title" style="font-family:Arial;font-size:14px">View Incoming Orders</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form method="post" action="~/Orders/IncomingOrders">
+                                                    @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control col-6", @required = "required" })
+                                                    
+                                                    <input type="hidden" value="@Request.QueryString["id"]" name="userid" />
+                                                    <button type="submit" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View Incoming Orders">
+                                                       View Orders <i class="glyphicon glyphicon-eye-open"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+
+                                    if (Request.QueryString["fromdate"] == null)
+                                    {
+                                            <div id="token">
+                                                <div class="col-12 col-md-6 col-lg-6">
+                                                    <div id="msgtoken" class="alert alert-danger" style="display:none"></div>
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control" style="border-color:#33C6F6" id="h_token" placeholder="Enter Hard Token to view More Operations" />
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-common" type="button" onclick="return checkToken()">
+                                                                <span id="processtoken"><i class="lni lni-arrow-right-circle"></i>Go</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            }
+                                            <div id="report" style="display:none">
+                                                <h4 style="font-size:14px;" class="badge badge-info">View Delivery Report by Date Range</h4>
+                                               
+
+                                                <form method="get">
+                                                    <br />
+                                                    @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control col-6", @required = "required" })
+                                                    <input type="hidden" value="@UserID" id="userid" name="uid" />
+                                                    <span class="badge badge-pill" style="padding:10px;font-size:14px;color:black;"></span>
+                                                    <div class="row" style="color:black;">
+                                                        <div class="col-md-3">
+                                                            <b>From</b>  <input type="date" name="fromdate" class="form-control" required="required" />
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <b>To</b> <input type="date" name="todate" class="form-control" required="required" />
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <br />
+                                                            <input type="submit" name="submit" value="Display Report" class="btn btn-common" />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            if (Request.QueryString["fromdate"] != null)
+                                            {
+
+                                            <h4 style="font-size:14px;" class="badge badge-info">View Delivery Report by Date Range</h4>
+
+                                            <form method="get">
+                                                <br />
+                                                @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control col-6", @required = "required" })
+                                                <input type="hidden" value="@UserID" id="userid" name="uid" />
+                                                <span class="badge badge-pill" style="padding:10px;font-size:14px;color:black;"></span>
+                                                <div class="row" style="color:black;">
+                                                    <div class="col-md-3">
+                                                        <b>From</b>  <input type="date" name="fromdate" class="form-control" required="required" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <b>To</b> <input type="date" name="todate" class="form-control" required="required" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <br />
+                                                        <input type="submit" name="submit" value="Display Report" class="btn btn-common" />
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            var fromdate = Convert.ToDateTime(Request.QueryString["fromdate"]).Date;
+                                            var todate = Convert.ToDateTime(Request.QueryString["todate"]).Date;
+                                            var fromdateformat = string.Format("{0:MMM dd, yyyy}", fromdate);
+                                            var todateformat = string.Format("{0:MMM dd, yyyy}", todate);
+                                            int stateid = Convert.ToInt32(Request.QueryString["StateID"]);
+                                            int uid = Convert.ToInt32(Request.QueryString["uid"]);
+                                            int AllocationID = db.DeliveryAgentAllocations.Where(s => s.StateID == stateid && s.UserID == uid).Select(s => s.ID).FirstOrDefault();
+                                            var query = db.Orders.Where(l => (l.DateDelivered >= fromdate
+                                            && l.DateDelivered <= todate && l.DeliveredByAgentAllocationID == AllocationID)).ToList();
+                                            <p></p>
+                                            <h4 style="font-size:14px;padding:6px;" class="badge badge-secondary">
+                                                Delivery report between <b>@fromdateformat</b> and <b>@todateformat </b>in @db.States.Where(s => s.ID == stateid).Select(s => s.Name).FirstOrDefault() State
+                                            </h4>
+                                            <table id="zero_config" class="table table-responsive" style="color:black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>OrderID</th>
+
+                                                        <th>
+                                                            Quantity
+                                                        </th>
+
+                                                        <th>
+                                                            DateOrdered
+                                                        </th>
+
+                                                        <th>
+                                                            DeliveryStatus
+                                                        </th>
+                                                        <th>
+                                                            DateDelivered
+                                                        </th>
+
+                                                        <th>
+                                                            ProductName
+                                                        </th>
+                                                        <th>
+                                                            Sub ProductName
+                                                        </th>
+                                                        <th>
+                                                            CustomerName
+                                                        </th>
+
+                                                        <th>
+                                                            Reason
+                                                        </th>
+                                                        <th>
+                                                            DateRejected
+                                                        </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var item in query)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ID)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Quantity)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.DateOrdered)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.DeliveryStatus)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.DateDelivered)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProductName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.SubProductName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ShopCustomer.Name)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.RejectReason)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.DateRejected)
+                                                            </td>
+
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                </tfoot>
+
+                                            </table>
+                                            }
+                                            }
+
+
+
+                                            if ((string)Session["UserRole"] == "Super Admin")
+                                            {
+                                            <h4>Search by Order ID</h4>
+                                            <form method="get" action="~/Orders/UpdateOrder">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6 col-lg-6">
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="text" class="form-control" name="id" style="border-color:#33C6F6" id="orderid" placeholder="Enter Order ID" />
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-common" type="submit" onclick="return checkinput()">
+                                                                    <span id="process"><i class="lni lni-search"></i>Search</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <div class="row">
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Projects/Index">
+                                                        <i class="lni lni-support"></i>
+                                                        User Guide
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Users/Index">
+                                                        <i class="lni lni-users"></i>
+                                                        Users
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Users/AssignUserRole">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        User Roles
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Orders">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Orders
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Products">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Products
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Users/UpgradedUsers">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Upgraded Users
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PricingPlans">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Pricing Plans
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/OurLeads/Index/?id=@UserID">
+                                                        <i class="lni lni-users"></i>
+                                                        Leads/Customers
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Workdones/Index/?id=@UserID">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Workdone
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Positions/Index/?id=@UserID">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Apllication Positions
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Applications/Index/?id=@UserID">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Apllications
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+
+                                                    <a class="nav-link" href="~/AptitudeTestGuidelines/Index/?id=@UserID">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Aptitude Test Guidelines
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+
+                                                    <a class="nav-link" href="~/Users/Bonus">
+                                                        <i class="lni lni-users"></i>
+                                                        Bonus Percentage
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/MailingListNGs/Index">
+                                                        <i class="lni lni-users"></i>
+                                                        Mailing List NG
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/MailingListNonNGs/Index">
+                                                        <i class="lni lni-users"></i>
+                                                        Mailing List NonNG
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/EmailMessages/Index">
+                                                        <i class="lni lni-book"></i>
+                                                        Email Messages
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PopularStores/PopularStoreAdmin">
+                                                        <i class="lni lni-book"></i>
+                                                        Popular Stores
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/SearchOptimizations">
+                                                        <i class="lni lni-book"></i>
+                                                        SEO Products
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PopularStorePricings/Index">
+                                                        <i class="lni lni-book"></i>
+                                                        Popular Stores Pricing
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/SearchOptimizationPricings">
+                                                        <i class="lni lni-book"></i>
+                                                        SEO Pricing
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PopularProducts/Index">
+                                                        <i class="lni lni-book"></i>
+                                                        Popular Products
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PopularProductPricings/Index">
+                                                        <i class="lni lni-book"></i>
+                                                        Popular Products Pricing
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/SocialMediaAds">
+                                                        <i class="lni lni-book"></i>
+                                                        Social MediaAds
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/SocialMediaChannels">
+                                                        <i class="lni lni-book"></i>
+                                                        Social Media Channels
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/SocialMediaAdsStatistics">
+                                                        <i class="lni lni-book"></i>
+                                                        SocialMediaAdsStatistics
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/TrainingPricings">
+                                                        <i class="lni lni-book"></i>
+                                                        Training Pricing
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/OnlineTrainings">
+                                                        <i class="lni lni-book"></i>
+                                                        Online Training List
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/DeliveryCity_Only">
+                                                        <i class="lni lni-book"></i>
+                                                        Set Delivery Cities
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/DeliveryCities">
+                                                        <i class="lni lni-book"></i>
+                                                        Set Delivery Cost
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3  col-6">
+                                                    @{
+                                                        int Payment_Closed = (int)db.Settings.Select(s => s.Payment_Account_Activation).FirstOrDefault();
+                                                    }
+                                                    <span id="payment_account_activation">
+                                                        @if (Payment_Closed == 1)
+                                                        {
+                                                            <button type="button" class="badge-success" onclick="disable_payment_account_activation()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Disable Payment for Account Activation</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="badge-danger" onclick="enable_payment_account_activation()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Enable Payment for Account Activation</button>
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div class="col-md-3  col-6">
+                                                    @{
+                                                        int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
+                                                    }
+                                                    <span id="logomobile">
+                                                        @if (MobileLogo == 1)
+                                                        {
+                                                            <button type="button" class="badge-success" onclick="hide_logomobile()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Hide logo on mobile</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="badge-danger" onclick="display_logomobile()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to display logo on mobile</button>
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/PaymentAccountActivations">
+                                                        <i class="lni lni-book"></i>
+                                                        Set Account Registration Price
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/BankInformations">
+                                                        <i class="lni lni-book"></i>
+                                                        Sellers Bank Accounts
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Shops">
+                                                        <i class="lni lni-book"></i>
+                                                        Shops
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/DeliveryAgentAllocations">
+                                                        <i class="lni lni-book"></i>
+                                                        Delivery Agent Allocation
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/DeliveryAgentAllocations/AllAgents">
+                                                        <i class="lni lni-book"></i>
+                                                        View Item Delivered by Agents
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Orders/IncomingOrdersAdmin">
+                                                        <i class="lni lni-book"></i>
+                                                        View Incoming Orders
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-md-3 col-6">
+                                                    <a class="nav-link" href="~/Orders/UpdatePaymentAfterDelivery">
+                                                        <i class="lni lni-book"></i>
+                                                        Make Order Payment- Pay on Delivery
+
+                                                    </a>
+                                                </div>
+
+
+                                            </div>
+
+                                            }
+
+                                            if ((string)Session["UserRole"] == "Marketer")
+                                            {
+                                            <ul>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="~/OurLeads/Index/?id=@UserID">
+                                                        <i class="lni lni-users"></i>
+                                                        Leads/Customers
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="~/Workdones/Index/?id=@UserID">
+                                                        <i class="glyphicon glyphicon-road"></i>
+                                                        Workdone
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            }
+                                            }
+
+
+
+                                            <!-- End Content -->
+                                        </div>
+                                    </div>
+                                </div></div></div>
+
+<script type="text/javascript">
+                    function CheckFileName() {
+                        var fileName = document.getElementById("uploadFile").value
+                        //debugger;
+                        if (fileName == "") {
+                            alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+                            return false;
+                        }
+                        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+                            return true;
+                        else {
+                            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+                            return false;
+                        }
+                        return true;
+                    }
+        </script>
+
+
+<script type="text/javascript">
+    var maxSize = '15';
+    function fileSizeValidate(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize > maxSize) {
+                alert('Maximum file size exceed! Image size should not be larger than 15KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    var minSize = '12';
+    function fileSizeValidateMin(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize < minSize) {
+                alert('Minimum file size not reached! Image size should not be less than 12KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function myFunction(x) {
+        if (x.matches) { // If media query matches
+            // document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
+            document.getElementById("companydetailsmobile").style.display = "block";
+            document.getElementById("companydetails").style.display = "none";
+            document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
+            
+
+        } else {
+            document.getElementById("companydetailsmobile").style.display = "none";
+            document.getElementById("companydetails").style.display = "block";
+
+  }
+}
+
+var x = window.matchMedia("(max-width: 700px)")
+myFunction(x) // Call listener function at run time
+x.addListener(myFunction) // Attach listener function on state changes
+</script>
+
+        <!-- Content section End -->
+                            <script type="text/javascript">
+$('.Editor').jqte();
+
+// settings of status
+var jqteStatus = true;
+$(".status").click(function () {
+jqteStatus = jqteStatus ? false : true;
+$('.Editor').jqte({ "status": jqteStatus })
+});
+ </script>
+
+<script type="text/javascript">
+    function enable_payment_account_activation() {
+        var url = "/Users/enable_payment_account_activation/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer" title="Click to disable"><i class="lni lni-pencil"></i><a onclick="disable_payment_account_activation()">Payment for Account Activation open</a></span>';
+                $("#payment_account_activation").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    function disable_payment_account_activation() {
+        var url = "/Users/disable_payment_account_activation/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer"  title="Click to enable"><i class="lni lni-pencil"></i><a onclick="enable_payment_account_activation()">Payment for Account Activation Closed</a></span>';
+                $("#payment_account_activation").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    function display_logomobile() {
+        var url = "/Users/display_logomobile/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer" title="Click to hide"><i class="lni lni-pencil"></i><a onclick="hide_logomobile()">Logo on mobile displayed</a></span>';
+                $("#logomobile").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    function hide_logomobile() {
+        var url = "/Users/hide_logomobile/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer"  title="Click to enable"><i class="lni lni-pencil"></i><a onclick="display_logomobile()">Logo on mobile hidden</a></span>';
+                $("#logomobile").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>
+
+<script>
+    function checkinput() {
+        var orderid = document.getElementById("orderid").value;
+        if (orderid == '') {
+            document.getElementById("orderid").focus();
+            document.getElementById("orderid").style.borderColor = "red";
+            return false;
+        }
+    }
+    </script>
+
+
+    <script>
+    function checkToken() {
+        var token = document.getElementById("h_token").value;
+        if (token == '') {
+            document.getElementById("h_token").focus();
+            document.getElementById("h_token").style.borderColor = "red";
+            return false;
+        }
+        else {
+            Check_HardToken();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function Check_HardToken() {
+        var htoken = document.getElementById("h_token").value;
+        var userid = document.getElementById("userid").value;
+        var url = "/Users/Check_HardToken/";
+        $.ajax({
+            url: url,
+            data: { token:htoken,userid:userid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    if (item.count == 1) {
+                        $("#report").css("display", "block");
+                        $("#msgtoken").css("display", "none");
+                    }
+                    else
+                    {
+                        $("#msgtoken").css("display", "block");
+                        $("#msgtoken").html("Invalid Token");
+                    }
+                });
+           
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

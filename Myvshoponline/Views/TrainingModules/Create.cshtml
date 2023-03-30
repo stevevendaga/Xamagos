@@ -1,0 +1,333 @@
+﻿@model Myvshoponline.TrainingModule
+
+<head>
+    @{
+        ViewBag.Title = "Add Training Modules ";
+    }
+
+
+    <link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+    @*<script type="text/javascript" src="http://code.jquery.com/jquery.min.js" charset="utf-8"></script>*@
+    <script type="text/javascript" src="~/TextEditor/jquery-te-1.4.0.js"></script>
+    <script src="~/TextEditor/jquery-te-1.4.0.min.js"></script>
+
+
+    @*<link rel="stylesheet" type="text/css" href="~/Content/Site.css" />*@
+
+    <style type="text/css">
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #f1f1f1;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ca3838;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+                /* Change color of dropdown links on hover */
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+    </style>
+
+</head>
+
+<div id="content">
+    <div class="container">
+              <div class="row">
+
+                <div class="col-md-12" style="background-color:#FFFFFF; padding-left:20px;">
+
+
+                    <div style="color:white; font-size:20px; text-align:center; padding:5px; background-color:#007ACC;border-bottom:5px solid #FF8A15; border-radius:10px; margin-bottom:15px;">
+                        <p style="font-size:20px;color:white;"> Topic for @ViewBag.ProjectName</p>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label>Upload Images </label>
+
+                        @using (Html.BeginForm("UploadProjectImage", "TrainingModules", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {<input type="hidden" name="ProjectID" value="@ViewBag.PID" />
+                        <input type="file" name="filesmultiple" multiple="multiple" id="uploadFilemultiple" style="width: 100%;color:black;" class="btn btn-acid-grey-2" />
+                            <br />
+                                <input type="submit" name="submit" value="Upload" style="padding:3px;margin-bottom:2px;" class="btn btn btn-success" onclick="return CheckFileNameMultiple();">
+                        }
+
+                    </div>
+                    <hr />
+                    <div class="col-md-12">
+                        @using (Html.BeginForm("Create", "TrainingModules", FormMethod.Post, new { @name = "myForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <input type="hidden" name="ProjectID" value="@ViewBag.PID" />
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            <label id="moduleLabels">Training Title</label>
+                                            <input type="text" class="form-control" placeholder="Title of the Module" name="ProjectTitle" id="inputTrainings" required maxlength="50" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            <label id="moduleLabels">Last Serial Number <span style="background-color:#FF8A15; padding:3px 8px; color:white;"> @ViewBag.Serial </span></label>
+                                            <input type="text" class="form-control" placeholder="Serial Number" name="Serial" id="inputTrainings" required />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            <label id="moduleLabels">Note for the Topic</label>
+
+
+                                            <span class="intLink" onclick="var newImg = prompt('Enter the image name');
+    if (newImg) { insertMetacharsForDescription('&lt;img src=\u0022 ../../ProjectImages/' + newImg + '.jpg\u0022 width=50%\u0022&gt;', '&lt;\/img&gt;'); }
+    else { document.myForm.image.focus(); }">
+                                                <button type="button" class="btn btn-success" style="padding:2px;">  Add Image </button>
+                                            </span>
+                                            <input type="text" id="image" name="image" style="width:100%;" />
+                                            <textarea class="Editor" name="Description"></textarea>
+                                            <input type="submit" value="Create" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+
+                                    <label id="moduleLabels">Video Link</label>
+                                    <input type="text" class="form-control" placeholder="Video Link" name="VideoUrl" id="inputTrainings" />
+
+                                    <label id="moduleLabels">Video Length</label>
+                                    <input type="text" class="form-control" placeholder="Hrs:Mins " name="TimeInMins" id="inputTrainings" />
+
+                                    <label id="moduleLabels">Notes</label>
+                                    <textarea id="inputTrainings" class="form-control" name="Notes" cols="10" rows="4" placeholder="Notes for this Session"></textarea>
+
+                                    <div class="row">
+                                        @{
+                                            string allImages = "";
+                                            string allProjectid = "";
+                                            string allID = "";
+                                            if (ViewBag.SubjectImagesCount > 0)
+                                            {
+                                                foreach (var item in ViewBag.Images)
+                                                {
+                                                    allImages += @item.Image + ";";
+                                                    allProjectid += @item.ProjectID + ";";
+                                                    allID += @item.ID + ";";
+
+                                                }
+
+                                                string[] eachImage = allImages.Split(';');
+                                                string[] eachProjectID = allProjectid.Split(';');
+                                                string[] eachID = allID.Split(';');
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        @for (int i = 0; i < ViewBag.ImagesCount; i++)
+                                                        {
+                                                            <div class="col-md-4" style="padding:3px">
+                                                                @{
+                                                                    string picture = eachImage[i] + ".jpg";
+                                                                }
+                                                                <center>
+
+                                                                    <div class="dropdown">
+                                                                        <button class="dropbtn">
+                                                                            <img src="../../ProjectImages/@picture" style="width:60px; height:50px;cursor:pointer;" />
+                                                                        </button>
+                                                                        <div class="dropdown-content">
+
+                                                                            @using (Html.BeginForm("DeleteImage", "TrainingModules", FormMethod.Post))
+                                                                            {
+                                                                                <input type="hidden" value="@eachID[i]" name="ID" />
+                                                                                <input type="hidden" value="@eachProjectID[i]" name="ProjectID" />
+                                                                                <input type="hidden" value="@picture" name="ImagePath" />
+                                                                                <input type="submit" value="Remove" onclick="return confirm('Are you sure you want to delete this image?')" id="remove" class="btn btn-danger" />
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    <br />
+                                                                    <input type="text" readonly value="@eachImage[i]">                                                             </center>
+
+                                                            </div>
+                                                                    }
+                                                    </div>
+                                                </div>
+                                                                    }
+
+
+
+
+                                        }
+                                    </div>
+                                
+
+
+
+                            </div></div>
+                                                                    }
+
+
+
+
+
+
+                            </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    
+
+
+
+
+
+    <div id="htmltagsforDescription" style="display: none;">
+        @*[&nbsp;<span class="intLink" title="Bold" onclick="insertMetacharsForDescription('&lt;strong&gt;', '&lt;\/strong&gt;');">
+            <strong>B</strong>
+        </span> |
+        <span class="intLink" title="Underline" onclick="insertMetacharsForDescription('&lt;u&gt;', '&lt;\/u&gt;');">
+            <u>U</u>
+
+        </span> | <span class="intLink" title="Italic" onclick="insertMetacharsForDescription('&lt;em&gt;', '&lt;\/em&gt;');">
+            <em>I</em>
+        </span> | <span class="intLink" title="Break" onclick="insertMetacharsForDescription('&lt;br&gt;', '&lt;\/br&gt;');">
+            Line Break
+
+        </span> | <span class="intLink" title="Paragraph" onclick="insertMetacharsForDescription('&lt;p&gt;', '&lt;\/p&gt;');">
+            Paragraph
+        </span> @*|
+
+            |<span class="intLink" onclick="var Fcolor = prompt('Enter color name');
+            if (Fcolor) { insertMetacharsForDescription('&lt;font color=\u0022' + Fcolor + '\u0022&gt;', '&lt;\/font&gt;'); }
+                    else { document.myForm.Description.focus(); }">
+                                        Font Color </span> &nbsp;]
+        @*</span> | <span class="intLink" onclick="insertMetachars('\n&lt;code&gt;\n', '\n&lt;\/code&gt;\n');">
+                code
+
+            </span> | <span class="intLink" onclick="insertMetachars(' :-)');">
+                smile*@
+
+        @*<span class="intLink" onclick="var newImg = prompt('Enter the image name');
+    if (newImg) { insertMetacharsForDescription('&lt;img src=\u0022 ../../ProjectImages/' + newImg + '.jpg\u0022 width=150 height=120px\u0022&gt;', '&lt;\/img&gt;'); }
+            else { document.myForm.Description.focus(); }">
+                Add Image
+            </span> &nbsp;]*@
+    </div>
+
+
+</div>
+    <script type="text/javascript">
+        function gethtmltags() {
+            document.getElementById("htmltags").innerHTML = document.getElementById("htmltagsforDescription").innerHTML;
+        }
+
+        function insertMetacharsForDescription(sStartTag, sEndTag) {
+
+            var bDouble = arguments.length > 1, oMsgInput = document.myForm.image, nSelStart = oMsgInput.selectionStart, nSelEnd = oMsgInput.selectionEnd, sOldText = oMsgInput.value;
+            oMsgInput.value = sOldText.substring(0, nSelStart) + (bDouble ? sStartTag + sOldText.substring(nSelStart, nSelEnd) + sEndTag : sStartTag) + sOldText.substring(nSelEnd);
+            oMsgInput.setSelectionRange(bDouble || nSelStart === nSelEnd ? nSelStart + sStartTag.length : nSelStart, (bDouble ? nSelEnd : nSelStart) + sStartTag.length);
+            oMsgInput.focus();
+        }
+
+
+        function CheckFileNameMultiple() {
+            var fileName = document.getElementById("uploadFilemultiple").value
+            //debugger;
+            if (fileName == "") {
+                alert("Browse to upload a valid File with jpg/jpeg/gif/png");
+                return false;
+            }
+            else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG")
+                return true;
+            else {
+                alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png");
+                return false;
+            }
+            return true;
+        }
+
+
+
+        function Get_Serial(_option) {
+            var url = "/TrainingModules/Get_Last_Serial/";
+            $.ajax({
+                url: url,
+                data: { projectid: _option },
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    var html = ' ';
+                    $.each(data, function (key, item) {
+                        // html += '<option name= "optionselected">' + item.Text + '</option>';
+                        html += "<Label> Last Serial: " + item.Text + "</Label>";
+                    });
+
+                    $("#serial").html(html).show();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+
+
+        $('.Editor').jqte();
+
+        // settings of status
+        var jqteStatus = true;
+        $(".status").click(function () {
+            jqteStatus = jqteStatus ? false : true;
+            $('.Editor').jqte({ "status": jqteStatus })
+        });
+
+
+
+
+    </script>
+
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

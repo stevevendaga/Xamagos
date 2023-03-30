@@ -1,0 +1,29 @@
+﻿
+.sizemobile-shophead{
+        font-size:25px;
+        color:white;
+        font-family:'Gill Sans MT';
+        text-align:center;
+    }
+    .sizemobile-shopaddress{
+        font-size:14px;
+        color:white;
+        font-family:'Times New Roman';
+        text-align:center;
+    }
+@media (min-width:768px)
+{
+    .sizemobile-shophead{
+        font-size:14px;
+        color:white;
+        font-family:'Gill Sans MT';
+        text-align:center;
+    }
+
+    .sizemobile-shopaddress{
+        font-size:12px;
+        color:white;
+        font-family:'Times New Roman';
+        text-align:center;
+    }
+}

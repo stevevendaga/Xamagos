@@ -1,0 +1,384 @@
+﻿@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "Make Sales";
+}
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+ <div id="content">
+    <div class="container">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Sales</h3>
+                        </div>
+                        <input type="hidden" name="shopid" value="@ViewBag.ShopID" id="shopid" />
+                        <div class="panel-body">
+                            <ul style="font-size:13px">
+                                <li>
+                                    <i class="lni lni-dashboard"></i>
+                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    @{
+                                        int ShopID = ViewBag.ShopID;
+                                        int UserID = (int)db.Shops.Find(ShopID).UserID;
+                                        var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
+                                    }
+                                <li>
+                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                        <i class="lni lni-stats-down"></i> Sales
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                @*<li>
+                                    <a href="~/ShopCustomers/Index/?id=@ShopID">
+                                        <i class="lni lni-users"></i>
+                                        My Customers (@totalCust)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <a href="~/Orders/ShopOrders/@UserID?sid=@ShopID" id="orders">
+                                        <i class="lni lni-cart"></i>
+                                        Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <span id="ppayment" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-hourglass"></i>
+                                        Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="pdelivery" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-ban"></i>
+                                        Pending Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="delivered" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-cart-full"></i>
+                                        Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                    </span>
+
+                                </li>*@
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                @*<div class="job-alerts-item bookmarked">*@
+                <div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <span style="margin-top:0px;margin-bottom:3px;color:white;">
+                                <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                    <font style="color:white">
+                                        <i class="fas fa-money-bill"></i>
+                                        Sell to an existing customer <i class="fas fa-money-bill"></i>
+                                    </font>
+                                </a>
+                            </span>
+                        </div>
+
+                        <div class="col-md-6 col-12">
+                            <span style="margin-top:0px;margin-bottom:3px;color:white;">
+                                <a href="~/Orders/MakesalesNewCustomer/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                    <font style="color:white">
+                                        <i class="fas fa-money-bill"></i>
+                                        Sell to a new customer
+                                        <i class="fas fa-money-bill"></i>
+                                    </font>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px"> 
+                           Sell to a new customer</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @*Products with subcategory use ajax to drop the subproducts*@
+                                    <div style="display:none" id="RecordsSaved" class="alert alert-success"></div>
+                                    @*<div style="display:none" id="alert" class="alert alert-success alert-dismissable fade show" role="alert">
+                <button type="button"  class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <span id="RecordsSaved"></span>
+            </div>*@
+                                    <input type="text" onkeyup="hideproductdiv(this.value);getproduct(this.value)" placeholder="Enter product name" class="form-control" id="product" required="required" />
+                                    <input type="hidden" id="productvalue" name="productid" class="form-control" />
+                                    
+                                    <div id="displayproduct" style="border:1px solid brown;"></div>
+                                    
+                                    <div id="displaysubitem"><input type="hidden" id="subitem" /></div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="text" name="amount" id="amt" onchange="zeronotallowed(this.value)" placeholder="Enter Amount" class="form-control" required="required" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="number" min="1" name="qty" id="qty" onchange="zeronotallowed(this.value)" placeholder="Enter quantity" class="form-control" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <input type="text" style="margin-top:2px;" placeholder="Enter customer name" class="form-control" id="customer" required="required" />
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <input type="text" style="margin-top:2px;" placeholder="Enter customer's phone number" class="form-control" id="phone" required="required" />
+                                            </div>
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input style="margin-top:2px;" type="text" placeholder="[ optional ] Enter customer's email" class="form-control" id="email" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input style="margin-top:2px;" type="text" placeholder="[ optional ] Enter customer's address" class="form-control" id="address" />
+                                        </div>
+                                    </div>
+                                          
+                                           
+                                            <br />
+                                            <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loader.gif" /><br>Processing..</div>
+
+                                            <input type="submit" value="Sell Now" class="btn btn-common" onclick="checkvalues();" style="padding-bottom:4px;padding-top:4px;margin-left:9px;" />
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                    
+</div>
+                    </div>
+                </div>
+    </div>
+</div></div>
+
+<!-- End Content -->
+        <script type="text/javascript">
+            function hideproductdiv(_option) {
+                if (_option == "") {
+                    $("#displayproduct").hide() = true;
+                }
+            }
+        function getproduct(_option) {
+            var _shopid = document.getElementById("shopid").value;
+        var url = "/Orders/AutoCompleteProducts/";
+        $.ajax({
+        url: url,
+        data: { option: _option, shopid: _shopid },
+        cache: false,
+        type: "GET",
+        success: function (data) {
+        var html = '';
+                
+        $.each(data, function (key, item) {
+            html += '<button onclick="fillproductvalue(this.name);fillproduct(this.value);fillamount(this.id);" class="btn btn-primary" style="padding-bottom:2px;padding-top:2px;padding-left:2px;margin-bottom:2px;" name="' + item.ID + '"  id="' + item.Amount + '" value="' + item.PName + " -  N" + formatNumber(item.Amount) + '">' + item.PName + ' - <del class=NairaSign>N</del> ' + formatNumber(item.Amount) + '</button><br>';
+           // html += '<button id="p" onclick="fillproduct(this.value);fillproductvalue(this.id)" class="btn btn-primary" style="padding-bottom:2px;padding-top:2px;padding-left:2px;margin-bottom:2px;" value="' + item.ID + '">' + item.PName + ' - <del class=NairaSign>N</del> ' + formatNumber(item.Amount) + '</button><br>';
+        });
+       
+       $("#displayproduct").html(html).show();
+        },
+        error: function (reponse) {
+        alert("error : " + reponse);
+        }
+        });
+        }
+           </script>
+
+
+
+<script type="text/javascript">
+
+    function dateFormat(d) {
+console.log(d);
+return ((d.getMonth() + 1) + "").padStart(2, "0")
++ "/" + (d.getDate() + "").padStart(2, "0")
++ "/" + d.getFullYear();
+                                }
+</script>
+
+
+<script type="text/javascript">
+    function formatNumber(num) {
+ return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    function fillproduct(_value)
+    {
+        document.getElementById("product").value = _value;
+        document.getElementById("displayproduct").innerHTML = "";
+
+      
+    }
+
+    function fillamount(_value) {
+        document.getElementById("amt").value = _value;
+    }
+
+    function fillamount(_value) {
+        document.getElementById("amt").value = _value;
+    }
+    function fillproductvalue(_value) {
+        document.getElementById("productvalue").value = _value;
+        //GET PRODUCT SUB ITEMS
+
+        var _shopid = document.getElementById("shopid").value;
+        var url = "/Orders/Get_Subitems/";
+        $.ajax({
+            url: url,
+            data: { option: _value, shopid: _shopid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                if (data != "") {
+                    var html = '<select class="form-control" id="subitem" onchange="fillamountsubitem(this.value)">';
+
+                    $.each(data, function (key, item) {
+                        if (item.PName != "") {
+                            $("#subitem").hide();
+                            html += '<option value="' + item.ID + '">' + item.PName + " - " + formatNumber(item.Amount) + '</option>';
+                        }
+                        // html += '<button id="p" onclick="fillproduct(this.value);fillproductvalue(this.id)" class="btn btn-primary" style="padding-bottom:2px;padding-top:2px;padding-left:2px;margin-bottom:2px;" value="' + item.ID + '">' + item.PName + ' - <del class=NairaSign>N</del> ' + formatNumber(item.Amount) + '</button><br>';
+                    });
+                    html += "</select>"
+                    $("#displaysubitem").html(html).show();
+                }
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function fillamountsubitem(_value) {
+        var url = "/Orders/Get_SubitemsAmount/";
+        $.ajax({
+            url: url,
+            data: { option: _value },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    document.getElementById("amt").value = item.Amount;
+
+                });
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+
+
+    function zeronotallowed(_value) {
+        if (_value == 0) {
+            alert("Zero not allowed");
+            document.getElementById("qty").value = "";
+            return false;
+        }
+    }
+</script>
+
+     <script type="text/javascript">
+         function MakeSale() {
+             var _shopid = document.getElementById("shopid").value;
+             var _productid = document.getElementById("productvalue").value;
+             var _customer = document.getElementById("customer").value;
+             var _email = document.getElementById("email").value;
+             var _phone = document.getElementById("phone").value;
+             var _address= document.getElementById("address").value;
+             var _qty = document.getElementById("qty").value;
+             var _amt = document.getElementById("amt").value;
+             var _productSubProductID = document.getElementById("subitem").value;
+                 $(document).ajaxStart(function () {
+                     $("#wait").css("display", "block");
+                 });
+
+                 var url = "/Orders/SellNowNewCustomer/";
+                 $.ajax({
+                     url: url,
+                     data: { shopid: _shopid, productid: _productid, customer: _customer, qty: _qty, email: _email, phone: _phone, address: _address, amt: _amt, productsubproductid: _productSubProductID },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+
+                         $.each(data, function (key, item) {
+                             // html += '';
+                             html += 'Sales completed successfully';
+
+                         });
+                         $("#wait").css("display", "none");
+                         $("#alert").css("display", "block");
+                         $("#RecordsSaved").html('Sales completed successfully').show();
+                         document.getElementById("productvalue").value = "";
+                         document.getElementById("customer").value = "";
+                         document.getElementById("qty").value = "";
+                         document.getElementById("product").value = "";
+                         document.getElementById("amt").value = "";
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+        
+     </script>
+
+     <script>
+         function checkvalues()
+         {
+             var _productid = document.getElementById("productvalue").value;
+             var _customerid = document.getElementById("customer").value;
+             var _qty = document.getElementById("qty").value;
+             var _amt= document.getElementById("amt").value;
+             if(_productid=='')
+             {
+                 alert("Enter product name");
+                 return false;
+             }
+             else if (_amt == '') {
+                 alert("Enter Amount");
+                 return false;
+             }
+            
+             else if (_qty == '') {
+                 alert("Enter quantity");
+                 return false;
+             }
+             else if (_customerid == '') {
+                 alert("Enter customer name");
+                 return false;
+             }
+             else
+             {
+                 MakeSale();
+             }
+         }
+     </script>

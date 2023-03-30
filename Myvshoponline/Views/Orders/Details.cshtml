@@ -1,0 +1,381 @@
+﻿@model Myvshoponline.Order
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<style>
+    .dl-horizontal{
+        color:black;
+        padding:10px;
+    }
+    
+</style>
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+<div id="content">
+    <div class="">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">My Orders</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul style="font-size:13px">
+                                <li>
+                                    <i class="lni lni-dashboard"></i>
+                                    <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    @*<a href="#" id="orders" onclick="getcontent(this.id)">*@
+                                        <a href="~/Orders/MyOrders/@ViewBag.CompanyID" id="orders" onclick="getcontent(this.id)">
+                                            <i class="lni lni-cart"></i>
+                                            Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                        </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                @*<li>
+                                    <a href="#" id="ppayment" onclick="getcontent(this.id)">
+                                        <i class="lni lni-hourglass"></i>
+                                        Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <a href="#" id="pdelivery" onclick="getcontent(this.id)">
+                                        <i class="lni lni-ban"></i>
+                                        Awaiting Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <a href="#" id="delivered" onclick="getcontent(this.id)">
+                                        <i class="lni lni-cart-full"></i>
+                                        Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>*@
+                            </ul>
+                        </div>
+                        <input type="hidden" name="ShopcustomerID" id="userid" value="@Model.UserID" />
+                        @*<h4 style="background-color:#71BE50;color:white;opacity:0.6;padding:9px;font-size:14px">
+                            My Patronized Shops
+
+                        </h4>*@
+                        @*<ul class="list-item">
+
+                            @foreach (var item in ViewBag.Shops)
+                            {
+                                if (item.Name != null)
+                                {
+                                    <li>
+                                        <a style="color:#00B7F4;font-size:12px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
+                                            <b>  <i class="lni-briefcase" style="font-size:12px"></i> @item.Name </b>
+                                        </a>
+                                        <div class="contact-icon">
+                                            <i class="lni-map-marker"></i>
+                                            <a>@item.State.Name</a>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>*@
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                <div class="job-alerts-item bookmarked">
+                    @*<h3 style="font-size:14px">
+                        My Orders &raquo;
+                        <a href="~/Orders/PendingPayment">Pending Payments</a> |
+                        <a href="~/Orders/PendingPayment">Pending Delivery</a> |
+                        <a href="~/Orders/PendingPayment">Delivered</a>
+
+                    </h3>*@
+                    <div id="displayordercontent">
+                        <div id="printdiv">
+                            <div id="header" style="display:none">
+                                <center>
+                                    <img src="~/Images/logosquare.png" style="width:100px;height:100px" />
+
+                                    <h2 style="font-size:30px">
+                                        XAMAGOS
+                                    </h2>
+                                    <h3 style="font-size:12px">
+                                        @Model.Product.Shop.Name
+                                        <br />
+                                        @Model.Product.Shop.Email
+                                        <br />
+                                        @Model.Product.Shop.PhoneNumber
+                                    </h3>
+                                </center>
+                            </div>
+                            <h4 style="font-size:15px;color:#413fdc">
+                                Order Details for @Model.Product.Name &raquo;
+                                <font color="green"> Order ID <i class="lni lni-arrow-right"></i> #@Model.ID </font>
+                            </h4>
+                            <hr />
+
+                            <table class="dl-horizontal" style="font-size:14px;color:black">
+
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Quantity)
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.Quantity)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Rate)
+                                    </th>
+
+                                    <td>
+
+                                        @{
+                                            var r = string.Format("{0:#,0}", Model.Rate);
+                                        }
+                                        @if (Model.Product.Currency == "NGN")
+                                        {<del class="NairaSign">N</del>}
+                                        else
+                                        {<span>@Model.Product.Currency</span> }@r
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Amount")
+                                    </th>
+
+                                    <td>
+
+
+                                        @{
+                                            var am = string.Format("{0:#,0}", Model.Amount);
+                                        }
+                                       @if (Model.Product.Currency == "NGN")
+                                       {<del class="NairaSign">N</del>}
+                                       else
+                                       {<span>@Model.Product.Currency</span> }@am
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Date Ordered")
+                                    </th>
+
+                                    <td>
+                                        @{
+                                            var date = string.Format("{0:MMM dd, yyyy}", Model.DateOrdered);
+                                        }
+                                        @date
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Shop")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.Product.Shop.Name)
+                                    </td>
+                                <tr>
+                                <tr>
+                                    @*<th>
+                                        @Html.DisplayName("Store")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.Product.Shop.User.CompanyName)
+                                    </td>*@
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Payment Status")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.PaymentStatu.Status)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Payment Reference")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.PaymentRef)
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <th>
+                                        @Html.DisplayName("Payment Channel")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.PaymentChannel)
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Date Paid")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.DatePaid)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Negotiated")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.Negotiated)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Delivery Address")
+                                    </th>
+
+                                    <td>
+                                        @{ var shippinginfo = db.ShippingInformations.Where(a => a.OrderID == Model.ID).Select(a => a.Address).FirstOrDefault() + " , " + db.ShippingInformations.Where(a => a.OrderID == Model.ID).Select(a => a.City).FirstOrDefault() + " - " + db.ShippingInformations.Where(a => a.OrderID == Model.ID).Select(a => a.State.Name).FirstOrDefault() +" State "+ db.ShippingInformations.Where(a => a.OrderID == Model.ID).Select(a => a.CountryRegion.Country).FirstOrDefault();
+                                        
+                                        }
+                                        @shippinginfo
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Delivery Notes")
+                                    </th>
+
+                                    <td>
+                                        @{ var notes = db.ShippingInformations.Where(a => a.OrderID == Model.ID).Select(a => a.DeliveryNotes).FirstOrDefault();
+
+                                        }
+                                        @notes
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Delivery Status")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.DeliveryStatus)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Date Delivered")
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.DateDelivered)
+                                    </td>
+                                </tr>
+                               
+                            </table>
+                        </div>
+                        <center>
+                            
+                            <button type="submit" value="Print" class="btn btn-success" onclick="printDiv('printdiv')">Print</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+<script language="javascript" type="text/javascript">
+        function printDiv(divID) {
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements + "</body>";
+        var y = document.getElementById("header");
+        if (y.style.display === "none") {
+            y.style.display = "block";
+        } else {
+            y.style.display = "none";
+        }
+
+        //Print Page
+        window.print();
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        }
+
+</script>
+
+
+
+<script type="text/javascript">
+    function getcontent(_id) {
+        var _userid = document.getElementById("userid").value;
+        var url = "/Orders/Get_MyOrders/";
+        $.ajax({
+            url: url,
+            data: { option: _id, userid: _userid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<table class="table" style="font-size:12px;color:black"><tr><th>Product Name</th><th>Quantity</th><th>Rate</th><th>Amount</th><th>Date Ordered</th>';
+                $.each(data, function (key, item) {
+                    html += '<tr>';
+                    if (item.SubProductID != 0) {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+
+                    } else {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                    }
+                    html+='</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
+                });
+                 
+               html += "</table>"
+
+               $("#displayordercontent").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    </script>
+<script>
+
+    function dateFormat(d) {
+        console.log(d);
+        return ((d.getMonth() + 1) + "").padStart(2, "0")
+            + "/" + (d.getDate() + "").padStart(2, "0")
+            + "/" + d.getFullYear();
+    }
+</script>
+
+<script type="text/javascript">
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+</script>

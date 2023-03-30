@@ -1,0 +1,297 @@
+﻿@model IEnumerable<Myvshoponline.Application>
+
+@{
+    ViewBag.Title = "Index";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int ApplicationClosed =(int) db.Settings.Select(s => s.ApplicationClosed).FirstOrDefault();
+    int CbtOpenClosed = (int)db.Settings.Select(s => s.OpenandCloseCBTTest).FirstOrDefault();
+}
+@using Myvshoponline.Controllers;
+<div id="content">
+    <div class="container">
+        <span id="enableapplication">
+            @if (ApplicationClosed == 1)
+            {
+                <button type="button" class="badge-success" onclick="disableapplication()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Disable Application</button>
+            }
+            else
+            {
+                <button type="button" class="badge-danger" onclick="enableapplication()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Enable Application</button>
+            }
+        </span>
+
+
+        <span id="enablecbttest">
+            @if (CbtOpenClosed ==1)
+            {
+                <button type="button" class="badge-success" onclick="disablecbttest()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Disable CBT Test</button>
+            }
+            else
+            {
+                <button type="button" class="badge-danger" onclick="enablecbttest()" style="font-size:14px;cursor:pointer"><i class="lni lni-pencil"></i> Click to Enable CBT Test</button>
+            }
+        </span>
+    <span>
+        <a href="~/Applications/SendMailtoApplicants">Send Mail to Applicants</a> | 
+    </span>
+
+        <span>
+            <a href="~/Applications/SendMailtoApplicantsAptitude">Send Aptitude Msg to Applicants</a>
+        </span>
+
+    <br />
+        <div class="row">
+            @foreach (var item in db.Positions.ToList())
+            {
+                <div class="col-md-3">
+       @Html.Raw(HttpUtility.HtmlDecode(item.Position1)) [@db.Applications.Where(s => s.PositionID == item.ID).Count() ]
+                </div>
+
+            }
+        </div>
+    <br />
+    <div class="row">
+        <h3 style="font-size:14px;">Total Applicants [@db.Applications.Count()]</h3>
+    </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-md-2">
+                <br />
+                <h2 style="font-size:14px;">List of Applicants [@Model.Count()]</h2>
+            </div>
+            <div class="col-md-5">
+                <form method="get" action="~/Applications/Index">
+                    <div class="input-group" style="margin-top:0px;">
+
+                        <input type="text" name="search" class="form-control" style="border:1px solid blue;" required="required" placeholder="Position,Name,Phone,Email,State of residence,Score">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit" name="submit" style="width:20px;font-size:15px;">
+                                <i class="lni-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+<br />
+        </div></div>
+        <table id="zero_config" class="table table-responsive" style="color:black;font-size:13px;">
+            <thead>
+
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OtherNames)
+                </th>
+                <th>
+                    @Html.DisplayName("Phone")
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayName("Address")
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LGAResidence)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+
+                <th>
+                    @Html.DisplayName("Date")
+                </th>
+                <th>
+                    @Html.DisplayName("Position")
+                </th>
+                <th>
+                    @Html.DisplayName("Sex")
+                </th>
+                <th>
+                    @Html.DisplayName("State of Origin")
+                </th>
+                <th>
+                    @Html.DisplayName("State of Residence")
+                </th>
+                <th>Scores</th>
+                <th></th>
+            </tr>
+                </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OtherNames)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LGAResidence)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+
+                    <td>
+                        @string.Format("{0:MMM dd, yyyy}", item.DateSubmitted)
+                    </td>
+                    <td>
+                        @Html.Raw(HttpUtility.HtmlDecode(item.Position.Position1))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sex.Sex1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State1.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AptitudeTestScore)
+                    </td>
+                    @*<td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                        </td>*@
+                </tr>
+            }
+</tbody>
+            <tfoot>
+                <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherNames)
+            </th>
+            <th>
+                @Html.DisplayName("Phone")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayName("Address")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LGAResidence)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+
+            <th>
+                @Html.DisplayName("Date")
+            </th>
+            <th>
+                @Html.DisplayName("Position")
+            </th>
+            <th>
+                @Html.DisplayName("Sex")
+            </th>
+            <th>
+                @Html.DisplayName("State of Origin")
+            </th>
+            <th>
+                @Html.DisplayName("State of Residence")
+            </th>
+            <th>Scores</th>
+            <th></th></tr>
+            </tfoot>
+        </table>
+    </div></div>
+
+
+<script type="text/javascript">
+    function enableapplication() {
+        var url = "/Applications/Enableapplication/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer" title="Click to disable"><i class="lni lni-pencil"></i><a onclick="disableapplication()">Application Enabled</a></span>';
+               $("#enableapplication").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    function disableapplication() {
+        var url = "/Applications/Disableapplication/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer"  title="Click to enable"><i class="lni lni-pencil"></i><a onclick="enableapplication()">Application Closed</a></span>';
+                $("#enableapplication").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    function enablecbttest() {
+        var url = "/Applications/enablecbttest/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer" title="Click to disable"><i class="lni lni-pencil"></i><a onclick="disablecbttest()">CBT Test Enabled</a></span>';
+                $("#enablecbttest").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    function disablecbttest() {
+        var url = "/Applications/disablecbttest/";
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:14px;cursor:pointer"  title="Click to enable"><i class="lni lni-pencil"></i><a onclick="enablecbttest()">CBT Test Closed</a></span>';
+                $("#enablecbttest").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+</script>

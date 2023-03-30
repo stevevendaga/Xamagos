@@ -1,0 +1,2786 @@
+﻿
+<style>
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+</style>
+@*<body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed"></body>*@
+
+    <input type="hidden" value="@Model.Name" id="currentshopname" />
+
+    <!--GEOCODING-->
+    <script defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+    </script>
+    <script>
+    "use strict";
+    var shopname = document.getElementById("currentshopname").value;
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            //zoom: 8,
+            zoom: 8,
+            center: {
+                lat: 9.0820,
+                lng: 8.6753
+            }
+        });
+        const geocoder = new google.maps.Geocoder();
+        const infowindow = new google.maps.InfoWindow();
+        geocodeAddress(geocoder, map, infowindow);
+    }
+    function geocodeAddress(geocoder, map, infowindow) {
+        const address = document.getElementById("address").value;
+        geocoder.geocode(
+          {
+              address: address
+          },
+          (results, status) => {
+              if (status === "OK") {
+                  map.setCenter(results[0].geometry.location);
+                  const marker = new google.maps.Marker({
+                      map: map,
+                      position: results[0].geometry.location,
+                  });
+                  infowindow.setContent(shopname + " - " + results[0].formatted_address);
+                  infowindow.open(map, marker);
+              } else {
+                  alert(
+                    "Location Not Found: " + status
+                  );
+              }
+          }
+        );
+    }
+    </script>
+    <!-- END GEOCODING-->
+
+
+    @model Myvshoponline.Shop
+
+    @using Myvshoponline.Controllers;
+    @{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+
+    @{
+        ViewBag.Title = Model.Name;
+    }
+
+
+
+
+    @{
+        //GET price for popular product a day
+        decimal popularstorepriceperday = Convert.ToDecimal(db.PopularStorePricings.Select(s => s.Amount).First());
+        int UserID = (int)Model.UserID;
+        string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+        int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+        int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+
+
+        int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+        int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+        int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+        int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+        int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+        int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+        int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+        DateTime lauchd = new DateTime(lYear, lmonth, lday);
+        DateTime prevd = new DateTime(pYear, pmonth, pday);
+        TimeSpan diff = lauchd.Subtract(prevd);
+        ViewBag.diff = diff.Days;
+        ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+        ViewBag.Ndays = db.Users.Find(UserID).NDays;
+        Getdata mydata = new Getdata();
+        //PHONE OTP HERE
+        string RegisterOTP_Numeric = Convert.ToString(mydata.Generate_OTP_Numeric());
+        // Session["OTP_ShopPhoneVerifyOTP"] = RegisterOTP_Numeric;
+        //=============
+
+
+
+
+
+        //if (ViewBag.diff > ViewBag.FixedDays)
+        //{
+        //    ViewBag.Expired = "Your plan has expired!";
+        //}
+        //else
+        //{
+        //    var r = db.Set<User>().Find(UserID);
+        //    r.NDays = ViewBag.diff;
+        //    r.LaunchDate = DateTime.Now;
+        //    r.LaunchYear = DateTime.Now.Year;
+        //    r.LaunchMonth = DateTime.Now.Month;
+        //    r.LaunchDay = DateTime.Now.Day;
+        //    db.SaveChanges();
+        //}
+    }
+
+    <link href="~/Content/Panel.css" rel="stylesheet" />
+
+    <div class="modal zoomInRight" id="myModalPromote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%;">
+        @*<div class="modal-dialog modal-dialog-centered">*@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:14px">Promote <font color="blue"> @Model.Name</font> to get it Listed as Popular Store and stand a chance to get more patronage.</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body" id="promotebody">
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <h5 style="font-size:14px;">Duration</h5>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-12" style="color:black">
+                        Choose when this promotion will end (Days)
+                        <br /><br />
+                        <div class="row">
+
+                            <div class="col-md-5" style="vertical-align:top">
+                                <div class="row" style="padding-left:10px;">
+
+                                    <a name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreament(); getdate()">&minus;</a>
+                                    <input type="text" min="1" id="noofdayspromote" value="1" name="quantity" style="width:70px;height:35px;vertical-align:central;text-align:center;font-weight:bold;font-size:14px" onkeyup="updateforndays(this.value); getdate()" />
+                                    <a style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament(); getdate()">+</a>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+
+                                <span>End Date:</span>
+                                <div>
+                                    @*<input id="txtDate" type="date"/>*@
+                                    @*<p>
+                                            Date:
+                                            <input id="txtDate" type="date" />
+                                        </p>
+                                        <p>
+                                            <input type="button" onclick="getdate()" value="Fill Follow Date" />
+                                        </p>
+                                        <p>
+                                            Follow Date:
+                                            <input id="follow_Date" type="text" />
+                                        </p>*@
+                                    <strong id="displayenddate">
+
+                                    </strong>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <script>
+                function getdate() {
+                    var months = new Array(12);
+                    months[0] = "January";
+                    months[1] = "February";
+                    months[2] = "March";
+                    months[3] = "April";
+                    months[4] = "May";
+                    months[5] = "June";
+                    months[6] = "July";
+                    months[7] = "August";
+                    months[8] = "September";
+                    months[9] = "October";
+                    months[10] = "November";
+                    months[11] = "December";
+                    //var tt = document.getElementById('txtDate').value;
+                    var nday = parseInt(document.getElementById("noofdayspromote").value);
+                    var date = new Date();
+                    var newdate = new Date(date);
+
+                    newdate.setDate(newdate.getDate() + nday);
+
+                    var dd = newdate.getDate();
+                    var mm = newdate.getMonth();
+                    var y = newdate.getFullYear();
+
+                    var someFormattedDate = months[mm] + ' ' + dd + ', ' + y;
+                    document.getElementById('displayenddate').innerHTML = someFormattedDate;
+                }
+                </script>
+
+
+                <div class="form-group">
+
+                    <div class="col-md-10" style="color:black">
+                        <b> Payment Summary</b> <hr style="margin-top:3px;" />
+                        <span class="badge badge-info" style="padding:6px;"> Your promotion will run for <span id="forndays">1</span> day(s). </span>
+                        <div id="paymentsummary" style="background-color:#F0F2F5;padding:10px;border-radius:15px;">
+                            Total budget <br />
+                            NGN @string.Format("{0:#,0}", popularstorepriceperday) a day x <span id="timesndays">1</span> days =NGN <b id="totalamt">@popularstorepriceperday</b>
+                            <input type="hidden" id="PromoteAmount" />
+                            <input type="hidden" id="shopname" value="@Model.Name" />
+                            <input type="hidden" id="shopemail" value="@Model.Email" />
+                            <input type="hidden" id="phone" value="@Model.PhoneNumber" />
+                            <input type="hidden" id="popularpriceperday" value="@popularstorepriceperday" />
+                        </div>
+                    </div>
+                </div>
+
+                <form>
+                    <script src="https://js.paystack.co/v1/inline.js"></script>
+                    <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">Promote Now@*<span id="buttonamount"></span>*@ <i class="lni lni-arrow-right-circle"></i> <span id="totalamtpaynow"></span></button>
+                </form>
+            </div>
+            <button type="button" class="btn btn-common" id="okbtn" data-dismiss="modal" style="display:none">CANCEL</button>
+        </div>
+
+        @*</div>*@
+    </div>
+
+    <!--MODAL FOR SOCIAL MEDIA-->
+
+    <div class="modal" id="myModalSocialMedia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="position:fixed center;width:100%;">
+        @*<div class="modal-dialog modal-dialog-centered">*@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:13px">Advertize your products on social media channels(Facebook,LinkedIn,Twitter) for <font color="blue"> @Model.Name</font> with our API</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body" id="promotebody">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5 style="font-size:12px;">Choose Social Media Channel</h5>
+                                @Html.DropDownList("SocialMediaChannel", null, "-- Choose Social Media Channel --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "socialmediachannel", @onchange = "GetChannelPrice(this.value);" })
+                                <input id="channelprice" type="hidden">
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                What do you want to promote? <br />
+                                <span style="color:black">
+                                    <input type="radio" id="option" value="store" name="radio" onclick="displayProduct()" /> Online Store
+                                    <input type="radio" name="radio" id="optionproduct" value="product" onclick="displayProducts()" /> Product
+                                </span>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div id="showproduct" style="display:none;">
+                                    @Html.DropDownList("ShopProducts", null, "-- Select Product --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "myproduct", @onchange = "getProductImage(this.value)" })
+                                </div>
+                                <div id="displayproductimage"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Define your Audience</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h5 style="font-size:12px;">Country</h5>
+                                        <input type="text" id="country" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5 style="font-size:12px;">Locations</h5>
+                                        <input type="text" id="locations" class="form-control" placeholder="States, Cities" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5 style="font-size:12px;">Define who you want to see your ads</h5>
+                                        <input type="text" id="audience" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="padding-top:1px;margin:0px;">
+                    <div class="col-md-10">
+                        <h5 style="font-size:14px;">Duration</h5>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="color:black">
+                        Choose when this promotion will end (Days)
+                        <br /><br />
+                        <div class="row">
+
+                            <div class="col-md-5" style="vertical-align:top">
+                                <div class="row" style="padding-left:10px;">
+                                    <a name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreamentsocialmedia(); getdatesocialmedia()">&minus;</a>
+                                    <input type="text" min="1" id="noofdayssocialmedia" value="1" style="width:70px;height:35px;vertical-align:central;text-align:center;font-weight:bold;font-size:14px" onkeyup="updateforndayssocialmedia(this.value); getdatesocialmedia()" />
+                                    <a style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increamentsocialmedia(); getdatesocialmedia()">+</a>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <span>End Date:</span>
+                                <div>
+                                    <strong id="displayenddatesocialmedia">
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+
+                function getdatesocialmedia() {
+                    var months = new Array(12);
+                    months[0] = "January";
+                    months[1] = "February";
+                    months[2] = "March";
+                    months[3] = "April";
+                    months[4] = "May";
+                    months[5] = "June";
+                    months[6] = "July";
+                    months[7] = "August";
+                    months[8] = "September";
+                    months[9] = "October";
+                    months[10] = "November";
+                    months[11] = "December";
+                    //var tt = document.getElementById('txtDate').value;
+                    var ndaysocial = parseInt(document.getElementById("noofdayssocialmedia").value);
+                    var date = new Date();
+                    var newdate = new Date(date);
+
+                    newdate.setDate(newdate.getDate() + ndaysocial);
+
+                    var dd = newdate.getDate();
+                    var mm = newdate.getMonth();
+                    var y = newdate.getFullYear();
+
+                    var someFormattedDate = months[mm] + ' ' + dd + ', ' + y;
+                    document.getElementById('displayenddatesocialmedia').innerHTML = someFormattedDate;
+                }
+                </script>
+
+
+                <div class="form-group">
+
+                    <div class="col-md-10" style="color:black">
+                        <b> Payment Summary</b> <hr style="margin-top:3px;" />
+                        <span class="badge badge-info" style="padding:6px;"> Your promotion will run for <span id="forndayssocialmedia">1</span> day(s). </span>
+                        <div id="paymentsummarysocialmedia" style="background-color:#F0F2F5;padding:10px;border-radius:15px;">
+                            Total budget for <span id="timesndayssocialmedia">1</span> day(s) =NGN <b id="totalamtsocialmedia"></b>
+                            <input type="hidden" id="PromoteAmountsocialmedia" />
+                            <input type="hidden" id="shopname" value="@Model.Name" />
+                            <input type="hidden" id="shopemail" value="@Model.Email" />
+                            <input type="hidden" id="phone" value="@Model.PhoneNumber" />
+                        </div>
+                    </div>
+                </div>
+
+                <form>
+                    <script src="https://js.paystack.co/v1/inline.js"></script>
+                    <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystacksocialmedia()">Promote Now@*<span id="buttonamount"></span>*@ <i class="lni lni-arrow-right-circle"></i> <span id="totalamtpaynowsocialmedia"></span></button>
+                </form>
+            </div>
+
+            <button type="button" class="btn btn-common" id="okbtn" data-dismiss="modal" style="display:none">CANCEL</button>
+        </div>
+
+        @*</div>*@
+    </div>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0&appId=431464983901995&autoLogAppEvents=1"></script>
+
+
+
+    <div id="content" style="margin-top:-32px">
+
+        @*<h5 style="font-size:12px" class="h5"><a href="~/Users/Dashboard/@Model.UserID" title="Click here to go to @Model.User.CompanyName profile"><i class="lni-user"></i> @Model.User.CompanyName.ToUpper() </a> &raquo;<b style="color:black"> @Model.Name.ToUpper()</b></h5>*@
+
+
+        <div class="panel">
+            <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
+                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@Model.Name </h1>
+                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;"><i class="lni-map-marker"></i> @Model.Address</h1>
+            </div>
+            @*<div class="panel-body">
+                </div>*@
+        </div>
+
+
+
+        <input type="hidden" value="@Model.User.CompanyName" id="companyname" />
+        <!-- Listings Section Start -->
+        <section id="job-listings" class="section" style="padding:10px">
+            <div class="">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-6 col-xs-12">
+                                <div class="right-sideabr">
+                                    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+                                    {
+
+                                        <script type="text/javascript">
+                                                function increament() {
+                                                    var currentval = parseInt(document.getElementById("noofdayspromote").value);
+                                                    currentval += 1;
+                                                    document.getElementById("noofdayspromote").value = currentval;
+
+                                                    document.getElementById("forndays").innerHTML = currentval;
+                                                    document.getElementById("timesndays").innerHTML = currentval;
+                                                    document.getElementById("totalamt").innerHTML = formatNumber(parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value);
+                                                    document.getElementById("totalamtpaynow").innerHTML = "NGN " + document.getElementById("totalamt").innerHTML;
+                                                    document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value;
+                                                    getdate();
+                                                }
+                                                function decreament() {
+                                                    var currentval = document.getElementById("noofdayspromote").value;
+                                                    if (currentval != 1) {
+                                                        document.getElementById("noofdayspromote").value = currentval - 1;
+
+                                                        document.getElementById("forndays").innerHTML = currentval - 1;
+                                                        document.getElementById("timesndays").innerHTML = currentval - 1;
+                                                        document.getElementById("totalamt").innerHTML = formatNumber(parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value);
+                                                        document.getElementById("totalamtpaynow").innerHTML = "NGN " + document.getElementById("totalamt").innerHTML;
+                                                        document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value;
+                                                        getdate();
+
+                                                    }
+                                                }
+                                                function updateforndays(ndays) {
+                                                    document.getElementById("forndays").innerHTML = ndays;
+                                                    document.getElementById("timesndays").innerHTML = ndays;
+
+                                                    document.getElementById("totalamt").innerHTML = formatNumber(parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value);
+                                                    document.getElementById("totalamtpaynow").innerHTML = "NGN " + document.getElementById("totalamt").innerHTML;
+                                                    document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value;
+                                                    getdate();
+                                                }
+
+
+                                        </script>
+
+                                            <script>
+                                                function payWithPaystack() {
+                                                    var actualamt = document.getElementById("PromoteAmount").value;
+                                                    var myamt = document.getElementById("PromoteAmount").value * 100;
+                                                    var nofdays = document.getElementById("noofdayspromote").value;
+                                                    var shopname = document.getElementById("shopname").value;
+                                                    var shopemail = document.getElementById("shopemail").value;
+                                                    var ShopID = document.getElementById("getshopid").value;
+                                                    var enddate = document.getElementById("displayenddate").innerHTML;
+                                                    var phone = document.getElementById("phone").value;
+                                                    if (nofdays == 0) {
+                                                        alert("Please days cannot be zero");
+                                                        return false;
+                                                    }
+
+                                                    else {
+                                                        var handler = PaystackPop.setup({
+                                                            key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                                                            // key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+                                                            email: shopemail,
+                                                            amount: myamt,
+                                                            ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                                            firstname: shopname,
+                                                            number: "",
+                                                            // label: "Optional string that replaces customer email"
+                                                            label: shopname,
+                                                            metadata: {
+                                                                custom_fields: [
+                                                                           {
+                                                                               display_name: "Mobile Number",
+                                                                               variable_name: "mobile_number",
+                                                                               value: phone
+                                                                           }
+                                                                ]
+                                                            },
+                                                            callback: function (response) {
+                                                                var url = "/Shops/Update_Payment_Promote_Popular_Store/";
+                                                                $.ajax({
+                                                                    url: url,
+                                                                    data: { refno: response.reference, amount: actualamt, shopname: shopname, noofdays: nofdays, enddate: enddate, ShopID: ShopID },
+                                                                    cache: false,
+                                                                    type: "POST",
+                                                                })
+                                                                //  alert('Payment made succesfully ' + shopname + '\n Your trasaction reference: ' + response.reference);
+                                                                window.location.href = "/PopularStores/Index/?sid=" + ShopID;
+                                                                //$("#promotebody").html("<span class='alert alert-success'>Payment made succesfully paid for' + shopname<br><br></span> <br>");
+                                                                //$("#okbtn").css("display", "block");
+                                                            },
+                                                            onClose: function () {
+                                                                alert('Transaction aborted by user. Try again');
+                                                            }
+                                                        });
+                                                        handler.openIframe();
+                                                    }
+                                                }
+                                            </script>
+
+
+
+
+
+                                            <script type="text/javascript">
+                                                function increamentsocialmedia() {
+                                                    var currentval = parseInt(document.getElementById("noofdayssocialmedia").value);
+                                                    currentval += 1;
+                                                    document.getElementById("noofdayssocialmedia").value = currentval;
+
+                                                    document.getElementById("forndayssocialmedia").innerHTML = currentval;
+                                                    document.getElementById("timesndayssocialmedia").innerHTML = currentval;
+                                                    document.getElementById("totalamtsocialmedia").innerHTML = formatNumber(parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value);
+                                                    document.getElementById("totalamtpaynowsocialmedia").innerHTML = "NGN " + document.getElementById("totalamtsocialmedia").innerHTML;
+                                                    document.getElementById("PromoteAmountsocialmedia").value = parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value;
+                                                    getdatesocialmedia();
+                                                }
+                                                function decreamentsocialmedia() {
+                                                    var currentval = document.getElementById("noofdayssocialmedia").value;
+                                                    if (currentval != 1) {
+                                                        document.getElementById("noofdayssocialmedia").value = currentval - 1;
+
+                                                        document.getElementById("forndayssocialmedia").innerHTML = currentval - 1;
+                                                        document.getElementById("timesndayssocialmedia").innerHTML = currentval - 1;
+                                                        document.getElementById("totalamtsocialmedia").innerHTML = formatNumber(parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value);
+                                                        document.getElementById("totalamtpaynowsocialmedia").innerHTML = "NGN " + document.getElementById("totalamtsocialmedia").innerHTML;
+                                                        document.getElementById("PromoteAmountsocialmedia").value = parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value;
+                                                        getdatesocialmedia();
+
+                                                    }
+                                                }
+                                                function updateforndayssocialmedia(ndays) {
+                                                    document.getElementById("forndayssocialmedia").innerHTML = ndays;
+                                                    document.getElementById("timesndayssocialmedia").innerHTML = ndays;
+
+                                                    document.getElementById("totalamtsocialmedia").innerHTML = formatNumber(parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value);
+                                                    document.getElementById("totalamtpaynowsocialmedia").innerHTML = "NGN " + document.getElementById("totalamtsocialmedia").innerHTML;
+                                                    document.getElementById("PromoteAmountsocialmedia").value = parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value;
+                                                    getdatesocialmedia();
+
+
+                                                }
+
+                                            </script>
+
+                                            <script>
+                                                function payWithPaystacksocialmedia() {
+                                                    var actualamt = document.getElementById("PromoteAmountsocialmedia").value;
+                                                    var myamt = document.getElementById("PromoteAmountsocialmedia").value * 100;
+                                                    var nofdays = document.getElementById("noofdayssocialmedia").value;
+                                                    var shopname = document.getElementById("shopname").value;
+                                                    var shopemail = document.getElementById("shopemail").value;
+                                                    var ShopID = document.getElementById("getshopid").value;
+                                                    var enddate = document.getElementById("displayenddatesocialmedia").innerHTML;
+                                                    var phone = document.getElementById("phone").value;
+                                                    var socialmediachannelID = document.getElementById("socialmediachannel").value;
+                                                    var productid = document.getElementById("myproduct").value;
+                                                    var country = document.getElementById("country").value;
+                                                    var locations = document.getElementById("locations").value;
+                                                    var audience = document.getElementById("audience").value;
+
+                                                    if (nofdays == 0) {
+                                                        alert("Please days cannot be zero");
+                                                        return false;
+                                                    }
+
+                                                    else {
+                                                        var handler = PaystackPop.setup({
+                                                            key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                                                            // key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+                                                            email: shopemail,
+                                                            amount: myamt,
+                                                            ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                                            firstname: shopname,
+                                                            number: "",
+                                                            // label: "Optional string that replaces customer email"
+                                                            label: shopname,
+                                                            metadata: {
+                                                                custom_fields: [
+                                                                           {
+                                                                               display_name: "Mobile Number",
+                                                                               variable_name: "mobile_number",
+                                                                               value: phone
+                                                                           }
+                                                                ]
+                                                            },
+                                                            callback: function (response) {
+                                                                var url = "/Shops/Update_Payment_Promote_Social_Media/";
+                                                                $.ajax({
+                                                                    url: url,
+                                                                    data: { refno: response.reference, amount: actualamt, shopname: shopname, noofdays: nofdays, enddate: enddate, ShopID: ShopID, socialmediachannelID: socialmediachannelID, country: country, locations: locations, audience: audience, productid: productid },
+                                                                    cache: false,
+                                                                    type: "POST",
+                                                                })
+                                                                //  alert('Payment made succesfully ' + shopname + '\n Your trasaction reference: ' + response.reference);
+                                                                window.location.href = "/PopularStores/Index/?sid=" + ShopID;
+                                                                //$("#promotebody").html("<span class='alert alert-success'>Payment made succesfully paid for' + shopname<br><br></span> <br>");
+                                                                //$("#okbtn").css("display", "block");
+                                                            },
+                                                            onClose: function () {
+                                                                alert('Transaction aborted by user. Try again');
+                                                            }
+                                                        });
+                                                        handler.openIframe();
+                                                    }
+                                                }
+                                            </script>
+                                    }
+
+                                    @{
+                                        var totalCust = db.CustomerShops.Where(s => s.ShopID == Model.ID).Count();
+                                        var totalProducts = db.Products.Where(s => s.ShopID == Model.ID).Count();
+                                        var totaldeliverylocations = db.DeliveryLocations.Where(s => s.ShopID == Model.ID).Count();
+                                    }
+                                    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+                                    {
+
+                                        @*<h4 style="padding:3px;">
+                                                <ul class="list-item">
+
+                                                    <li style="background-color:#00B7F4;opacity:0.5">
+                                                        <a class="active" href="~/ShopCustomers/Index/?id=@Model.ID" style="color:white">
+                                                            My Customers (@totalCust)</a></li></ul>
+                                            </h4>*@
+                                        <div class="modal zoomInRight" id="payforactivation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%;">
+                                            @*<div class="modal-dialog modal-dialog-centered">*@
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="padding-bottom:0px;margin-bottom:0px">
+                                                    <h5 class="modal-title" style="font-size:14px">Store Activation</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" style="color:red">×</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @{
+                                                        int StateID = Convert.ToInt32(Model.StateID);
+                                                        decimal amount_storeactivation = (db.PaymentAccountActivations.Where(s => s.StateID == StateID).Select(s => s.Amount).FirstOrDefault() == null ? 0 : (decimal)db.PaymentAccountActivations.Where(s => s.StateID == StateID).Select(s => s.Amount).FirstOrDefault());
+                                                    }
+                                                    <div id="msg_email_phone_verification" style="color:red"></div>
+                                                    <!-- ======= Pricing Section ======= -->
+                                                    <h4 style="color:black;font-size:14px;font-weight:bold;text-align:center;margin-top:0px;padding-top:2px;padding-bottom:2px;" class="alert alert-info">One-Time Payment</h4>
+                                                    <p style="color:black;padding-bottom:0px;margin-bottom:0px;">Your one-time payment fee covers the following services <i class="glyphicon glyphicon-hand-down"></i></p>
+                                                    <ul style="text-align:left;margin-top:0px;">
+                                                        <li>
+                                                            <i class="glyphicon glyphicon-hand-right"></i> Store Activation
+                                                        </li>
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> SMS Alert on all Transactions</li>
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> Payment Gateway Integration</li>
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> 5,000+ Products Upload</li>
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> SEO</li>
+                                                        @*<li><i class="glyphicon glyphicon-hand-right"></i> Delivery Registration</li>*@
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> Sales Module</li>
+                                                        <li><i class="glyphicon glyphicon-hand-right"></i> Google Map Geocoding</li>
+                                                    </ul>
+                                                    <h4 style="font-size:14px;font-weight:bold;padding-top:3px;padding-bottom:3px;">
+                                                        @{
+                                                            var ams = string.Format("{0:#,0}", amount_storeactivation);
+                                                        }
+                                                        One-Time Fee: ₦@ams
+                                                    </h4><center>
+
+                                                        <div class="btn-wrap">
+                                                            @*<button type="button" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;" onclick="checkEmailPhoneVerifyStatus()">Make Payment <i class="lni lni-check-mark-circle"></i></button>*@
+
+                                                            <input type="hidden" id="amount_store_activation" value="@amount_storeactivation" />
+                                                            <form>
+                                                                <input type="hidden" id="amount_store_activation" value="@amount_storeactivation" />
+                                                                <div id="makepayment_store_activation" style="display:none"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
+                                                                <script src="https://js.paystack.co/v1/inline.js"></script>
+                                                                <button type="button" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;" onclick="checkEmailPhoneVerifyStatus()">Make Payment <i class="lni lni-check-mark-circle"></i></button>
+                                                            </form>
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                            <div class="modal zoomInRight" id="verifyphone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%;">
+                                                @*<div class="modal-dialog modal-dialog-centered">*@
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="padding-bottom:0px;margin-bottom:0px">
+                                                        <h5 class="modal-title" style="font-size:14px">Verify Phone Number</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" style="color:red">×</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="get" action="~/Shops/Send_Phone_Verify_OTP_controller">
+                                                            <input type="hidden" name="ShopID" value="@Model.ID" />
+                                                            <input type="hidden" name="Phone" value="@Model.PhoneNumber" />
+                                                            Send Code to @Model.PhoneNumber
+                                                            <button type="submit" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;">Send OTP<i class="lni lni-check-mark-circle"></i></button>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <center id="activate_store">
+                                                @{int Payment_Closed = (int)db.Settings.Select(s => s.Payment_Account_Activation).FirstOrDefault();
+
+                                                    if (Payment_Closed == 1)
+                                                    {
+                                                        if (paymentstatus == 0)
+                                                        {
+
+                                                            <button type="button" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;" data-toggle="modal" data-target="#payforactivation" onclick="clearTextBox();">Activate Store<i class="fa fas fa-check-double"></i><span id="totalamtpay"></span></button>
+                                                            <hr />
+                                                        }
+                                                    }
+                                                }
+                                            </center>
+                                            <div class="panel panel-success" style="margin-top:-31px">
+                                                <div class="panel-heading" style="background-color:#0BACE1">
+                                                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Services</h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-5 col-lg-5">
+                                                            <div id="onemailverified" style="display:none">
+                                                                <span class="badge badge-primary">
+                                                                    Email Verified
+                                                                </span>
+                                                                <span class="badge">
+                                                                    <img src="~/Images/verified.png" style="width:20px;height:20px;" />
+                                                                </span>
+                                                            </div>
+                                                            <div id="email">
+                                                                @if (Model.EmailVerify == null)
+                                                                {
+                                                                    <span class="btn btn-common" onclick="Show_verifyemailbox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:2px;padding-right:2px;font-size:10px;">
+                                                                        Verify Email
+                                                                    </span>
+                                                                    <span class="badge">
+                                                                        <img src="~/Images/notverified.png" style="width:15px;height:15px;cursor:pointer;display:none;" onclick="Close_verifyemailbox()" id="emailclose" />
+                                                                    </span>
+                                                                    <br />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge badge-primary">
+                                                                        Email Verified
+                                                                    </span>
+                                                                    <span class="badge">
+                                                                        <img src="~/Images/verified.png" style="width:20px;height:20px;" />
+                                                                    </span>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <!--Email verification box-->
+                                                        <div id="verifyemailbox" style="display:none;">
+                                                            <div class="alert alert-success" style="font-size:13px;background-color:white;border-color:#0d9bc8">
+
+                                                                <div id="msgsendcode">
+                                                                    <a href="#" style="color:blue;" onclick="return Send_EmailVerifyOTP()">Send Code</a>
+
+                                                                </div>
+                                                                <div id="msg"></div>
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" class="form-control" style="border-color:#33C6F6" id="emailotp_shop" placeholder="Enter Verification code" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-common" type="button" onclick="return VerifyEmailOTP();">
+                                                                            <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <a href="#" style="color:blue;display:none" id="rsndemailotp" onclick="return Resend_EmailVerifyOTP()">Didn't get code? Resend</a>
+                                                                <div id="resendemailotp" style="display:none"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
+                                                                <input type="hidden" id="shopid" value="@Model.ID" />
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" id="shopurl" value="@Model.ShopURL" />
+                                                        <!--end email verification-->
+                                                        <div class="col-12 col-md-7 col-lg-7">
+                                                            <div id="onphoneverified" style="display:none">
+                                                                <span class="badge badge-primary">
+                                                                    Phone Number Verified
+                                                                </span>
+                                                                <span class="badge">
+                                                                    <img src="~/Images/verified.png" style="width:20px;height:20px;" />
+                                                                </span>
+                                                            </div>
+                                                            <div id="phone_block">
+                                                                @if (Model.PhoneVerify == null)
+                                                                {
+                                                                    <span class="btn btn-common" onclick="Show_verifyphonebox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:2px;padding-right:2px;font-size:10px;">
+                                                                        Verify Phone Number
+                                                                    </span>
+                                                                    @*<button type="button" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;" data-toggle="modal" data-target="#verifyphone" onclick="clearTextBox();">Verify Phone<i class="fa fas fa-check-double"></i><span id="totalamtpay"></span></button>*@
+                                                                    <span class="badge">
+                                                                        <img src="~/Images/notverified.png" style="width:15px;height:15px;cursor:pointer;display:none" id="phoneclose" onclick="Close_verifyphonebox()" />
+                                                                    </span>
+                                                                    <br />
+                                                                    <div id="verifyphone">
+
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge badge-primary">
+                                                                        Phone Number Verified
+                                                                    </span>
+                                                                    <span class="badge">
+                                                                        <img src="~/Images/verified.png" style="width:20px;height:20px;" />
+                                                                    </span>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!--Phone verification box-->
+                                                    <div id="verifyphonebox" style="display:none;">
+                                                        <div class="alert alert-success" style="font-size:13px;background-color:white;border-color:#0d9bc8">
+                                                            <div id="msgphonesendcode">
+                                                                <a href="#" style="color:blue;" onclick="return Send_PhoneVerifyOTP()">Send Code</a>
+                                                            </div>
+                                                            <div id="msg"></div>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control" style="border-color:#33C6F6" id="phoneotp_shop" placeholder="Enter Verification code" />
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-common" type="button" onclick="return VerifyPhoneOTP();">
+                                                                        <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <a href="#" style="color:blue;display:none" id="rsndphoneotp" onclick="return Resend_PhoneVerifyOTP()">Didn't get code? Resend</a>
+                                                            <div id="resendphoneotp" style="display:none"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
+                                                            <input type="hidden" id="shopid" value="@Model.ID" />
+                                                        </div>
+                                                    </div>
+                                                    <!--end phone verification-->
+
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <span id="enableshop">
+                                                                @if (Payment_Closed == 1 && paymentstatus == 1)
+                                                                {
+                                                                    if (Model.ShopStatus == "Active")
+                                                                    {
+                                                                        if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                        {
+                                                                            <span class="badge-success" style="font-size:11px;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Disable Shop</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="badge-success" onclick="disableshop()" style="font-size:11px;cursor:pointer;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Disable Shop</span>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                        {
+                                                                            <span class="badge-danger" style="font-size:11px;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Enable Shop</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="badge-danger" onclick="enableshop()" style="font-size:11px;cursor:pointer;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Enable Shop</span>
+                                                                        }
+                                                                    }
+                                                                }
+                                                                <!--PAYMENT IS NOT ENABLED-->
+                                                                @if (Payment_Closed == 0)
+                                                                {
+                                                                    if (Model.ShopStatus == "Active")
+                                                                    {
+                                                                        if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                        {
+                                                                            <span class="badge-success" style="font-size:11px;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Disable Shop</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="badge-success" onclick="disableshop()" style="font-size:11px;cursor:pointer;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Disable Shop</span>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                        {
+                                                                            <span class="badge-danger" style="font-size:11px;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Enable Shop</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="badge-danger" onclick="enableshop()" style="font-size:11px;cursor:pointer;padding:2px;border-radius:3px;"><i class="lni lni-hand"></i> Click to Enable Shop</span>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </span>
+
+                                                        </div>
+                                                        <div class="col-6">
+                                                            @if (Payment_Closed == 1 && paymentstatus == 1)
+                                                            {
+                                                                if (PricingPlan != "BASIC PLAN")
+                                                                {
+                                                                    <span id="onlineorder">
+                                                                        @if (Model.EnableOnlineOrder == "Yes")
+                                                                        {
+                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            {
+                                                                                <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Disable Online Order</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="disableonlineorder()">Click to Disable Online Order</a></span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            {
+                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Enable Online Order</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="enableonlineorder()">Click to Enable Online Order</a></span>
+                                                                            }
+                                                                        }
+                                                                    </span>
+                                                                }
+                                                            }
+
+                                                            <!--IF PAYMENT IS NOT ENABLED-->
+                                                            @if (Payment_Closed == 0)
+                                                            {
+                                                                if (PricingPlan != "BASIC PLAN")
+                                                                {
+                                                                    <span id="onlineorder">
+                                                                        @if (Model.EnableOnlineOrder == "Yes")
+                                                                        {
+                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            {
+                                                                                <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Disable Online Order</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="disableonlineorder()">Click to Disable Online Order</a></span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            {
+                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Enable Online Order</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="enableonlineorder()">Click to Enable Online Order</a></span>
+                                                                            }
+                                                                        }
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <hr style="margin-bottom:2px;" />
+
+                                                    <div class="row">
+                                                        <img src="~/Images/widthdrawal.png" class="img-circle elevation-3 " style="width:25px;height:25px;" />
+
+                                                        <div onclick="Show_bankaccountinfo()" class="btn btn-common" style="padding-top:1px;padding-bottom:1px;padding-left:9px;padding-right:9px;border-bottom-left-radius:25px;border-top-right-radius:25px;">
+                                                            Bank Account Information
+                                                        </div>
+                                                        <div class="badge" id="bankaccountinfobtn" style="display:none">
+                                                            <img src="~/Images/notverified.png" style="width:15px;height:15px;cursor:pointer" onclick="Close_bankaccountinfo()" />
+                                                        </div>
+                                                    </div>
+                                                    <!--bank account info box-->
+                                                    @*<a href="#" data-toggle="popover" title="Popover header" data-content="Some text" data-placement="top" data-trigger="hover">Google Map</a>*@
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $('[data-toggle="popover"]').popover();
+                                                        });
+                                                    </script>
+                                                    <div id="bankaccountinfo" style="display:none;">
+                                                        <div class="alert alert-success alert-dismissable" id="successmsg_bank" style="display:none">
+                                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                            <h3 style="font-size:14px">Success</h3>
+                                                            Bank Account Details Added successfully.
+                                                        </div>
+
+                                                        <div class="alert alert-success alert-dismissable" id="successmsg_delete_account" style="display:none">
+                                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                            <h3 style="font-size:14px">Success</h3>
+                                                            Account details deleted.
+                                                        </div>
+
+                                                        @if (db.BankInformations.Where(b => b.ShopID == Model.ID).Count() > 0)
+                                                        {
+                                                            <div class="col-12" id="displayacct">
+                                                                @*<h4>Bank Account Details</h4>*@
+
+                                                                <dl class="dl-horizontal" style="color:black;">
+                                                                    <dt>
+                                                                        Account Name
+                                                                    </dt>
+
+                                                                    <dd>
+                                                                        @db.BankInformations.Where(b => b.ShopID == Model.ID).Select(s => s.AccountHolder).FirstOrDefault()
+                                                                    </dd>
+
+                                                                    <dt>
+                                                                        Account Number
+                                                                    </dt>
+
+                                                                    <dd>
+                                                                        @db.BankInformations.Where(b => b.ShopID == Model.ID).Select(s => s.AccountNumber).FirstOrDefault()
+                                                                    </dd>
+
+
+                                                                    <dt>
+                                                                        Bank
+                                                                    </dt>
+
+                                                                    <dd>
+                                                                        @db.BankInformations.Where(b => b.ShopID == Model.ID).Select(s => s.Bank.Name).FirstOrDefault()
+
+                                                                    </dd>
+                                                                    <dt>
+                                                                        @{
+                                                                            int bid = db.BankInformations.Where(b => b.ShopID == Model.ID).Select(s => s.ID).FirstOrDefault();
+                                                                        }
+                                                                        <i class="glyphicon glyphicon-remove-sign" onclick="return DeleteAccount(@bid)" style="color:red;font-size:18px;cursor:pointer"></i>
+                                                                    </dt>
+                                                                </dl>
+
+                                                            </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="alert alert-success" style="font-size:13px;background-color:white;border-color:#0d9bc8">
+                                                                                    <div id="msgphonesendcode">
+                                                                                        <span style="color:black;font-weight:bold;">Add your bank account information</span>
+                                                                                    </div>
+                                                                                    <hr style="margin-top:2px;margin-bottom:2px;" />
+                                                                                    <div id="msg_bank"></div>
+
+
+                                                                                    <div class="form-group">
+                                                                                        @Html.Label("Account Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                                        <div class="col-md-12">
+                                                                                            <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Account Name" id="acctname" onchange="this.value= this.value.toUpperCase()" />
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    @*<div class="col-6 col-md-6">
+                                                                                                <div class="form-group">
+                                                                                                    @Html.Label("Middle Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                                                    <div class="col-md-12">
+                                                                                                        <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Middle Name" id="mname" onchange="this.value= this.value.toUpperCase()" />
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        <div class="col-6 col-md-6">
+
+                                                                                            <div class="form-group">
+                                                                                                @Html.Label("Last Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                                                <div class="col-md-12">
+                                                                                                    <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Last Name" id="lname" onchange="this.value= this.value.toUpperCase()" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>*@
+
+                                                                                    <div class="form-group">
+                                                                                        @Html.Label("Bank", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                                        <div class="col-md-12">
+                                                                                            @Html.DropDownList("BankID", null, "-- Select Bank --", htmlAttributes: new { @class = "form-control", @id = "bankid" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div id="acctmsg" class="badge badge-danger" style="display:none"></div>
+                                                                                    <div class="input-group input-group-lg">
+
+                                                                                        @*@Html.Label("Account Number", htmlAttributes: new { @class = "control-label col-md-6" })*@
+                                                                                        @Html.Editor("AccountNo", new { htmlAttributes = new { @class = "form-control", @placeholder = "Account Number", @id = "acctno", @pattern = "[0-9]", @type = "tel", @style = "border-color:#33C6F6", @maxlength = "10" } })
+                                                                                        <div class="input-group-append">
+                                                                                            <button class="btn btn-common" id="save" type="button" onclick="return AddBankDetails();">
+                                                                                                <span id="saveacct">Save <i class="fas fa-save"></i></span>
+                                                                                                <div id="loader_bank" style="display:none">
+                                                                                                    <img src="~/Images/loaders/ajax-loadergg.gif" />
+                                                                                                </div>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+
+
+                                                                                </div>
+                                                                            }
+                                                        <div id="addaccount" class="alert alert-success" style="font-size:13px;background-color:white;display:none;border-color:#0d9bc8">
+                                                            <div id="msgphonesendcode">
+                                                                <span style="color:black;font-weight:bold;">Add your bank account information</span>
+                                                            </div>
+                                                            <hr style="margin-top:2px;margin-bottom:2px;" />
+                                                            <div id="msg_bank"></div>
+
+
+                                                            <div class="form-group">
+                                                                @Html.Label("Account Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                <div class="col-md-12">
+                                                                    <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Account Name" id="acctname" onchange="this.value= this.value.toUpperCase()" />
+                                                                </div>
+                                                            </div>
+
+                                                            @*<div class="col-6 col-md-6">
+                                                                        <div class="form-group">
+                                                                            @Html.Label("Middle Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                            <div class="col-md-12">
+                                                                                <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Middle Name" id="mname" onchange="this.value= this.value.toUpperCase()" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                <div class="col-6 col-md-6">
+
+                                                                    <div class="form-group">
+                                                                        @Html.Label("Last Name", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                        <div class="col-md-12">
+                                                                            <input type="text" class="form-control" style="border-color:#33C6F6" placeholder="Last Name" id="lname" onchange="this.value= this.value.toUpperCase()" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>*@
+
+                                                            <div class="form-group">
+                                                                @Html.Label("Bank", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                <div class="col-md-12">
+                                                                    @Html.DropDownList("BankID", null, "-- Select Bank --", htmlAttributes: new { @class = "form-control", @id = "bankid" })
+                                                                </div>
+                                                            </div>
+                                                            <div id="acctmsg" class="badge badge-danger" style="display:none"></div>
+                                                            <div class="input-group input-group-lg">
+
+                                                                @*@Html.Label("Account Number", htmlAttributes: new { @class = "control-label col-md-6" })*@
+                                                                @Html.Editor("AccountNo", new { htmlAttributes = new { @class = "form-control", @placeholder = "Account Number", @id = "acctno", @pattern = "[0-9]", @type = "tel", @style = "border-color:#33C6F6", @maxlength = "10" } })
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-common" type="button" onclick="return AddBankDetails();">
+                                                                        <span id="saveacct">Save <i class="fas fa-save"></i></span>
+                                                                        <div id="loader_bank" style="display:none">
+                                                                            <img src="~/Images/loaders/ajax-loadergg.gif" />
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                    <!--end bank info-->
+                                                    <hr style="margin-top:2px;" />
+                                                    <div id="msgactivateaccount" class='alert alert-danger' style="display:none;padding-top:2px;padding-bottom:2px;"></div>
+                                                    <div class="row">
+                                                        <div class="col-6 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    @if (Payment_Closed == 1)
+                                                                    {
+                                                                        if (paymentstatus == 1)
+                                                                        {
+                                                                            <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="#" id="product">
+                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                            </a>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                        {
+                                                                            <a href="#" id="product">
+                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                            </a>
+                                                                        }
+
+                                                                    }
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-6 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    @if (Payment_Closed == 1)
+                                                                    {
+                                                                        if (paymentstatus == 1)
+                                                                        {
+                                                                            <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                                <i class="lni lni-cart"></i>
+                                                                                Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                            </a>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a href="#" id="orders">
+                                                                                            <i class="lni lni-cart"></i>
+                                                                                            Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                                        </a>
+                                                                                                    }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                                                    {
+                                                                                                        <a href="#" id="orders">
+                                                                                                            <i class="lni lni-cart"></i>
+                                                                                                            Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                                                        </a>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                                                                        <i class="lni lni-cart"></i>
+                                                                                                                        Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                                                                    </a>
+                                                                                                                                }
+                                                                                                                            }
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="col-6 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    @if (Payment_Closed == 1)
+                                                                    {
+                                                                        if (paymentstatus == 1)
+                                                                        {
+                                                                            <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                                <i class="lni lni-stats-down"></i> Sales
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="#">
+                                                                                <i class="lni lni-stats-down"></i> Sales
+                                                                            </a>
+
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                        {
+                                                                            <a href="#" id="sales">
+                                                                                <i class="lni lni-stats-down"></i> Sales
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                                <i class="lni lni-stats-down"></i> Sales
+                                                                            </a>
+                                                                        }
+
+                                                                    }
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-6 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    @if (Payment_Closed == 1)
+                                                                    {
+                                                                        if (paymentstatus == 1)
+                                                                        {
+                                                                            <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                                <i class="lni lni-users"></i>
+                                                                                My Customers (@totalCust)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="#" id="customers">
+                                                                                <i class="lni lni-users"></i>
+                                                                                My Customers (@totalCust)
+                                                                            </a>
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                        {
+                                                                            <a href="#" id="customers">
+                                                                                <i class="lni lni-users"></i>
+                                                                                My Customers (@totalCust)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                                <i class="lni lni-users"></i>
+                                                                                My Customers (@totalCust)
+                                                                            </a>
+                                                                        }
+
+                                                                    }
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+
+                                                        @*<div class="col-12 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    @if (Payment_Closed == 1)
+                                                                    {
+                                                                        if (paymentstatus == 1)
+                                                                        {
+                                                                            <a href="~/DeliveryLocations/Index/?sid=@Model.ID">
+                                                                                <i class="lni lni-map-marker"></i>
+                                                                                Delivery Locations (@totaldeliverylocations)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="#" id="dlocation">
+                                                                                <i class="lni lni-map-marker"></i>
+                                                                                Delivery Locations (@totaldeliverylocations)
+                                                                            </a>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                        {
+                                                                            <a href="#" id="dlocation">
+                                                                                <i class="lni lni-map-marker"></i>
+                                                                                Delivery Locations (@totaldeliverylocations)
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="~/DeliveryLocations/Index/?sid=@Model.ID">
+                                                                                <i class="lni lni-map-marker"></i>
+                                                                                Delivery Locations (@totaldeliverylocations)
+                                                                            </a>
+
+                                                                        }
+
+                                                                    }
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>*@
+                                                        <div class="col-12 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    <span id="ppayment" style="color:forestgreen" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-hourglass"></i>
+                                                                        Pending Payments (@{var pp = Convert.ToInt32(ViewBag.PendingPayment);}@pp)
+                                                                    </span>
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    <span id="pdelivery" style="color:forestgreen" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-ban"></i>
+                                                                        Pending Delivery (@{ var pdd = Convert.ToInt32(ViewBag.PendingDelivery);}@pdd)
+                                                                    </span>
+                                                                    <hr style="padding:1px;margin:5px" />
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-12 col-md-6 col-lg-6">
+                                                            <ul style="font-size:13px">
+                                                                <li>
+                                                                    <span id="delivered" style="color:forestgreen" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-cart-full"></i>
+                                                                        Delivered (@{var dd = Convert.ToInt32(ViewBag.Delivered); }@dd)
+                                                                    </span>
+
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                    </div>
+                                                    @*<ul style="font-size:13px">
+                                                            <li>
+
+                                                                <a href="~/Products/MyProducts/?id=@Model.ID">
+                                                                    <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                </a>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+                                                            <li>
+                                                                <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                    <i class="lni lni-stats-down"></i> Sales
+                                                                </a>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+                                                            <li>
+                                                                <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                    <i class="lni lni-users"></i>
+                                                                    My Customers (@totalCust)
+                                                                </a>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+
+
+                                                            <li>
+                                                                <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" id="orders" onclick="getcontent(this.id)">
+                                                                    <i class="lni lni-cart"></i>
+                                                                    Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                                                </a>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+
+                                                            <li>
+                                                                <a href="~/DeliveryLocations/Index/?sid=@Model.ID">
+                                                                    <i class="lni lni-map-marker"></i>
+                                                                   Delivery Locations (@totaldeliverylocations)
+                                                                </a>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+                                                            <li>
+                                                                <span id="ppayment" style="color:forestgreen" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-hourglass"></i>
+                                                                        Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                                                </span>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+                                                            <li>
+                                                                <span id="pdelivery" style="color:forestgreen"  onclick="getcontent(this.id)">
+                                                                    <i class="lni lni-ban"></i>
+                                                                    Pending Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                                                </span>
+                                                                <hr style="padding:1px;margin:5px" />
+                                                            </li>
+                                                            <li>
+                                                                <span id="delivered" style="color:forestgreen"  onclick="getcontent(this.id)">
+                                                                    <i class="lni lni-cart-full"></i>
+                                                                    Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                                                </span>
+
+                                                            </li>
+                                                        </ul>*@
+
+
+                                                    <h4 style="border-radius:15px;">
+                                                        @*<center>*@
+                                                        @*<span class="badge"> <i class="lni-briefcase"></i> @Model.Name.ToUpper()</span> &raquo;
+                                                            <a href="~/Shops/Edit/@Model.ID" class="btn btn-warning" style="height:25px;padding:2px;font-size:12px;" title="Edit Shop Details"><i class="lni-pencil"></i> Edit</a>*@
+                                                        @*<a href="~/Shops/Delete/@Model.ID" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this shop? Deleting this shop will also delete all the products and anything tied to this shop.')" style="height:25px;padding:2px;font-size:12px;" title="Delete Shop"><i class="lni-cut"></i>Delete</a>*@
+                                                        <div class="row" style="margin-top:5px;">
+                                                            <div class="col-12 col-md-6 col-lg-6" style="margin-bottom:10px">
+                                                                <span style="color:white; padding:3px;margin-top:10px;vertical-align:top">
+                                                                    <a href="#" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Get your store listed as popular store" data-toggle="modal" data-target="#myModalPromote" onclick="clearTextBox();"> <i class="lni lni-stats-up"></i> Promote Store</a>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-12 col-md-6 col-lg-6" style="text-align:right">
+                                                                <span style="color:white;padding:3px;margin-top:0px;vertical-align:top">
+                                                                    <a href="~/SearchOptimizations/SEO?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products for search optimization"> <i class="lni lni-search"></i> Search Optimization</a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="margin-top:5px;">
+                                                            <div class="col-12 col-md-6 col-lg-6" style="margin-bottom:10px">
+                                                                <span style="color:white;padding:3px;margin-top:10px;vertical-align:top;">
+                                                                    <a href="~/PopularProducts/PopularProducts?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products"> <i class="lni lni-more"></i> Promote Products</a>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-12 col-md-6 col-lg-6" style="text-align:right">
+
+                                                                <span style="color:white;padding:3px;margin-top:10px;vertical-align:top">
+                                                                    <a href="~/PopularStores/Index/?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%; padding:5px;font-size:10px" title="View my promoted items" onclick="clearTextBox();"> <i class="lni lni-stats-up"></i> Promotions</a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="margin-top:5px;">
+                                                            <div class="col-md-12">
+
+                                                                <span style="color:white; padding:3px;margin-top:10px;vertical-align:top">
+                                                                    <a href="#" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Get your store listed as popular store" data-toggle="modal" data-target="#myModalSocialMedia" onclick="clearTextBox();"> <i class="lni lni-facebook-filled"></i> Advertize on Social Media <i class="lni lni-twitter-filled"></i></a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+
+                                                        @*</center>*@
+
+
+                                                        @if (TotalNumberofShops >= NumberofShops)
+                {
+                                                            @*<br />
+                                                                <span style="color:red;font-size:11px;">
+                                                                    Maximun number of shops reached for your current plan
+                                                                </span>*@
+                                                        }
+                                                        else
+                                                        {
+                                                            @*<a href="~/Products/Create/@Model.ID" class="btn btn-common" style="height:25px;padding:1px" title="Add Product"><i class="lni-plus"></i>Add Product</a>*@
+
+
+
+
+                                                        }
+                                                        <input type="hidden" id="getshopid" value="@Model.ID" />
+
+
+                                                        @*<hr style="margin:5px;padding:1px;" />
+                                                            <span id="onlinepayment">
+                                                                @if (Model.EnableOnlinePayment == "Yes")
+                                                                {
+
+                                                                    <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="disableonlinepayment()">Click to Disable Online Payment</a></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="enableonlinepayment()">Click to Enable Online Payment</a></span>
+                                                                }
+
+                                                            </span>*@
+                                                    </h4>
+
+
+
+
+
+
+
+
+
+
+
+                                                </div>
+                                                <!--The div element for the map -->
+                                                <div id="map"></div>
+
+                                            </div>
+                                                                            }
+
+                                    <h4 style="font-size:15px;">Store Description</h4>
+                                    <p style="text-align:justify; margin-left:20px;">@Model.Description</p>
+
+                                    <ul class="list-item">
+                                        @if (Model.Name != null)
+                                        {
+                                            <li>
+                                                <div class="contact-icon">
+                                                    <i class="lni-map-marker"></i>
+
+                                                    @{
+                                                        int sid = Convert.ToInt32(Model.StateID);
+                                                        string State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                    }
+
+                                                    <a> Location:  @Model.CountryRegion.Country - @State</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-phone-handset"></i>
+                                                    <a> Phone:&nbsp;&nbsp; @Model.PhoneNumber</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-envelope"></i>
+                                                    <a> Email:&nbsp;&nbsp; @Model.Email</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+
+                                                    <div id="floating-panel">
+                                                        <input id="address" type="hidden" value="@Model.Address" />
+                                                    </div>
+                                                    <br />
+
+
+                                                </div>
+                                            </li>}
+                                    </ul>
+
+
+
+
+
+
+
+
+
+                                    @*@if ((string)Session["username"] == null)
+                                        {
+                                            int ShopCustomerID = Convert.ToInt32(Session["CustomerID"]);
+                                            var CoutinCustomerShop = db.CustomerShops.Where(s => s.ShopID == Model.ID && s.ShopCustomerID == ShopCustomerID).Count();
+                                            <ul class="list-item">
+
+                                                @if (Session["CustomerID"] != null && CoutinCustomerShop > 0)
+                                                {
+                                                    <li>
+                                                        Your are a Customer to this store.
+                                                        <br />
+                                                        <a class="btn btn-common" style="color:white" href="~/Users/CustomerDashboard/@Session["CustomerID"]">
+                                                            Go to your dashboard
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    if (Session["CustomerID"] != null)
+                                                    {
+                                                        <li>
+                                                            <a class="btn btn-common" style="color:white" href="~/ShopCustomers/Create/?id=@Model.ID&v=1&cid=@Session["CustomerID"]">
+                                                                Become Our Customer
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <a class="btn btn-common" style="color:white" href="~/ShopCustomers/Create/?id=@Model.ID&v=1">
+                                                                Become Our Customer
+                                                            </a>
+                                                        </li>
+                                                    }
+
+
+                                                }
+
+                                            </ul>
+                                        }*@
+
+
+
+                                    <div class="contact-icon">
+
+                                        <script>
+                                                (function (d, s, id) {
+                                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                                    if (d.getElementById(id)) return;
+                                                    js = d.createElement(s); js.id = id;
+                                                    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                                                    fjs.parentNode.insertBefore(js, fjs);
+                                                }(document, 'script', 'facebook-jssdk'));</script>
+
+                                        <!-- Your share button code -->
+
+                                        <ul class="mt-4 footer-social">
+                                            <li>Share This Store</li>
+                                            <li>
+                                                @{
+                                                    string referallink1 = "http://marketsquare247.com/Shops/?shopURL=" + Model.ShopURL;
+                                                }
+                                                <div class="fb-share-button"
+                                                     data-href="@referallink1"
+                                                     data-layout="button_count">
+                                                </div>
+                                            </li>
+                                            <li><a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                                            @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+                                                <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                                            <li>
+                                                <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                                                    <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
+                                                </a>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-xs-12">
+                        <aside id="sidebar" class="col-lg-12 col-md-12 col-xs-12">
+                            <!-- Search Widget -->
+                            <div class="widget">
+                                <h5 class="widget-title">Search This Shop</h5>
+                                <div class="widget-search widget-box">
+                                    <form method="get">
+                                        <input type="hidden" name="id" value="@Model.ID" />
+                                        @*<input class="form-control search" required="required" name="search" type="search" placeholder="SEARCH @Model.Name" />
+                                            <button class="search-btn" type="submit"><b><i class="lni-search" style="color:blue"></i></b></button>*@
+                                        <div class="input-group input-group-sm" style="margin:2px;">
+                                            <input type="text" name="search" id="searchshop" required="required" class="form-control" style="height:38px;" placeholder="SEARCH @Model.Name" />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-common" type="submit">
+                                                    <i class="lni-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div id="originalcategory1">
+                                <!-- Categories Widget -->
+                                <div class="widget ">
+                                    <h5 class="widget-title" style="background-color:#0BACE1;color:white;padding:10px">
+                                        Product Categories
+
+                                        @*@if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+                                            {
+
+                                                <span>
+                                                    ..:.. <a href="~/Products/Create/?id=@Model.ID" style="color:white;">
+                                                        Add Products
+                                                    </a>
+                                                </span>
+                                            }*@
+                                    </h5>
+                                    <div class="widget-categories widget-box">
+                                        <ul class="cat-list" style="padding-top:0px">
+                                            @if (ViewBag.Products != null)
+                                            {
+                                                foreach (var item in ViewBag.Products)
+                                                {
+                                                    int ShopID = item.Shop.ID;
+                                                    int PCID = item.ProductCategoryID;
+                                                    int total = db.Products.Where(p => p.ProductCategoryID == PCID && p.ShopID == ShopID && p.ProductStatu.Status == "Available").Count();
+                                                    <li>
+                                                        <a href="~/Products/ProductCategoryDetails/?id=@item.ProductCategoryID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                                            @item.ProductCategory.Name
+                                                            <span class="num-posts">(@total)</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </aside>
+
+                    </div>
+                </div>
+
+                @if (ViewBag.search != null)
+                {
+            <!--Search Section Start -->
+                    <section id="job-listings" class="section" style="padding:10px">
+                        <div class="container">
+                            <div class="section-header" style="padding:0px">
+                                <h3 class="section-title">Search Results - @ViewBag.search</h3>
+                                <p>Find @ViewBag.Shopcount results</p>
+                            </div>
+                            <div class="row" style="padding:0px">
+                                @foreach (var item in ViewBag.Shopsearch)
+                                {
+                                    int ProductID = item.ID;
+                                    int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
+                                    <div class="col-6 col-sm-4 col-md-2 style=" padding:0px;margin:0px">
+                                        @if (countproductinsubitems > 0)
+                                        {
+                                            <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                        @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                        <center>
+                                                            <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                                                            <br />
+                                                            <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+
+                                                            <h3 style="margin:0px;padding:0px">
+
+                                                                <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+
+                                                                    @if (item.Currency == "NGN")
+                                                                    {<del class="NairaSign">N</del>}
+                                                                    else
+                                                                    { <span>@item.Currency</span>}@{var a = string.Format("{0:#,0}", item.Amount);}@a
+                                                                </span>
+                                                            </h3>
+                                                            <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                                                            @{
+                                                                int sid = item.StateID;
+                                                                var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                            }
+                                                            <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                                            <br />
+                                                            <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>
+                                                        </center>
+
+                                                    </div>
+                                                </div>
+                                            </a>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                                                @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                                                <center>
+                                                                                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                                                                                    <br />
+                                                                                    <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                                                                                    <h3 style="margin:0px;padding:0px;">
+                                                                                        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                                                                                            @if (item.Currency == "NGN")
+                                                                                            {<del class="NairaSign">N</del>}
+                                                                                            else
+                                                                                            { <span>@item.Currency</span>}@{var a = string.Format("{0:#,0}", item.Amount);}@a
+                                                                                        </span>
+                                                                                    </h3>
+                                                                                    <hr style="padding-bottom:1px;margin-bottom:0px;" />
+                                                                                    @{
+                                                                                        int sid = item.StateID;
+                                                                                        var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                                                    }
+                                                                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                                                                    <br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>
+                                                                                </center>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                                        }
+                                    </div>
+
+
+
+                                        @*<div class="col-12 text-center mt-4">
+                                                    <a href="job-page.html" class="btn btn-common">Browse All Jobs</a>
+                                                </div>
+                                            </div>*@
+                                                                                        }
+                            </div>
+
+                        </div>
+                    </section>
+                                                                                        }
+
+                <!-- End of Search Section End -->
+
+
+
+
+                <div class="container">
+                    <div class="row">
+                        <!-- Start Blog Posts -->
+                        <div class="col-lg-8 col-md-12 col-xs-12">
+                            <!-- Start Post -->
+                            @*<div class="blog-post">
+
+
+                                    <div class="post-content">
+
+                                        <h4 style="font-size:15px;">Shop Description</h4>
+                                        <p style="text-align:justify">@Model.Description</p>
+
+
+
+                                    </div>
+
+                                </div>*@
+                            <aside id="sidebar">
+                                <div id="getcategorycontent"></div>
+                            </aside>
+
+
+                        </div>
+                        <!-- End Blog Posts -->
+                        <!--Sidebar-->
+                        <aside id="sidebar" class="col-lg-4 col-md-12 col-xs-12">
+
+
+
+                            <!-- Popular Posts widget -->
+                            @*<div class="widget">
+                                    <h5 class="widget-title">Recent Posts</h5>
+                                    <div class="widget-popular-posts widget-box">
+                                        <ul class="posts-list">
+                                            <li>
+                                                <div class="widget-content">
+                                                    <a href="#">Tips to write an impressive resume online for beginner</a>
+                                                    <span><i class="lni-calendar"></i> 25 March, 2020</span>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                            <li>
+                                                <div class="widget-content">
+                                                    <a href="#">The sceret to pitching for new business</a>
+                                                    <span><i class="lni-calendar"></i> 25 March, 2020</span>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                            <li>
+                                                <div class="widget-content">
+                                                    <a href="#">7 things you should never say to your boss</a>
+                                                    <span><i class="lni-calendar"></i> 25 March, 2020</span>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>*@
+                        </aside>
+                        <!--End sidebar-->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Content -->
+
+
+
+    <script type="text/javascript">
+            function enableonlineorder() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/EnableOnlineOrder/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        //alert("Online order enabled");
+                        var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer" title="Click to disable"><i class="lni lni-cart"></i><a onclick="disableonlineorder()">Click to Disable Online Order</a></span>';
+                        $("#onlineorder").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+
+
+    <script type="text/javascript">
+            function disableonlineorder() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/DisableOnlineOrder/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        // alert("Online order disabled!");
+                        var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"  title="Click to enable"><i class="lni lni-cart"></i><a onclick="enableonlineorder()">Click to Enable Online Order</a></span>';
+                        $("#onlineorder").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+
+    </script>
+
+
+    <script type="text/javascript">
+            function enableonlinepayment() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/EnableOnlinePayment/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        //alert("Online payment enabled");
+                        var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer" title="Click to disable"><i class="lni lni-cart"></i><a onclick="disableonlinepayment()">Online Payment Enabled</a></span>';
+                        $("#onlinepayment").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+
+
+    <script type="text/javascript">
+            function disableonlinepayment() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/DisableOnlinePayment/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        // alert("Online payment disabled!");
+                        var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"  title="Click to enable"><i class="lni lni-cart"></i><a onclick="enableonlinepayment()">Online Payment Disabled</a></span>';
+                        $("#onlinepayment").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+
+    </script>
+
+
+
+
+    <script type="text/javascript">
+            function myFunction(x) {
+                if (x.matches) { // If media query matches
+                    document.getElementById("getcategorycontent").style.display = "block";
+                    document.getElementById("getcategorycontent").innerHTML = document.getElementById("originalcategory").innerHTML;
+                    document.getElementById("originalcategory").style.display = "none";
+
+                } else {
+
+                    document.getElementById("originalcategory").style.display = "block";
+                    document.getElementById("getcategorycontent").style.display = "none";
+
+
+                }
+            }
+
+            var x = window.matchMedia("(max-width: 600px)")
+            myFunction(x) // Call listener function at run time
+            x.addListener(myFunction) // Attach listener function on state changes
+    </script>
+
+    <script type="text/javascript">
+            function enableshop() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/EnableShop/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        //  alert("Your shop is active now");
+                        var html = '<span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer" title="Click to enable"><i class="lni lni-cart"></i><a onclick="disableshop()">Click to Disable Shop</a></span>';
+                        $("#enableshop").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+    <script type="text/javascript">
+            function disableshop() {
+                var _shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/DisableShop/";
+                $.ajax({
+                    url: url,
+                    data: { shopid: _shopid },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        // alert("Your shop is inactive now");
+                        var html = '<span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer" title="Click to enable"><i class="lni lni-cart"></i><a onclick="enableshop()">Click to Enable Shop</a></span>';
+                        $("#enableshop").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+    <script type="text/javascript">
+            function formatNumber(num) {
+                return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            }
+    </script>
+
+    <script type="text/javascript">
+            function getProductImage(_productID) {
+                var _shopid = document.getElementById("getshopid").value;
+                var shopname = document.getElementById("shopname").value;
+                var companyname = document.getElementById("companyname").value;
+                var image = _productID + ".jpg";
+                document.getElementById("displayproductimage").innerHTML = '<img src="/BusinessImages/' + companyname + '/' + shopname + '/' + image + '" style="width:80px;">';
+            }
+    </script>
+
+
+    <script>
+            function displayProducts() {
+                document.getElementById("showproduct").style.display = "block";
+                document.getElementById("displayproductimage").style.display = "block";
+            }
+
+    </script>
+    <script>
+            function displayProduct() {
+                document.getElementById("showproduct").style.display = "none";
+                document.getElementById("displayproductimage").style.display = "none";
+
+            }
+
+    </script>
+
+    <script type="text/javascript">
+            function GetChannelPrice(_id) {
+                if (_id != '') {
+                    var url = "/Shops/GetChannelPrice/";
+                    $.ajax({
+                        url: url,
+                        data: { id: _id },
+                        cache: false,
+                        type: "GET",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                $("#channelprice").val(item.ChannelAmount).show();
+
+                                document.getElementById("totalamtsocialmedia").innerHTML = formatNumber(parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value);
+                                document.getElementById("totalamtpaynowsocialmedia").innerHTML = "NGN " + document.getElementById("totalamtsocialmedia").innerHTML;
+                                document.getElementById("PromoteAmountsocialmedia").value = parseInt(document.getElementById("noofdayssocialmedia").value) * document.getElementById("channelprice").value;
+
+                            });
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+    </script>
+
+
+
+
+    <script type="text/javascript">
+            function GetExpenditureList() {
+                var url = "/Expenditures/GetExpenditureList/";
+                $.ajax({
+                    url: url,
+                    data: {},
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            GetExpenditures(item.ExpenditureID);
+                        });
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+
+    <script type="text/javascript">
+            function GetExpenditures(ExpenditureID) {
+                var url = "/Expenditures/GetExpenditures/";
+                $.ajax({
+                    url: url,
+                    data: {},
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            var html = '<table class="table" style="font-size:12px;"><tr><th>Expenditure Name</th><th>Date</th><th>Amount</th>';
+
+                            $.each(data, function (key, item) {
+                                var date = toString("{0:dd MMM, yyyy}", item.Date);
+
+                                html += '<tr>';
+                                html += '<td>' + item.ExpenditureName + '</td>' + '<td>' + item.Amount + '</td>';
+                            });
+                            html += "</table>"
+                        });
+
+                        $("#displaycontent").html(html).show();
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+    <script type="text/javascript">
+            function Show_verifyemailbox() {
+                document.getElementById("verifyemailbox").style.display = "block";
+                document.getElementById("emailclose").style.display = "block";
+            }
+
+            function Show_verifyphonebox() {
+                document.getElementById("verifyphonebox").style.display = "block";
+                document.getElementById("phoneclose").style.display = "block";
+            }
+
+            function Close_verifyphonebox() {
+                document.getElementById("verifyphonebox").style.display = "none";
+                document.getElementById("phoneclose").style.display = "none";
+            }
+
+            function Close_verifyemailbox() {
+                document.getElementById("verifyemailbox").style.display = "none";
+                document.getElementById("emailclose").style.display = "none";
+            }
+
+            function Show_bankaccountinfo() {
+                document.getElementById("bankaccountinfo").style.display = "block";
+                document.getElementById("bankaccountinfobtn").style.display = "block";
+
+            }
+
+            function Close_bankaccountinfo() {
+                document.getElementById("bankaccountinfo").style.display = "none";
+                document.getElementById("bankaccountinfobtn").style.display = "none";
+
+            }
+    </script>
+
+    <script type="text/javascript">
+            function Send_EmailVerifyOTP() {
+                var _ShopID = document.getElementById("shopid").value;
+                $(document).ajaxStart(function () {
+                    var img = ' <img src="../../Images/loaders/ajax-loadergg.gif" />';
+                    $("#msgsendcode").html(img);
+                });
+                var url = "/Shops/Send_EmailVerifyOTP/";
+                $.ajax({
+                    url: url,
+                    data: { ShopID: _ShopID },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        var html = '';
+                        $.each(data, function (key, item) {
+                            $("#msgsendcode").html("<div>Verification code has been sent to @Model.Email</div>").show();
+                            $("#rsndemailotp").css("display", "block");
+                            $("#verifyphonebox").css("display", "none");
+                        });
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+    <script type="text/javascript">
+            function VerifyEmailOTP() {
+                var _emailotp_shop_received = document.getElementById("emailotp_shop").value;
+                var _ShopID = document.getElementById("shopid").value;
+                if (_emailotp_shop_received == '') {
+                    document.getElementById("emailotp_shop").style.borderColor = "red";
+                    document.getElementById("emailotp_shop").focus();
+                    return false;
+                }
+                else {
+                    var url = "/Shops/Verify_EmailOTP_Shop/";
+                    $.ajax({
+                        url: url,
+                        data: { emailotp_shop_received: _emailotp_shop_received, ShopID: _ShopID },
+                        cache: false,
+                        type: "POST",
+                        success: function (data) {
+                            var html = '';
+                            $.each(data, function (key, item) {
+                                if (item.OTPExist == 'true') {
+                                    $("#verifyemailbox").css("display", "none");
+                                    $("#onemailverified").css("display", "block");
+                                    $("#email").css("display", "none");
+                                }
+                                else {
+                                    $("#msgsendcode").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
+                                    var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
+                                    //$("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();
+                                }
+                            });
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+    </script>
+
+    <script type="text/javascript">
+            function Resend_EmailVerifyOTP() {
+                var _ShopID = document.getElementById("shopid").value;
+                $(document).ajaxStart(function () {
+                    $("#resendemailotp").css("display", "block");
+                });
+                //var ans = confirm('Are you sure you want to resend verification code?');
+                //if (ans) {
+
+                var url = "/Shops/Resend_VerifyEmailOTP/";
+                $.ajax({
+                    url: url,
+                    data: { ShopID: _ShopID },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        var html = '';
+                        $.each(data, function (key, item) {
+                            $("#msgsendcode").html("<div> A new verification code has been sent to @Model.Email.</div>").show();
+                        });
+                        $("#resendemailotp").css("display", "none");
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+            //}
+    </script>
+    <!-- Script for Phone verification-->
+    <script type="text/javascript">
+            function Send_PhoneVerifyOTP() {
+                var _ShopID = document.getElementById("shopid").value;
+                var phone = document.getElementById("phone").value;
+
+                $(document).ajaxStart(function () {
+                    var img = ' <img src="../../Images/loaders/ajax-loadergg.gif" />';
+                    $("#msgphonesendcode").html(img);
+                });
+                var url = "/Shops/PhoneOTP_Shop/";
+                $.ajax({
+                    url: url,
+                    data: { ShopID: _ShopID },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        var html = '';
+                        $.each(data, function (key, item) {
+                            if (item.OTPExist == 'true') {
+                                $("#msgphonesendcode").html("<div>Verification code has been sent to " + phone + "</div>").show();
+                                $("#rsndphoneotp").css("display", "block");
+                                $("#verifyemailbox").css("display", "none");
+                            }
+                        });
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+
+    <script type="text/javascript">
+            function VerifyPhoneOTP() {
+                var _phoneotp_shop = document.getElementById("phoneotp_shop").value;
+                var _ShopID = document.getElementById("shopid").value;
+                if (_phoneotp_shop == '') {
+                    document.getElementById("phoneotp_shop").style.borderColor = "red";
+                    document.getElementById("phoneotp_shop").focus();
+                    return false;
+                }
+                else {
+                    var url = "/Shops/Verify_PhoneOTP_Shop/";
+                    $.ajax({
+                        url: url,
+                        data: { phoneotp_shop: _phoneotp_shop, ShopID: _ShopID },
+                        cache: false,
+                        type: "POST",
+                        success: function (data) {
+                            var html = '';
+                            $.each(data, function (key, item) {
+                                if (item.OTPExist == 'true') {
+                                    $("#verifyphonebox").css("display", "none");
+                                    $("#onphoneverified").css("display", "block");
+                                    $("#phone_block").css("display", "none");
+                                }
+                                else {
+                                    $("#msgphonesendcode").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
+                                    //$("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();
+                                }
+                            });
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+    </script>
+
+    <script type="text/javascript">
+            function Resend_PhoneVerifyOTP() {
+                var _ShopID = document.getElementById("shopid").value;
+                var _shopurl = document.getElementById("shopurl").value;
+                $(document).ajaxStart(function () {
+                    $("#resendphoneotp").css("display", "block");
+                });
+                //var ans = confirm('Are you sure you want to resend verification code?');
+                //if (ans) {
+
+                var url = "/Shops/Resend_Verify_Phone_OTP/";
+                $.ajax({
+                    url: url,
+                    data: { ShopID: _ShopID, Shopurl: _shopurl },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        var html = '';
+                        $.each(data, function (key, item) {
+                            $("#msgphonesendcode").html("<div> A new verification code has been sent to @Model.PhoneNumber.</div>").show();
+                        });
+                        $("#resendphoneotp").css("display", "none");
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+            //}
+    </script>
+
+    <script>
+            function payWithPaystack_StoreActivationM() {
+                var myamt = document.getElementById("amount_store_activation").value * 100;
+                var myname = document.getElementById("currentshopname").value;
+                var email = document.getElementById("shopemail").value;
+                var shopid = document.getElementById("getshopid").value;
+                var phone = document.getElementById("phone").value;
+
+                $(document).ajaxStart(function () {
+                    $("#makepayment_store_activation").css("display", "block");
+                });
+                var handler = PaystackPop.setup({
+                    //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                    key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+                    email: email,
+                    amount: myamt,
+                    ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                    firstname: myname,
+                    number: "",
+                    // label: "Optional string that replaces customer email"
+                    label: myname,
+                    metadata: {
+                        custom_fields: [
+                           {
+                               display_name: "Mobile Number",
+                               variable_name: "mobile_number",
+                               value: phone
+                           }
+                        ]
+                    },
+                    callback: function (response) {
+                        var url = "/Users/Update_Payment_Store_Activation/";
+                        $.ajax({
+                            url: url,
+                            data: { refno: response.reference, amount: myamt, shopid: shopid },
+                            cache: false,
+                            type: "POST",
+                        })
+                        window.location.href = "/Shops/ShopDetails/" + shopid;
+                        $("#makepayment_store_activation").css("display", "none");
+                    },
+                    onClose: function () {
+                        alert('Transaction aborted by user. Try again');
+                    }
+                });
+                handler.openIframe();
+            }
+    </script>
+    <script>
+            function checkEmailPhoneVerifyStatus() {
+                var shopid = document.getElementById("getshopid").value;
+                var url = "/Shops/Get_EmailPhoneVerifyStatus/";
+                $.ajax({
+                    url: url,
+                    data: { shopid, shopid },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            if (item.EmailVerify == null) {
+                                $("#msg_email_phone_verification").html("Please verify your email.");
+                                document.getElementById("email").style.borderColor = "red";
+                            }
+                            else if (item.PhoneVerify == null) {
+                                $("#msg_email_phone_verification").html("Please verify your phone number.");
+                                document.getElementById("phone_block").style.borderColor = "red";
+                            }
+                            else {
+                                document.getElementById("email").style.borderColor = "white";
+                                document.getElementById("phone_block").style.borderColor = "white";
+                                //MAKE PAYMENT AND ACTIVATION HERE
+                                payWithPaystack_StoreActivationM();
+                            }
+
+                        });
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+    </script>
+    @*<script type="text/javascript">
+            function payWithPaystack_StoreActivation() {
+                var myamt = document.getElementById("amount_store_activation").value * 100;
+                var myname =document.getElementById("currentshopname").value;
+                var shopemail = document.getElementById("shopemail").value;
+                var shopid = document.getElementById("getshopid").value;
+                var phone = document.getElementById("phone").value;
+                $(document).ajaxStart(function () {
+                    $("#makepayment_store_activation").css("display", "block");
+                });
+                var url = "/Users/Update_Payment_Store_Activation/";
+                var ref= ''+Math.floor((Math.random() * 1000000000) + 1);
+                    $.ajax({
+                        url: url,
+                        data: { refno: ref, amount: myamt,shopid,shopid},
+                        cache: false,
+                        type: "POST",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                window.location.href = "../../Shops/ShopDetails/"+item.shopid;
+                            });
+                            $("#makepayment_store_activation").css("display", "none");
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            //}
+        </script>
+
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#product").on('click', function(e) {
+                $("#msgactivateaccount").css("display","block");
+                $('#msgactivateaccount').text("Please activate your account.");
+            });
+         });
+        </script>*@
+
+    <script type="text/javascript">
+            //$(document).ready(function() {
+            //    $("#orders").on('click', function(e) {
+            //        $("#msgactivateaccount").css("display","block");
+            //        $('#msgactivateaccount').text("Please activate your account.");
+            //    });
+            //});
+            $(document).ready(function () {
+                $("#orders").on('click', function (e) {
+                    $("#msgactivateaccount").css("display", "block");
+                    $('#msgactivateaccount').text("Please verify your phone number and email.");
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+            //$(document).ready(function() {
+            //    $("#sales").on('click', function(e) {
+            //        $("#msgactivateaccount").css("display","block");
+            //        $('#msgactivateaccount').text("Please activate your account.");
+            //    });
+            // });
+            $(document).ready(function () {
+                $("#sales").on('click', function (e) {
+                    $("#msgactivateaccount").css("display", "block");
+                    $('#msgactivateaccount').text("Please verify your phone number and email.");
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+            //$(document).ready(function() {
+            //    $("#customers").on('click', function(e) {
+            //        $("#msgactivateaccount").css("display","block");
+            //        $('#msgactivateaccount').text("Please activate your account.");
+            //    });
+            //});
+
+            $(document).ready(function () {
+                $("#customers").on('click', function (e) {
+                    $("#msgactivateaccount").css("display", "block");
+                    $('#msgactivateaccount').text("Please verify your phone number and email.");
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+            //$(document).ready(function() {
+            //    $("#product").on('click', function(e) {
+            //        $("#msgactivateaccount").css("display","block");
+            //        $('#msgactivateaccount').text("Please activate your account.");
+            //    });
+            // });
+            $(document).ready(function () {
+                $("#product").on('click', function (e) {
+                    $("#msgactivateaccount").css("display", "block");
+                    $('#msgactivateaccount').text("Please verify your phone number and email.");
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+            //$(document).ready(function() {
+            //    $("#dlocation").on('click', function(e) {
+            //        $("#msgactivateaccount").css("display","block");
+            //        $('#msgactivateaccount').text("Please activate your account.");
+            //    });
+            // });
+            $(document).ready(function () {
+                $("#dlocation").on('click', function (e) {
+                    $("#msgactivateaccount").css("display", "block");
+                    $('#msgactivateaccount').text("Please verify your phone number and email.");
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+            function AddBankDetails() {
+                var _Shopid = document.getElementById("shopid").value;
+                var _acctname = document.getElementById("acctname").value;
+                var bankid = document.getElementById("bankid").value;
+                var acctno = document.getElementById("acctno").value;
+                if (_acctname == '') {
+                    document.getElementById("acctname").style.borderColor = "red";
+                    return false;
+                }
+                else if (bankid == '') {
+                    document.getElementById("bankid").style.borderColor = "red";
+                    document.getElementById("acctname").style.borderColor = "green";
+                    return false;
+                }
+
+                else if (acctno == '') {
+                    document.getElementById("acctno").style.borderColor = "red";
+                    document.getElementById("acctname").style.borderColor = "green";
+                    document.getElementById("bankid").style.borderColor = "green";
+                    return false;
+                }
+
+
+                else if ($("#acctno").val().length < 10) {
+                    $("#acctmsg").css("display", "block");
+                    $("#acctmsg").text('Account number must be 10 digits');
+                    document.getElementById("acctno").style.borderColor = "red";
+                    return false;
+                }
+                else {
+                    $("#acctmsg").css("display", "none");
+
+                    document.getElementById("acctno").style.borderColor = "green";
+                    $(document).ajaxStart(function () {
+                        $("#loader_bank").css("display", "block");
+                    });
+                    var url = "/BankInformations/AddBankDetails/";
+                    $.ajax({
+                        url: url,
+                        data: { ShopID: _Shopid, acctname: _acctname, bankid: bankid, acctno: acctno },
+                        cache: false,
+                        type: "POST",
+                        success: function (data) {
+                            var html = '';
+                            $.each(data, function (key, item) {
+                                document.getElementById("successmsg_bank").style.display = "block";
+                                document.getElementById("acctname").value = item.acctname;
+                                document.getElementById("acctno").value = item.acctno;
+                                $("#save").css("display", "none");
+                            });
+                            $("#loader_bank").css("display", "none");
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+    </script>
+    <script>
+            function DeleteAccount(id) {
+
+                var ans = confirm('Are you sure you want to delete bank information?');
+                if (ans) {
+                    var url = "/BankInformations/DeleteBank/";
+                    $.ajax({
+                        url: url,
+                        data: { ID: id },
+                        cache: false,
+                        type: "POST",
+                        success: function (data) {
+                            $("#displayacct").css("display", "none");
+                            $("#successmsg_delete_account").css("display", "block");
+                            $("#addaccount").css("display", "block");
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+    </script>
+
+    <script>
+            function gotoProducts(shopid) {
+                window.location = '/Products/MyProducts/?id=' + shopid;
+                let timerInterval
+                Swal.fire({
+                    title: '',
+                    html: 'Loading... <b></b>',
+                    timer: 10000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    padding: '1em',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            //b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            }
+
+
+    </script>

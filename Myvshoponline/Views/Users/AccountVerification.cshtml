@@ -1,0 +1,343 @@
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<style>
+    .fade {
+        -webkit-transform: translate(0, -25%);
+        -ms-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+        -webkit-transition: -webkit-transform 0.3s ease-out;
+        -moz-transition: -moz-transform 0.3s ease-out;
+        -o-transition: -o-transform 0.3s ease-out;
+        transition: transform 0.3s ease-out;
+        position: center;
+    }
+</style>
+@model IEnumerable<Myvshoponline.User>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+
+@{
+    ViewBag.Title = ViewBag.CompanyName;
+}
+@{
+    int UserID = ViewBag.CompanyID;
+    string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+    int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+    int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+
+    int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+    int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+    int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+    int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+    int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+    int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+    int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+    DateTime prevd = new DateTime(pYear, pmonth, pday);
+    TimeSpan diff = lauchd.Subtract(prevd);
+    ViewBag.diff = diff.Days;
+    ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+    ViewBag.Ndays = db.Users.Find(UserID).NDays;
+
+
+    string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+    int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+    int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+    double TotalDaysRemaining = Fixeddays - DaysUsed;
+
+    var totalDays = TotalDaysRemaining;
+    var totalYears = Math.Truncate(totalDays / 365);
+    var totalMonths = Math.Truncate((totalDays % 365) / 30);
+    var remainingDays = Math.Truncate((totalDays % 365) % 30);
+
+}<!-- Start Content -->
+<body style="background-color:#f5fcff">
+</body>
+<div id="content">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-12" id="companydetails" style="display:block">
+                <div>
+                    @foreach (var item1 in Model)
+                    {
+                      var passports = item1.ID + ".jpg";
+                        <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px"><i class="nav-icon fas fa-user-secret" style="fill:Background"></i> IDENTITY VERIFICATION</span>
+                            <br />
+                      if (string.IsNullOrEmpty((string)Session["username"]))
+                      {
+                            <img class="alerts-title" src="~/BusinessImages/@item1.CompanyName/@passports" style="width:100px;vertical-align:top;height:100px;" />
+                      }
+
+
+                        <div class="row">
+                            @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+                            {
+
+                              
+                          <div class="col-lg-6 col-md-6 col-12" style="background-color:white;border-radius:5px;border:1px solid #BDE1AE ">
+                            <p style="margin-top:20px;color:black;">
+                              Government issued ID
+                              <br />Display image after upload, then show Submit button
+                            </p>
+                            
+
+                            <div class="input-group input-group-sm">
+                              <select name="idtype" id="idtype" onchange="getIdType(this.value)" class="form-control" style="height:40px;">
+                                <option selected disabled>Select ID Type</option>
+                                <option value="National Identity Card">National Identity Card</option>
+                                <option value="Voter's Card">Voter's Card</option>
+                                <option value="Driver's License">Driver's License</option>
+                                <option value="International Passport">International Passport</option>
+                              </select>
+                            </div>
+
+                            <div id="divContent" style="display:none;margin-top:5px;">
+                              <div class="panel panel-info">
+                                <div class="panel-heading" style="background-color:#71BE50">
+                                  <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;" id="lblNumber"> <span id="planname"></span></h3>
+                                </div>
+                                <div class="panel-body">
+
+                                  <div id="upload" style="display:none;">
+                                    <p style="color:black;margin-top:10px;">
+                                      Upload photo of ID (<strong>Front and Back</strong>)
+                                      <div class="alert-danger" id="msgInvalidUpload"> </div>
+                                    </p>
+                                    <span style="color:black;">
+                                      Kindly upload a clear valid ID card (Government issued ID card)
+                                    </span>
+
+                                    <div class="input-group input-group-sm">
+                                      <input type="file" id="fileUpload" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:5px;height:40px;" required="required" multiple>
+                                      <div class="input-group-append">
+                                        <button class="btn btn-common" type="button">
+                                          <i class="fas fa-camera" id="eyeoldpw"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div id="idinfo">
+                                    <input type="text" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" placeholder="" id="idno" onkeyup="changeidnocolor()" />
+                                    <label style="color:black">Date Issued</label>
+                                    <input type="date" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;margin-top:5px;margin-bottom:5px;" placeholder="" id="dissued" />
+                                    <label style="color:black">Expiry Date</label>
+                                    <input type="date" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" placeholder="" id="dexpiry" />
+                                  </div>
+
+                                  <br />
+                                  <center>
+                                    <div class="input-group-append" id="infodiv">
+                                      <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return uploadIdentity();">
+                                        <span id="saveacct">Save & Continue <i class="fas fa-save"></i></span>
+                                      </button>
+                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                        <div class="spinner-container">
+                                          <div class="loading-spinner"></div>
+                                        </div>
+                                      </button>
+                                    </div>
+
+                                    <div class="input-group-append" id="imgUpload" style="display:none">
+                                      <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return CheckFileName();">
+                                        <span id="saveacct">Upload <i class="fas fa-upload"></i></span>
+                                      </button>
+                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                        <div class="spinner-container">
+                                          <div class="loading-spinner"></div>
+                                        </div>
+                                      </button>
+                                    </div>
+
+
+
+
+
+                                  </center>
+                                </div>
+                                </div>
+                                </div>
+
+                                <br />
+                              </div>
+                                   }
+                              </div>
+                    }
+
+                    <!-- End Pagination -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+
+<script type="text/javascript">
+        function CheckFileName() {
+          var fileName = document.getElementById("fileUpload").value
+            //debugger;
+          if (fileName == "") {
+            document.getElementById("msgInvalidUpload").innerHTML = "Browse to upload a valid File with jpg/jpeg/gif/png";
+            //document.getElementById("fileUpload").value = "";
+            return false;
+          }
+          else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+          {
+            document.getElementById("msgInvalidUpload").innerHTML = "";
+
+            var fileUpload = $("#msgInvalidUpload").get(0);
+                var files = fileUpload.files;
+                // Create FormData object  
+                var fileData = new FormData();
+                // Looping over all files and add it to FormData object  
+                for (var i = 0; i < files.length; i++) {
+                  fileData.append(files[i].name, files[i]);
+                }
+                $.ajax({
+                  url: '/Users/UploadIdentity',
+                  type: "POST",
+                  contentType: false, // Not to set any content header  
+                  processData: false, // Not to process data  
+                  data: fileData,
+                  success: function (result) {
+                    alert(result);
+                  },
+                  error: function (err) {
+                    alert(err.statusText);
+                  }
+                });
+               return true;
+               }
+            else {
+              document.getElementById("msgInvalidUpload").innerHTML = "File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png";
+              //document.getElementById("fileUpload").value = "";
+                return false;
+            }
+            return true;
+        }
+</script>
+
+
+
+
+<script type="text/javascript">
+  function getIdType(_value) {
+    document.getElementById("divContent").style.display = "block";
+    if (_value == "National Identity Card") {
+      document.getElementById("lblNumber").innerHTML = "National Identity Card";
+      document.getElementById("idno").placeholder = "Enter NIN";
+      
+    }
+    else if (_value == "Voter's Card") {
+      document.getElementById("lblNumber").innerHTML = "Voter's Card";
+      document.getElementById("idno").placeholder = "Enter VIN";
+    }
+    else if (_value == "Driver's License") {
+      document.getElementById("lblNumber").innerHTML = "Driver's License";
+      document.getElementById("idno").placeholder = "Enter License number";
+    }
+    else {
+      document.getElementById("lblNumber").innerHTML = "International Passport";
+      document.getElementById("idno").placeholder = "Enter International Passport number";
+    }
+  }
+</script>
+
+
+<script>
+  function changeidnocolor() {
+    document.getElementById("idno").style.background = "white";
+  }
+  //submit identity
+  function uploadIdentity() {
+
+    var idno = document.getElementById("idno").value;
+    var dissued = document.getElementById("dissued").value;
+    var dexpiry = document.getElementById("dexpiry").value;
+    var idType = document.getElementById("dexpiry").value;
+    if (idno == '') {
+
+      document.getElementById("idno").focus();
+      document.getElementById("idno").style.borderColor = "red";
+      return false;
+    }
+    else if (dissued == '') {
+      document.getElementById("idno").style.borderColor = "green";
+      document.getElementById("dissued").focus();
+      document.getElementById("dissued").style.borderColor = "red";
+      return false;
+    }
+    else if (dexpiry == '') {
+      document.getElementById("idno").style.borderColor = "green";
+      document.getElementById("dissued").style.borderColor = "green";
+
+      document.getElementById("dexpiry").focus();
+      document.getElementById("dexpiry").style.borderColor = "red";
+      return false;
+    }
+    else if (dissued > dexpiry) {
+      document.getElementById("dissued").style.borderColor = "red";
+      document.getElementById("dexpiry").style.borderColor = "red";
+      return false;
+    }
+   
+    else {
+      document.getElementById("loadSpinner").style.display = "block";
+      document.getElementById("btnUpload").style.display = "none";
+      document.getElementById("idno").style.borderColor = "green";
+      document.getElementById("dissued").style.borderColor = "green";
+      document.getElementById("dexpiry").style.borderColor = "green";
+
+      //on success
+      document.getElementById("upload").style.display = "block";
+      document.getElementById("idinfo").style.display = "none";
+      document.getElementById("imgUpload").style.display = "block";
+      document.getElementById("infodiv").style.display = "none";
+
+      var url = "/Shops/StoreLocator/";
+      $.ajax({
+        url: url,
+        data: { idno: idno, dissued: dissued, dexpiry: dexpiry },
+        cache: false,
+        type: "GET",
+        success: function (data) {
+          if (data != '') {
+            var html = '<p></p><section class="content" style="marging:0PX;"><div class="container-fluid"><div class="row">';
+            $.each(data, function (key, item) {
+              var passports = item.UserID + ".jpg";
+              html += '<div class="col-md-4 col-lg-4 col-6"><div class="" style="padding:10px;background-color:#FFFFFF;margin-bottom:8px;border-radius:5px;"><div class="">';
+              html += '<h4 style="font-size:12px;color:#33C6F6"><a href="../Shops/ShopDetails/' + item.ID + '">' + item.ShopName + '</a></h4>';
+              html += '<p style="color:black;background-color:white;line-height:15px;font-size:12px">' + item.ShopAddress + '<br><button type="button" value="' + item.ShopAddress + '"class="badge badge-info" id="' + item.ShopName + '" style="padding:10px;border:0px;font-size:12px;" data-toggle="modal" data-target="#myModalMap" onclick="loadStoreAddress(this.value,this.id)">View on Google Map <i class="fas fa-arrow-circle-right"></i></button></p><br><br></div>';
+
+              html += '</div></div>';
+            });
+            html += "</div></div></section>";
+          } else {
+            html = "<br><span class='alert alert-danger'>No record found! </span>";
+          }
+          $("#loadSpinner").css("display", "none");
+          $("#btnUpload").css("display", "block");
+          $("#displaystores").html(html);
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  }
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

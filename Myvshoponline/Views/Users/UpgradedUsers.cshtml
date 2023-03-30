@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Myvshoponline.User>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+    var totalpaid = db.Users.Where(p => p.PaymentStatus == 1).Sum(p => p.Amount);
+    var totalformat = string.Format("{0:#,0}", totalpaid);
+}
+
+
+@{
+    ViewBag.Title = "Upgraded Users";
+}
+<div id="content">
+    <div class="container">
+        <h4 style="font-size:16px;"> Upgraded Users [@Model.Count()] - @totalformat </h4>
+
+     
+        <table class="table" style="color:black;">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompanyName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+               
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+               
+               
+                <th>
+                    @Html.DisplayName("Date")
+                </th>
+               
+                <th>
+                    @Html.DisplayName("Plan")
+                </th>
+                <th>
+                    @Html.DisplayName("Cycle")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                   
+                    
+                    <td>
+                        @{ if (item.DateCreated!=null)
+                            {
+                                var date = string.Format("{0:MMM dd,yyy hh:mm tt}",item.DateCreated);
+                                @date
+                            }
+
+
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PricingPlan.PlanName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillingCycle.Cycle)
+                    </td>
+                    @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    </td>*@
+                </tr>
+            }
+
+        </table>
+        </div></div>

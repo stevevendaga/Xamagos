@@ -1,0 +1,307 @@
+﻿@model Myvshoponline.ShippingInformation
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+@{
+    ViewBag.Title = "Order Checkout";
+    int CID = Convert.ToInt32(Request.QueryString["id"]);
+    string currency = db.Orders.Where(o => o.UserID == CID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
+}
+
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+<div id="content">
+    <div class="">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-12 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;"><i class="lni lni-cart"></i> SHOPPING CART  </h3>
+                        </div>
+                        <div class="panel-body">
+                            <table style="padding:10px;color:black;font-size:12px;" class="table table-striped table-responsive-sm table-hover">
+                                <tr>
+                                    <th>SN</th>
+                                    @*<th>Shop Name</th>*@
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th style="text-align:center">
+                                        Unit Price <br />(@if (currency == "NGN")
+                                        {<span>₦</span>}
+                                        else
+                                        {<span>@currency</span> })
+                                    </th>
+                                    <th style="font-weight:bold;text-align:center">
+                                        Amount <br />(@if (currency == "NGN")
+                                        {<span>₦</span>}
+                                        else
+                                        {<span>@currency</span> })
+                                    </th>
+                                    <th></th>
+                                </tr>@{
+                                    int i = 1;
+                                    int UserID = ViewBag.customerID;
+                                    decimal sum_shippingcost = (db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Sum(s => s.DeliveryCost) == null ? 0 : (decimal)db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Sum(s => s.DeliveryCost));
+                                    var shops = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").OrderByDescending(s => s.DateOrdered).OrderBy(s => s.ProductSubProduct.Product.ShopID).OrderBy(s => s.Product.ShopID).ToList();
+                                    // var products = db.Orders.Where(s => s.ShopCustomerID == CustomerID).OrderBy(s=>s.Product.ShopID).ToList();
+                                    foreach (var item in shops)
+                                    {
+
+                                        var itemname = "";
+                                        int ShopID = item.Product.ShopID;
+                                        int counttotalbreak = shops.Where(s => s.Product.ShopID == ShopID).Count();
+
+                                        <tr>
+                                            <td>@i</td>
+                                            @*<td>@item.DateOrdered</td>*@
+                                            @*<td>@item.Product.Shop.Name SHOP</td>*@
+                                            @if (item.SubProductID != 0)
+                                        {
+                                            itemname = item.ProductSubProduct.Name;
+
+                                        }
+                                        else
+                                        {
+                                            itemname = item.Product.Name;
+                                        }
+
+                                            <td>@itemname </td>
+
+                                            <td>@item.Quantity</td>
+                                            <td style="font-weight:bold">
+                                                @{
+                                                    var rate = string.Format("{0:#,0}", item.Rate);
+                                                }
+                                                @rate
+                                            </td>
+                                            <td style="font-weight:bold">
+                                                @{
+                                                    var am = string.Format("{0:#,0}", item.Amount);
+                                                }
+                                                @am
+                                            </td>
+                                            <td style="color:red">
+                                                <span style="background-color:#FF4747;border-radius:20px;color:white;border:0px;padding-left:4px;padding-right:4px;padding-top:2px;padding-bottom:2px;width:30px;height:10px;font-size:15px">
+                                                    <a href="~/Orders/Delete/@item.ID?CustomerID=@UserID" onclick="return confirm('Are you sure you want to remove @itemname from cart?')" style="color:white;font-size:15px;">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </a>
+                                                </span>
+                                            </td>
+
+                                        </tr>
+                                                    if (db.Orders.Where(s => s.UserID == UserID && s.Product.ShopID == ShopID || s.ProductSubProduct.Product.ShopID == ShopID).Select(s => s.Product.ShopID).FirstOrDefault() == ShopID)
+                                                    {
+                                                        if (i == counttotalbreak)
+                                                        {
+                                                            var p = "";
+                                                            <tr style="border:0px;">
+
+                                                                <td colspan="7">
+                                                                    <span style="float:right;font-weight:bold;color:red">
+                                                                        Shipping Cost:
+                                                                        (@if (currency == "NGN")
+
+                                                                        {<span>₦</span>}
+                                                                        else
+                                                                        {<span>@currency</span>
+                                                                            //Use sum_shippingcost to add different items delivery cost
+                                                                            //use item.deliverycost to pick single delivery cost from the first item
+                                                                        })
+
+                                                                        @string.Format("{0:#,0}", sum_shippingcost)
+                                                                    </span>
+                                                                    <br />
+                                                                    <span class="badge badge-info" style="padding:10px;color:black;border-color:green;font-size:10px;background-color:white">
+                                                                        @*Click on <font color="magenta"><b>Proceed to Checkout</b> </font> to*@
+                                                                        Order @counttotalbreak @if (counttotalbreak > 1) { p = "products"; }
+                                                                        else
+                                                                        { p = "product"; }@p from @item.Product.Shop.Name
+                                                                    </span>
+                                                                    <span>
+                                                                        <img src="~/Images/checkouticon.png" style="width:35px;height:30px;" />
+                                                                        <a href="~/Orders/OrderCheckOut/?id=@UserID&sid=@ShopID" class="btn btn-success" style="width:auto;padding:3px">
+                                                                            Proceed to Checkout
+                                                                        </a>
+
+
+                                                                    </span>
+                                                                </td>
+
+
+                                                            </tr>
+                                                                i = 0;
+                                                            }
+                                                        }
+                                                        i++;
+                                                    }
+                                }
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            @*<div class="col-lg-4 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading" style="background-color:#71BE50">
+                                                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9">
+                                                            SUPPLY YOUR SHIPPING INFORMATION BELOW
+                                                            </h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                           @using (Html.BeginForm("CreateOrderShippingInfo", "Products", FormMethod.Post))
+                                                           {
+                                                            @Html.AntiForgeryToken()
+                                                            <div class="form-horizontal">
+                                                                <input type="hidden" name="Quantity" id="quanity" value="@ViewBag.Quantity" />
+                                                                <input type="hidden" name="ProductID" id="productid" value="@ViewBag.pid" />
+                                                                <input type="hidden" name="customerid" id="customerid" value="@Session["CustomerID"]" />
+                                                                <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
+                                                                <input type="hidden" name="Rate" id="rate" value="@ViewBag.Rate" />
+                                                                <input type="hidden" id="productname" value="@ViewBag.Item" />
+                                                                <input type="hidden" name="src" value="@ViewBag.src" />
+
+                                                                <div class="form-group">
+                                                                    <div class="col-md-10">
+                                                                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address",@required="required",@id="address" } })
+                                                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-md-10">
+                                                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City", @required = "required", @id = "city" } })
+                                                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <div class="col-md-10">
+                                                                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State", @required = "required", @id = "state" } })
+                                                                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-md-offset-2 col-md-10">
+
+                                                                      @{
+                                                                          int ShopID;
+
+                                                                            int  ProductID = (int)db.Orders.Where(s => s.ShopCustomerID == CustomerID).Select(s => s.ProductID).FirstOrDefault();
+
+
+                                                                          if (Model.Order.SubProductID==0)
+                                                                          {
+                                                                              ShopID  = db.ProductSubProducts.Where(p => p.ID == ProductID).Select(p => p.Product.Shop.ID).FirstOrDefault();
+                                                                          }
+                                                                          else
+                                                                          {
+                                                                              ShopID = db.Products.Where(p => p.ID == ProductID).Select(p => p.Shop.ID).FirstOrDefault();
+                                                                          }
+
+                                                                          if (db.Shops.Where(s => s.ID == ShopID).Select(s => s.EnableOnlinePayment).FirstOrDefault() == "Yes")
+                                                                          {
+                                                                              string ShopAPIKey = db.ShopAPIKeys.Where(s => s.ShopID == ShopID).Select(s => s.APIKey).FirstOrDefault();
+                                                                              <input type="hidden" value="@ShopAPIKey" id="apikey" name="apikey" />
+                                                                            <input type="hidden" value="1" id="onlinepayment" name="onlinepayment" />
+
+                                                                                <button type="submit" class="btn btn-success" style="width:auto;" onclick="alert()">Proceed to Checkout <i class="lni lni-arrow-right-circle"></i></button>
+
+                                                                          }
+                                                                          else
+                                                                          {
+                                                                            <button type="submit" class="btn btn-success" style="width:auto;"> Submit Order <i class="lni lni-arrow-right-circle"></i></button>
+                                                                          }
+                                                                    }
+
+                                                                    </div>
+                                                                </div>
+                </div>
+                                                           }
+
+                                                        </div>
+                                                    </div>
+                                                </div>*@
+
+
+        </div>
+
+    </div>
+</div>
+<!-- End Content -->
+
+<script type="text/javascript">
+    function alert() {
+        alert("Clicked");
+    }
+</script>
+@*<script>
+        function payWithPaystack() {
+            var productid = document.getElementById("productid").value;
+            var productname = document.getElementById("productname").value;
+            var quantity = document.getElementById("quantity").value;
+            var rate = document.getElementById("rate").value;
+            var amount = document.getElementById("amount").value;
+            var address = document.getElementById("address").value;
+            var city = document.getElementById("city").value;
+            var state = document.getElementById("state").value;
+            var customerid = document.getElementById("customerid").value;
+            var customername = document.getElementById("customername").value;
+            var myamt = document.getElementById("amount").value * 100;
+            var myname = document.getElementById("productname").value + " -" + customername;
+            var apikey = document.getElementById("apikey").value
+            var customeremail = document.getElementById("customeremail").value
+            //ADD TO ORDER AND SHIPING INFORMATION
+            alert(myamt);
+            var url = "/Orders/InsertOrder_Shipping_Info/";
+            $.ajax({
+                url: url,
+                data: { ShopCustomerID:customerid,ProductID:productid,Quantity:quanity, Rate:rate,Amount:amount, Address:address,City:city,State:state },
+                cache: false,
+                type: "POST",
+            })
+                var handler = PaystackPop.setup({
+                    key: apikey,
+              email: customeremail,
+              amount: myamt,
+              ref: ''+ Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+              firstname: myname,
+              number: "",
+                    // label: "Optional string that replaces customer email"
+             label: myname,
+              metadata: {
+                 custom_fields: [
+                    {
+                        display_name: "Mobile Number",
+                        variable_name: "mobile_number",
+                        value: "+2348078088233"
+                    }
+                 ]
+              },
+              callback: function (response) {
+                  var url = "/Orders/Update_Payment_Product/";
+                  $.ajax({
+                      url: url,
+                      data: { refno: response.reference, amount: myamt, productid: productid, customerid: customerid },
+                      cache: false,
+                      type: "POST",
+                  })
+                 // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+                  window.location.href = "/Orders/Details/" + customerid;
+              },
+              onClose: function(){
+                  alert('Transaction aborted by user. Try again');
+              }
+            });
+            handler.openIframe();
+          }
+    </script>*@
+
+

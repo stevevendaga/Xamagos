@@ -1,0 +1,123 @@
+﻿@model IEnumerable<Myvshoponline.OnlineTraining>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index [@Model.Count()]</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-responsive">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OtherNames)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LGAResidence)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateSubmitted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReferenceNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatePaid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sex.Sex1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State1.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Surname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OtherNames)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LGAResidence)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateSubmitted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReferenceNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatePaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sex.Sex1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State1.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

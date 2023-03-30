@@ -1,0 +1,58 @@
+﻿@model Myvshoponline.DeliveryCity
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DeliveryCity</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryNote)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryNote)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryCity_Only.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryCity_Only.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State1.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State1.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

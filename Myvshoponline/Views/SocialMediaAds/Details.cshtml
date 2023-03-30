@@ -1,0 +1,181 @@
+﻿@model Myvshoponline.SocialMediaAd
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+ 
+    <h4 style="font-size:14px;">Social Media Ads for @Model.Shop.Name</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal" style="color:black;">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Country)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Country)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Locations)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Locations)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.TargetPeople)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.TargetPeople)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.TotalDaysPaid)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.TotalDaysPaid)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DatePaid)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DatePaid)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.RefNo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.RefNo)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PaymentStatus)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PaymentStatus)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.EndDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AmountPaid)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AmountPaid)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DaysActive)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DaysActive)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LaunchYear)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LaunchYear)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LaunchMonth)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LaunchMonth)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LaunchDay)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LaunchDay)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PreviousYear)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PreviousYear)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PreviousMonth)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PreviousMonth)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PreviousDay)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PreviousDay)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.PopularStoreStatu.Status)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PopularStoreStatu.Status)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Product.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Product.Name)
+                </dd>
+
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.SocialMediaChannel.Channel)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.SocialMediaChannel.Channel)
+                </dd>
+
+            </dl>
+        </div>
+   
+        <div class="col-md-5">
+            <p>
+                @Html.ActionLink("Activate Ads", "Edit", new { id = Model.ID }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+            <a href="~/SocialMediaAdsStatistics/Create?aid=@Model.ID">Update Statistics</a>
+
+        </div>
+    </div>
+    

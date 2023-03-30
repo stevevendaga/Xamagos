@@ -1,0 +1,540 @@
+﻿@model IEnumerable<Myvshoponline.Product>
+
+@{
+    ViewBag.Title = "View Products";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int ShopID =Convert.ToInt32(Request.QueryString["id"]);
+}
+
+
+<div id="content" style="margin-top:0px;">
+    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a> </h5>
+
+    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+    {
+        <hr style="padding:1px;margin:10px" />
+       <b style="color:black">My Products</b>
+        @*<div class="col-12">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
+                                </a>
+
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+           
+                <div class="col-md-12" style="margin-top:3px;">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <ul style="font-size:14px">
+                                <li>
+                                    <span style="margin-top:0px;margin-bottom:3px;">
+                                        <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                            <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <ul style="font-size:14px">
+                                <li>
+                                    <span style="margin-top:0px;margin-bottom:3px;">
+                                        <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                            <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>*@
+
+
+      
+                <hr style="padding:1px;margin:10px" />
+    }
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <h5 style="font-size:15px;">
+                    <span class="badge badge-success"> Published</span> <span class="badge badge-info">@db.Products.Where(s => s.ShopID == ShopID && s.ProductStatusID == 1).Count()</span>
+                    <a href="~/Products/ViewProducts?id=@Request.QueryString["id"]&un_pub=0" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View published products">
+                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i></font>
+                    </a>
+                </h5>
+            </div>
+            <div class="col-6 col-md-3">
+
+                <h5 style="font-size:15px;">
+                    <span class="badge badge-warning"> Unpublished</span> <span class="badge badge-info">@db.Products.Where(s => s.ShopID == ShopID && s.ProductStatusID == 2).Count()</span>
+                    <a href="~/Products/ViewProducts?id=@Request.QueryString["id"]&un_pub=1" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View unpublished products">
+                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i></font>
+                    </a>
+                </h5>
+            </div>
+            </div>
+        </div>
+    <div class="badge">
+        Click on <font style="color:red">
+            <i class="glyphicon glyphicon-remove"></i> 
+        </font>icon  from the right to delete a product.
+    </div>
+@if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
+{
+            <h5 style="font-size:15px;"><span class="badge badge"> Unpublished Products</span> </h5>
+        }
+        else
+        {
+            <h5 style="font-size:15px;"><span class="badge badge"> Published Products</span> </h5>
+            <div class="badge">Note: Click on <font style="color:#E25C09">
+                 <i class="glyphicon glyphicon-remove-circle"></i></font> icon to unpublish a product.</div><br />
+                <div class="badge">
+                  Toggle between <font style="color:green;cursor:pointer"><i class="glyphicon glyphicon-adjust"></i></font>
+                    for negotiable
+                    and
+                    <font style="color:gray;cursor:pointer"><i class="glyphicon glyphicon-adjust"></i></font>  for non-negotiable
+                </div>
+}
+
+        @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
+        {
+            <span style="margin-top:5px;">
+                <a href="~/Products/Publish_Products?ShopID=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                    <font style="color:white">  <i class="glyphicon glyphicon-cloud-upload"></i> Publish</font>
+                </a>
+            </span>
+
+            <span style="margin-top:5px;">
+            @{
+                            int pcid =(db.ShopProductCategories.Where(s => s.ShopID == ShopID).Select(s => s.ProductCategoryID).FirstOrDefault()==null?0: (int)db.ShopProductCategories.Where(s => s.ShopID == ShopID).Select(s => s.ProductCategoryID).FirstOrDefault());
+                        }
+                <a href = "../../Products/ProductCategoryDetails?sid=@Request.QueryString["id"]&id=@pcid" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                    <font style = "color:white">  <i class="glyphicon glyphicon-eye-close"></i> Preview</font>
+                </a>
+            </span>
+            <div class="badge badge-danger">Note: Only products with pictures will be published.</div>
+        }
+        <p></p>
+        @*<table class="table table table-striped table-hover table  table-responsive-sm" style="color:black;">*@
+            <table id="zero_config" class="table table-striped table-hover table-responsive-sm" style="color:black;">
+               
+                <thead>
+                   
+                     <tr>
+                        <th></th>
+                        <th>
+
+                        </th>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Details)
+                        </th>
+                        <th>
+                            Selling Price
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        @*<th>
+                    @Html.DisplayNameFor(model => model.DateCreated)
+                </th>*@
+                        <th>
+                            Category
+                        </th>
+                        @*<th>
+                    @Html.DisplayNameFor(model => model.ProductStatu.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Shop.Name)
+                </th>*@
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+            {
+                        <tr>
+                            <td id="@item.ID">
+                                @if (item.Negotiable == "No")
+                                {
+                                    <font style="color:grey;cursor:pointer"><i class="glyphicon glyphicon-adjust" title="Non-Negotiable" onclick="Update_Negotiable_Yes(@item.ID)"></i></font>
+                                }
+                                else
+                                {
+                                    <font style="color:green;cursor:pointer"><i class="glyphicon glyphicon-adjust" title="Negotiable" onclick="Update_Negotiable_No(@item.ID)"></i></font>
+                                }
+
+                            </td>
+                            <td>
+                                @if (item.ProductStatusID == 2)
+                                {
+                                    <input type="checkbox" id="@item.ID" value="@item.ID" onclick="cbox(this.value)" checked />
+                                }
+
+                                @if (item.ProductStatusID == 1)
+                                {
+                                    <a href="#" onclick="return confirmUnpublish(@item.ID,@item.ShopID)" title="Unpublish @item.Name">
+                                        @*<a href="~/Products/Un_Publish_Product/@item.ID?&ShopID=@ShopID&un_pub=0" onclick="return confirmUnpublish()" title="Unpublish @item.Name">*@
+                                            <font style="color:#E25C09"><i class="glyphicon glyphicon-remove-circle"></i></font>
+                                        </a>
+                                }
+                                @*else
+                        {
+                        <input type="checkbox" id="@item.ID" value="@item.ID" onclick="cbox(this.value)" />
+                        }*@
+                            </td>
+                            <td align="center">
+                                @{
+                                    string ImageName = item.ID + ".jpg";
+                                    int UserID = (int)Session["UserID"];
+                                    string ShopName = db.Shops.Find(item.ShopID).Name;
+                                    string businessname = db.Users.Find(UserID).CompanyName;
+                                    string hardtoken = db.Users.Find(UserID).HardToken;
+                                    string image = "../../BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + ImageName;
+                                    string filepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + ImageName);
+
+                                }
+                                <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;">
+                                    <button href="#" class="btn btn-primary" style="height:20px;padding:2px;width:25px;padding-top:0px;font-weight:bold;font-size:15px" title="Change Product Picture" data-toggle="modal" data-target="#myModal" onclick="load_productid(@item.ID);clearTextBox();"> <i class="lni-camera"></i></button>
+                                </span>
+                                @if (File.Exists(filepath))
+                                {
+                                    <img src="@image" style="width:50px;height:35px; border-radius:10px" />
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.Raw(HttpUtility.HtmlDecode(item.Details))
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QuantityinStock)
+                            </td>
+                            @*<td>
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductCategory.Name)
+                            </td>
+                            @*<td>
+                        @Html.DisplayFor(modelItem => item.ProductStatu.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shop.Name)
+                    </td>*@
+                            <td>
+                                @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
+                                {
+                                    // @Html.ActionLink("Edit", "Edit", new { id = item.ID })
+                                    <a href="~/Products/Edit/@item.ID?&un_pub=1">
+                                        <font style="color:#E25C09">  <i class="glyphicon glyphicon-edit"></i></font>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="~/Products/Edit/@item.ID?&un_pub=0">
+                                        <font style="color:#E25C09">  <i class="glyphicon glyphicon-edit"></i></font>
+                                    </a>
+                                    // @Html.ActionLink("Edit", "Edit", new { id = item.ID })
+                                }
+
+                            </td>
+                            <td>
+                                @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
+                                {
+                                    <a href="#" onclick="return deleteProduct(@item.ID,@item.ShopID,1)">
+                                        <font style="color:red">  <i class="glyphicon glyphicon-remove"></i></font>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#" onclick="return deleteProduct(@item.ID,@item.ShopID,0)">
+                                        <font style="color:red">  <i class="glyphicon glyphicon-remove"></i></font>
+                                    </a>
+
+                                }
+
+
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                            </td>
+                        </tr>
+                                    }
+                    </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>
+
+                        </th>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Details)
+                        </th>
+                        <th>
+                            Selling Price
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                      
+                        <th>
+                            Category
+                        </th>
+                      
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+</table>
+       @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
+       {
+        <span style="margin-top:5px;">
+            <a href="~/Products/Publish_Products?ShopID=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                <font style="color:white">  <i class="glyphicon glyphicon-cloud-upload"></i> Publish</font>
+            </a>
+        </span>
+       }
+    </div>
+
+
+<!-- Modal Upload Product Image-->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:14px">Upload Product Picture</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Upload_Product_Picture_from_ViewProducts", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="hidden" id="ProductID" name="ProductID" />
+                    <input type="hidden" id="un_pub" name="un_pub" value="@Request.QueryString["un_pub"]"  />
+                    <input type="hidden" id="ShopID" name="ShopID" value="@Request.QueryString["id"]" />
+
+            <font color="black">
+                <input type="file" name="files" id="uploadFile" style="width: 100%;color:black" class="btn btn-default" />
+            </font><hr />
+            <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function load_productid(ProductID)
+    {
+        document.getElementById("ProductID").value = ProductID;
+    }
+       
+</script>
+ 
+<script>
+    function CheckFileName() {
+        var fileName = document.getElementById("uploadFile").value
+        //debugger;
+        if (fileName == "") {
+            alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+            return false;
+        }
+        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+            return true;
+        else {
+            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+        <script>
+        function cbox(_select) {
+            if (document.getElementById(_select).checked) {
+                select(_select);
+               //count_selected();
+            }
+            else {
+
+                deselect(_select);
+                //count_selected();
+            }
+        }
+        </script>
+
+<script type="text/javascript">
+            function select(_select) {
+                var url = "/Products/Select_product_for_publishing/";
+                $.ajax({
+                    url: url,
+                    data: { pid: _select },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>
+
+<script type="text/javascript">
+            function deselect(_select) {
+                var url = "/Products/De_selectProduct_for_publishing/";
+                
+                $.ajax({
+                    url: url,
+                    data: { pid: _select },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>
+
+<script type="text/javascript">
+            function count_selected() {
+                var url = "/Products/Count_Selected/";
+                var _shopid = document.getElementById("shopid").value;
+                $.ajax({
+                    url: url,
+                    data: {shopid:_shopid},
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            $("#total").html(item.CountTotal).show();
+                        });
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>
+
+<script type="text/javascript">
+    function Update_Negotiable_Yes(productid) {
+        var url = "/Products/Update_Negotiable_Yes/";
+        $.ajax({
+            url: url,
+            data: {ProductID: productid},
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<font style="color:green;cursor:pointer"><i class="glyphicon glyphicon-adjust" title="Negotiable" onclick="Update_Negotiable_No(' + productid + ')"></i></font>';
+                $("#"+productid).html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function Update_Negotiable_No(productid) {
+        var url = "/Products/Update_Negotiable_No/";
+        $.ajax({
+            url: url,
+            data: { ProductID: productid},
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<font style="color:grey;cursor:pointer"><i class="glyphicon glyphicon-adjust" title="Non-Negotiable" onclick="Update_Negotiable_Yes(' + productid + ')"></i></font>';
+                $("#"+productid).html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+</script>
+<script>
+    function confirmUnpublish(itemid,shopid)
+    {
+        Swal.fire({
+            title: 'Unpublish this product',
+            text: "Are you sure?",
+            icon: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+            showDenyButton: true,
+            denyButtonText: 'No',
+        }).then((result) => {
+            if (result.isDenied) {
+
+            }
+            else if (result.isConfirmed)
+            {
+                window.location='../Products/Un_Publish_Product/?id='+itemid +'&ShopID='+shopid+'&un_pub=0';
+            }
+        });
+    }
+
+    function deleteProduct(itemid, shopid,option) {
+        Swal.fire({
+            title: 'Delete',
+            text: "Are you sure you want to delete this product?",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+            showDenyButton: true,
+            denyButtonText: 'No',
+        }).then((result) => {
+            if (result.isDenied) {
+               
+            }
+            else if (result.isConfirmed)
+            {
+                window.location = '../Products/delete/' + itemid + '?&sid=' + shopid + '&un_pub=' + option;
+            }
+        });
+    }
+</script>

@@ -1,0 +1,261 @@
+﻿@model Myvshoponline.TrainingModule
+
+@{
+    ViewBag.Title = "Edit Project Modules";
+}
+
+
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+@*<script type="text/javascript" src="http://code.jquery.com/jquery.min.js" charset="utf-8"></script>*@
+<script type="text/javascript" src="~/TextEditor/jquery-te-1.4.0.js"></script>
+<script src="~/TextEditor/jquery-te-1.4.0.min.js"></script>
+
+
+
+
+<style type="text/css">
+    /* Dropdown Button */
+    .dropbtn {
+        background-color: #f1f1f1;
+        color: white;
+        padding: 1px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .intLink {
+        cursor: pointer;
+        text-decoration: none;
+        color: #0000ff;
+    }
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #ca3838;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {
+                background-color: #ddd;
+            }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+</style>
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <form name="myForm" method="post" action="Edit">
+                    @using (Html.BeginForm())
+            {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+
+
+                            <div style="color:black; font-size:20px; text-align:center; padding:5px; background-color:#FFF9F2; border-bottom:5px solid #FF8A15; border-radius:10px; margin-bottom:15px;">
+
+                                <p> Edit a Training </p>
+
+                            </div>
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ModuleID)
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Projects</label>
+                                    @Html.DropDownList("ProjectID", null, htmlAttributes: new { @id = "inputTrainings", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Training Title</label>
+
+                                    @Html.EditorFor(model => model.ProjectTitle, new { htmlAttributes = new { @class = "form-control", @id = "inputTrainings" } })
+                                    @Html.ValidationMessageFor(model => model.ProjectTitle, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Serial Number</label>
+
+                                    @Html.EditorFor(model => model.Serial, new { htmlAttributes = new { @placeholder = "Serial No", @class = "form-control", @id = "inputTrainings" } })
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Detailed Explanations</label>
+
+                                    <textarea class="Editor" id="inputTrainings" style="margin:0px;" name="Description">@Model.Description</textarea>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Video Link</label>
+                                    @Html.EditorFor(model => model.VideoUrl, new { htmlAttributes = new { @id = "inputTrainings", @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.VideoUrl, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.DateUploaded, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                <div class="col-md-10">
+                                    <input type="hidden" value="@Model.DateUploaded" name="DateUploaded" />
+                                    @*@Html.EditorFor(model => model.DateUploaded, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DateUploaded, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Video Length</label>
+                                    @Html.EditorFor(model => model.TimeInMins, new { htmlAttributes = new { @class = "form-control", @id = "inputTrainings" } })
+                                    @Html.ValidationMessageFor(model => model.TimeInMins, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Notes</label>
+                                    <textarea id="inputTrainings" class="form-control" name="Notes" cols="10" rows="4" placeholder="Notes">@Model.Notes</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-10">
+                                    <label id="moduleLabels">Activity</label>
+                                    <textarea id="inputTrainings" class="form-control" name="Activity" cols="10" rows="4" placeholder="Activity">@Model.Activity</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div clas="col-md-10">
+
+                                    <span class="col-md-4">
+                                        <a class="badge badge-light" id="trainingLink" href="~/Projects/Details/@Model.ProjectID">Back to Project</a>
+                                    </span>
+
+                                    <span class="col-md-6">
+                                        <input style="max-width:none;" type="submit" id="LetMe" value="Update Record" class="btn btn-primary" />
+                                    </span>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                </form>
+
+            </div>
+
+        </div></div></div>
+
+
+        <div id="htmltagsforDescription" style="display: none;">
+            [&nbsp;<span class="intLink" title="Bold" onclick="insertMetacharsForDescription('&lt;strong&gt;', '&lt;\/strong&gt;');">
+                <strong>B</strong>
+            </span> |
+            <span class="intLink" title="Underline" onclick="insertMetacharsForDescription('&lt;u&gt;', '&lt;\/u&gt;');">
+                <u>U</u>
+
+            </span> | <span class="intLink" title="Italic" onclick="insertMetacharsForDescription('&lt;em&gt;', '&lt;\/em&gt;');">
+                <em>I</em>
+            </span> | <span class="intLink" title="Break" onclick="insertMetacharsForDescription('&lt;br&gt;', '&lt;\/br&gt;');">
+                Line Break
+
+            </span> | <span class="intLink" title="Paragraph" onclick="insertMetacharsForDescription('&lt;p&gt;', '&lt;\/p&gt;');">
+                Paragraph
+            </span> @*|
+
+                |<span class="intLink" onclick="var Fcolor = prompt('Enter color name');
+                if (Fcolor) { insertMetacharsForDescription('&lt;font color=\u0022' + Fcolor + '\u0022&gt;', '&lt;\/font&gt;'); }
+                        else { document.myForm.Description.focus(); }">
+                    Font Color</span>*@ &nbsp;]@*
+                </span> | <span class="intLink" onclick="insertMetachars('\n&lt;code&gt;\n', '\n&lt;\/code&gt;\n');">
+                         code
+
+                     </span> | <span class="intLink" onclick="insertMetachars(' :-)');">
+                         smile
+
+                 </span> | <span class="intLink" onclick="var newImg = prompt('Enter the image name');
+                     if (newImg) { insertMetacharsForQuestion('&lt;img src=\u0022 ../../SubjectImages/' + newImg + '.jpg\u0022 width=150 height=120px\u0022&gt;', '&lt;\/img&gt;'); }
+                     else { document.myForm.Question1.focus(); }">
+                         Img
+                     </span> &nbsp;]*@
+                </div>
+
+                <script type="text/javascript">
+                    function gethtmltags() {
+                        document.getElementById("htmltags").innerHTML = document.getElementById("htmltagsforDescription").innerHTML;
+                    }
+
+                    function insertMetacharsForDescription(sStartTag, sEndTag) {
+
+                        var bDouble = arguments.length > 1, oMsgInput = document.myForm.Description, nSelStart = oMsgInput.selectionStart, nSelEnd = oMsgInput.selectionEnd, sOldText = oMsgInput.value;
+                        oMsgInput.value = sOldText.substring(0, nSelStart) + (bDouble ? sStartTag + sOldText.substring(nSelStart, nSelEnd) + sEndTag : sStartTag) + sOldText.substring(nSelEnd);
+                        oMsgInput.setSelectionRange(bDouble || nSelStart === nSelEnd ? nSelStart + sStartTag.length : nSelStart, (bDouble ? nSelEnd : nSelStart) + sStartTag.length);
+                        oMsgInput.focus();
+                    }
+
+
+
+                    $('.Editor').jqte();
+
+                    // settings of status
+                    var jqteStatus = true;
+                    $(".status").click(function () {
+                        jqteStatus = jqteStatus ? false : true;
+                        $('.Editor').jqte({ "status": jqteStatus })
+                    });
+
+                </script>
+
+
+
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }
+

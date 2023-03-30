@@ -1,0 +1,306 @@
+﻿@model Myvshoponline.ShopCustomer
+
+@{
+    ViewBag.Title = "Create New Customer";
+}
+<body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
+
+    <div id="content">
+        @*<a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<a href="~/Shops/ShopDetails/@ViewBag.SID"> @ViewBag.ShopName SHOP </a>*@
+        <section id="content" class="section-padding" style="padding:0px;">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-md-6 col-xs-12" style="background-color:white">
+                        <div class="page-login-form box">
+
+                            @if (ViewBag.v != null)
+                            {
+                                <ul class="form-links">
+                                    <li class="alert alert-info">
+                                        Already have an account?
+                                        @if (ViewBag.pid != null)
+                                        {
+
+                                            if (ViewBag.src == "subitem")
+                                            {
+                                                if (!string.IsNullOrEmpty(Request.QueryString["negotiate"]))
+                                                {
+                                                <a href="~/Home/CustomerLogin?sid=@ViewBag.SID&pid=@ViewBag.pid&quantity=@ViewBag.quantity&v=@ViewBag.v&dcity=@ViewBag.dcity&src=subitem&negotiate=true"> <b style="color:#00B7F4"> Login </b></a>
+                                                }
+                                                else
+                                                {
+                                                <a href="~/Home/CustomerLogin?sid=@ViewBag.SID&pid=@ViewBag.pid&quantity=@ViewBag.quantity&v=@ViewBag.v&src=subitem&dcity=@ViewBag.dcity"> <b style="color:#00B7F4"> Login </b></a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (!string.IsNullOrEmpty(Request.QueryString["negotiate"]))
+                                                {
+                                                <a href="~/Home/CustomerLogin?sid=@ViewBag.SID&pid=@ViewBag.pid&quantity=@ViewBag.quantity&v=@ViewBag.v&dcity=@ViewBag.dcity&negotiate=true"><b style="color:#00B7F4"> Login </b></a>
+                                                }
+                                                else
+                                                {
+                                               <a href="~/Home/CustomerLogin?sid=@ViewBag.SID&pid=@ViewBag.pid&quantity=@ViewBag.quantity&v=@ViewBag.v&dcity=@ViewBag.dcity"> <b style="color:#00B7F4"> Login </b></a>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a href="~/Home/CustomerLogin?sid=@ViewBag.SID"> <b style="color:#00B7F4"> Login </b></a>
+                                            }
+                                    </li>
+                                </ul>
+                                <hr />
+                                <br />
+                                <h3 style="padding:0px;font-size:14px">
+                                    supply your details below to proceed
+                                </h3>
+                            }
+                                        else
+                                        {
+                                <h3 style="padding:0px;font-size:14px">
+                                    Create New Customer
+                                </h3>
+                            }
+
+                            @if (ViewBag.PhoneEmailExist != null)
+                            {<div class="alert alert-danger" style="color:red;">@ViewBag.PhoneEmailExist</div>
+                            }
+                            <form class="login-form" method="post" action="~/ShopCustomers/Create">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="ShopID" value="@ViewBag.SID" />
+                                <input type="hidden" name="Visitor" value="@ViewBag.v" />
+                                <input type="hidden" name="pid" value="@ViewBag.pid" />
+                                <input type="hidden" name="quantity" value="@ViewBag.quantity" />
+                                <input type="hidden" name="src" value="@ViewBag.src" />
+                                <input type="hidden" name="negotiate" value="@ViewBag.negotiate" />
+                                <input type="hidden" name="dcity" value="@ViewBag.dcity" />
+
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-user"></i>
+                                        @Html.EditorFor(model => model.Name, new
+                               {
+                                   htmlAttributes = new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Your Name",
+                                       @onchange = "this.value = this.value.toUpperCase()"
+                                   }
+                               })
+                                        @if (ViewBag.CustomerExist != null)
+                                        {<div class="panel panel-danger" style="color:red;">@ViewBag.CustomerExist</div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-phone-handset"></i>
+                                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required", @pattern = "[0-9]{11}", @type = "tel" } })
+                                        @if (ViewBag.PhoneExist != null)
+                                        {<div class="alert alert-danger" style="color:red;">@ViewBag.PhoneExist</div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-envelope"></i>
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email" } })
+                                        @if (ViewBag.EmailExist != null)
+                                        {<div class="alert alert-danger" style="color:red;">@ViewBag.EmailExist</div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-map-marker"></i>
+                                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address", @required = "required" } })
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+
+                                        <div class="input-icon">
+                                            <i class="lni-stats-up"></i>
+                                            @Html.DropDownList("CustomerStatusID", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.CustomerStatusID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+
+                                @*<div class="form-group">
+                                        <div class="input-icon">
+                                            <i class="lni-user"></i>
+                                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username", @required = "required" } })
+                                            @if (ViewBag.UsernameExist != null)
+                                            {<div class="panel panel-danger" style="color:red;">@ViewBag.UsernameExist</div>
+                                            }
+                                        </div>
+                                    </div>*@
+                                <div id="display_message" style="color:red"></div>
+                                @if (ViewBag.v != null)
+                                {
+                                    <div class="form-group">
+                                        <div class="input-icon">
+                                            <i class="lni-lock"></i>
+                                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "password", @placeholder = "Password", @type = "password", @required = "required" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-icon">
+                                            <i class="lni-unlock"></i>
+                                            <input type="password" id="confirmpassword" class="form-control" placeholder="Retype Password" required="required">
+                                        </div>
+                                    </div>
+                                }
+                                @if (ViewBag.pid != null)
+                                {
+                                    <button class="btn btn-common log-btn mt-3" id="reg">Proceed &raquo;</button>
+                                }
+                                else
+                                {
+                                    if (ViewBag.v != null)
+                                    {
+                                        <button class="btn btn-common log-btn mt-3" id="reg">Sign Up</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-common log-btn mt-3" id="reg">Sign Up</button>
+                                    }
+                                }
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @*@using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <input type="hidden" name="ShopID" value="@ViewBag.SID" />
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",@placeholder="Customer's Name" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Customer's Phone Number" } })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Customer's Email" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            <textarea name="Address" cols="125" rows="3"></textarea>
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username" } })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <div class="col-md-10">
+                            @Html.DropDownList("CustomerStatusID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CustomerStatusID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-common" />
+                        </div>
+                    </div>
+                </div>
+            }*@
+
+        @*<script>
+            function checkpassword() {
+                if (document.getElementById("password").value != document.getElementById("confirmpassword").value) {
+                    alert("Password Mismatch!");
+                    return false;
+                }
+            }
+        </script>*@
+
+        <script type="text/javascript">
+$(document).ready(function() {
+    $("#reg").on('click', function(e) {
+        var words = $("#password").val().length;
+        if (words < 6) {
+            $('#display_message').text('Password must be minimun of 6 characters');
+            document.getElementById("password").style.borderColor = "red";
+            return false;
+          //  $('#word_left').text(160 - words)
+        }
+        else if ($("#password").val() != $("#confirmpassword").val())
+            {
+            $('#display_message').text('Password do not match');
+            document.getElementById("confirmpassword").style.borderColor = "red";
+            return false;
+            }
+        else {
+            //if (e.which !== 8) e.preventDefault();
+            document.getElementById("password").style.borderColor = "green";
+            document.getElementById("confirmpassword").style.borderColor = "green";
+            $('#display_message').text('');
+        }
+    });
+ });
+        </script>
+        <script type="text/javascript">
+$(document).ready(function() {
+    $("#password").on('keydown', function(e) {
+        var words = $(this).val().length;
+        if (words < 6) {
+            $('#display_message').text('Password must be minimun of 6 characters');
+          //  $('#word_left').text(160 - words)
+        }else{
+            //if (e.which !== 8) e.preventDefault();
+            $('#display_message').text('');
+        }
+    });
+ });
+        </script>
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
+    </div>
+</body>

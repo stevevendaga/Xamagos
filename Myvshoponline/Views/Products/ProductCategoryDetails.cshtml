@@ -1,0 +1,569 @@
+﻿<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
+@model IEnumerable<Myvshoponline.Product>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+   int CommissionPercent = Convert.ToInt32(db.Settings.Select(s => s.CommissionPercent).FirstOrDefault());
+    decimal c_percent = (decimal)(CommissionPercent / 100.00);
+
+     }
+
+@{
+    ViewBag.Title = ViewBag.ShopName;
+}
+@{
+    int UserID = ViewBag.UserID;
+    int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+    int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+    int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+    int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+    int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+    int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+    int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+    DateTime prevd = new DateTime(pYear, pmonth, pday);
+    TimeSpan diff = lauchd.Subtract(prevd);
+    ViewBag.diff = diff.Days;
+    ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+    ViewBag.Ndays = db.Users.Find(UserID).NDays;
+
+    @*if (ViewBag.diff > ViewBag.FixedDays)
+    {
+        mydata.Update_ShopStatus_to_Inactive_on_Expiry(UserID);
+        ViewBag.Expired = "Your plan has expired!";
+    }
+    else
+    {
+        var r = db.Set<User>().Find(UserID);
+        r.NDays = ViewBag.diff;
+        r.LaunchDate = DateTime.Now;
+        r.LaunchYear = DateTime.Now.Year;
+        r.LaunchMonth = DateTime.Now.Month;
+        r.LaunchDay = DateTime.Now.Day;
+        db.SaveChanges();
+    }*@
+}
+<div id="content" style="margin-top:-32px">
+    @*<h5 class="h5"><a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a> &raquo; </b><b style="color:black">@ViewBag.CategoryName</b></h5>*@
+    
+    <div class="panel">
+        <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
+            <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@ViewBag.ShopName </h1>
+            @foreach (var item22 in ViewBag.Shop)
+            {
+                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;">
+                    <i class="lni-map-marker"></i>  @item22.Address
+                </h1>
+            }
+        </div>
+        @*<div class="panel-body">
+            </div>*@
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7 col-md-12 col-xs-12">
+            <h6 style="font-size:12px">
+                @*<a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a>*@ &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a>  </b>
+                @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+                {
+
+                  <b style="color:black">  &raquo; <a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a></b>
+                }
+            </h6>
+@if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+{
+            <hr style="padding:1px;margin:10px" />
+
+            @*<div class="col-12">
+                <div class="row">
+                    <div class="col-md-6 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
+                                    </a>
+
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+           
+                <div class="col-md-12" style="margin-top:3px;">
+                    <div class="row">
+                        <div class="col-md-6 col-6">
+                            <ul style="font-size:14px">
+                                <li>
+                                    <span style="margin-top:0px;margin-bottom:3px;">
+                                        <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                            <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6 col-6">
+                            <ul style="font-size:14px">
+                                <li>
+                                    <span style="margin-top:0px;margin-bottom:3px;">
+                                        <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                            <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>*@
+
+            <ul style="font-size:13px">
+                <li>
+                    @*<span class="badge badge-info" style="margin-top:0px;margin-bottom:3px;">
+                        <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-default" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                            <font style="color:blue">  <i class="lni lni-plus"></i> Add Products</font>
+                        </a>
+
+                    </span>
+
+                    <span class="badge badge-info" style="margin-top:0px;margin-bottom:3px;">
+                        <a href="~/Products/MyProducts/?id=@ViewBag.ShopID" class="btn btn-default" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                            <font style="color:blue">  <i class="lni lni-files"></i> My Products</font>
+                        </a>
+
+                    </span>
+
+                
+                    <span class="badge badge-info" style="margin-top:0px;margin-bottom:3px;">
+                        <a href="~/Products/ProductCategoryDetailsUnavailable/?sid=@ViewBag.ShopID" class="btn btn-default" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                            <font style="color:blue"><i class="lni lni-lock"></i> Inactive Products</font>
+                        </a>
+
+                    </span>*@
+                   
+
+                </li>
+            </ul>
+            <b style="color:black">@ViewBag.CategoryName</b>
+            <hr style="padding:1px;margin:10px" />
+}
+        </div>
+       
+            <div class="col-lg-5 col-md-12 col-xs-12">
+                <!-- Search Widget -->
+                <div class="widget">
+                    <form action="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID" method="get">
+                        <div class="input-group">
+                            <input type="hidden" name="id" value="@ViewBag.CategoryID" />
+                            <input type="hidden" name="sid" value="@ViewBag.ShopID" />
+                            <input type="text" name="search" class="form-control" placeholder="Search for products in @ViewBag.CategoryName category">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit" name="submit" style="width:20px">
+                                    <i class="lni-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+</div>   
+    
+    
+    
+    <!-- Listings Section Start -->
+    <section id="job-listings" class="section" style="padding:0px;background-color:white">
+        <div class="">
+            <div class="row">
+                @*<div class="col-lg-6 col-md-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6 col-xs-12">
+                            <div class="right-sideabr">
+
+                                <h4><i class="lni-briefcase"></i> @ViewBag.ShopName 
+                                    <!-- And user role is shop owner-->
+                                  @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+                                  {
+                            <span>&raquo;</span>
+                                      foreach (var item in ViewBag.Shop)
+                                      {
+                            <a href="~/Products/Create/@item.ID" class="btn btn-common" style="height:25px;padding:1px" title="Add Product"><i class="lni-plus"></i></a>
+                            <a href="~/Products/ProductCategoryDetailsUnavailable/@ViewBag.CategoryID?sid=@item.ID" class=" btn btn-link" style="color:blue;">Unavailable Products (@{var av = db.Products.Where(p => p.ProductStatu.Status == "Unavailable").Count();}@av)</a>
+                                    }
+                                }
+
+
+                                </h4>
+                                <ul class="list-item" style="font-size:11px">
+                                    @if (ViewBag.ShopName != null)
+                                    {
+                                        foreach (var item in ViewBag.Shop)
+                                        {
+                                            <li>
+                                                <div class="contact-icon">
+                                                    <i class="lni-map-marker"></i>
+                                                    <a> Location:  @item.State.Name</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-phone-handset"></i>
+                                                    <a> Phone:&nbsp;&nbsp; @item.PhoneNumber</a>
+                                                </div>
+
+                                                <div class="contact-icon">
+                                                    <i class="lni-envelope"></i>
+                                                    <a> Email:&nbsp;&nbsp; @item.Email</a>
+                                                </div>
+                                                <div class="contact-icon">
+                                                    <i class="lni-link"></i>
+                                                    <a> Shop URL: </a><span style="color:#613bff">www.myvshoponline.com/Shops/?shopURL=@item.ShopURL</span>
+                                                </div>
+                                                <div class="contact-icon">
+                                                    <i class="lni-map-marker"></i>
+                                                    <a> Address: @item.Address </a>
+                                                </div>
+</li>
+                                        }
+                                    }
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-xs-12">
+                    <aside id="sidebar" class="col-lg-12 col-md-12 col-xs-12">
+                        <!-- Search Widget -->
+                        <div class="widget">
+                            <h5 class="widget-title">Search for Items in <b>@ViewBag.CategoryName </b> Category</h5>
+                            <div class="widget-search widget-box">
+                                <form action="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID" method="get">
+                                    <input type="hidden" name="id" value="@ViewBag.CategoryID" />
+                                    <input type="hidden" name="sid" value="@ViewBag.ShopID" />
+                                    <input class="form-control search" name="search" required="required" type="search" placeholder="Enter your keyword" />
+                                    <button class="search-btn"><b><i class="lni-search" style="color:blue"></i></b></button>
+                                </form>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>*@
+            </div>
+
+
+            <div class="container">
+                <d class="row">
+                    <!-- Start Blog Posts -->
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <!-- Start Post -->
+                        <div class="blog-post">
+                            <!-- Post Content -->
+                            <div class="post-content">
+@if (ViewBag.search != null)
+{
+    <span style="color:black;padding:0px">Search Results</span>
+    <h5 style="background-color:white;font-family:'Bookman Old Style';font-size:14px"> 
+  <b style="color:black"><a href="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID">@ViewBag.CategoryName</a></b> <i class="lni-chevron-right" style="font-size:10px"></i> "<b>@ViewBag.search</b>" (@Model.Count() Results)                              
+   </h5>
+}
+else
+{
+    <h5 style="font-family:'Bookman Old Style';font-size:20px;padding:0px; margin:0px"><i class="@ViewBag.Icon"></i> @ViewBag.CategoryName </h5>
+}
+                                <br />
+    <!-- Category Section Start -->
+    <section class="category section" style="padding:2px;margin:0px">
+        <div class="container">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == item.ID).Count();
+                     <div class="col-lg-2 col-md-4 col-12 " style="padding:0px;margin:0px;border-top:1px solid #00B7F4">
+                            <div class="right-sideabr" style="padding:5px;">
+                                   @if (countproductinsubitems > 0)
+                                   {
+                                    <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name"  style="height:285px;background-color:white">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                <center>
+                                                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                                                    <br />
+                                                    <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+
+                                                    <h3 style="margin:0px;padding:0px">
+
+                                                        <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+
+                                                            @if (item.Currency == "NGN")
+                                                            {<del class="NairaSign">N</del>}
+                                                            else
+                                                            { <span>@item.Currency</span>}@{
+                                                                @*var amt = string.Format("{0:#,0}", item.Amount);}@amt*@
+                                                            decimal totalCommission =Convert.ToDecimal(item.Amount * c_percent);
+                                                            decimal Total =Convert.ToDecimal(item.Amount + totalCommission);
+                                                            var amt = string.Format("{0:#,0}", Total);}@amt
+                                                        </span>
+                                                    </h3>
+                                                    @*<hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                                                    @{
+                                                        int sid = Convert.ToInt32(item.Shop.StateID);
+                                                        var State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                    }
+                                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @State</span>
+                                                    <br />
+                                                    <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                                </center>
+
+                                            </div>
+                                        </div>
+                                    </a>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <a  href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                                                @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                                                <center>
+                                                                                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                                                                                    <br />
+                                                                                    <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                                                                                    <h3 style="margin:0px;padding:0px;">
+                                                                                        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                                                                                            @if (item.Currency == "NGN")
+                                                                                            {<del class="NairaSign">N</del>}
+                                                                                            else
+                                                                                            { <span>@item.Currency</span>}@{
+                                                                                                @*var am = string.Format("{0:#,0}", item.Amount);}@am*@
+                                                                                            decimal totalCommission =Convert.ToDecimal(item.Amount * c_percent);
+                                                                                            decimal Total =Convert.ToDecimal(item.Amount + totalCommission);
+                                                                                            var am = string.Format("{0:#,0}", Total);}@am
+                                                                                        </span>
+                                                                                    </h3>
+                                                                                    @*<hr style="padding-bottom:1px;margin-bottom:0px;" />
+                                                                                    @{ 
+                                                                                        int sid = Convert.ToInt32(item.Shop.StateID);
+                                                                                        var State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                                                    }
+                                                                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @State</span>
+                                                                                    <br /> <span style="font-size:11px;padding-top:1px"><i class="glyphicon glyphicon-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                                                                </center>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                                                }
+<ul style="padding:0px;margin:0px">
+    <li style="padding-top:1px">
+       @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+       {
+            @*<span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px"> 
+        <a href="#" class="btn btn-primary" style="height:25px;padding:2px" title="Change Product Picture" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();"><i class="lni-camera"></i></a></span>*@
+
+
+        @*<span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px"><a href="~/Products/Edit/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" class="btn btn-warning" style="height:25px;padding:2px" title="Edit Product Details"><i class="lni-pencil"></i></a></span>
+        <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px">
+        <a href="~/Products/Delete/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID"  onclick="return confirm('Are you sure you want to delete @item.Name? \nIf deleted all related records will be romoved!')" class="btn btn-danger" style="height:25px;padding:2px" title="Delete Product"><i class="lni-cut"></i></a></span>*@
+        <span class="badge-info" title="Quantity" style="font-size:12px;padding:3px;border-radius:4px">@item.QuantityinStock in stock</span>
+       }
+        @*<span title="Price" style="font-size:18px;color:black;font-weight:bold">
+        @if (item.Currency == "NGN")
+        {<del class="NairaSign">N</del>}
+        else
+        { <span>@item.Currency</span>}@{var a = string.Format("{0:#,0}", item.Amount);}@a</span>*@
+        @*<span class="full-time" title="Price" style="color:white; background-color:#060681;opacity:0.7;font-size:16px">N@{var a = string.Format("{0:#,0}", item.Amount);}@a</span>*@
+      
+
+        @*<span class="full-time" title="Quantity" style="background-color:#00AEE8;color:white;">Qty: @item.QuantityinStock</span>*@
+
+       
+
+
+        @*<span class="full-time" style="color:white; background-color:#d932d6"><a href="~/Products/Edit/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" class="btn btn-warning" style="height:25px;padding:2px" title="Edit Product Details"><i class="lni-pencil"></i></a></span>
+        <span class="full-time" style="color:white; background-color:#ff6a00">
+            <a href="~/Products/Delete/@item.ID?sid=@item.ShopID&categoryid=@item.ProductCategoryID" onclick="return confirm('Are you sure you want to delete @item.Name? \nIf deleted all related records will be romved!')" class="btn btn-danger" style="height:25px;padding:2px" title="Delete Product"><i class="lni-cut"></i></a>
+        </span>
+        }
+        <span class="full-time" style="color:white; background-color:#060681;opacity:0.7;font-size:16px">N@{var a = string.Format("{0:#,0}", item.Amount);}@a</span>
+        <span class="full-time" style="background-color:#00AEE8;color:white;">Qty: @item.QuantityinStock</span>*@
+    </li>
+    </ul>
+    </div>
+    </div>
+    }
+    </div></div>
+</section>
+    <!-- Category Section End -->
+                               
+
+                                @*<div class="meta">
+                                    <span class="meta-part"><a href="#"><i class="lni-user"></i> By Admin</a></span>
+                                    <span class="meta-part"><i class="lni-calendar"></i><a href="#"> 20.02.2020</a></span>
+                                    <span class="meta-part"><a href="#"><i class="lni-comments-alt"></i> 5Comments</a></span>
+                                </div>*@
+                                
+                                @*<div class="share-social">
+                                    <span>Share This Job:</span>
+                                    <div class="social-link">
+                                        <a class="MagNews" target="_blank" data-original-title="twitter" href="#" data-toggle="tooltip" data-placement="top"><i class="lni-twitter-filled"></i></a>
+                                        <a class="facebook" target="_blank" data-original-title="facebook" href="#" data-toggle="tooltip" data-placement="top"><i class="lni-facebook-filled"></i></a>
+                                        <a class="google" target="_blank" data-original-title="google-plus" href="#" data-toggle="tooltip" data-placement="top"><i class="lni-google-plus"></i></a>
+                                        <a class="linkedin" target="_blank" data-original-title="linkedin" href="#" data-toggle="tooltip" data-placement="top"><i class="lni-linkedin-fill"></i></a>
+                                    </div>
+                                </div>*@
+
+                                <aside id="sidebar">
+                                    <div id="getcategorycontent" style="display:none"></div>
+                                </aside>
+                            </div>
+                            <!-- Post Content -->
+                        </div>
+                        <!-- End Post -->
+                        <!-- Start Comment Area -->
+                       
+                        <!-- End Comment Area -->
+                    </div>
+                    <!-- End Blog Posts -->
+                    <!--Sidebar-->
+                   
+              @*<div id="originalcategory" style="display:block">
+             <aside id="sidebar" class="col-lg-4 col-md-12 col-xs-12">
+            <!-- Categories Widget -->
+            <div class="widget ">
+                <h5 class="widget-title" style="background-color:#0BACE1;color:white;padding:10px">Product Categories</h5>
+                <div class="widget-categories widget-box">
+                    <ul class="cat-list">
+                        @if (ViewBag.Products != null)
+                        {
+                            foreach (var item in ViewBag.Products)
+                            {
+                                int ShopID = item.Shop.ID;
+                                int PCID = item.ProductCategoryID;
+                                int total = db.Products.Where(p => p.ProductCategoryID == PCID && p.ShopID == ShopID && p.ProductStatu.Status == "Available").Count();
+                                <li>
+                                    <a href="~/Products/ProductCategoryDetails/?id=@item.ProductCategoryID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                        @item.ProductCategory.Name
+                                        <span class="num-posts">(@total)</span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Posts widget -->
+        <div id="relatedproducts">
+            <div class="widget">
+                <h5 class="widget-title" style="background-color:#0BACE1;color:white;padding:10px">Related Products</h5>
+                <div class="widget-popular-posts widget-box">
+                    <ul class="posts-list">
+                        @if (ViewBag.RelatedProducts != null)
+                        {
+                            foreach (var item in ViewBag.RelatedProducts)
+                            {
+                                <li>
+                                    <div class="widget-content">
+                                        <a href="~/Products/ProductDetails/?id=@item.ID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                            @{ string name = item.Name;
+                                                string PName = db.Products.Where(n => n.Name == name).Select(n => n.Name).First();
+                                                int count = db.Products.Where(n => n.Name == name).Count();
+                                            }
+                                            @PName
+                                            (@count)
+                                            <!--  @item.Name (count) -->
+                                        </a>
+                                    </div>
+                                </li>
+                                                    }
+                                                }
+
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </div>*@
+                                       
+
+                    </aside>
+                    <!--End sidebar-->
+                </div>
+            </div></section>
+        </div>
+ 
+
+<!-- End Content -->
+
+
+<script type="text/javascript">
+                    function CheckFileName() {
+                        var fileName = document.getElementById("uploadFile").value
+                        //debugger;
+                        if (fileName == "") {
+                            alert("Browse to upload a valid File with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG")
+                            return true;
+                        else {
+                            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        return true;
+                    }
+</script>
+<script type="text/javascript">
+    var maxSize = '15';
+    function fileSizeValidate(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize > maxSize) {
+                alert('Maximum file size exceed! Image size should not be greater than 15KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function myFunction(x) {
+        if (x.matches) { // If media query matches
+            document.getElementById("getcategorycontent").style.display = "block";
+            document.getElementById("getcategorycontent").innerHTML = document.getElementById("originalcategory").innerHTML;
+            document.getElementById("originalcategory").style.display = "none";
+  } else {
+
+            document.getElementById("originalcategory").style.display = "block";
+            document.getElementById("getcategorycontent").style.display = "none";
+  }
+}
+var x = window.matchMedia("(max-width: 600px)")
+myFunction(x) // Call listener function at run time
+x.addListener(myFunction) // Attach listener function on state changes
+</script>

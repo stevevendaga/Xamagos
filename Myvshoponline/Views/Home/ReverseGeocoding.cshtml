@@ -1,0 +1,77 @@
+﻿<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+</script>
+
+
+<h3>My Google Maps Demo</h3>
+<div id="floating-panel">
+    <input id="latlng" type="text" value="40.714224,-73.961452" />
+    <input id="submit" type="button" value="Reverse Geocode" />
+</div>
+<!--The div element for the map -->
+<div id="map"></div>
+
+<style>
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+</style>
+
+<!--GEOCODING-->
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+</script>
+
+
+<script>
+      "use strict";
+
+      function initMap() {
+          const map = new google.maps.Map(document.getElementById("map"), {
+          //zoom: 8,
+          zoom: 8,
+          center: {
+              lat: 9.0820,
+              lng: 8.6753
+          }
+        });
+          const geocoder = new google.maps.Geocoder();
+          const infowindow = new google.maps.InfoWindow();
+          document.getElementById("submit").addEventListener("click", () => {
+              geocodeLatLng(geocoder, map, infowindow);
+          });
+
+      }
+      function geocodeLatLng(geocoder, map, infowindow) {
+          const input = document.getElementById("latlng").value;
+          const latlngStr = input.split(",", 2);
+          const latlng = {
+              lat: parseFloat(latlngStr[0]),
+              lng: parseFloat(latlngStr[1])
+          };
+          geocoder.geocode(
+            {
+                location: latlng
+            },
+            (results, status) => {
+                if (status === "OK") {
+                    if (results[0]) {
+                        const marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                        });
+                        infowindow.setContent(results[0].formatted_address);
+                        infowindow.open(map, marker);
+                    } else {
+                        window.alert("No results found");
+                    }
+                } else {
+                    window.alert("Geocoder failed due to: " + status);
+                }
+            }
+          );
+      }
+</script>
+<!-- END GEOCODING-->

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Myvshoponline.DeliveryCity>
+
+@{
+    ViewBag.Title = "Shipping Cost";
+}
+
+<div id="content">
+    <h5>Set Shipping Cost</h5>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                From State
+            </th>
+            <th>
+                To State
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryCity_Only.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryNote)
+            </th>
+
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State1.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryCity_Only.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryNote)
+                </td>
+
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

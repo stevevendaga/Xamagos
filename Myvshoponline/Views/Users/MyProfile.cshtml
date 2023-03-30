@@ -1,0 +1,926 @@
+
+<style>
+    .fade {
+        -webkit-transform: translate(0, -25%);
+        -ms-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+        -webkit-transition: -webkit-transform 0.3s ease-out;
+        -moz-transition: -moz-transform 0.3s ease-out;
+        -o-transition: -o-transform 0.3s ease-out;
+        transition: transform 0.3s ease-out;
+        position: center;
+    }
+</style>
+@model IEnumerable<Myvshoponline.User>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<input type="hidden" value="@Session["UserID"]" name="UserID" id="userid" />
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
+    @*<div class="modal-dialog modal-dialog-centered">*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" style="font-size:14px">Upload Photo</h5>
+            <button type="button" class="close" data-dismiss="modal">X</button>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("UploadLogo", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" value="@Session["UserID"]" name="UserID" id="userid" />
+                    @*<h5 style="color:red;font-size:12px">
+                            ** Note **
+                            &raquo;  Image size should not be less than 12KB and greater than 15 KB
+                        </h5><hr />*@
+                    <font color="black">
+                        @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
+                        <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" />
+                    </font><hr />
+                    <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
+            }
+        </div>
+        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+    </div>
+
+    @*</div>*@
+</div>
+
+<div class="modal" id="myModalChangePw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
+@*<div class="modal-dialog modal-dialog-centered">*@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" style="font-size:14px">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal">X</button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success alert-dismissable" id="successmsg_pw" style="display:none">
+            @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+            <h3 style="font-size:14px">Success</h3>
+            Password changed successfully
+        </div>
+        <div class="alert alert-danger alert-dismissable" id="invalidmsg_oldpw" style="display:none">
+            @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+            <h3 style="font-size:14px">Failed</h3>
+           Your old password is incorrect
+        </div>
+        @using (Html.BeginForm("Change Password", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <input type="hidden" value="@Session["UserID"]" name="UserID" />
+
+            <label>Old Password</label>
+            <div class="input-group input-group-sm">
+                    <input type="password" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" placeholder="Old Password" id="oldpw" />
+                <div class="input-group-append">
+                    <button class="btn btn-common" type="button" onclick="viewOldPw()">
+                        <i class="fas fa-eye" id="eyeoldpw" ></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+            
+            <label>New Password</label>
+
+            <span id="display_count" style="color:red"></span>
+            <div class="input-group input-group-sm">
+                <input type="password" class="form-control" tabindex="2" style="border-color:#33C6F6;padding:18px;" placeholder="New Password" id="newpw" />
+                <div class="input-group-append">
+                    <button class="btn btn-common" type="button" onclick="viewNewPw()">
+                        <i class="fas fa-eye" id="eyenewpw" ></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="alert alert-danger alert-dismissable" id="successmsg_pw_mismatch" style="display:none">
+                @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+                Password do not match!
+            </div>
+            <label>Confirm Password</label>
+            <div class="input-group input-group-sm">
+                <input type="password" class="form-control" tabindex="3" style="border-color:#33C6F6;padding:18px;" placeholder="Confirm Password" id="confirmpw" />
+                <div class="input-group-append">
+                    <button class="btn btn-common" type="button" onclick="viewConfirmPw()">
+                        <i class="fas fa-eye" id="eyeconfirmpw" ></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+           <button type="button" tabindex="4" class="btn btn-common" onclick="return changePw();">Save Password <i class="fas fa-save"></i> </button>
+        }
+    </div>
+    @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+</div>
+
+@*</div>*@
+</div>
+
+@{
+    ViewBag.Title = ViewBag.CompanyName;
+}
+@{
+    int UserID = ViewBag.CompanyID;
+    string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+    int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+    int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+
+    int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+    int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+    int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+    int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+    int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+    int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+    int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+    DateTime prevd = new DateTime(pYear, pmonth, pday);
+    TimeSpan diff = lauchd.Subtract(prevd);
+    ViewBag.diff = diff.Days;
+    ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+    ViewBag.Ndays = db.Users.Find(UserID).NDays;
+
+
+    string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+    int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+    int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+    double TotalDaysRemaining = Fixeddays - DaysUsed;
+
+    var totalDays = TotalDaysRemaining;
+    var totalYears = Math.Truncate(totalDays / 365);
+    var totalMonths = Math.Truncate((totalDays % 365) / 30);
+    var remainingDays = Math.Truncate((totalDays % 365) % 30);
+
+}<!-- Start Content -->
+<body style="background-color:#f5fcff">
+</body>
+<div id="content">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-12" id="companydetails" style="display:block">
+                <div>
+                    @foreach (var item1 in Model)
+                    {
+                        var passports = item1.ID + ".jpg";
+                        <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px"><i class="nav-icon fas fa-user-circle" style="fill:Background"></i> WELCOME,  @item1.CompanyName.ToUpper()</span>
+                            <br />
+                        if (string.IsNullOrEmpty((string)Session["username"]))
+                        {
+                            <img class="alerts-title" src="~/BusinessImages/@item1.CompanyName@item1.HardToken/@passports" style="width:100px;vertical-align:top;height:100px;" />
+                        }
+
+
+                        <div class="row">
+                            @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+                            {
+                                <div class="col-lg-4 col-md-4 col-5" style="background-color:white">
+                                    <div id="companyheader">
+                                        <span class="alerts-title" id="companyname" style="margin:0px;padding:2px;font-size:16px;display:none;"><i class=" lni lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</span>
+                                        @*<p style="color:red;font-size:18px;text-align:left;font-weight:bold;margin-left:25px;">FREE MODE<span> </span> </p>*@
+                                        <br />
+                                        <center>
+                                            <img class="alerts-title" src="~/BusinessImages/@item1.CompanyName@item1.HardToken/@passports" style="width:100px;vertical-align:top;height:100px;" />
+                                            <br style="margin-top:10px;" />
+                                            <br />
+                                            <span style="color:white;padding:0px;margin-top:10px;vertical-align:top">
+                                                &nbsp;&nbsp; <a href="#" class="btn btn-primary" style="height:25px;padding:2px;font-size:11px" title="Update Business Logo" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();"> <i class="lni-camera"></i> Upload  Photo</a>
+                                            </span>
+                                        </center>
+                                        <br />
+                                        <div class="row">
+
+                                            <div class="btn btn-common" style="padding-top:1px;padding-bottom:1px;padding-left:9px;padding-right:9px;border-bottom-left-radius:25px;border-top-right-radius:25px;" data-toggle="modal" data-target="#myModalChangePw" onclick="clearTextBox();">
+                                                Change Password
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                   
+
+                                </div>
+                                    <div class="col-lg-4 col-md-5 col-7" style="background-color:white;border-radius:5px;border:1px solid #BDE1AE ">
+
+                                        <p style="margin-top:5px;font-weight:bold">
+                                            ACCOUNT TYPE <br />
+                                        <span style="text-align:match-parent">
+                                             <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></span>
+                                            <br />
+                                            <a class="btn btn-success" href="~/Users/BuyPlan?id=1" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px">
+                                                <i class="lni lni-licencse"></i> Upgrade Now
+                                            </a>
+                                            <h6 style="color:brown;font-size:14px;">
+                                                Upgrade your <b> Account </b>
+                                                to enjoy more benefits
+                                                of XAMAGOS.
+                                            
+                                            </h6>
+                                            <h6 style="color:black;font-size:14px;">Your Referal Code: <b> @UserID </b></h6>
+                                            
+                                            @*<h4 style="font-size:12px;">Share Your Referal Link</h4>
+                        <script>
+                        (function (d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+
+
+                        <ul class="mt-4 footer-social">
+                            <li>
+
+                                @{
+                                    string referallink = "http://marketsquare247.com/Users/Create?rx=" + UserID;
+                                }
+                                @{
+                                    string referallink1 = "http://marketsquare247.com/Users/Create?rx=" + UserID;
+                                }
+                                <div class="fb-share-button"
+                                        data-href="@referallink1"
+                                        data-layout="button_count">
+                                </div>
+                            </li>
+                            <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/Users/Create?rx=@referallink" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                           
+                            <li>
+                                <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                                    <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
+                                </a>
+                            </li>
+
+                        </ul>*@
+
+                                        </p>
+                                       
+                              
+                          
+
+                                        @{
+//if (ViewBag.diff > ViewBag.FixedDays)
+//{
+//    ViewBag.Expired = "Your plan has expired!";
+//}
+//else
+//{
+//    var r = db.Set<User>().Find(UserID);
+//    r.NDays = ViewBag.diff;
+//    r.LaunchDate = DateTime.Now;
+//    r.LaunchYear = DateTime.Now.Year;
+//    r.LaunchMonth = DateTime.Now.Month;
+//    r.LaunchDay = DateTime.Now.Day;
+//    db.SaveChanges();
+//}
+                                        }
+                                        @*@if (paymentstatus == 1)
+                                            {
+
+
+                                                <p style="text-align:match-parent"> <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></p>
+                                                if (ViewBag.Expired != null)
+                                                {
+                                                    <span class="badge badge-info" style="font-size:15px;color:red;border:1px solid red;background-color:white">@ViewBag.Expired </span><hr style="margin:0px;padding:0px;" />
+                                                }
+                                                else
+                                                {*@
+                                        @*<span class="badge badge-info" style="font-size:18px;text-align:center;background-color:white">
+                                                       <p>
+                                                           @if (totalYears > 0)
+                                                       {
+                                                           <span>@totalYears</span>
+                                                           if (totalYears > 1)
+                                                           {
+                                                               <span>years</span>
+                                                           }
+                                                           else
+                                                           {
+                                                               <span>year</span>
+                                                           }
+                                                       }
+
+                                                       @if (totalMonths > 0)
+                                                       {
+                                                           <span>@totalMonths</span>
+                                                           if (totalMonths > 1)
+                                                           {
+                                                               <span>months</span>
+                                                           }
+                                                           else
+                                                           {
+                                                               <span>month</span>
+                                                           }
+
+
+                                                       }
+                                                       @if (remainingDays > 0)
+                                                       {
+                                                           <span>and</span>
+
+                                                           <span>@remainingDays</span>
+                                                           if (remainingDays > 1)
+                                                           {
+                                                               <span>days</span>
+                                                           }
+                                                           else
+                                                           {
+                                                               <span>
+                                                                   day
+                                                               </span>
+                                                           }
+                                                       }
+                                                   </p>
+
+                                            </span>*@
+
+                                        
+                                        @*}
+                                                <hr style="padding:0px;margin:2px" />
+
+                                            }
+                                            else
+                                            {
+                                                //string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+                                                //int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+                                                //int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+                                                //int TotalDaysRemaining = Fixeddays - DaysUsed;
+                                                <br />*@
+
+                                        @*<hr style="margin-top:3px;"/>*@
+                                        @*<h5 style="font-size:15px;">Referals: @db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() </h5>
+
+                                        <h5 style="font-size:15px;color:green">
+                                            Amount Earned<br />
+                                            <span class="NairaSign">N</span> @{ var amt = db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() * 5;
+                                            }@amt.00
+                                        </h5>
+                                        <hr />
+                                        <span style="font-size:12px;color:black;">Minimum withdrawable amount:<span class="NairaSign">N</span>1,000.00</span>
+                                        @if (amt >= 1000)
+                                        {
+                                            <button type="button" id="withdraw" class="btn btn-success" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
+                                                            <br /><br />
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" id="withdraw" class="btn btn-warning" disabled="disabled" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
+                                                            <br /><br />
+                                        }*@
+                                        @*if (TotalDaysRemaining == 0)
+                                                {
+                                                    <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">Your trial period has expired! </span><hr style="margin:2px;padding:0px;" />
+                                                    <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">
+
+                                                        <p>
+                                                            @if (totalYears > 0)
+                                                        {
+                                                            <span>@totalYears</span>
+                                                            if (totalYears > 1)
+                                                            {
+                                                                <span>years</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>year</span>
+                                                            }
+                                                        }
+
+                                                        @if (totalMonths > 0)
+                                                        {
+                                                            <span>@totalMonths</span>
+                                                            if (totalMonths > 1)
+                                                            {
+                                                                <span>months</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>month</span>
+                                                            }
+
+
+
+                                                        }
+                                                        @if (remainingDays > 0)
+                                                        {
+                                                            <span>and</span>
+                                                            <span>@remainingDays</span>
+                                                            if (remainingDays > 1)
+                                                            {
+                                                                <span>days</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>
+                                                                    day
+                                                                </span>
+                                                            }
+                                                        }
+                                                        <span>remaining</span>
+                                                    </p>
+
+
+                                            </span><hr style="margin:2px;padding:0px;" />
+                                                    <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
+
+                                                }*@
+
+
+                                        @*}*@
+                                    </div>
+                                        @*<h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
+                                                }
+                                                else
+                                                {
+                                                    @*<img class="alerts-title" src="~/BusinessImages/@item1.CompanyName/@passports" style="width:30%;vertical-align:top;height:70px" />
+                                                        <h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><br /><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
+                                                }
+                        </div>
+                            @*if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+                                       {
+                                                                   <div class="panel panel-success">
+                                                                       <div class="panel-heading" style="background-color:#71BE50;opacity:0.6">
+                                                                           <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Report Summary</h3>
+                                                                       </div>
+                                                                       <div class="panel-body">
+                                                                           <table class="table-condensed" style="padding:0px;border:0px;" >
+                                                                               <tr style="border:0px;">
+                                                                                   <td>
+                                                                                       Shops:
+                                                                                   </td>
+                                                                                   <td>
+                                                                                       @{ var totalshop = db.Shops.Where(s => s.UserID == item1.ID).Count();}
+                                                                                       <span style="background-color:#00B7F4;color:white;padding:4px;border-radius:5px;">
+                                                                                           @totalshop
+                                                                                       </span>
+                                                                                   </td>
+                                                                                   <td>
+                                                                                       Customers:
+                                                                                   </td>
+                                                                                   <td>
+                                                                                       @{ var customers = db.CustomerShops.Where(s => s.Shop.UserID == item1.ID).Count();}
+                                                                                       <span style="background-color:#00B7F4;color:white;padding:4px;border-radius:5px;">
+                                                                                           @customers
+                                                                                       </span>
+                                                                                   </td>
+                                                                                   <td>
+                                                                                       Products:
+                                                                                   </td>
+                                                                                   <td>
+                                                                                       @{ var totalproducts = db.Products.Where(s => s.Shop.UserID == item1.ID).Count();}
+                                                                                       <span style="background-color:#00B7F4;color:white;padding:4px;border-radius:5px;"> @totalproducts </span>
+                                                                                   </td>
+                                                                               </tr>
+                                </table>
+                                                                      <br />
+                                                                           <table class="table-condensed table-striped" style="padding:2px;border:0px;width:100%;">
+                                                                               <tr>
+                                                                                   <th colspan="3" style="background-color:#BDE1AE;padding:2px">
+                                                                                       <font color="black">Shop Name</font>
+                                                                                   </th>
+                                                                                   <th colspan="2" style="background-color:#BDE1AE;padding:2px"><font color="black">Qty in Stock</font></th>
+                                                                                   <th colspan="2" style="background-color:#BDE1AE;padding:2px"><font color="black">Sold</font></th>
+
+                                                                                   @foreach (var item in db.Shops.Where(s => s.UserID == item1.ID).ToList())
+                                                                                   {
+                                                                                   <tr>
+                                                                                       <td colspan="4">
+                                                                                           @item.Name
+                                                                                       </td>
+                                                                                       <td>
+                                                                                           @{ var productinstock = db.Products.Where(s => s.ShopID == item.ID).Select(s => s.QuantityinStock).FirstOrDefault();}
+                                                                                           <span style="background-color:#00B7F4;color:white;padding:4px;border-radius:5px;">@productinstock</span>
+                                                                                       </td>
+
+                                                                                       <td colspan="3">
+                                                                                           @{ var productsold = db.Orders.Where(s => s.Product.ShopID == item.ID && s.DeliveryStatus == "Delivered").Count();}
+                                                                                           <span style="background-color:#00B7F4;color:white;padding:4px;border-radius:5px;">@productsold</span>
+                                                                                       </td>
+                                                                                       <td></td>
+                                                                                   </tr>
+                                                                                               }
+                                                                                   </tr>
+                                                                               </table>
+
+                                                                           </div></div>
+                                                                                               }*@
+
+                                                @*if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+                                                                    {
+
+                                                    <h5 style="font-size:18px">Online Payment Integration</h5>
+                                                    <p>
+                                                        Place a request to enable online payment on your shop.
+                                                        <br />
+                                                        <a href="#" class="btn btn-common" title="Request Online Payment Integration" data-toggle="modal" data-target="#myModalrequestonlineorder" style="padding-bottom:2px;padding-top:2px">
+                                                            Request Now
+                                                        </a>
+                                                    </p>
+
+
+                                                    }*@
+
+
+                                                <div class="modal" id="myModalrequestonlineorder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    @*<div class="modal-dialog modal-dialog-centered">*@
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" style="font-size:14px">Request for Online Order on Your Shop</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">×</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @using (Html.BeginForm("Create", "RequestOnlineOrders", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                <div class="form-group">
+                                                                    @Html.Label("Choose Shop", htmlAttributes: new { @class = "control-label col-md-12" })
+                                                                    <div class="col-md-10">
+                                                                        @Html.DropDownList("ShopID", null, htmlAttributes: new { @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+                                                                        <input type="submit" class="btn btn-common" value="Submit Request">
+                                                            }
+                                                        </div>
+                                                        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                                                    </div>
+
+                                                    @*</div>*@
+                                                </div>
+
+                                                        <div class="col-md-12">
+                                                            <div class="contact-right-area wow fadeIn">
+
+
+                                                                <!-- Modal Description-->
+                                                                <div class="modal" id="myModalDescription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                                    @*<div class="modal-dialog modal-dialog-centered">*@
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" style="font-size:14px">Briefly Describe your Business</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal">×</button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+
+                                                                            <form method="post" action="~/Users/CreateDescription">
+                                                                                @Html.AntiForgeryToken()
+                                                                                <div class="form-group">
+                                                                                    <div class="input-icon">
+                                                                                        <i class="lni-list"></i>
+                                                                                        <textarea class="Editor" name="Description" style="width:100%">@item1.Description</textarea>
+                                                                                        @*@Html.TextArea("Description", new { htmlAttributes = new { @class = "Editor", @required = "required" } })*@
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <button class="btn btn-common log-btn mt-3">Save</button>
+                                                                            </form>
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                    @*</div>*@
+                                                                </div>
+                                                                <!--Ends-->
+                                                              
+                                                                <div id="contactinfo">
+
+                                                                    <div class="contact-info">
+                                                                        <div class="single-contact">
+                                                                            <div class="contact-icon">
+                                                                                <i class="lni-map-marker"></i>
+                                                                            </div>
+                                                                            <p>@item1.Address</p>
+                                                                        </div>
+                                                                        <div class="single-contact">
+                                                                            <div class="contact-icon">
+                                                                                <i class="lni-envelope"></i>
+                                                                            </div>
+                                                                            <p><a href="#">Email: @item1.Email </a></p>
+
+                                                                        </div>
+                                                                        <div class="single-contact">
+                                                                            <div class="contact-icon">
+                                                                                <i class="lni-phone-handset"></i>
+                                                                            </div>
+                                                                            <p><a href="#">Phone Number: @item1.PhoneNumber</a></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                                                                                    }
+
+                    @*<a class="job-listings" href="job-details.html">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-12 col-xs-12">
+                                    <div class="job-company-logo">
+                                        <img src="assets/img/features/img2.png" alt="">
+                                    </div>
+                                    <div class="job-details">
+                                        <h3>Graphic Designer</h3>
+                                        <span class="company-neme">
+                                            Hunter Inc.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <div class="location">
+                                        <i class="lni-map-marker"></i> New Yourk, US
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-full-time">Full Time</span>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-apply">Apply Now</span>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="job-listings" href="job-details.html">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-12 col-xs-12">
+                                    <div class="job-company-logo">
+                                        <img src="assets/img/features/img3.png" alt="">
+                                    </div>
+                                    <div class="job-details">
+                                        <h3>Managing Director</h3>
+                                        <span class="company-neme">
+                                            MagNews
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <div class="location">
+                                        <i class="lni-map-marker"></i> New Yourk, US
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-full-time">Full Time</span>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-apply">Apply Now</span>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="job-listings" href="job-details.html">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-12 col-xs-12">
+                                    <div class="job-company-logo">
+                                        <img src="assets/img/features/img4.png" alt="">
+                                    </div>
+                                    <div class="job-details">
+                                        <h3>Software Engineer</h3>
+                                        <span class="company-neme">
+                                            AmazeSoft
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <div class="location">
+                                        <i class="lni-map-marker"></i> New Yourk, US
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-full-time">Full Time</span>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-xs-12 text-right">
+                                    <span class="btn-apply">Apply Now</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <ul class="pagination">
+                            <li class="active"><a href="#" class="btn btn-common"><i class="ti-angle-left"></i> prev</a></li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li class="active"><a href="#" class="btn btn-common">Next <i class="ti-angle-right"></i></a></li>
+                        </ul>*@
+                    <!-- End Pagination -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+
+<script type="text/javascript">
+        function CheckFileName() {
+            var fileName = document.getElementById("uploadFile").value
+            //debugger;
+            if (fileName == "") {
+                alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+                return false;
+            }
+            else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+                return true;
+            else {
+                alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+                return false;
+            }
+            return true;
+        }
+</script>
+
+
+<script type="text/javascript">
+        var maxSize = '15';
+        function fileSizeValidate(fdata) {
+            if (fdata.files && fdata.files[0]) {
+                var fsize = fdata.files[0].size / 1024;
+                if (fsize > maxSize) {
+                    alert('Maximum file size exceed! Image size should not be larger than 15KB');
+                    document.getElementById("uploadFile").value = null;
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+</script>
+
+<script type="text/javascript">
+        var minSize = '12';
+        function fileSizeValidateMin(fdata) {
+            if (fdata.files && fdata.files[0]) {
+                var fsize = fdata.files[0].size / 1024;
+                if (fsize < minSize) {
+                    alert('Minimum file size not reached! Image size should not be less than 12KB');
+                    document.getElementById("uploadFile").value = null;
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+</script>
+
+<script type="text/javascript">
+        function myFunction(x) {
+            if (x.matches) { // If media query matches
+                // document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
+                document.getElementById("companydetailsmobile").style.display = "block";
+                document.getElementById("companydetails").style.display = "none";
+                document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
+
+
+                document.getElementById("companyheadermobile").style.display = "block";
+                document.getElementById("companyheader").style.display = "none";
+                document.getElementById("companyheadermobile").innerHTML = document.getElementById("companyheader").innerHTML;
+                document.getElementById("companyname").style.display = "none";
+                document.getElementById("ondesktopname").style.display = "block";
+                //document.getElementById("contactinfo").style.display = "none";
+                document.getElementById("shopdetailsmobile").style.display = "block";
+                document.getElementById("shopdetails").style.display = "none";
+                document.getElementById("shopdetailsmobile").innerHTML = document.getElementById("shopdetails").innerHTML;
+                //document.getElementById("companynameonlymobile").style.display = "none";
+               // document.getElementById("companynameonlymobile").innerHTML = document.getElementById("ondesktopname").innerHTML;
+            } else {
+                document.getElementById("companydetailsmobile").style.display = "none";
+                document.getElementById("companydetails").style.display = "block";
+                document.getElementById("companyheadermobile").style.display = "none";
+                document.getElementById("companyheader").style.display = "block";
+                //document.getElementById("contactinfo").style.display = "block";
+
+            }
+        }
+
+        var x = window.matchMedia("(max-width: 700px)")
+        myFunction(x) // Call listener function at run time
+        x.addListener(myFunction) // Attach listener function on state changes
+</script>
+
+<!-- Content section End -->
+<script type="text/javascript">
+        $('.Editor').jqte();
+
+        // settings of status
+        var jqteStatus = true;
+        $(".status").click(function () {
+            jqteStatus = jqteStatus ? false : true;
+            $('.Editor').jqte({ "status": jqteStatus })
+        });
+</script>
+<script type="text/javascript">
+    function changePw() {
+        var _pw = document.getElementById("newpw").value;
+        var _userid = document.getElementById("userid").value;
+        var oldpw = document.getElementById("oldpw").value;
+        var confirmpw = document.getElementById("confirmpw").value;
+        if (oldpw == '')
+        {
+            $("#oldpw").css("borderColor", "red");
+            $("#oldpw").focus();
+            return false;
+        }
+        else if (_pw == '')
+        {
+            $("#newpw").css("borderColor", "red");
+            $("#newpw").focus();
+            return false;
+        }
+        else if (confirmpw=='')
+        {
+            $("#confirmpw").css("borderColor", "red");
+            $("#confirmpw").focus();
+            return false;
+        }
+        else if (confirmpw != _pw) {
+            $("#successmsg_pw_mismatch").css("display", "block");
+            $("#confirmpw").css("borderColor", "red");
+            $("#confirmpw").focus();
+            return false;
+        }
+        else if (confirmpw == _pw) {
+            $("#successmsg_pw_mismatch").css("display", "none");
+            $("#confirmpw").css("borderColor", "green");
+        }
+        var url = "/Users/ChangePW/";
+        $.ajax({
+            url: url,
+            data: {oldpw:oldpw, pw: _pw,userid:_userid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    if (item.PasswordChanged == 'true') {
+                        $("#successmsg_pw").css("display", "block");
+                        $("#invalidmsg_oldpw").css("display", "none");
+
+                        document.getElementById("newpw").value = "";
+                        document.getElementById("oldpw").value = "";
+                        document.getElementById("confirmpw").value = "";
+
+                        $("#oldpw").css("borderColor", "");
+                        $("#newpw").css("borderColor", "");
+                        $("#confirmpw").css("borderColor", "");
+
+                    }
+                    else {
+                        $("#invalidmsg_oldpw").css("display", "block");
+                    }
+                });
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function viewOldPw() {
+            if (document.getElementById("oldpw").type == "text") {
+                document.getElementById("oldpw").type = "password";
+                document.getElementById("eyeoldpw").className = "fa fas fa-lock";
+            }
+            else {
+                document.getElementById("oldpw").type = "text";
+                document.getElementById("eyeoldpw").className = "fa fas fa-eye";
+            }
+    }
+
+    function viewNewPw() {
+        if (document.getElementById("newpw").type == "text") {
+            document.getElementById("newpw").type = "password";
+            document.getElementById("eyenewpw").className = "fa fas fa-lock";
+        }
+        else {
+            document.getElementById("newpw").type = "text";
+            document.getElementById("eyenewpw").className = "fa fas fa-eye";
+        }
+    }
+
+    function viewConfirmPw() {
+        if (document.getElementById("confirmpw").type == "text") {
+            document.getElementById("confirmpw").type = "password";
+            document.getElementById("eyeconfirmpw").className = "fa fas fa-lock";
+        }
+        else {
+            document.getElementById("confirmpw").type = "text";
+            document.getElementById("eyeconfirmpw").className = "fa fas fa-eye";
+        }
+    }
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#newpw").on('keydown', function(e) {
+        var words = $(this).val().length;
+        if (words < 6) {
+            $('#display_count').text('Password must be minimun of 6 characters');
+          //  $('#word_left').text(160 - words)
+        }else{
+            //if (e.which !== 8) e.preventDefault();
+            $('#display_count').text('');
+        }
+    });
+ });
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

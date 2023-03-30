@@ -1,0 +1,212 @@
+﻿@model IEnumerable<Myvshoponline.TempPendingPayment>
+
+@{
+    ViewBag.Title = "Pending Payments";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    }
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+ 
+ <div id="content">
+    <div class="">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-5 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Pending Payments</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    <ul style="font-size:13px">
+                        <li>
+                        <i class="lni lni-dashboard"></i>
+                        <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                        <hr style="padding:1px;margin:5px" />
+                        </li>
+                        </ul>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4" style="text-align:right">
+                        <ul style="font-size:13px">
+                        <li>
+                        <a href="~/Orders/MyOrders/@ViewBag.CompanyID" id="orders">
+                        <i class="lni lni-cart"></i>
+                        Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                        </a>
+                        <hr style="padding:1px;margin:5px" />
+                        </li>
+                        </ul>
+
+                        </div>
+                             
+                            </div>
+                              
+                               
+                        </div>
+                        @*<h4 style="background-color:#0BACE1;color:white;padding:9px;font-size:14px">
+                          My Patronized Shops
+                        </h4>
+                        <ul class="list-item">
+
+                            @foreach (var item in ViewBag.Shops)
+                            {
+                                if (item.Name != null)
+                                {
+                                    <li>
+                                        <a style="color:#00B7F4;font-size:12px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name">
+                                            <b>  <i class="lni-briefcase" style="font-size:12px"></i> @item.Name </b>
+                                        </a>
+                                        <div class="contact-icon">
+                                            <i class="lni-map-marker"></i>
+                                            @{
+                                                int sid = Convert.ToInt32(item.StateID);
+                                                string State = db.States.Where(st => st.ID == sid).Select(st => st.Name).FirstOrDefault();
+                                            }
+                                            <a>@item.CountryRegion.Country - @State</a>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>*@
+
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="ShopcustomerID" id="shopcustomerid" value="@ViewBag.CompanyID" />
+            <div class="col-lg-7 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                @*<div class="job-alerts-item bookmarked">*@
+                <div>
+                    <h3 style="font-size:14px" id="orda">Pending Payments</h3>
+                 
+                    <div id="displayordercontent">
+                        <table id="zero_config" class="table  table-responsive table-hover table-stripped" style="font-size:12px;color:black">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Group ID")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Amount) (@*<del class="NairaSign">N</del>*@)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Date Ordered")
+                                    </th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td>
+                                            <a href="~/Orders/OrdersPayment/?id=@item.OrderGroupID">
+                                               @item.OrderGroupID
+                                            </a>
+                                        </td>
+                                        
+                                        <td>
+
+                                            @{
+                                                var amount = string.Format("{0:#,0}", item.Amount);
+                                            }
+                                            @amount
+                                        </td>
+                                        <td>
+                                            @{
+                                                var date = string.Format("{0:MMM dd, yyyy}", item.DateCreated);
+                                                //var date = string.Format("{0:dd MMM, yyyy hh:mm:ss tt}", item.DateOrdered);
+                                            }
+                                            @date
+
+                                        </td>
+                                        <td>
+                                            @*<a href="#">Pay Now</a>*@
+                                        </td>
+                                       
+                                    </tr>
+                                                    }
+                                                }
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                                                
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+<script type="text/javascript">
+    function getcontent(_id) {
+        var _shopcustomerid = document.getElementById("shopcustomerid").value;
+        var url = "/Orders/Get_MyOrders/";
+        $.ajax({
+            url: url,
+            data: { option: _id, shopcustomerid: _shopcustomerid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+                var html = '<table class="table table-responsive table-hover table-stripped" style="font-size:12px;color:black"><tr><th>Product Name</th><th>Quantity</th><th>Rate(₦)</th><th>Amount(₦)</th><th>Date Ordered</th>';
+                var opp = '';
+                $.each(data, function (key, item) {
+                    html += '<tr>';
+                    if (item.SubProductID != 0) {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+
+                    } else {
+                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                    }
+                    html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
+                    if(item.op=="orders")
+                    {
+                        $("#orda").html("My Orders").show();
+                    }
+                    else if(item.op=="ppayment")
+                    {
+                        $("#orda").html("Pending Payments").show();
+                    }
+                    else if (item.op == "pdelivery") {
+                        $("#orda").html("Pending Delivery").show();
+                    }
+                    else if(item.op=="delivered") {
+                        $("#orda").html("Delivered").show();
+                    }
+                    else {
+
+                    }
+                });
+               html += "</table>"
+
+               $("#displayordercontent").html(html).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function dateFormat(d) {
+        console.log(d);
+        return ((d.getMonth() + 1) + "").padStart(2, "0")
+            + "/" + (d.getDate() + "").padStart(2, "0")
+            + "/" + d.getFullYear();
+    }
+</script>
+
+
+<script type="text/javascript">
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+</script>

@@ -1,0 +1,70 @@
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+</script>
+
+
+<h3>My Google Maps Demo</h3>
+<div id="floating-panel">
+    <input id="address" type="text" value="Sydney, NSW" />
+    <input id="submit" type="button" value="Geocode" />
+</div>
+<!--The div element for the map -->
+<div id="map"></div>
+
+<style>
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+</style>
+
+<!--GEOCODING-->
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+</script>
+
+
+<script>
+      "use strict";
+
+      function initMap() {
+          const map = new google.maps.Map(document.getElementById("map"), {
+          //zoom: 8,
+          zoom: 8,
+          center: {
+              lat: 9.0820,
+              lng: 8.6753
+          }
+        });
+          const geocoder = new google.maps.Geocoder();
+          document.getElementById("submit").addEventListener("click", () => {
+              geocodeAddress(geocoder, map);
+          });
+
+      }
+      function geocodeAddress(geocoder, resultsMap) {
+        const address = document.getElementById("address").value;
+        geocoder.geocode(
+          {
+            address: address
+          },
+          (results, status) => {
+            if (status === "OK") {
+              resultsMap.setCenter(results[0].geometry.location);
+              new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location,
+              // address:setContent(results[0].formatted_address)
+
+              });
+            } else {
+              alert(
+                "Geocode was not successful for the following reason: " + status
+              );
+            }
+          }
+        );
+      }
+</script>
+<!-- END GEOCODING-->

@@ -1,0 +1,317 @@
+﻿@model Myvshoponline.SearchOptimization
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int ShopID = Convert.ToInt32(Request.QueryString["sid"]);
+    //GET price for popular product a day
+    decimal Pricingperday = Convert.ToDecimal(db.PopularProductPricings.Select(s => s.Amount).First());
+}
+
+
+@{
+    ViewBag.Title = "Promote my Products";
+}
+<br /><br /><br />
+<body onload="LoadProductSelections()">
+</body>
+<h2 style="font-size:15px" class="alert alert-info">Promote your Products  to get them listed as popular products on the home page for <a href="~/Shops/ShopDetails/@ShopID">  @db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault() </a></h2>
+
+<!-- Start Content -->
+<div id="content" style="padding-top:0px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+
+                <h3 class="alerts-title" style="font-size:14px;">Click on a product to add or remove from list.</h3>
+                <input type="hidden" value="@ShopID" id="shopid" />
+                <input type="hidden" value="@Pricingperday" id="SeoPrincing" />
+                <input type="hidden" id="shopname" value="@db.Shops.Where(s=>s.ID==ShopID).Select(s=>s.Name).FirstOrDefault()" />
+                <input type="hidden" id="shopemail" value="@db.Shops.Where(s=>s.ID==ShopID).Select(s=>s.Email).FirstOrDefault()" />
+                <input type="hidden" id="phone" value="@db.Shops.Where(s=>s.ID==ShopID).Select(s=>s.PhoneNumber).FirstOrDefault()" />
+                @foreach (var item in ViewBag.ProductCategories)
+                {
+                    int CatID = item.ProductCategoryID;
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;padding:5px;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">@item.ProductCategory.Name</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                @foreach (var prod in db.Products.Where(i => i.ShopID == ShopID && i.ProductCategoryID == CatID).ToList())
+                {
+                                    <div class="col-md-3 col-sm-3 col-xs-6" style="margin-bottom:5px;padding:1px;">
+                                        <button value="@prod.ID" id="@prod.ID" class="btn btn-common" style="font-size:10px;padding:4px;margin:0px" onclick="AddProduct(this.value)"> @prod.Name</button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6 col-sm-8 col-xs-12">
+                <div class="right-sideabr">
+                    <h4 style="font-size:13px;">
+                        <center>Summary of Products Added</center><br />
+                        <center><span style="font-size:13px;"><i>Total</i></span> <span class="badge badge-info" style="font-size:13px;" id="totaladded">0</span></center>
+                    </h4>
+
+                    <span id="Recordsalreadyexist"></span>
+                    <div id="LoadSelections" style="padding:20px;">
+                    </div>
+                    <hr style="margin:0px;" />
+                    <div class="row" style="padding-left:20px;">
+                        <b style="color:black;font-size:13px;"> Choose when this promotion will end (Days) &nbsp;</b>
+                        <br />
+                        <a name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreament(); getdate()">&minus;</a>
+                        <input type="text" min="1" id="noofdayspromote" value="1" name="quantity" style="width:70px;height:35px;vertical-align:central;text-align:center;font-weight:bold;font-size:14px" onkeyup="updateforndays(this.value); getdate()" />
+                        <a style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament(); getdate()">+</a>
+                    </div>
+                    <hr />
+                    <span style="color:black;">
+                        Your promotion will run for <span id="forndays" style="font-weight:bold"></span> day(s)
+                        and ends on <strong id="displayenddate"></strong>
+                    </span>
+
+                    <input type="hidden" id="PromoteAmount" />
+                    <div style="padding:10px;color:black;">
+                        <b>Payment Summary </b>
+                        <br style="font-weight:bold" />
+                        NGN @string.Format("{0:#,0}", Pricingperday) for <span id="ndays"></span> day(s) x <span id="noofproducts">0</span> product(s) =NGN <b id="totalamt">0</b>
+
+                        <br /><br />
+
+                        <form>
+                            <script src="https://js.paystack.co/v1/inline.js"></script>
+                            <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">Promote Now <i class="lni lni-arrow-right-circle"></i> <b id="totalamtpaynow"> </b></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End Content -->
+
+<script type="text/javascript">
+    function AddProduct(_productid) {
+        var shopid = document.getElementById("shopid").value;
+        var url = "/PopularProducts/SaveSelectionsTemp/";
+
+                 $.ajax({
+                     url: url,
+                     data: { shopid:shopid,productid: _productid},
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         LoadProductSelections(shopid);
+                         $.each(data, function (key, item) {
+                             if(item.ProductalreadyExist!=null)
+                             {
+                               //$("#Recordsalreadyexist").html("<font color='red'>"+item.ProductalreadyExist + " already added!</font>").show();
+
+                                 DeleteProduct(item.ID,_productid,shopid);
+                             }
+                             else {
+                                 $("#Recordsalreadyexist").html("");
+                                 document.getElementById(_productid).style.backgroundColor = "green";
+                             }
+                         });
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+
+
+<script type="text/javascript">
+    function LoadProductSelections() {
+        getdate();
+             var _shopid = document.getElementById("shopid").value;
+             var url = "/PopularProducts/GetProductSelections/";
+                 $.ajax({
+                     url: url,
+                     data: { shopid: _shopid},
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '<div class="row" style"padding:1px;">';
+                         $.each(data, function (key, item) {
+                             html += '<div class="col-md-3" style="font-size:13px;color:black;padding:1px;"> &bull; ' + item.ProductName + '</div>';
+                              document.getElementById("totaladded").innerHTML = item.Total;
+                              document.getElementById("noofproducts").innerHTML = item.Total;
+                              document.getElementById("forndays").innerHTML = document.getElementById("noofdayspromote").value;
+                              document.getElementById("totalamt").innerHTML = formatNumber((parseInt(item.Total) * document.getElementById("SeoPrincing").value) * document.getElementById("noofdayspromote").value);
+                              document.getElementById("totalamtpaynow").innerHTML = "NGN " + document.getElementById("totalamt").innerHTML;
+                              document.getElementById("PromoteAmount").value = (parseInt(item.Total) * document.getElementById("SeoPrincing").value) * document.getElementById("noofdayspromote").value;
+                             document.getElementById(item.ProductID).style.backgroundColor = "green";
+                         });
+                         html += '</div>';
+                        // $("#total").innerHTML=data.Total;
+                         $("#LoadSelections").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+<script type="text/javascript">
+    function DeleteProduct(id,_productid,shopid) {
+        var shopid = document.getElementById("shopid").value;
+        var url = "/PopularProducts/DeleteProduct/";
+
+                 $.ajax({
+                     url: url,
+                     data: { id:id},
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+
+                         document.getElementById(_productid).style.backgroundColor = "#33C6F6";
+                             LoadProductSelections(shopid);
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+<script>
+    function payWithPaystack() {
+       var actualamt = document.getElementById("PromoteAmount").value;
+        var myamt = document.getElementById("PromoteAmount").value * 100;
+        var nofdays = document.getElementById("noofdayspromote").value;
+        var shopname =document.getElementById("shopname").value;
+        var shopemail = document.getElementById("shopemail").value;
+       var ShopID = document.getElementById("shopid").value;
+        var enddate = document.getElementById("displayenddate").innerHTML;
+        var phone = document.getElementById("phone").value;
+        if (nofdays == 0)
+        {
+            alert("Please days cannot be zero");
+            return false;
+        }
+
+        else {
+            var handler = PaystackPop.setup({
+                // key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                 key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+                    email: shopemail,
+                    amount: myamt,
+                    ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                    firstname: shopname,
+                    number: "",
+                    // label: "Optional string that replaces customer email"
+                    label: shopname,
+                    metadata: {
+                custom_fields: [
+                           {
+                    display_name: "Mobile Number",
+                               variable_name: "mobile_number",
+                               value: phone
+                           }
+                        ]
+                    },
+                    callback: function (response) {
+                        var url = "/PopularProducts/Update_Payment_Promote_PopularProducts/";
+                        $.ajax({
+                    url: url,
+                    data: { refno: response.reference, amount: actualamt, shopname: shopname, noofdays: nofdays, enddate: enddate, ShopID: ShopID, shopemail: shopemail },
+                            cache: false,
+                            type: "POST",
+                        })
+                      //  alert('Payment made succesfully ' + shopname + '\n Your trasaction reference: ' + response.reference);
+                        window.location.href = "/PopularStores/Index/?sid=" + ShopID;
+                        //$("#promotebody").html("<span class='alert alert-success'>Payment made succesfully paid for' + shopname<br><br></span> <br>");
+                        //$("#okbtn").css("display", "block");
+                },
+                    onClose: function () {
+                    alert('Transaction aborted by user. Try again');
+                }
+            });
+            handler.openIframe();
+        }
+    }
+</script>
+
+
+<script>
+        function getdate() {
+        var months = new Array(12);
+        months[0] = "January";
+        months[1] = "February";
+        months[2] = "March";
+        months[3] = "April";
+        months[4] = "May";
+        months[5] = "June";
+        months[6] = "July";
+        months[7] = "August";
+        months[8] = "September";
+        months[9] = "October";
+        months[10] = "November";
+        months[11] = "December";
+        //var tt = document.getElementById('txtDate').value;
+        var nday = parseInt(document.getElementById("noofdayspromote").value);
+        var date = new Date();
+        var newdate = new Date(date);
+
+        newdate.setDate(newdate.getDate() + nday);
+
+        var dd = newdate.getDate();
+        var mm = newdate.getMonth();
+        var y = newdate.getFullYear();
+
+        var someFormattedDate = months[mm] + ' ' + dd + ', ' + y;
+        document.getElementById('displayenddate').innerHTML = someFormattedDate;
+        }
+</script>
+
+<script type="text/javascript">
+function increament() {
+        var currentval = parseInt(document.getElementById("noofdayspromote").value);
+        currentval +=1 ;
+        document.getElementById("noofdayspromote").value = currentval;
+        document.getElementById("ndays").innerHTML = currentval;
+       //document.getElementById("totalamt").innerHTML = parseInt(document.getElementById("noofproducts").innerHTML) * document.getElementById("SeoPrincing").value * currentval;
+       // document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value
+        getdate();
+        LoadProductSelections();
+    }
+    function decreament() {
+        var currentval = document.getElementById("noofdayspromote").value;
+        if (currentval != 1) {
+            document.getElementById("noofdayspromote").value = currentval - 1;
+            document.getElementById("ndays").innerHTML = currentval - 1;
+            //document.getElementById("totalamt").innerHTML = parseInt(document.getElementById("noofproducts").innerHTML) * document.getElementById("SeoPrincing").value * currentval-1;
+            //document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value
+            getdate();
+            LoadProductSelections();
+        }
+    }
+    function updateforndays(ndays) {
+        document.getElementById("ndays").innerHTML = ndays;
+        //document.getElementById("totalamt").innerHTML = (parseInt(document.getElementById("noofproducts").innerHTML) * document.getElementById("SeoPrincing").value) * currentval;
+        //document.getElementById("PromoteAmount").value = parseInt(document.getElementById("noofdayspromote").value) * document.getElementById("popularpriceperday").value
+        getdate();
+        LoadProductSelections();
+    }
+</script>
+<script type="text/javascript">
+    LoadProductSelections();
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

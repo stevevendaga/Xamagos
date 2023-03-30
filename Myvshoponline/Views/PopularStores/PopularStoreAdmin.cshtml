@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Myvshoponline.PopularStore>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<br /><br /><br />
+
+
+<h4 style="font-size:14px;">Popular Stores Promoted | Active [@Model.Where(s=>s.PopularStoreStatu.Status=="Active").Count()] | Expired [@Model.Where(s => s.PopularStoreStatu.Status == "Expired").Count()] </h4>
+
+
+<table class="table table-responsive" style="color:black;">
+    <tr>
+        
+        @*<th>
+            @Html.DisplayNameFor(model => model.PaymentStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RefNo)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatePaid)
+        </th>
+        <th>
+            @Html.DisplayName("Days Used")
+        </th>
+        <th>
+            @Html.DisplayName("Days Remaining")
+        </th>
+        <th>
+            @Html.DisplayName("Duration")
+        </th>
+        <th>
+            @Html.DisplayName("End Date")
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.LaunchYear)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LaunchMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LaunchDay)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PreviousYear)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PreviousMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PreviousDay)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.PopularStoreStatu.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Shop.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        @*<td>
+            @Html.DisplayFor(modelItem => item.PaymentStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RefNo)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatePaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DaysActive)
+        </td>
+        <td>
+            @(item.TotalDaysPaid-item.DaysActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDate)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.LaunchYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LaunchMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LaunchDay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreviousYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreviousMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreviousDay)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Shop.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

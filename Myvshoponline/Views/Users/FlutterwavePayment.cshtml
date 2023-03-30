@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Myvshoponline.User>
+
+@{
+    ViewBag.Title = "Flutterwave Payment";
+}
+<div id="content">
+    <div class="container">
+        <div class="col-md-4">
+            <h4 style="font-size:16px;">Set Bonus Percentage</h4>
+            <form method="post" action="~/Users/Bonus">
+                <input type="number" min="1" class="form-control" name="discount" placeholder="Discount Percentage" required="required" />
+                <br />
+                <input type="number" min="1" class="form-control" name="bonus" placeholder="Bonus Percentage"  required="required" />
+                <br />
+                <input type="submit" value="Set Now" class="btn btn-success" style="padding:3px;" />
+
+            </form><hr />
+
+            <span style="color:black">Percentage Settings</span><br />
+
+            <span style="color:mediumvioletred">Discount Percentage: </span>@ViewBag.DiscountPercentage <br />
+            <span style="color:green">Bonus Percentage: </span>@ViewBag.BonusPercentage
+        </div>
+        </div></div>
+
+<script>
+    function MakeFlutterwave()   {
+
+            "tx_ref":"hooli-tx-1920bbtytty",
+            "amount":"100",
+            "currency":"NGN",
+            "redirect_url":"https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+            "payment_options":"card",
+            "meta":{
+                "consumer_id":23,
+                "consumer_mac":"92a3-912ba-1192a"
+            },
+   "customer":{
+       "email":"user@gmail.com",
+       "phonenumber":"080****4528",
+       "name":"Yemi Desola"
+   },
+   "customizations":{
+       "title":"Pied Piper Payments",
+       "description":"Middleout isn't free. Pay the price",
+       "logo":"https://assets.piedpiper.com/logo.png"
+   }
+        }
+    
+</script>
+
+<script>
+    function MakeFlutterwave() {
+            var myamt = document.getElementById("totalamount").value * 100;
+            var companyname = document.getElementById("companyname").value;
+            var myname = document.getElementById("getplanname").value + " -" + companyname;
+            var _planID = document.getElementById("plan").value;
+            var _BillingID = document.getElementById("billing").value;
+            var realplan = document.getElementById("getplanname").value;
+            var userid = document.getElementById("userid").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+
+            var _extraperiod = document.getElementById("extraperiod").value;
+            var _expectedamount=document.getElementById("expectedamount").value;
+            var _discountpercentage = document.getElementById("discount").value;
+            var _discountamount = document.getElementById("discountamount").value;
+            var _extrabonuspercentage = document.getElementById("extrabonus").value;
+            var _extrabonusamount = document.getElementById("extrabonusamount").value;
+            var handler = PaystackPop.setup({
+                key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+               //key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+          email:email,
+          amount: myamt,
+          ref: ''+ Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+          firstname: myname,
+          number: "",
+                // label: "Optional string that replaces customer email"
+           "tx_ref":"hooli-tx-1920bbtytty",
+          "amount":"100",
+          "currency":"NGN",
+          "redirect_url":"https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+          "payment_options":"card",
+          "meta":{
+              "consumer_id":23,
+              "consumer_mac":"92a3-912ba-1192a",
+          callback: function (response) {
+              var url = "/Users/Update_Payment_Company_Plan/";
+              $.ajax({
+                  url: url,
+                  data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },
+                  cache: false,
+                  type: "POST",
+              })
+             // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+              window.location.href = "/Users/BusinessLanding/"+userid;
+          },
+          onClose: function(){
+              alert('Transaction aborted by user. Try again');
+          }
+
+           
+            },
+   "customer":{
+                "email":"user@gmail.com",
+                "phonenumber":"080****4528",
+                "name":"Yemi Desola"
+            },
+   "customizations":{
+                "title":"Pied Piper Payments",
+                "description":"Middleout isn't free. Pay the price",
+                "logo":"https://assets.piedpiper.com/logo.png"
+   }
+
+        });
+        handler.openIframe();
+      }
+</script>

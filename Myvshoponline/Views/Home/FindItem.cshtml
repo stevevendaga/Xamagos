@@ -1,0 +1,397 @@
+﻿@model IEnumerable<Myvshoponline.Product>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+    }
+@{
+    ViewBag.Title = "Product Finder";
+    int CommissionPercent = Convert.ToInt32(db.Settings.Select(s => s.CommissionPercent).FirstOrDefault());
+    decimal c_percent = (decimal)(CommissionPercent / 100.00);
+
+}
+ 
+<p></p>
+<body onload=" initMap();" style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
+</body>
+
+<h3 style="color:white;font-size:18px;margin-left:10px;">
+    <i class="fa fa-search"></i> Product Finder
+</h3>
+
+
+  <!-- SEARCH FORM -->
+<div class="col-lg-12 pt-4 pt-lg-0" data-aos="fade-left" style="background-color:white;border-radius:10px;box-shadow:#06867e 10px 10px inset;padding:30px;opacity:0.9">
+                    <form class="form-inline m-lg-0" method="get" action="~/Home/FindItem" style="padding:10px;">
+                         @if (Request.QueryString["item"] != null)
+                         {
+                            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="item" type="text" value="@Request.QueryString["item"]" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
+                         }
+                         else
+                         {
+                            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="item" type="text" placeholder="Search products, brands and categories" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
+                         }
+                           
+                     
+
+                        <div class="input-group input-group-sm" style="margin:2px;">
+                          @if (Request.QueryString["item"] != null)
+                          {
+                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" value="@Request.QueryString["CountryID"]">
+                          }
+                          else
+                          {
+                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" placeholder="Country/Region">
+                          }
+                        @*@Html.DropDownList("CountryID", null, "Country/Region", htmlAttributes: new { @class = "form-control form-control-navbar", @required = "required", @onchange = "displaystateInputbar(this.value)", @style = "margin:2px;" })*@
+                    </div>
+                    <div class="input-group input-group-sm" style="margin:2px;" id="displaystatebar">
+@if (Request.QueryString["item"] != null)
+{
+<input type="text" id="loadStates" name="StateID" class="form-control form-control-navbar" value="@Request.QueryString["StateID"]" />
+}
+else
+{
+    <input type="text" id="loadStates" name="StateID" class="form-control form-control-navbar" placeholder="State" />
+}
+                    </div>
+                        <div class="input-group input-group-sm" style="margin:2px;">
+                            @Html.DropDownList("ProductCategoryID", null, htmlAttributes: new { @class = "form-control form-control-navbar" })
+                            <div class="input-group-append">
+                                <button class="btn btn-common" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Right navb-->
+                        </div>
+
+@if (Request.QueryString["item"] != null)
+{
+        <!-- Listings Section Start -->
+<h3 class="section-title" style="font-size:14px;padding:5px;color:white">Search Results for @ViewBag.searchitem - found @Model.Count() results  </h3>
+                    <!--Section for SEO products-->
+
+<div id="popularproductsforSEO" style="margin:1px;padding:0px;">
+<div class="panel panel-success">
+    @if (db.SearchOptimizations.Count() > 0)
+    {
+        <div class="panel-heading" style="background-color:#0BACE1;">
+            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px;text-align:left;">Sponsored</h3>
+        </div>
+    }
+<div class="panel-body">
+<div class="col-md-12">
+<div class="row">
+@foreach (var item in Model)
+{
+    int ShopID = item.ShopID;
+
+    int ProductID = item.ID;
+    <!--CHECK IF THIS PRODUCT IS SPONSORED IN SEARCH OPTIMIZATION-->
+    if (db.SearchOptimizations.Where(s => s.ProductID == ProductID && s.PopularStoreStatu.Status == "Active").Count() > 0)
+    {
+
+        int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
+    <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
+        @if (countproductinsubitems > 0)
+        {
+            <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                        @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                        <center>
+                            <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                            <br />
+                            <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+
+                            <h3 style="margin:0px;padding:0px">
+
+                                <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+
+                                    @if (item.Currency == "NGN")
+                                    {<del class="NairaSign">N</del>}
+                                    else
+                                    { <span>@item.Currency</span>}@{
+                                        @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                                    decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                                    decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                                    var a = string.Format("{0:#,0}", Total);}@a
+                                </span>
+                            </h3>
+                            <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                            @{
+                                int sid =Convert.ToInt32(item.Shop.StateID);
+                                var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                            }
+                            <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                            @*<br />
+                            <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                        </center>
+
+                    </div>
+                </div>
+            </a>
+    }
+    else
+    {
+
+    <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                <center>
+                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                    <br />
+                    <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                    <h3 style="margin:0px;padding:0px;">
+                        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                            @if (item.Currency == "NGN")
+                            {<del class="NairaSign">N</del>}
+                            else
+                            { <span>@item.Currency</span>}@{
+                                @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                            decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                            decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                            var a = string.Format("{0:#,0}", Total);}@a
+                        </span>
+                    </h3>
+                    <hr style="padding-bottom:1px;margin-bottom:0px;" />
+                    @{
+                        int sid = Convert.ToInt32(item.Shop.StateID);
+                        var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                    }
+                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                    @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                </center>
+            </div>
+        </div>
+    </a>
+}
+
+</div>
+        }
+
+    }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--END Section for SEO-->
+<!--START OF OTHER PRODUCTS-->
+                    <div class="row" style="padding:0px">
+                        @foreach (var item in Model)
+                        {
+                            int ProductID = item.ID;
+                            if (db.SearchOptimizations.Where(s => s.ProductID == ProductID && s.PopularStoreStatu.Status == "Active").Count() < 1)
+                            {
+                                int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
+                            <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
+                                @if (countproductinsubitems > 0)
+                                {
+                                    <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                <center>
+                                                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                                                    <br />
+                                                    <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+                                                    <h3 style="margin:0px;padding:0px">
+                                                        <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+                                                            @if (item.Currency == "NGN")
+                                                            {<del class="NairaSign">N</del>}
+                                                            else
+                                                            { <span>@item.Currency</span>}@{
+                                                                @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                                                            decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                                                            decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                                                            var a = string.Format("{0:#,0}", Total);}@a
+                                                        </span>
+                                                    </h3>
+                                                    <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                                                    @{
+                                                        int sid = Convert.ToInt32(item.Shop.StateID);
+                                                        var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                    }
+                                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                                    @*<br />
+                                                    <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                                </center>
+
+                                            </div>
+                                        </div>
+                                    </a>
+    }
+    else
+    {
+
+                                                                    <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                                                                                @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                                                                <center>
+                                                                                    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                                                                                    <br />
+                                                                                    <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                                                                                    <h3 style="margin:0px;padding:0px;">
+                                                                                        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                                                                                            @if (item.Currency == "NGN")
+                                                                                            {<del class="NairaSign">N</del>}
+                                                                                            else
+                                                                                            { <span>@item.Currency</span>}@{
+                                                                                                @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                                                                                            decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                                                                                            decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                                                                                            var a = string.Format("{0:#,0}", Total);}@a
+                                                                                        </span>
+                                                                                    </h3>
+                                                                                    <hr style="padding-bottom:1px;margin-bottom:0px;" />
+                                                                                    @{
+                                                                                        int sid = Convert.ToInt32(item.Shop.StateID);
+                                                                                        var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                                                                                    }
+                                                                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                                                                    @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                                                                </center>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+    }
+
+                            </div>
+        }
+    }
+                        @*<div class="col-12 text-center mt-4">
+                            <a href="~/Home/Index#categories" class="btn btn-common">Browse Products Categories</a>
+                            <br />
+                        </div>*@
+                    </div>
+                @*</div>
+            </div>
+        </section>*@
+
+
+
+    }
+        <!-- Listings Section End -->
+      <script type="text/javascript">
+    function displaystateInput(CountryID) {
+
+                 var url = "/Shops/GetCountryName/";
+                 $.ajax({
+                     url: url,
+                     data: { CountryID: CountryID },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         $.each(data, function (key, item) {
+                             if (item.CountryName == "Nigeria") {
+                                 GetStates(CountryID);
+                             }
+                             else {
+                                 html += '<input type="text" id="city" name="StateID" class="form-control" style = "height:36px;padding-top:3px;margin-bottom:2px;" placeholder="State/City[optional]" />';
+                             }
+                         });
+                         document.getElementById("displayst").style.display = "block";
+                         $("#displaystate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+<script type="text/javascript">
+    function GetStates(CountryID) {
+
+                 var url = "/Shops/GetStates/";
+                 $.ajax({
+                     url: url,
+                     data: { CountryID: CountryID },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         html += '<span><select name="StateID" class="form-control" style ="height:36px;padding-top:3px;margin-bottom:2px;">';
+                         html += '<option selected disabled>-- Select State[optional] --</option>';
+                         $.each(data, function (key, item) {
+
+                                 html+='<option value='+item.StateName +'>'+ item.StateName +'</option>';
+                         });
+                         html += '</select></span>';
+                         document.getElementById("displayst").style.display = "block";
+                         $("#displaystate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+ <script type="text/javascript">
+        $(function () {
+            $("#loadcountries")
+                .bind("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                    $(this).data("ui-autocomplete").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 2,
+                    source: function (request, response) {
+                        $.getJSON("/Home/AutoLoadCountries", {
+                            term: extractLast(request.term)
+                        }, response);
+                    },
+                });
+        });
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+</script>
+
+
+<script type="text/javascript">
+        $(function () {
+            $("#loadStates")
+                .bind("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                    $(this).data("ui-autocomplete").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 2,
+                    source: function (request, response) {
+                        $.getJSON("/Home/AutoLoadStates", {
+                            term: extractLast(request.term)
+                        }, response);
+                    },
+                });
+        });
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+</script>

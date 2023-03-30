@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Myvshoponline.DeliveryAgentAllocation>
+
+@{
+    ViewBag.Title = "Orders Delivered";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+}
+<p></p>
+
+<a href="~/DeliveryAgentAllocations/AllAgents"><< Back to Agents</a>
+<br />
+<form method="get">
+<input type="hidden" name="alloid" value="@Request.QueryString["alloid"]" />
+    <span class="badge badge-pill" style="padding:10px;font-size:14px;color:black;"></span>
+    <div class="row" style="color:black;">
+        <div class="col-md-3">
+            <b>From</b>  <input type="date" name="fromdate" class="form-control" required="required" />
+        </div>
+        <div class="col-md-3">
+            <b>To</b> <input type="date" name="todate" class="form-control" required="required" />
+        </div>
+        <div class="col-md-3">
+            <br />
+            <input type="submit" name="submit" value="Display Report" class="btn btn-common" />
+        </div>
+    </div>
+</form>
+
+ @if (Request.QueryString["fromdate"] != null)
+ {
+     var fromdate = Convert.ToDateTime(Request.QueryString["fromdate"]).Date;
+     var todate = Convert.ToDateTime(Request.QueryString["todate"]).Date;
+     var fromdateformat = string.Format("{0:MMM dd, yyyy}", fromdate);
+     var todateformat = string.Format("{0:MMM dd, yyyy}", todate);
+     int AllocationID =Convert.ToInt32(Request.QueryString["alloid"]);
+     var CompanyName = db.DeliveryAgentAllocations.Where(s => s.ID == AllocationID).Select(s => s.User.CompanyName).FirstOrDefault();
+     var state = db.DeliveryAgentAllocations.Where(s => s.ID == AllocationID).Select(s => s.State.Name).FirstOrDefault();
+     var query = db.Orders.Where(l => (l.DateDelivered >= fromdate
+                                     && l.DateDelivered <= todate && l.DeliveredByAgentAllocationID == AllocationID)).ToList();
+<p></p>
+<h4 style="font-size:14px;padding:6px;" class="badge badge-secondary">
+    Delivery report between <b>@fromdateformat</b> and <b>@todateformat </b>in @state State
+</h4>
+<h4 style="font-size:14px;">@CompanyName </h4>
+<table id="zero_config" class="table table-responsive" style="color:black;">
+    <thead>
+        <tr>
+            <th>OrderID</th>
+
+            <th>
+                Quantity
+            </th>
+
+            <th>
+                DateOrdered
+            </th>
+
+            <th>
+                DeliveryStatus
+            </th>
+            <th>
+                DateDelivered
+            </th>
+
+            <th>
+                ProductName
+            </th>
+            <th>
+                Sub ProductName
+            </th>
+            <th>
+                CustomerName
+            </th>
+
+            <th>
+                Reason
+            </th>
+            <th>
+                DateRejected
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in query)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOrdered)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateDelivered)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopCustomer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RejectReason)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateRejected)
+                </td>
+
+            </tr>
+
+        }
+    </tbody>
+    <tfoot>
+    </tfoot>
+
+</table>
+               }

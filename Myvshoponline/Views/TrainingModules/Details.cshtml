@@ -1,0 +1,81 @@
+﻿@model Myvshoponline.TrainingModule
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div>
+    <h4 id="colorHeading">Training Module Details</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Project Name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
+        <dt>
+            @Html.DisplayName("Module Title")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Video Url")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VideoUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Date Uploaded")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateUploaded)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Video Length")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeInMins)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activity)
+        </dd>       
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ModuleID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,139 @@
+﻿@model IEnumerable<Myvshoponline.Position>
+
+@{
+    ViewBag.Title = "Market Square247 Application Portal";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int ApplicationClosed =(int) db.Settings.Select(s => s.ApplicationClosed).First();
+}
+}
+@using Myvshoponline.Controllers;
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div id="content">
+    <div class="container">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="color:black;font-weight:bold"> Welcome to Market Square247 Application Portal</h3>
+            </div>
+            <div class="panel-body" style="color:black;">
+                <div>
+                    @*<span>
+                        Support Lines: <b style="color:#ff6a00">08077227372, 08059073747</b>
+                    </span>*@
+                    <div class="col-md-12" style="box-shadow:1px 1px 1px 1px;border-radius:5px;padding:3px">
+                        @*<h4 style="font-size:15px;">Instruction for Applicants</h4>*@
+                        <div class="row">
+                            <div class="col-md-4">
+                                <ul>
+                                    @*<li>
+                                        Before you start filling the form online, ensure you have the following:
+                                        <ol>
+                                            <li>&bull; Curriculum Vitae (<span style="color:red">pdf format</span>)</li>
+                                            <li>&bull; Functional email address</li>
+                                            <li>&bull; Functional telephone line</li>
+                                            <li>&bull; Recent passport with clear background</li>
+                                        </ol>
+                                    </li>*@
+                                    @if (ApplicationClosed == 1)
+                                    {
+                                        <li style="font-weight:bold;font-size:16px;">Deadline for application is Monday, 18th November, 2019.</li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <br />
+                                            <h1 style="color:red;padding-left:20px;font-size:16px;">NO ACTIVE APPLICATION</h1>
+                                            
+                                        </li>
+                                    }
+
+                                    @*<li style="color:black;font-weight:bold;">Selected applicants are expected to write a Computer Based Test (CBT) Examination on 25th November, 2019 - 30th November, 2019.</li>
+<li style="color:blue;font-weight:bold;">Note: The CBT Examination is going to be taken online.</li>*@
+
+                                    @*<li style="color:blue;font-weight:bold;">Click on a position you wish to apply to proceed with the application process.</li>*@
+                                </ul>
+                            </div>
+                            <div class="col-md-8">
+                                <ul>
+                                    @*<li ><span style="color:red;font-size:16px;">Note: Only selected applicants will be contacted through email and applicants can also login with their email and password used during application to check selection status.</span> </li>*@
+                                  <li></li>
+@*@if (ApplicationClosed == 1)
+{
+                                    <li style="font-weight:bold;font-size:16px;">Deadline for application is Monday, 18th November, 2019.</li>
+}
+else
+{
+    <li>
+        <br />
+        <h1 style="color:red;padding-left:20px;font-size:16px;">APPLICATION CLOSED</h1>
+        <br />
+    </li>
+}*@
+                                </ul>
+                                @*<hr style="margin-bottom:1px;margin-top:3px;" />*@
+                                <span style="font-weight:bold;color:blue;">Existing Applicant?<br /><hr /></span>
+                                 <span style="font-weight:bold;color:green;">Login to Check your Aptitude Test Score</span>
+                                @if (Request.QueryString["err"] != null)
+                                {
+                                    <h5 style="color:red;font-size:14px;">Access denied, try again!</h5>
+                                }
+                                <form method="post" action="~/Applications/Login">
+                                    <div class="row">
+                                      
+                                        <div class="col-md-4" style="margin-top:7px;">
+
+                                            <input type="text" name="email" placeholder="Enter your email" class="form-control" required="required" />
+                                        </div>
+                                        <div class="col-md-4" style="margin-top:7px;">
+                                            <input type="password" name="password" placeholder="Enter your password" class="form-control" required="required" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="submit" value="Login" class="btn btn-common" />
+                                        </div>
+                                    </div>
+                                </form>
+                                <p><br /></p>
+                                <ul>
+                                    @*<li><span style="color:red;font-size:16px;">Note: Only selected applicants will be contacted through email and applicants can also login with their email and password used during application to check selection status.</span> </li>*@
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    @if (ApplicationClosed == 1)
+                    {
+                        foreach (var item in db.Positions.Where(p=>p.Status==1).ToList())
+                        {
+
+                            <div class="col-md-4" style="text-align:center;margin-bottom:10px;font-size:14px;">
+                                <a href="~/Applications/JobDetails/?AppType=@item.ID">
+                                    <img src="@Url.Content("~/Images/" + item.ID + ".jpg")" alt="app image" height="100" />
+                                    <br />
+                                    <div style="background-color:#f0f3f5;border-radius:5px;padding:5px 5px 5px 5px;height:50px">
+                                        @*<h4 style="text-align:center;color:#25912e;margin-top:5px; font-size:18px;">@item.Position1</h4>*@
+                                        @Html.Raw(HttpUtility.HtmlDecode(item.Position1))
+                                        @*<btn class="btn btn-apply" style="background-color:green;color:white;">Apply Now &raquo;</btn>*@
+                                    </div>
+                                </a>
+</div>
+
+                        }
+                    }
+                    @*else
+                    {
+                        <h1 style="color:red;padding-left:20px;font-size:24px;">APLLICATION HAS BEEN CLOSED</h1>
+                    }*@
+                </div>
+            </div>
+        </div>
+        </div></div>
+<p>
+
+</p>
+<br />
+<p>
+
+</p>

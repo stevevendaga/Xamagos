@@ -1,0 +1,203 @@
+﻿@model  Myvshoponline.Project
+
+@*@model  SysmaxTrainingCenter.Project*@
+
+<link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+
+@{ 
+    ViewBag.Title = "Project Details";
+    string img = Model.ProjectID + ".jpg";
+
+}
+
+<div class="row" style="font-size:19px;">
+    @* Image for Project is here *@
+    <div class="row">
+        <div class="col-md-6">
+            <img src="~/Images/@img" height="100" style="float:left;" />
+        </div>
+
+        <div class="col-md-6">
+            <div style="color:black; font-size:20px; text-align:center; padding:5px; background-color:#FFF9F2; border-bottom:10px solid #FF8A15; border-radius:10px; ">
+                <span style="color:#C46200;" class="glyphicon glyphicon-folder-open"></span>
+                <br />
+                
+                Training Modules 
+            <span style="padding:3px; margin-left:0px; color:#FF8A15; font-size:35px; text-align:center;">@Model.TrainingModules.Count()
+                </span> 
+            </div>
+
+        </div>
+    </div>
+    
+@*
+    <div class="col-md-10">
+        <dl class="dl-horizontal">
+
+            <dt style="background-color:#1EA0A4; color:#C4F3F4; text-align:left; padding-left:10px; margin:0px;">
+                @Html.DisplayName("Project Name")
+            </dt>
+
+            <dd style="background-color:#1EA0A4; color:#C4F3F4; padding-left:10px; margin:0px;">
+                @Html.DisplayFor(model => model.ProjectName)
+            </dd>
+
+    <dt style="background-color:#C4F3F4; color:#FF0000; text-align:left; padding-left:10px; margin:0px;">
+        <span style="text-align:left;">
+            @Html.DisplayName("Description")
+        </span>
+    </dt>
+
+    <dd style="background-color:#C4F3F4; color:black; padding-left:10px; margin:0px;">
+        <p style="padding-right:8px;margin-left:150px; text-align:justify;">
+            @Html.DisplayFor(model => model.Description)
+        </p>
+    </dd>
+
+    <dt style="background-color:#C4F3F4; color:none; text-align:left; padding-left:10px; margin:0px;">
+        @Html.DisplayName("Project Link")
+    </dt>
+
+    <dd style="background-color:#C4F3F4; color:blue; padding-left:10px; margin:0px;">
+        @*<a> @Html.DisplayFor(model => model.ProjectLinks)</a>
+        @if (Model.LinkProtocol == "http")
+        {
+            <a href="http://@Html.DisplayFor(modelItem => modelItem.ProjectLinks)" target="_blank">
+                @Html.DisplayFor(modelItem => modelItem.ProjectLinks)
+            </a>
+        }
+        else
+        {
+            <a href="https://@Html.DisplayFor(modelItem => modelItem.ProjectLinks)" target="_blank">
+                @Html.DisplayFor(modelItem => modelItem.ProjectLinks)
+            </a>
+        }
+
+    </dd>
+            <dt style="text-align:left; margin:0px;">
+
+
+            </dt>
+            <dd style="text-align:left; margin:0px;">
+                <a id="btnProject" class="btn btn-default" href="~/Projects/Edit/?id=@Model.ProjectID">Edit Project</a>
+
+
+                <span><a id="btnProject" class="btn btn-default" href="~/Projects/Index"> Projects </a></span>
+            </dd>
+        </dl>
+
+    </div>
+
+*@
+
+    </div>
+
+
+
+
+
+@*@Html.ActionLink("Create New", "Create") id="btnColor" *@
+@* -----------Training Modules Here------- *@
+
+<div class="row">
+    <div class="col-md-12" style="padding:5px;">
+        <span><a id="myBtn" class="btn btn-default" href="~/TrainingModules/Create?ProjectID=@Model.ProjectID">Add New Training</a></span>
+
+        <span><a id="mybtn1" class="btn btn-default" href="~/TrainingModules/Create?ProjectID=@Model.ProjectID">Add New Training</a></span>
+
+        <span><a id="btnProject" class="btn btn-default" href="~/Projects/Index"> Projects </a></span>        
+    </div>
+
+
+    <table class="table table-bordered table-striped" style="background-color:#F2F2F2; font-size:15px;">
+        <tr style="background-color:#E9E9E9;">
+            <th>
+                @Html.DisplayName("S/No")
+            </th>
+            <th>
+                @Html.DisplayName("Title")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>            
+            <th>
+                @Html.DisplayName("Length")
+            </th>
+            <th>
+                @Html.DisplayName("Notes")
+            </th>
+            <th>
+                @Html.DisplayName("Activity")
+            </th>
+            <th>
+                @Html.DisplayName("Project")
+            </th>
+            
+        </tr>
+
+        @foreach (var item in Model.TrainingModules)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Serial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectTitle)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Description)*@
+
+                    @Html.Raw(HttpUtility.HtmlDecode(item.Description))
+                </td>                
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeInMins)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activity)
+                </td>
+                <td style="min-width:50px;">
+                    @*@Html.DisplayFor(modelItem => item.Project.ProjectName)*@
+                    <span class="badge badge-success"> <a style="color:white; padding:4px; font-size:14px;" href="~/TrainingModules/Edit?id=@item.ModuleID">Edit <i class="glyphicon glyphicon-edit"></i></a></span>
+
+                    <span class="badge badge-success"><a style="color:white; padding:4px; font-size:14px;" href="~/TrainingModules/Delete?id=@item.ModuleID &projectid=@item.ProjectID">Delete</a></span>
+                </td>                
+            </tr>
+        }
+
+    </table>
+
+
+
+
+
+
+</div>
+
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 900 || document.documentElement.scrollTop > 900) {
+    document.getElementById("myBtn").style.display = "inline-block";
+  } 
+  else {
+      document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+//function topFunction() {
+//  document.body.scrollTop = 0;
+//  document.documentElement.scrollTop = 0;
+//}
+</script>
+
+
+@*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@

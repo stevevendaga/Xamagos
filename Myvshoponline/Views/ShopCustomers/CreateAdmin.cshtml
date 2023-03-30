@@ -1,0 +1,171 @@
+﻿@model Myvshoponline.ShopCustomer
+
+@{
+    ViewBag.Title = "Create New Customer";
+}
+
+<div id="content">
+    <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<a href="~/Shops/ShopDetails/@ViewBag.SID"> @ViewBag.ShopName </a>
+    <section id="content" class="section-padding" style="padding:0px">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-xs-12">
+                    <div class="page-login-form box">
+                        
+                           
+                                <h3 style="padding:0px;font-size:14px">
+                                    Create New Customer
+                                </h3>
+                        @if (ViewBag.PhoneEmailExist != null)
+                        {<div class="alert alert-danger" style="color:red;">@ViewBag.PhoneEmailExist</div>
+                        }
+                        <form class="login-form" method="post" action="~/ShopCustomers/CreateAdmin">
+                            @Html.AntiForgeryToken()
+                            
+                            <input type="hidden" name="ShopID" value="@ViewBag.SID" />
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-user"></i>
+                                    @Html.EditorFor(model => model.Name, new
+                               {
+                                   htmlAttributes = new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Full Name",
+                                       @onchange = "this.value = this.value.toUpperCase()"
+                                   }
+                               })
+                                    @if (ViewBag.CustomerExist != null)
+                                    {<div class="panel panel-danger" style="color:red;">@ViewBag.CustomerExist</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-phone-handset"></i>
+                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required", @pattern = "[0-9]{11}", @type = "tel" } })
+                                    @if (ViewBag.PhoneExist != null)
+                                    {<div class="alert alert-danger" style="color:red;">@ViewBag.PhoneExist</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-envelope"></i>
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email" } })
+                                    @if (ViewBag.EmailExist != null)
+                                    {<div class="alert alert-danger" style="color:red;">@ViewBag.EmailExist</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-map-marker"></i>
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address", @required = "required" } })
+                                </div>
+                            </div>
+        <button class="btn btn-common log-btn mt-3">Create</button>
+ 
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @*@using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <input type="hidden" name="ShopID" value="@ViewBag.SID" />
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",@placeholder="Customer's Name" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Customer's Phone Number" } })
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Customer's Email" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        <textarea name="Address" cols="125" rows="3"></textarea>
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username" } })
+                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.DropDownList("CustomerStatusID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CustomerStatusID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-common" />
+                    </div>
+                </div>
+            </div>
+        }*@
+
+    <script>
+    function checkpassword()
+    {
+        if (document.getElementById("password").value != document.getElementById("confirmpassword").value)
+        {
+            alert("Password Mismatch!");
+            return false;
+        }
+    }
+    </script>
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</div>
+

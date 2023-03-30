@@ -1,0 +1,215 @@
+﻿@model Myvshoponline.Product
+
+@{
+    ViewBag.Title = "Edit";
+}
+<div id="content">
+    <h5 class="h5" style="font-size:12px"> <a href="~/Users/Dashboard"><i class="lni-user"></i> @Model.Shop.User.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@Model.ShopID"> Back to Products Menu </a></b></h5>
+    
+        <hr style="padding:1px;margin:10px" />
+
+        @*<div class="col-12">
+            <div class="row">
+
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
+                                </a>
+
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <ul style="font-size:14px">
+                        <li>
+                            <span style="margin-top:0px;margin-bottom:3px;">
+                                <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;">
+                                    <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>*@
+
+
+    <b style="color:black">Edit Product</b>
+                <hr style="padding:1px;margin:10px" />
+  
+    <!-- Content section Start -->
+    <section class="section" style="padding:10px">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-12 col-xs-12">
+                    <div class="post-job box">
+                      
+                        @using (Html.BeginForm("Edit","Products",FormMethod.Post,htmlAttributes:new { @enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                @Html.HiddenFor(m => m.DateCreated)
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(m => m.ShopID)
+                                @Html.HiddenFor(m => m.Published)
+                                @Html.HiddenFor(m => m.Ready_for_Publishing)
+                                @Html.HiddenFor(m => m.Negotiable)
+                                <input type="hidden" name="un_pub" value="@Request.QueryString["un_pub"]" />
+                                <div class="form-group">
+                                    Product Name
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required = "required", @id = "titlecase", @placeholder = "Product Name" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                   Product Description
+                                    <textarea class="textarea" name="Details" required="required">@Html.Raw(HttpUtility.HtmlDecode(Model.Details))</textarea>
+                                    @*<textarea rows="3" name="Details" required="required" class="form-control" placeholder="Product Description">@Model.Details</textarea>*@
+                                    @*@Html.TextArea("Details", new { htmlAttributes = new { @class = "form-control", @required = "required" } })*@
+                                    @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="row" style="margin-bottom:5px;">
+                                    <div class="col-md-5">
+                                        Category
+                                        @Html.DropDownList("ProductCategoryID", null, "-- Select Category --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.ProductCategoryID, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-5">
+                                        Product Status
+                                        @Html.DropDownList("ProductStatusID", null, "-- Select Product Status --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.ProductStatusID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        Selling Price
+                                        @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount", @min = "1" } })
+                                        @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-5">
+                                        Qty in Stock
+                                        @Html.EditorFor(model => model.QuantityinStock, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Quantity in Stock", @min = "1" } })
+                                        @Html.ValidationMessageFor(model => model.QuantityinStock, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        Amount Purchased
+                                        @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount Purchased", @min = "1" } })
+                                        @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+                                        </div>
+                                    <div class="col-md-5">
+                                        Currency
+                                        <select name="Currency" class="form-control" required="required">
+                                            <option selected>@Model.Currency</option>
+                                            <option value="USD">
+                                                USD - US Dollar
+                                            </option>
+                                            <option value="NGN">
+                                                NGN - Nigerian Naira
+                                            </option>
+
+                                            <option value="EUR">
+                                                EUR - Euro
+                                            </option>
+                                            <option value="GBP">
+                                                GBP - British Pound
+                                            </option>
+                                            <option value="AUD">
+                                                AUD - Australian Dollar
+                                            </option>
+                                            <option value="CAD">
+                                                CAD - Canadian Dollar
+                                            </option>
+                                            <option value="JPY">
+                                                JPY - Japanese Yen
+                                            </option>
+                                            <option value="SGD">
+                                                SGD - Singapore Dollar
+                                            </option>
+                                        </select>
+                                    </div>
+                                    </div>
+
+                                <div class="row" style="background-color:#F2F7FB;margin-top:5px;">
+                                     
+                                    <div class="col-md-3" style="padding-top:10px">
+                                        <input type="button" value="Save" class="btn btn-common"/>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section></div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+<script type="text/javascript">
+                    function CheckFileName() {
+                        var fileName = document.getElementById("uploadFile").value
+                        //debugger;
+                        if (fileName == "") {
+                            alert("Browse to upload a valid File with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG")
+                            return true;
+                        else {
+                            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        return true;
+                    }
+</script>
+<script type="text/javascript">
+    var maxSize = '15';
+    function fileSizeValidate(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize > maxSize) {
+                alert('Maximum file size exceed! Image size should not be greater than 15KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>

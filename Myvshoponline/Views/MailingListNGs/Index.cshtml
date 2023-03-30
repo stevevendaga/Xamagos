@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Myvshoponline.MailingListNG>
+
+@{
+    ViewBag.Title = "NIGERIA MAILING LIST";
+}
+<br /><br />
+<br />
+<h4 style="font-size:16px;">NIGERIA MAILING LIST [@Model.Count()] | <a href="~/MailingListNGs/Index?sent=true">Sent [@Model.Where(s => s.Status == 1).Count()] </a> | <a href="~/MailingListNGs/Index?pending=true">Pending [@Model.Where(s => s.Status == 0).Count()] </a> </h4>
+<div class="row">
+    <div class="col-md-3">
+        <span class="full-time" style="color:white; background-color:white;padding:0px;margin-top:10px;vertical-align:top">
+            &nbsp;&nbsp; <a href="#" class="btn btn-primary" style="height:25px;padding:2px;font-size:11px" title="Upload Mails" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();"> <i class="lni-upload"></i> Upload Mails</a>
+        </span>
+    </div>
+    <div class="col-md-6" style="border:1px solid blue;">
+        <form method="get" action="/MailingListNGs/Index" style="margin-top:3px;">
+            @Html.DropDownList("EmailMessageID", null, "-- Choose Message --", htmlAttributes: new { @class = "form-control" })
+            <br />
+            <input type="text" name="selecttop" class="form-control" />
+            <br />
+            <center> <input type="submit" value="Post Mail Now" class="btn btn-common" style="padding:2px;margin-bottom:8px;" /> &nbsp;&nbsp;&nbsp; <a href="~/MailingListNGs/ResetMailStatus">Reset Status to zero</a></center>
+        </form>
+         
+    </div>
+</div>
+<br /><br />
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:14px">Upload Nigeria Mailing List</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("UploadMailingList", "MailingListNGs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+
+                    <font color="black">
+                        @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
+                        <input type="file" name="file" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="CheckFileName()" />
+                    </font><hr />
+                    <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
+                }
+            </div>
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+        </div>
+
+    </div>
+</div>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+    <tr>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+@if (Request.QueryString["pending"] != null || Request.QueryString["sent"] != null)
+{
+    foreach (var item in Model)
+    {
+    <tr>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+        </td>
+    </tr>
+    }
+}
+</table>
+
+
+<script type="text/javascript">
+        function CheckFileName() {
+            var fileName = document.getElementById("uploadFile").value
+            //debugger;
+            if (fileName == "") {
+                alert("Browse to upload a valid File with xls / xlsx extension");
+                return false;
+            }
+            else if (fileName.split(".")[1].toUpperCase() == "XLS" || fileName.split(".")[1].toUpperCase() == "XLSX")
+                return true;
+            else {
+                alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with xls / xlsx extensions");
+                return false;
+            }
+            return true;
+        }
+</script>

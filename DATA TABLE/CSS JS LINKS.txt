@@ -1,0 +1,21 @@
+ <!--DATA TABLE-->
+    <link href="~/templates/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+ <!-- DATA TABLE -->
+    <script src="~/Template/assets/extra-libs/multicheck/datatable-checkbox-init.js"></script>
+    <script src="~/Template/assets/extra-libs/multicheck/jquery.multicheck.js"></script>
+    <script src="~/Template/assets/extra-libs/DataTables/datatables.min.js"></script>
+    <script>
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').DataTable();
+        $('#zero_config1').DataTable();
+        $('#zero_config2').DataTable();
+        $('#zero_config3').DataTable();
+        $('#zero_config4').DataTable();
+        $('#zero_config5').DataTable();
+        $('#zero_config6').DataTable();
+        $('#zero_config7').DataTable();
+        $('#zero_config8').DataTable();
+        $('#zero_config9').DataTable();
+    </script>

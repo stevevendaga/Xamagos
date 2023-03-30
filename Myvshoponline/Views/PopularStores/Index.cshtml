@@ -1,0 +1,505 @@
+﻿@model IEnumerable<Myvshoponline.PopularStore>
+
+@{
+    ViewBag.Title = "Index";
+}
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+<p>
+    <br /><br />
+</p>
+<p>
+    @{
+        int ShopID = Convert.ToInt32(Request.QueryString["sid"]);
+    }
+    <div class="container">
+        <h4 style="font-size:13px;padding:6px;">All Promotions for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></h4>
+        <ul class="nav nav-tabs" role="tablist">
+
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#popularstore">Popular Store</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#popularproducts">Popular Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#seo">Search Optimization</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#socialmedia">Social Media</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="popularstore" class="container tab-pane active">
+                <br>
+                <span style="color:black;">  List of promotions made for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></span>
+            <br />
+    <table class="table table-hover table-responsive" style="color:black;">
+        <tr class="badge-info" style="opacity:0.5">
+            <th>
+                @Html.DisplayName("Duration (Days)")
+            </th>
+            <th>
+                @Html.DisplayName("Days Used")
+            </th>
+            <th>
+                @Html.DisplayName("Days Remaining")
+            </th>
+            <th>
+                @Html.DisplayName("End Date")
+            </th>
+            <th>
+                @Html.DisplayName("Amount Paid(N)")
+            </th>
+            <th>
+                @Html.DisplayName("Date Paid")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+
+
+        </tr>
+
+        @foreach (var item in Model)
+            {
+            <tr class="tab-pane">
+
+
+                <td style="color:black;font-weight:bold">
+                    @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                </td>
+                <td>
+
+                    @if (item.DaysActive > item.TotalDaysPaid)
+                    {
+                        @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.DaysActive)
+                    }
+                </td>
+                <td style="color:#0094ff;font-weight:bold">
+                    @if (item.DaysActive > item.TotalDaysPaid)
+                    {
+                        <span> 0</span>
+                    }
+                    else
+                    {
+                        @(item.TotalDaysPaid - item.DaysActive)
+                    }
+                </td>
+                <td style="color:#b10f0f;font-weight:bold;">
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @string.Format("{0:#,0}", item.Amount)
+                </td>
+                <td>
+                    @{
+                        var date = string.Format("{0:MMM dd,yyy hh:mm tt}", item.DatePaid);
+                    }
+                    @date
+                </td>
+                @if (item.PopularStoreStatu.Status == "Active")
+                {
+                    <td style="color:green;">
+                        @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                    </td>
+                }
+                else
+                {
+                    <td style="color:#ff0000;">
+                        @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                    </td>
+                }
+            </tr>
+                        }
+
+    </table>
+
+</div>
+            <div id="popularproducts" class="container tab-pane">
+                <br>
+                <span style="color:black;">  List of Products Sponsored as Popular Products for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></span>
+                
+                @if (db.PopularProducts.Where(s => s.ShopID == ShopID && s.PopularStoreStatu.Status == "Active").Count() < 1)
+                {
+                    <br />
+                    <br />
+                    <span class="salert-warning">
+                        You have no active products sponsored to display as Popular Products.
+                        Promote your products to boost your sales.
+                        &nbsp;&nbsp; <a href="~/PopularProducts/PopularProducts?sid=@ShopID" class="btn btn-info" style="height:25px;padding:5px;font-size:11px" title="Promote my products"> <i class="lni lni-more"></i> Promote Now</a>
+                    </span>
+                    <br /><br />
+                }
+
+                <table class="table table-hover table-responsive" style="color:black;font-size:13px;">
+                    <tr class="badge-info" style="opacity:0.5;text-align:center;">
+                        <th>
+
+                        </th>
+                        <th>Product</th>
+                        <th>
+                            @Html.DisplayName("Duration (Days)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Used")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Remaining")
+                        </th>
+                        <th>
+                            @Html.DisplayName("End Date")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Amount Paid(N)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Date Paid")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Status")
+                        </th>
+
+
+                    </tr>
+
+                    @foreach (var item in db.PopularProducts.Where(s=>s.ShopID==ShopID).OrderByDescending(s=>s.PopularStoreStatu.Status=="Active").ToList())
+                    {
+                        var passports = item.ProductID +".jpg";
+                        <tr class="tab-pane" style="text-align:center;">
+                            <td>
+                               
+                                <img src="~/BusinessImages/@item.Shop.User.CompanyName/@item.Shop.Name/@passports" style="width:30px;height:30px;" />
+                            </td>
+                            <td>@item.Product.Name</td>
+
+                            <td style="color:black;font-weight:bold">
+                                @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                            </td>
+                                                <td>
+                    @if (item.DaysActive > item.TotalDaysPaid)
+                    {
+                        @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                    }
+                    else
+                    {
+                    @Html.DisplayFor(modelItem => item.DaysActive)
+                    }
+                            </td>
+                            <td style="color:#0094ff;font-weight:bold">
+                                @if (item.DaysActive > item.TotalDaysPaid)
+                                {
+                                    <span> 0</span>
+                                }
+                                else
+                                {
+                                    @(item.TotalDaysPaid - item.DaysActive)
+                                }
+                            </td>
+                            <td style="color:#b10f0f;font-weight:bold;">
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @string.Format("{0:#,0}", item.Amount)
+                            </td>
+                            <td>
+                                @{
+                                    var date = string.Format("{0:MMM dd,yyy hh:mm tt}", item.DatePaid);
+                                }
+                                @date
+                            </td>
+                            @if (item.PopularStoreStatu.Status == "Active")
+                {
+                                <td style="color:green;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="color:#ff0000;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                        </tr>
+                                    }
+
+                </table>
+            </div>
+            <div id="seo" class="container tab-pane">
+                <br />
+                <span style="color:black;">  List of Products Sponsored for Search Optimization for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></span>
+                @if (db.SearchOptimizations.Where(s => s.ShopID == ShopID && s.PopularStoreStatu.Status == "Active").Count() < 1)
+                {
+                    <br />
+                    <br />
+                    <span class="alert-warning">You have no active product sponsored for Search Optimization.
+                    Promote your products to boost your sales.
+                    &nbsp;&nbsp; <a href="~/SearchOptimizations/SEO?sid=@ShopID" class="btn btn-info" style="height:25px;padding:5px;font-size:11px" title="Promote my products"> <i class="lni lni-search"></i> Promote Now</a>
+                </span>
+                <br /><br />
+                }
+              
+                <table class="table table-hover table-responsive" style="color:black;font-size:13px;">
+                    <tr class="badge-info" style="opacity:0.5;text-align:center;">
+                        <th>
+
+                        </th>
+                        <th>Product</th>
+                        <th>
+                            @Html.DisplayName("Duration (Days)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Used")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Remaining")
+                        </th>
+                        <th>
+                            @Html.DisplayName("End Date")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Amount Paid(N)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Date Paid")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Status")
+                        </th>
+
+
+                    </tr>
+
+                    @foreach (var item in db.SearchOptimizations.Where(s => s.ShopID == ShopID).OrderByDescending(s => s.PopularStoreStatu.Status == "Active").ToList())
+                    {
+                        var passports = item.ProductID + ".jpg";
+                        <tr class="tab-pane" style="text-align:center;">
+                            <td>
+                            <img src="~/BusinessImages/@item.Shop.User.CompanyName/@item.Shop.Name/@passports" style="width:30px;height:30px;" />
+                            </td>
+                            <td>@item.Product.Name</td>
+                            <td style="color:black;font-weight:bold">
+                                @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                            </td>
+                            <td>
+
+                                @if (item.DaysActive > item.TotalDaysPaid)
+                                {
+                                    @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.DaysActive)
+                                }
+                            </td>
+                            <td style="color:#0094ff;font-weight:bold">
+                                @if (item.DaysActive > item.TotalDaysPaid)
+                                {
+                                    <span> 0</span>
+                                }
+                                else
+                                {
+                                @(item.TotalDaysPaid - item.DaysActive)
+                                }
+                            </td>
+                            <td style="color:#b10f0f;font-weight:bold;">
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @string.Format("{0:#,0}", item.Amount)
+                            </td>
+                            <td>
+                                @{
+                                    var date = string.Format("{0:MMM dd,yyy hh:mm tt}", item.DatePaid);
+                                }
+                                @date
+                            </td>
+                            @if (item.PopularStoreStatu.Status == "Active")
+                            {
+                                <td style="color:green;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="color:#ff0000;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                        </tr>
+                                    }
+
+                </table>
+
+
+            </div>
+            <div id="socialmedia" class="container tab-pane">
+                <br />
+                <span style="color:black;"> All Social Media Promotions for  <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></span>
+                @if (db.SocialMediaAds.Where(s => s.ShopID == ShopID && s.PopularStoreStatu.Status == "Active").Count() < 1)
+                {
+                    <br />
+                    <br />
+                    <span class="alert-warning">
+                        You have no active promotion.
+                        Promote your store/products to boost your sales.
+                        &nbsp;&nbsp; <a href="~/SearchOptimizations/SEO?sid=@ShopID" class="btn btn-info" style="height:25px;padding:5px;font-size:11px" title="Promote my products"> <i class="lni lni-search"></i> Promote Now</a>
+                    </span>
+                    <br /><br />
+                }
+
+                <table class="table table-hover table-responsive" style="color:black;font-size:12px;padding:0px;">
+                    <tr class="badge-info" style="opacity:0.5;text-align:center;">
+                        <th>
+
+                        </th>
+                        <th>Item</th>
+                        <th>Channel</th>
+                        <th>
+                            @Html.DisplayName("Duration (Days)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Used")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Days Remaining")
+                        </th>
+                        <th>
+                            @Html.DisplayName("End Date")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Amount Paid(N)")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Date Paid")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Status")
+                        </th>
+
+
+                    </tr>
+
+                    @foreach (var item in db.SocialMediaAds.Where(s => s.ShopID == ShopID).OrderByDescending(s => s.PopularStoreStatu.Status == "Active").ToList())
+                    {
+                        var passports = item.ProductID + ".jpg";
+                        <tr class="tab-pane" style="text-align:center;">
+                            <td>
+                                <img src="~/BusinessImages/@item.Shop.User.CompanyName/@item.Shop.Name/@passports" style="width:30px;height:30px;" />
+                            </td>
+                            @if (item.ProductID == null)
+                            {
+                            <td>
+                                <span style="color:#48C8ED;">  @item.Shop.Name <span id="collapsesign_@item.ID"><i class="glyphicon glyphicon-plus-sign" onclick="GetStatistics(@item.ID)" title="Click to expand" style="cursor:pointer"></i></span>
+                                </span></td>
+
+                            }
+                            else
+                            {
+                                <td><span style="color:#48C8ED;"> @item.Product.Name <span id="collapsesign_@item.ID"><i class="glyphicon glyphicon-plus-sign" onclick="GetStatistics(@item.ID)" title="Click to expand" style="cursor:pointer"></i></span></span>
+                                </td>
+                            }
+                            <td style="color:black;font-weight:bold">
+                                @Html.DisplayFor(modelItem => item.SocialMediaChannel.Channel)
+                            </td>
+                            <td style="color:black;font-weight:bold">
+                                @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                            </td>
+                            <td>
+
+                                @if (item.DaysActive > item.TotalDaysPaid)
+                                {
+                                    @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.DaysActive)
+                                }
+                            </td>
+                            <td style="color:#0094ff;font-weight:bold">
+                                @if (item.DaysActive > item.TotalDaysPaid)
+                                {
+                                    <span> 0</span>
+                                }
+                                else
+                                {
+                                    @(item.TotalDaysPaid - item.DaysActive)
+                                }
+                            </td>
+                            <td style="color:#b10f0f;font-weight:bold;">
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @string.Format("{0:#,0}", item.AmountPaid)
+                            </td>
+                            <td>
+                                @{
+                                    var date = string.Format("{0:MMM dd,yyy hh:mm tt}", item.DatePaid);
+                                }
+                                @date
+                            </td>
+                            @if (item.PopularStoreStatu.Status == "Active")
+                            {
+                                <td style="color:green;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="color:#ff0000;">
+                                    @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div id="@item.ID"></div>
+                            </td>
+                        </tr>
+                                    }
+
+                </table>
+            </div>
+        </div>
+    </div> 
+ 
+    
+     
+    <script type="text/javascript">
+        function GetStatistics(_id) {
+            var url = "/SocialMediaAds/Get_AdsStatistics/";
+        $.ajax({
+            url: url,
+            data: { id: _id},
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = '<table class="table" style="font-size:12px;width:300px;"><tr>Ads Statistics </tr> <tr><th>No. of Views</th><th>No. of Clicks</th>';
+                $.each(data, function (key, item) {
+                    html += '<tr>';
+                  html += '<td>' + item.Views + '</td><td>' + item.Clicks + '</td></tr>';
+                });
+               html += "</table>"
+
+               $("#" + _id).html(html).show();
+               $("#collapsesign_" + _id).html("<i class='glyphicon glyphicon-minus-sign' onclick='CollapseStatistics("+_id+")' title='Click to collapse' style='cursor:pointer'></i>").show();
+               
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    </script>
+
+    <script type="text/javascript">
+        function CollapseStatistics(_id) {
+            document.getElementById("collapsesign_" + _id).innerHTML = "<i class='glyphicon glyphicon-plus-sign' onclick='GetStatistics("+_id+")' title='Click to expand' style='cursor:pointer'></i>";
+            document.getElementById(_id).innerHTML = "";
+
+    }
+    </script>

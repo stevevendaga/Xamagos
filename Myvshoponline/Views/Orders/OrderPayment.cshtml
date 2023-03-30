@@ -1,0 +1,111 @@
+﻿@model List<Myvshoponline.Order>
+
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+@{
+    ViewBag.Title = "Order Payment";
+    int cid =Convert.ToInt32(Session["UserID"]);
+    string currency = db.Orders.Where(o => o.UserID ==cid && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
+}
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div class="content" style="margin-top:30px;">
+    <div class="row" style="background-color:#F2F4F6;">
+        <div class="col-md-3"></div>
+        <div class="col-md-6" style="padding:0px;margin:0px;">
+            <!-- Box Comment -->
+            <!-- /.card-header -->
+            @*<div class="card-body">*@
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color:#0BACE1">
+                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:12px;">MAKE PAYMENT</h3>
+                </div>
+                <div class="panel-body">
+                        @{
+                            var email = db.Users.Where(s => s.ID == cid).Select(s => s.Email).FirstOrDefault();
+                            var phone = db.Users.Where(s => s.ID == cid).Select(s => s.PhoneNumber).FirstOrDefault();
+                            var customername = db.Users.Where(s => s.ID == cid).Select(s => s.CompanyName).FirstOrDefault();
+                            var totalamount = db.TempPendingPayments.Where(s => s.UserID == cid && s.Status==1).Select(s => s.Amount).Sum();
+                            var OrderGroupID = db.TempPendingPayments.Where(s => s.UserID == cid && s.Status == 1).Select(s => s.OrderGroupID).FirstOrDefault();
+                        }
+                                <input type="hidden" name="TempID" id="ordergroupid" value="@OrderGroupID" />
+                                <input type="hidden" name="customerid" id="customerid" value="@cid" />
+                                <input type="hidden" name="customeremail" id="customeremail" value="@email" />
+                                <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
+                                <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
+                                <input type="hidden" name="totalamount" id="totalamount" value="@totalamount" />
+                                <input type="hidden" name="shopname" id="shopname" value="@customername" />
+                                <center id="pay">
+                                      Total Amount
+                                    <hr />
+                                    <form>
+                                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                                        <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
+                                            Pay <span>₦</span>@string.Format("{0:#,0}", totalamount)
+                                        </button>
+                                    </form>
+                                </center>
+                          
+                                </div>
+                </div>
+
+            </div>
+        <div class="col-md-3"></div>
+        </div>
+    </div>
+
+        <script>
+                function payWithPaystack() {
+                    var customername = document.getElementById("customername").value;
+                    var customerid = document.getElementById("customerid").value;
+                    var ordergroupid = document.getElementById("ordergroupid").value;
+                    var myamt = document.getElementById("totalamount").value * 100;
+                    var myname = customername;
+                   // var apikey = document.getElementById("apikey").value;
+                    var customeremail = document.getElementById("customeremail").value;
+                    var customerphone = document.getElementById("customerphone").value;
+                        var handler = PaystackPop.setup({
+                            //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                            key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+                            email: customeremail,
+                            amount: myamt,
+                            ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                            firstname: myname,
+                            number: "",
+                            // label: "Optional string that replaces customer email"
+                            label: myname,
+                            metadata: {
+                                custom_fields: [
+                                   {
+                                       display_name: "Mobile Number",
+                                       variable_name: "mobile_number",
+                                       value: customerphone
+                                   }
+                                ]
+                            },
+                            callback: function (response) {
+                                var url = "/Orders/Update_Payment_Product/";
+                                $.ajax({
+                                    url: url,
+                                    data: { refno: response.reference, OrderGroupID: ordergroupid },
+                                    cache: false,
+                                    type: "POST",
+                                })
+                                // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+                               // window.location.href = "/Orders/Details/" + orderid;
+                                window.location.href = "/Orders/MyOrders/" + customerid;
+                            },
+                            onClose: function () {
+                                alert('Transaction aborted by user. Try again');
+                            }
+                        });
+                        handler.openIframe();
+                    }
+</script>
+           
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
+

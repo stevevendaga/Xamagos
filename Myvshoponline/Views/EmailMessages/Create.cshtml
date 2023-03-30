@@ -1,0 +1,60 @@
+﻿@model Myvshoponline.EmailMessage
+
+@{
+    ViewBag.Title = "Create New Mail";
+   
+}
+
+
+
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+<script src="~/TextEditor/jquery-te-1.4.0.js"></script>
+
+<div id="content">
+    <div class="container">
+        <h2 style="font-size:14px;">Create New Mail Message</h2>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <form method="post" action="~/EmailMessages/Create">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                       <input type="text" class="form-control" name="msgKey" placeholder="Message Identifier"/>
+                </div>
+                <div class="form-group">
+                    
+                        <textarea class="textarea" name="Subject" style="width:100%;background-color:blue" ></textarea>
+                        @*@Html.TextArea("Description", new { htmlAttributes = new { @class = "Editor", @required = "required" } })*@
+                </div>
+
+                <div class="form-group">
+                        <textarea class="textarea" name="Message" style="width:100%"></textarea>
+                        @*@Html.TextArea("Description", new { htmlAttributes = new { @class = "Editor", @required = "required" } })*@
+                </div>
+
+                <button class="btn btn-common log-btn mt-3">Save</button>
+            </form>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$('.Editor').jqte();
+
+// settings of status
+var jqteStatus = true;
+$(".status").click(function () {
+jqteStatus = jqteStatus ? false : true;
+$('.Editor').jqte({ "status": jqteStatus })
+});
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

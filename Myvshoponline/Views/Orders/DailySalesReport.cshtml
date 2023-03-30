@@ -1,0 +1,375 @@
+@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "Sales Report";
+}
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int CommissionPercent = Convert.ToInt32(db.Settings.Select(c => c.CommissionPercent).FirstOrDefault());
+    decimal c_percent = (decimal)(CommissionPercent / 100.00);
+     }
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+ <div id="content">
+    <div class="">
+        <div class="row">
+            <div id="companydetailsmobile" style="display:none"></div>
+            <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+                <div class="right-sideabr">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#0BACE1;">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Sales</h3>
+                        </div>
+                        <input type="hidden" name="shopid" value="@ViewBag.ShopID" id="shopid" />
+                        <div class="panel-body">
+                            <ul style="font-size:13px">
+                                <li>
+                                    <i class="lni lni-dashboard"></i>
+                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    @{
+                                        int ShopID = ViewBag.ShopID;
+                                        int UserID = (int)db.Shops.Find(ShopID).UserID;
+                                        var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
+                                    }
+                                <li>
+                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                        <i class="lni lni-stats-down"></i> Sales
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                @*<li>
+                                    <a href="~/ShopCustomers/Index/?id=@ShopID">
+                                        <i class="lni lni-users"></i>
+                                        My Customers (@totalCust)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <a href="~/Orders/ShopOrders/@UserID?sid=@ShopID" id="orders">
+                                        <i class="lni lni-cart"></i>
+                                        Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
+                                    </a>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+
+                                <li>
+                                    <span id="ppayment" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-hourglass"></i>
+                                        Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="pdelivery" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-ban"></i>
+                                        Pending Delivery (@{ var pd = Convert.ToInt32(ViewBag.PendingDelivery);}@pd)
+                                    </span>
+                                    <hr style="padding:1px;margin:5px" />
+                                </li>
+                                <li>
+                                    <span id="delivered" style="color:forestgreen" onclick="getcontent(this.id)">
+                                        <i class="lni lni-cart-full"></i>
+                                        Delivered (@{var d = Convert.ToInt32(ViewBag.Delivered); }@d)
+                                    </span>
+
+                                </li>*@
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-6 col-xs-12" id="companydetails" style="display:block">
+                @*<div class="job-alerts-item bookmarked">*@
+                <div>
+                    @if (Request.QueryString["Submit"] == null)
+                    {
+                   <a href="~/Orders/Accounts/?sid=@Request.QueryString["sid"]"><< Back to sales summary</a>
+                    }
+                    else
+                    {
+                        <a href="~/Orders/Accounts/?sid=@Request.QueryString["sid"]&fromdate=@Request.QueryString["fromdate"]&todate=@Request.QueryString["todate"]"><< Back to sales report as at <b> @string.Format("{0: MMM dd, yyyy}", Request.QueryString["fromdate"]).ToUpper()</b> to <b>@string.Format("{0: MMM dd, yyyy}", Request.QueryString["todate"]).ToUpper()</b></a>
+                    }
+                    <div class="panel panel-primary">
+                       
+                        <div class=" panel-heading">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">
+                                Sales Report as at @Request.QueryString["dtop"] &nbsp; <button type="submit" value="Print" class="btn btn-success" style="padding-bottom:3px;padding-top:3px;margin-top:2px;padding-left:3px;padding-right:3px;" onclick="printDiv('printdiv')"><i class="lni lni-printer"></i> Print Report</button>
+                            </h3>
+</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                   
+                                    @if (Request.QueryString["date"] != null)
+                                    {
+                                      var date = Convert.ToDateTime(Request.QueryString["date"]);
+                                      var sid = Convert.ToInt16(Request.QueryString["sid"]);
+                                      var query = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).OrderByDescending(l=>l.DateOrdered).ToList();
+                                      var TotalQty = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).Sum(l => l.Quantity);
+                                      //var TotalAmount = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).Sum(l => l.Amount-l.Commission);
+                                      var TotalAmount = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).Sum(l => l.Amount);
+                                      var TotalPurchasePrice = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).Sum(l => l.Product.PurchasePrice);
+                                      var TotalProfit = db.Orders.Where(l => l.DatePaid == date && l.Product.ShopID == sid).Sum(l => l.Rate - l.Product.PurchasePrice);
+                                      var TotalAmountformated = string.Format("{0:#,0}", TotalAmount);
+
+                                        <div id="printdiv">
+                                            <div id="header" style="display:none">
+                                                <center>
+                                                    <img src="~/Images/logosquare.png" style="width:100px;height:100px" />
+
+
+                                                    <h3 style="font-size:14px">
+                                                        <br />
+                                                        @ViewBag.Shopname
+                                                        <br />
+                                                        SALES REPORT AS AT <b>@Request.QueryString["dtop"].ToUpper()</b>
+                                                    </h3>
+                                                </center>
+                                            </div>
+                                                <table class="table table-responsive" style="color:black;font-size:11px;" id="tableprint">
+                                                    <tr>
+                                                        <th>SN</th>
+                                                        <th>Item</th>
+                                                        <th>
+                                                            Qty Sold
+                                                        </th>
+                                                        <th>Purchase Price</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Profit/Loss</th>
+                                                        <th>
+                                                            Total Amount ( @foreach (var item in query)
+                                                            {if (item.Product.Currency == "NGN")
+                                                            {<del class="NairaSign">N</del>}
+                                                            else
+                                                            {<span>item.Product.Currency</span> }
+                                                            })
+                                                        </th>
+                                                    </tr>
+                                                    @{ int i = 1;
+                                                        decimal overallpurchaseprice = 0;
+                                                        foreach (var item in query)
+                                                        {
+                                                            <tr>
+                                                                <td>@i</td>
+
+                                                                <td>
+                                                                    @if (item.SubProductID != 0)
+                                                                    {
+                                                                        @item.ProductSubProduct.Name
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @item.Product.Name
+                                                                    }
+                                                                </td>
+                                                                <td>@item.Quantity</td>
+
+                                                                <td>
+                                                                    @{
+                                                                        string pprice = "";
+                                                                        decimal pr;
+                                                                        if (item.SubProductID != 0)
+                                                                        {
+
+                                                                            pr = Convert.ToDecimal(item.ProductSubProduct.PurchasePrice * item.Quantity);
+                                                                            pprice = string.Format("{0:#,0}", pr);
+                                                                            overallpurchaseprice = overallpurchaseprice + pr;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            pr = Convert.ToDecimal(item.Product.PurchasePrice * item.Quantity);
+                                                                            pprice = string.Format("{0:#,0}", pr);
+                                                                            overallpurchaseprice = overallpurchaseprice + pr;
+                                                                        }
+                                                                    }
+                                                                    @pprice
+
+                                                                </td>
+                                                                <td>
+                                                                    @string.Format("{0:#,0}", item.Rate-(item.SubProductID==0?(c_percent*item.Product.Amount): (c_percent * item.ProductSubProduct.Amount)))
+                                                                </td>
+                                                                <td>
+                                                                    @if ((item.Amount-item.Commission - pr) == 0)
+                                                                    {
+                                                                        <span style="color:black;font-weight:bold;"> @string.Format("{0:#,0}", (item.Amount - item.Commission - pr)) </span>
+                                                                    }
+                                                                    else if ((item.Amount - item.Commission - pr) > 0)
+                                                                                {
+                                                                        <span style="color:green;font-weight:bold;"> @string.Format("{0:#,0}", (item.Amount - item.Commission - pr)) </span>
+                                                                    }
+                                                                                else
+                                                                                {
+                                                                        <span style="color:red;font-weight:bold;"> @string.Format("{0:#,0}", (item.Amount - item.Commission - pr)) </span>
+                                                                                }
+                                                                </td>
+                                                                <td>
+                                                                    <span style="color:black;font-size:12px;font-weight:bold">
+                                                                        @{
+                                                                                    var amountformated = string.Format("{0:#,0}", item.Amount - item.Commission);
+                                                                                }@amountformated
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                                        i++;
+                                                                            }
+                                                                        }
+                                                </table>
+                                                <h3 style="font-size:15px;">Sales Summary</h3>
+                                                <table class="table table-responsive" style="color:black;font-size:11px;">
+                                                    <tr>
+                                                        <th>Quantity Sold</th>
+                                                        <th>Total Amount (<del class="NairaSign">N</del>)</th>
+                                                        <th>
+                                                            Purchased Amount (<del class="NairaSign">N</del>)
+                                                        </th>
+                                                        <th>Profit (<del class="NairaSign">N</del>)</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            @TotalQty
+                                                        </td>
+                                                        <td>
+                                                            @TotalAmountformated
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:#,0}", overallpurchaseprice)
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:#,0}", TotalAmount - overallpurchaseprice)
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                    @*<span style="color:black;font-size:15px;font-weight:bold"> Quantity Sold = </span>
+                                                    <hr />
+                                                    <span style="color:black;font-size:20px;font-weight:bold" class="alert alert-info"> Total Amount = <del class="NairaSign">N</del>@TotalAmountformated</span>
+                                                  
+                                                    <span style="color:black;font-size:20px;font-weight:bold" class="alert alert-success"> Profit = <del class="NairaSign">N</del>@string.Format("{0:#,0}", TotalProfit)</span>*@
+                                        </div>
+
+                                                                        }
+
+                                        </div>
+
+                               
+</div>
+                        </div>
+
+                    
+</div>
+                    </div>
+                </div>
+    </div>
+</div>
+     </div>
+<!-- End Content -->
+        <script type="text/javascript">
+        function getproduct(_option) {
+            var _shopid = document.getElementById("shopid").value;
+        var url = "/Orders/AutoCompleteProducts/";
+        $.ajax({
+        url: url,
+        data: { option: _option, shopid: _shopid },
+        cache: false,
+        type: "GET",
+        success: function (data) {
+        var html = '';
+                
+        $.each(data, function (key, item) {
+            html += '<button id="p" onclick="fillproduct(this.value)" class="btn btn-primary" style="padding-bottom:2px;padding-top:2px;padding-left:2px;margin-bottom:2px;" value="' + item.PName + " -  N" + formatNumber(item.Amount) + '">' + item.PName + ' - <del class=NairaSign>N</del> ' + formatNumber(item.Amount) + '</button><br>';
+        });
+       
+       $("#displayproduct").html(html).show();
+        },
+        error: function (reponse) {
+        alert("error : " + reponse);
+        }
+        });
+        }
+           </script>
+
+<script type="text/javascript">
+        function getproduct(_option) {
+            var _shopid = document.getElementById("shopid").value;
+        var url = "/Orders/AutoCompletecustomer/";
+        $.ajax({
+        url: url,
+        data: { option: _option, shopid: _shopid },
+        cache: false,
+        type: "GET",
+        success: function (data) {
+        var html = '';
+
+        $.each(data, function (key, item) {
+            html += '<button id="p" onclick="fillcustomer(this.value)" class="btn btn-primary" style="padding-bottom:2px;padding-top:2px;padding-left:2px;margin-bottom:2px;" value="' + item.PName + " -  N" + formatNumber(item.Amount) + '">' + item.PName + ' - <del class=NairaSign>N</del> ' + formatNumber(item.Amount) + '</button><br>';
+        });
+
+       $("#displaycustomer").html(html).show();
+        },
+        error: function (reponse) {
+        alert("error : " + reponse);
+        }
+        });
+        }
+</script>
+
+<script type="text/javascript">
+
+    function dateFormat(d) {
+console.log(d);
+return ((d.getMonth() + 1) + "").padStart(2, "0")
++ "/" + (d.getDate() + "").padStart(2, "0")
++ "/" + d.getFullYear();
+                                }
+</script>
+
+
+<script type="text/javascript">
+    function formatNumber(num) {
+ return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    function fillproduct(_value)
+    {
+        document.getElementById("product").value = _value;
+        document.getElementById("displayproduct").innerHTML = "";
+    }
+
+    function fillcustomer(_value) {
+        document.getElementById("customer").value = _value;
+        document.getElementById("displaycustomer").innerHTML = "";
+    }
+</script>
+
+<script language="javascript" type="text/javascript">
+        function printDiv(divID) {
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements + "</body>";
+        var y = document.getElementById("header");
+        if (y.style.display === "none") {
+            y.style.display = "block";
+            
+        } else {
+            y.style.display = "none";
+        }
+
+        //Print Page
+        window.print();
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        }
+
+</script>

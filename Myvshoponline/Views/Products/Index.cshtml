@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Myvshoponline.Product>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<p></p>
+<h2>All Products</h2>
+
+
+<table id="zero_config" class="table table-responsive" style="color:black">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantityinStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductStatu.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Shop.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Details)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityinStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductCategory.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductStatu.Status)
+                </td>
+                <td>
+                    <a href="~/Products/ViewProducts?id=@item.ShopID&un_pub=0">
+                        @Html.DisplayFor(modelItem => item.Shop.Name)
+                    </a> 
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>

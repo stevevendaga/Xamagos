@@ -1,0 +1,368 @@
+﻿@model  IEnumerable<Myvshoponline.TrainingModule>
+
+
+@*<link rel="stylesheet" type="text/css" href="~/Content/Site.css">*@
+@{
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    ViewBag.Title = "Support Center ";
+    int px = Convert.ToInt32(Request.QueryString["px"]);
+    int sx = Convert.ToInt32(Request.QueryString["sx"]);
+    int serialmax = (int)db.TrainingModules.Where(t => t.ProjectID == px).Max(t => t.Serial);
+    int prev = sx - 1;
+    int next = sx + 1;
+
+    string nexttext = db.TrainingModules.Where(t => t.ProjectID == px && t.Serial == next).Select(t => t.ProjectTitle).FirstOrDefault();
+
+    string prevtext = db.TrainingModules.Where(t => t.ProjectID == px && t.Serial == prev).Select(t => t.ProjectTitle).FirstOrDefault();
+
+    string projectName = db.Projects.Where(t => t.ProjectID == px).Select(t => t.ProjectName).FirstOrDefault();
+    string projectCurrent = db.TrainingModules.Where(t => t.ProjectID == px && t.Serial == sx).Select(t => t.ProjectTitle).FirstOrDefault();
+
+    string img = db.Projects.Where(s => s.ProjectID == px).Select(s => s.ProjectID).FirstOrDefault() + ".jpg";
+
+}
+
+
+
+
+<div id="content">
+    <div class="container">
+
+
+                
+        @*<h4 style="font-family:Candara; font-weight:bold;font-size:20px;" id="colorHeading">
+            <span>@projectName.ToUpper() SUPPORT CENTER</span>
+        </h4>*@
+      
+        <header name="secondsearch" style="margin:0px 0px 0px 0px; padding-bottom:0px;padding-top:0px;">
+
+            <span style="font-size:16px;margin:10px;color:black !important;padding-top:18px;font-weight:bold;">Welcome to our Support Center
+            </span>
+                <form method="get" action="~/TrainingModules/Index">
+
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-lg-12 col-md-6 col-xs-12">
+                        <input type="hidden" value="1" name="px" />
+                            <div class="widget">
+                                
+                                    <div class="input-group">
+                                        <input type="hidden" name="id" value="@ViewBag.CategoryID" />
+                                        <input type="hidden" name="sid" value="@ViewBag.ShopID" />
+                                        <input type="text" name="search" class="form-control" style="border:1px solid blue; padding:10px;" required="required" placeholder="Type here to search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit" name="submit" style="width:20px;font-size:15px;">
+                                                <i class="lni-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                               
+
+                            </div>
+                            @*<div class="input-group">
+
+                                <input type="text" class="topnav" placeholder="Type here to search" name="search" style="width:95%;border:1px solid blue;border-radius:5px; padding:10px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit" name="submit" style="width:20px">
+                                        <i class="lni-search"></i>
+                                    </button>
+                                </div>
+                                </div>*@
+
+
+                            </div>
+                        </div>
+                      </form>
+</header>
+        <br />
+        @if (Request.QueryString["search"] != null)
+        {
+            <div class="col-md-12" id="sideTitle">
+                <h3 style="font-size:15px;">Search Results</h3>
+                @{
+                    string allSearchtitles = "";
+                    string allSearchprojectid = "";
+                    string allSearchserial = "";
+
+                    foreach (var item in ViewBag.CountTotSearchproject)
+                    {
+                        allSearchtitles += @item.ProjectTitle + ",";
+                        allSearchprojectid += @item.ProjectID + ",";
+                        allSearchserial += @item.Serial + ",";
+
+
+                    }
+
+                    string[] eachSearchTitle = allSearchtitles.Split(',');
+                    string[] eachSearchprojectid = allSearchprojectid.Split(',');
+                    string[] eachSearchserial = allSearchserial.Split(',');
+
+                }
+
+                @for (int i = 0; i < ViewBag.CountTotprojectSearchCount; i++)
+                {
+                    int eachproj = Convert.ToInt32(eachSearchprojectid[i]);
+                    int eachsx = Convert.ToInt32(eachSearchserial[i]);
+                    if (ViewBag.Px == eachproj && ViewBag.Sx == eachsx)
+                    {
+                        <a style="color:white;" href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@eachSearchprojectid[i]&@ViewBag.Random@ViewBag.Random&sx=@eachSearchserial[i]&@ViewBag.Random@ViewBag.Random@eachSearchTitle[i]">
+                            <div id="sideTitleInner" style="background-color:#2B579A; color:white; ">
+                                @eachSearchTitle[i]
+                            </div>
+                        </a>
+                                                @*<hr id="hrID" />*@
+                    }
+                    else
+                    {
+                        <a href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@eachSearchprojectid[i]&@ViewBag.Random@ViewBag.Random&sx=@eachSearchserial[i]&@ViewBag.Random@ViewBag.Random/@eachSearchTitle[i]">
+                            <div id="sideTitleInner">
+                                @eachSearchTitle[i]
+                            </div>
+                        </a>
+                                                @*<hr id="hrID" />*@
+                    }
+                }
+                @* Paginating Title *@
+
+            </div>
+            <hr style="background-color:#2B4C54;"/>
+
+
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+
+                                    @*Side Bar Content Title *@
+                                    <div class="col-md-4" id="sideTitle">
+
+                                        @{
+                                            string alltitles = "";
+                                            string allprojectid = "";
+                                            string allserial = "";
+
+                                            foreach (var item in ViewBag.CountTotproject)
+                                            {
+                                                alltitles += @item.ProjectTitle + ",";
+                                                allprojectid += @item.ProjectID + ",";
+                                                allserial += @item.Serial + ",";
+
+
+                                            }
+
+                                            string[] eachTitle = alltitles.Split(',');
+                                            string[] eachprojectid = allprojectid.Split(',');
+                                            string[] eachserial = allserial.Split(',');
+
+                                        }
+
+                                        @for (int i = 0; i < ViewBag.CountTotprojectCount; i++)
+                                        {
+                                            int eachproj = Convert.ToInt32(eachprojectid[i]);
+                                            int eachsx = Convert.ToInt32(eachserial[i]);
+                                            if (ViewBag.Px == eachproj && ViewBag.Sx == eachsx)
+                                            {
+                                                <a style="color:white;" href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@eachprojectid[i]&@ViewBag.Random@ViewBag.Random&sx=@eachserial[i]&@ViewBag.Random@ViewBag.Random@eachTitle[i]">
+                                                    <div id="sideTitleInner" style="background-color:#2B579A; color:white; ">
+                                                        @eachTitle[i]
+                                                    </div>
+                                                </a>
+                                                <hr id="hrID" style="padding:2px;margin:2px;" />
+                                            }
+                                            else
+                                            {
+                                                <a href="~/TrainingModules/Index/@ViewBag.Random@ViewBag.Random?px=@eachprojectid[i]&@ViewBag.Random@ViewBag.Random&sx=@eachserial[i]&@ViewBag.Random@ViewBag.Random/@eachTitle[i]">
+                                                    <div id="sideTitleInner">
+                                                        @eachTitle[i]
+                                                    </div>
+                                                </a>
+                                                <hr id="hrID"  style="padding:2px;margin:2px;" />
+                                            }
+                                        }
+                                        @* Paginating Title *@
+
+                                    </div>
+
+                                    @foreach (var item in Model)
+
+                                    {
+                                        <div class="col-md-8" style="text-align:justify;margin:0px; padding:5px; padding-left:17px; line-height:1.5em; font-size:18px; font-family:Arial; background-color:white;">
+
+                                            <b style="font-weight:600; margin:0px; padding:0px; font-size:24px;">@item.ProjectTitle</b><br />
+                                            @if (item.VideoUrl != null)
+                                            {
+                                            <div id="originalvedio">
+                                                <div style="padding:0; float:right; margin:0px; margin-left:8px;">
+                                                    <iframe style="height:270px; width:100%;" fullscreen="true" src='https://www.youtube.com/embed/@item.VideoUrl' allowfullscreen></iframe>
+                                                </div>
+                                            </div>
+                                            }
+
+
+                                            <p>  @Html.Raw(HttpUtility.HtmlDecode(item.Description))</p>
+                                            <div class="row">
+                                                <div id="getvedio"></div>
+                                            </div>
+@if (item.Notes != null)
+{
+                                            <div>
+                                                <p style="color:black; font-size:19px; margin:0; background-color:#FFF7C6; padding:8px;"><b style="color:red;">Note:</b> @item.Notes</p>
+                                                <hr style="margin:0;" />
+                                            </div>
+}
+                                            @*<div>
+                                                <p style="font-size:19px; font-weight:700; padding:2px 10px; margin-top:8px; background-color:#9AB8E4; margin:0; color:green;">Activity</p>
+                                                <p style="margin-top:8px; font-size:19px; margin:0; padding:2px 5px; background-color:#E4ECF8;"> @item.Activity</p>
+                                            </div>*@
+                                        </div>
+
+
+                                    }
+                                   
+                                </div>
+                              
+                              
+
+
+
+                                <div class="row" style="background-color:#2B579A; padding:3px 5%; font-weight:400;">
+
+                                    @if (sx > 1)
+                                    {
+                                        <a class="btn btn-default" id="navigations" style="float:left;color:white;" href="~/TrainingModules/Index?px=@px&sx=@prev"> <i class="glyphicon glyphicon-chevron-left"></i> Previous </a>
+                                    }
+                                    <span style="text-align:center;" class="badge" id="MiddleButton">
+                                        <p style="color:white;"> Current: @projectCurrent</p>
+                                    </span>
+                                    @if (sx != serialmax)
+                                    {
+                                        <a class="btn btn-default" id="navigations" style="float:right;" href="~/TrainingModules/Index?px=@px&sx=@next">Next <i class="glyphicon glyphicon-chevron-right"></i> </a>
+                                    }
+
+                                </div><br />
+                                <div class="row">
+                                    <div id="gettitle"></div>
+                                </div>
+
+                                @* Comments Here  *@
+
+                                @*@{
+                                    //
+                                    ViewBag.Comment = db.Comments.Where(t => t.ProjectID == px && t.Serial == sx).ToList();
+                                    ViewBag.CommentCount = db.Comments.Where(t => t.ProjectID == px && t.Serial == sx).Count();
+
+                                    string allposts = "";
+                                    string allcomment = "";
+                                    string allprojectsid = "";
+                                    string allserials = "";
+                                    string alldates = "";
+                                    string allusertype = "";
+
+                                    foreach (var item in ViewBag.Comment)
+                                    {
+                                        allposts += @item.PostedBy + ",";
+                                        allcomment += @item.Comments + "`";
+                                        allprojectsid += @item.ProjectID + ",";
+                                        allserials += @item.Serial + ",";
+                                        alldates += @item.DateCommented + ",";
+                                        allusertype += @item.Registration.Users + ",";
+
+
+                                    }
+
+
+                                    string[] eachpost = allposts.Split(',');
+                                    string[] eachComment = allcomment.Split('`');
+                                    string[] eachprojectsid = allprojectsid.Split(',');
+                                    string[] eachserials = allserials.Split(',');
+                                    string[] eachdate = alldates.Split(',');
+                                    string[] eachusertype = allusertype.Split(',');
+                                }
+                                <hr>
+
+
+                                @for (int i = 0; i < ViewBag.CommentCount; i++)
+                                {
+                                    if (eachusertype[i] == "Admin" || eachusertype[i] == "SuperAdmin")
+                                    {
+                                        <div id="comment">
+                                            <b style="color:#00B058;">  @eachpost[i] <font color="black"> <span class="badge badge-info">Administrator</span>  </font></b><br />
+                                            <p id="commentDetails"> @eachComment[i]</p>
+
+                                            <b style="color:#FFAA1C;"> @eachdate[i]</b>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div id="comment">
+                                            <b style="color:#00B058;">  @eachpost[i] </b><br />
+                                            <p id="commentDetails"> @eachComment[i]</p>
+
+                                            <b style="color:#FFAA1C;"> @eachdate[i]</b>
+                                        </div>
+                                    }
+                                }
+
+
+                                @using (Html.BeginForm("Comments", "TrainingModules", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="row">
+                                        <input type="hidden" value="@px" name="project" />
+                                        <input type="hidden" value="@sx" name="serial" />
+
+                                        <div class="col-md-5">
+                                            <p> 
+
+                                                <span style="float:left; color:#FFBC79; font-size:18px;"><i style="font-size:20px;" class="glyphicon glyphicon-comment"></i> @ViewBag.CommentCount Commented</span>
+                                            </p>
+
+                                            <textarea id="inputTrainings" name="CommentText" cols="10" rows="5" class="form-control" placeholder="Drop your Comments Here" required></textarea>
+
+                                            <div class="form-group" style="margin-top:3px;">
+                                                <div style="margin:auto;">
+                                                    <input id="commentBtn" type="submit" class="btn btn-default" name="Comment" value="Comment" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }*@
+                            </div>
+                        </div>
+                                            }
+                    </div>
+            </div>
+
+
+
+<script type="text/javascript">
+    function myFunction(x) {
+        if (x.matches) { // If media query matches
+            document.getElementById("getvedio").style.display = "block";
+            document.getElementById("getvedio").innerHTML = document.getElementById("originalvedio").innerHTML;
+           document.getElementById("originalvedio").style.display = "none";
+
+           document.getElementById("gettitle").style.display = "block";
+           document.getElementById("gettitle").innerHTML = document.getElementById("sideTitle").innerHTML;
+           document.getElementById("sideTitle").style.display = "none";
+  } else {
+            document.getElementById("originalvedio").style.display = "block";
+            document.getElementById("getvedio").style.display = "none";
+
+            document.getElementById("sideTitle").style.display = "block";
+            document.getElementById("gettitle").style.display = "none";
+         }
+}
+
+var x = window.matchMedia("(max-width: 600px)")
+myFunction(x) // Call listener function at run time
+x.addListener(myFunction) // Attach listener function on state changes
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

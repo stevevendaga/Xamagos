@@ -1,0 +1,119 @@
+﻿@model Myvshoponline.TrainingModule
+
+<link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+
+ @{
+     ViewBag.Title = "Sysmax Training Modules ";
+}
+
+
+
+<textarea style="width:100%; max-width:none;" class="form-control" name="Description" rows="20" placeholder="Brief Discription"></textarea>
+
+@*  
+<div class="row">         
+        <hr />    
+    <div class="col-md-2" id="sideTitle">
+        <hr id="hrID" />
+        @{
+            string alltitles = "";
+            string allprojectid = "";
+            string allserial = "";
+
+            foreach (var item in ViewBag.CountTotproject)
+            {
+                alltitles += @item.ProjectTitle + ",";
+                allprojectid += @item.ProjectID + ",";
+                allserial += @item.Serial + ",";
+
+
+            }
+
+            string[] eachTitle = alltitles.Split(',');
+            string[] eachprojectid = allprojectid.Split(',');
+            string[] eachserial = allserial.Split(',');
+
+
+        }
+        @for (int i = 0; i < ViewBag.CountTotprojectCount; i++)
+        {
+            <a href="~/TrainingModules/Training/?projectid=@eachprojectid[i]&serial=@eachserial[i]">  @eachTitle[i] </a>
+
+            <hr id="hrID"/>
+        }
+
+    </div>
+
+    <div class="col-md-6" style="text-align:justify;margin:0px; padding:5px; line-height:1.5em; font-size:15px;">
+        <br />
+        @Model.Description
+        @Html.Raw(HttpUtility.HtmlDecode(Model.Description))
+        *@
+
+
+        @*<div style="background-color:#f0f3f5;border-radius:5px;padding:5px 5px 5px 5px;">
+            <h4 style="text-align:center;color:#25912e; font-weight:bold; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> </h4>*@
+
+        @*<a href="~/TrainingModules/Training/?projectid=@item.ProjectID&serial=1">  @Html.DisplayFor(modelItem => item.Description) </a>
+
+
+
+            <hr />
+           <p style="color:red;">Note: @Model.Notes</p>
+            <hr style="margin:0;" />
+            <div>
+                <p style="font-size:16px; font-weight:700; margin-top:8px; margin:0; color:green;">Activity</p>
+                <p style="margin-top:8px; margin:0;"> @Model.Activity</p>
+            </div>
+            <hr style="margin:0;" />
+        </div>
+
+
+        <div class="col-md-4" >
+            <iframe style="margin:0; padding:0;" height="380" width="425" fullscreen="true" src="https://www.youtube.com/embed/@Model.VideoUrl" allowfullscreen></iframe>
+            <br />
+            <p> Video Length: @Model.TimeInMins</p>
+        </div>
+
+    </div>
+        *@  
+
+@*<div class="row" style="margin-top:10px;">
+ @{
+     int? s=Model.Serial - 1;
+     int? ss = Model.Serial + 1;
+         }
+        <div class="col-md-12">
+            <div class="row">
+<b style="float:left">
+    <a href="~/TrainingModules/Training/?projectid=@Model.ProjectID&serial=@s ">
+        @ViewBag.PreviousTopic
+    </a><< Previous Topic
+</b>@Model.ProjectTitle
+                <b style="float:right">
+                    Next Topic >>
+                    <a href="~/TrainingModules/Training/?projectid=@Model.ProjectID&serial=@ss"> @ViewBag.NextTopic</a>
+                </b>
+            </div>
+        </div>
+    
+</div>*@
+
+
+@* Comments Here
+    <form method="post" action="Comment">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 id="colorHeading">Comment</h3>
+                <textarea name="CommentText" cols="10" rows="5" class="form-control" placeholder="Comment"></textarea>
+                <br />
+                <input type="submit" class="btn btn-success" name="Comment" value="Comment" />
+            </div>
+        </div>
+
+    </form>
+
+*@
+
+    
+

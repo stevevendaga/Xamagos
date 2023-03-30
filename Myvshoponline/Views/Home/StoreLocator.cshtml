@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "Shop Locator";
+}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<body onload=" initMap();" style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
+
+</body>
+<br />
+<br />
+<h4 style="font-size:14px;color:#F68B51"><i class="fa fas fa-map-marker"></i> Shop Locator  <a href="#" class="btn btn-common" style="padding:4px;">Use Google Map</a></h4>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="input-group input-group-sm" style="margin:2px;">
+            <input type="text" id="location" class="form-control" style="height:38px;" placeholder="Enter business name/shop short name" onkeyup="changelocationcolor()" />
+            <div class="input-group-append">
+                <button class="btn btn-common" type="submit" onclick="StoreLocator()">
+                    <i class="fas fa-go"></i>GO
+
+                </button>
+            </div>
+
+        </div>
+        @*<div class="input-group input-group-sm" style="margin:2px;">
+            <input type="text" id="location" class="form-control" style="height:38px;" placeholder="Enter a location to see available shops" onkeyup="changelocationcolor()" />
+            <div class="input-group-append">
+                <button class="btn btn-common" type="submit" onclick="StoreLocator()">
+                    <i class="fas fa-go"></i>GO
+
+                </button>
+            </div>
+
+        </div>*@
+    </div>
+</div>
+<div id="displaystores">
+    <span id="wait" style="display:none;"><img src="~/Images/loaders/loader555.gif" /></span>
+</div>
+  
+
+    <div class="modal" id="myModalMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
+        @*<div class="modal-dialog modal-dialog-centered">*@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:14px" id="shopname">View on Google Map</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+
+                <div id="floating-panel">
+                    <input id="address" type="hidden" />
+                    @*<input id="submit" type="button" value="Geocode" />*@
+                </div>
+                <!--The div element for the map -->
+                <div id="map"></div>
+
+                <style>
+                    /* Set the size of the div element that contains the map */
+                    #map {
+                        height: 400px; /* The height is 400 pixels */
+                        width: 100%; /* The width is the width of the web page */
+                    }
+                </style>
+
+                <!--GEOCODING-->
+                <script defer
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+                </script>
+
+
+                <script>
+                    "use strict";
+                    var shopname = document.getElementById("shopname").innerHTML;
+
+      function initMap() {
+          const map = new google.maps.Map(document.getElementById("map"), {
+          //zoom: 8,
+          zoom: 10,
+          center: {
+              lat: 9.0820,
+              lng: 8.6753
+          }
+        });
+          const geocoder = new google.maps.Geocoder();
+          const infowindow = new google.maps.InfoWindow();
+          geocodeAddress(geocoder, map, infowindow);
+
+      }
+      function geocodeAddress(geocoder, map,infowindow) {
+        const address = document.getElementById("address").value;
+        geocoder.geocode(
+          {
+            address: address
+          },
+          (results, status) => {
+            if (status === "OK") {
+              map.setCenter(results[0].geometry.location);
+              const marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+             // address:setContent(results[0].formatted_address)
+
+              });
+              infowindow.setContent(results[0].formatted_address);
+              infowindow.open(map, marker);
+            } else {
+              //alert(
+              //  "Geocode was not successful for the following reason: " + status
+              //);
+            }
+          }
+        );
+      }
+                </script>
+                <!-- END GEOCODING-->
+
+            </div>
+        </div>
+
+        @*</div>*@
+    </div>
+
+    <!-- Main content -->
+    <!--The div element for the map -->
+    <div id="mapLocator"></div>
+
+   
+
+
+
+    <script>
+            //Store locator== Retrieve all shops based on location
+            function changelocationcolor() {
+                document.getElementById("location").style.background = "white";
+            }
+            function StoreLocator() {
+                var location = document.getElementById("location").value;
+                if (location == '') {
+
+                    document.getElementById("location").focus();
+                    document.getElementById("location").style.background = "#DC3545";
+                    document.getElementById("location").style.fontcolor = "white";
+                    return false;
+                }
+                else {
+                    $(document).ajaxStart(function () {
+                        $("#wait").css("display", "block");
+                    });
+
+
+                    var url = "/Shops/StoreLocator/";
+                    $.ajax({
+                        url: url,
+                        data: { location: location },
+                        cache: false,
+                        type: "GET",
+                        success: function (data) {
+                            if (data != '') {
+                                var html = '<p></p><section class="content" style="marging:0PX;"><div class="container-fluid"><div class="row">';
+                                $.each(data, function (key, item) {
+                                    var passports = item.UserID + ".jpg";
+                                    html += '<div class="col-md-4 col-lg-4 col-6"><div class="" style="padding:10px;background-color:#FFFFFF;margin-bottom:8px;border-radius:5px;"><div class="">';
+                                    html += '<h4 style="font-size:12px;color:#33C6F6"><a href="../Shops/ShopDetails/' + item.ID + '">' + item.ShopName + '</a></h4>';
+                                    html += '<p style="color:black;background-color:white;line-height:15px;font-size:12px">' + item.ShopAddress + '<br><button type="button" value="' + item.ShopAddress + '"class="badge badge-info" id="' + item.ShopName + '" style="padding:10px;border:0px;font-size:12px;" data-toggle="modal" data-target="#myModalMap" onclick="loadStoreAddress(this.value,this.id)">View on Google Map <i class="fas fa-arrow-circle-right"></i></button></p><br><br></div>';
+
+                                    html += '</div></div>';
+                                });
+                                html += "</div></div></section>";
+                            } else
+                            {
+                                html = "<br><span class='alert alert-danger'>No record found! </span>";
+                            }
+                            $("#wait").css("display", "none");
+                            $("#displaystores").html(html);
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+        //=== END Store locator
+
+            function loadStoreAddress(shopaddress,shopname)
+            {
+                document.getElementById("address").value = shopaddress;
+                document.getElementById("shopname").innerHTML = shopname;
+                initMap();
+            }
+    </script>
+
+

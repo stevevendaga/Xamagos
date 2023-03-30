@@ -1,0 +1,150 @@
+﻿
+
+<div id="mapnearby"></div>
+<div id="nearbystops" style="font-size:12px;"></div>
+
+  <!---JAVASCRIPT NEARBY STORES-->
+<script>
+      "use strict";
+
+      let map, infoWindow;
+
+      function initMapNearby() {
+          map = new google.maps.Map(document.getElementById("mapnearby"), {
+              //center: {
+              //    lat: -34.397,
+              //    lng: 150.644
+              //},
+              //zoom: 6
+          });
+          infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
+
+          //GET USERS CURRENT POSITION-LAT LONG
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                position => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const marker = new google.maps.Marker({
+                        position: pos,
+                        map: map
+                    });
+                    const userlatlong = position.coords.latitude + "," + position.coords.longitude;
+                    //call function retrieve shops
+                    GetNearbyStores(map, infoWindow, userlatlong);
+
+                },() => {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                }
+              );
+          } else {
+              // Browser doesn't support Geolocation
+              handleLocationError(false, infoWindow, map.getCenter());
+          }
+          // infowindow.setContent(results[0].formatted_address);
+
+      }//end of iniMap
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(
+            browserHasGeolocation
+              ? "Error: The  service failed."
+              : "Error: Your browser doesn't support."
+          );
+          infoWindow.open(map);
+      }
+
+    //Retrieve all shops addresses and name from shops
+      function GetNearbyStores(map, infoWindow, userlatlong)
+      {
+
+        var url = "/Shops/Get_ShopsForNearbyStores/";
+        $.ajax({
+            url: url,
+            data: { },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var html = "<table><tr><th>Lat</th><th>lng</th></tr><tr>"
+                $.each(data, function (key, item) {
+                    geocodeAddress(map, infoWindow, item.ShopAddress,item.ShopName, item.shopid, userlatlong)
+
+                });
+                html += "</tr></table>";
+                $("#DisplayStores").html(html);
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+      }
+    //=== END SHOPS
+
+    //GeoCoding for addresses goten from shops
+      function geocodeAddress(map, infowindow, address,shopname,shopid, userlatlong) {
+              const geocoder = new google.maps.Geocoder();
+              geocoder.geocode({ address: address }, (results, status) => {
+                  var loc = [];
+                  if (status === "OK") {
+                      //Latitude and longitude for a shop
+                      loc[0] = results[0].geometry.location.lat().toFixed(2);
+                      loc[1] = results[0].geometry.location.lng().toFixed(2);
+                      //=====
+                      //Users Lat Long
+                      const latlngStr = userlatlong.split(",", 2);
+                      const lat = parseFloat(latlngStr[0]).toFixed(2);
+                      const lng = parseFloat(latlngStr[1]).toFixed(2);
+                      const Distance=150;
+                      // var data = "User Lat= " + loc[0] + " User Long= " + loc[1] + "Shop Lat= " + lat + " Shop Long= " + lng;
+                      //Calculation Longitute and Lat Distance formula
+                      const pi = 3.142;
+                      //if ((acos(Math.sin((loc[0] * pi / 180)) * Math.sin((lat * pi / 180)) + Math.cos((loc[0] * pi / 180)) * Math.cos((lat * pi() / 180)) * Math.cos(((loc[0] - lng) * pi / 180))) * 180 / pi * 60 * 1.1515 * 1.609344) <Distance) {
+                      //    alert(data);
+                      //}
+                      //GET ANOTHER FUNCTION TO DISPLAY STORES
+
+                      if(distance(loc[0], loc[1], lat, lng, "K")<200)
+                      {
+
+                          // var ss = '<p><a href="../Shops/Shopdetails/' + shopid +'" style="font-size:12px;">'+ address + ' - ' + shopname + '</a></p>';
+                          var ss = '<p><a href="../Shops/Shopdetails/' + shopid + '" style="font-size:12px;color:#3AC6F5">' + shopname + '</a></p><div class="dropdown-divider"></div>';
+                          $('#nearbystops').append(ss);
+                          document.getElementById("nearbystorecount").innerHTML = parseInt(document.getElementById("nearbystorecount").innerHTML) + 1;
+                      }
+
+                  } else {
+                      //alert("Geocode was not successful for the following reason: " + status);
+                  }
+
+
+              }
+
+              );
+      }
+
+      function distance(lat1, lon1, lat2, lon2, unit) {
+
+          var radlat1 = Math.PI * lat1 / 180
+          var radlat2 = Math.PI * lat2 / 180
+          var theta = lon1 - lon2
+          var radtheta = Math.PI * theta / 180
+          var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+          if (dist > 1) {
+              dist = 1;
+          }
+          dist = Math.acos(dist)
+          dist = dist * 180 / Math.PI
+          dist = dist * 60 * 1.1515
+          if (unit == "K") { dist = dist * 1.609344 }
+          if (unit == "N") { dist = dist * 0.8684 }
+          return dist
+      }
+    //===End of geocode
+</script>
+
+
+<!--END JAVASCRIPT NEARBY STORES-->

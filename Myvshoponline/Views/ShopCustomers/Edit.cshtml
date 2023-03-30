@@ -1,0 +1,119 @@
+﻿@model Myvshoponline.ShopCustomer
+
+@{
+    ViewBag.Title = "Edit Customer";
+}
+
+
+
+<div id="content">
+    <a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName SHOP </a>
+    <section id="content" class="section-padding" style="padding:0px">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-xs-12">
+                    <div class="page-login-form box">
+                        <h3 style="padding:0px;font-size:14px">
+                            Edit Customer's Information
+                        </h3>
+                        <form class="login-form" method="post" action="~/ShopCustomers/Edit/@Model.ID">
+                            @Html.AntiForgeryToken()
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ID)
+
+
+                            <input type="hidden" name="ShopID" value="@ViewBag.SID" />
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-user"></i>
+                                    @Html.EditorFor(model => model.Name, new
+                                   {
+                                       htmlAttributes = new
+                                       {
+                                           @class = "form-control",
+                                           @placeholder = "Customer Name",
+                                           @onkeyup = "this.value = this.value.toUpperCase()"
+                                       }
+                                   })
+                                    @if (ViewBag.CustomerExist != null)
+                                    {<div class="panel panel-danger" style="color:red;">@ViewBag.CustomerExist</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-phone-handset"></i>
+                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-envelope"></i>
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-map-marker"></i>
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="input-icon">
+                                    <i class="lni-stats-up"></i>
+                                    @Html.DropDownList("CustomerStatusID", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CustomerStatusID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-user"></i>
+                                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username", @required = "required" } })
+                                    @if (ViewBag.UsernameExist != null)
+                                    {<div class="panel panel-danger" style="color:red;">@ViewBag.UsernameExist</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-lock"></i>
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "password", @placeholder = "Password", @type = "text", @required = "required" } })
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-unlock"></i>
+                                        <input type="password" id="confirmpassword" class="form-control" placeholder="Retype Password" required="required">
+                                    </div>
+                                </div>*@
+                            <button class="btn btn-common log-btn mt-3">Save</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function checkpassword()
+    {
+        if (document.getElementById("password").value != document.getElementById("confirmpassword").value)
+        {
+            alert("Password Mismatch!");
+            return false;
+        }
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

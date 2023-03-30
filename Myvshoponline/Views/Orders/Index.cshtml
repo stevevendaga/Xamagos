@@ -1,0 +1,164 @@
+﻿@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "Index";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    int CommissionPercent = Convert.ToInt32(db.Settings.Select(c => c.CommissionPercent).FirstOrDefault());
+    decimal c_percent = (decimal)(CommissionPercent / 100.00);
+}
+<p></p>
+<h2>Orders</h2>
+
+ 
+<form method="get">
+    <br />
+    <span class="badge badge-pill" style="padding:10px;font-size:14px;color:black;"></span>
+    <div class="row" style="color:black;">
+        <div class="col-md-3">
+            <b>From</b>  <input type="date" name="fromdate" class="form-control" required="required" />
+        </div>
+        <div class="col-md-3">
+            <b>To</b> <input type="date" name="todate" class="form-control" required="required" />
+        </div>
+        <div class="col-md-3">
+            <br />
+            <input type="submit" name="submit" value="Display Report" class="btn btn-common" />
+        </div>
+    </div>
+</form>
+
+                                    @if (Request.QueryString["fromdate"] != null)
+                                    {
+                                        var fromdate = Convert.ToDateTime(Request.QueryString["fromdate"]).Date;
+                                        var todate = Convert.ToDateTime(Request.QueryString["todate"]).Date;
+                                        var fromdateformat = string.Format("{0:MMM dd, yyyy}", fromdate);
+                                        var todateformat = string.Format("{0:MMM dd, yyyy}", todate);
+                                        var query = db.Orders.Where(l => (l.DateOrdered >= fromdate
+                                        && l.DateOrdered <= todate)).ToList();
+<p></p>
+<h4 style="font-size:13px;padding:6px;" class="badge badge-secondary">
+    Orders report between <b>@fromdateformat</b> and <b>@todateformat</b>
+</h4>
+                                    }
+<table id="zero_config" class="table table-responsive" style="color:black;">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateOrdered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentRef)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentChannel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatePaid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeliveryStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateDelivered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateSentforDelivery)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateRejected)
+        </th>
+        <th>
+            @Html.DisplayName("RejectReason")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentStatu.Status)
+        </th>
+        <th>
+            @Html.DisplayName("ProductName")
+        </th>
+        <th>
+            @Html.DisplayName("Buyer'sName")
+        </th>
+        <th>
+            @Html.DisplayName("Shop")
+        </th>
+        <th></th>
+    </tr>
+        </thead>
+    <tbody>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount-item.Commission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateOrdered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentRef)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentChannel)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatePaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeliveryStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateDelivered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateSentforDelivery)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateRejected)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RejectReason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentStatu.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShopCustomer.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Shop.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+        </tbody><tfoot>
+    </tfoot>
+
+</table>

@@ -1,0 +1,105 @@
+﻿@using Myvshoponline.Models 
+@model LoginViewModel
+    
+<title>Member Login</title>
+
+
+<div class="row">  
+    @* Sysmax Image Side *@
+    <div class="col-md-2"  style="margin:0px; padding:0px;">
+        <img src="~/Images/sysmaxTrainings.jpg" style="width:100%; height:348px" />
+    </div> 
+     
+        <div class="col-md-4" style="margin:0px; padding:0px; text-align:center; max-height:350px;">
+
+            <div style="width:100%; text-align:center; height:350px; max-height:350px;"  >
+               
+                @* LOGIN section *@
+                 <section id="loginForm" style="background-color:#1C9A9D; padding:27px 5px; max-height:350px;">
+
+                    <div>
+                        <img class="img-circle" src="~/Images/memberLogin.jpg" width="150" height="150" style="border:10px solid #E1FAFB; box-shadow:2px 2px 2px 2px;" />
+                    </div>
+
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                        @Html.AntiForgeryToken()
+                        if (ViewBag.UserNotExist != "")
+                        {
+                            <h4 style="color:red; text-align:center;"> @ViewBag.UserNotExist </h4>
+                        }
+
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group" style="margin:3px;">
+                            @*@Html.Label("Username", new { @class = "col-md-2 control-label" })*@
+                            <div class="col-lg-offset-1 col-md-10" style="margin-top:0px; text-align:center;">
+                                <input id="loginInputs" type="text" name="username" placeholder="Username" class="form-control" style="font-size:16px; text-align:center; max-width: 100%;" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin:3px;">
+                            @*@Html.Label("Password", new { @class = "col-md-2 control-label" })*@
+                            <div class="col-lg-offset-1 col-md-10" style="text-align:center;">
+                                <input id="loginInputs" type="password" name="password" placeholder="Password" class="form-control" style="font-size:16px; text-align:center; max-width: 100%;" />
+
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin:3px;">
+
+                            <div class="col-md-offset-1 col-md-10">
+                                <input id="LetMe" type="submit" value="Let Me In" title="Login Here" class="btn btn-default" style="max-width: 100%;" />
+                                <br />
+                                <a title="Forgot Password" style="padding:5px 0px 0px 5px; color:#FBB600;" href="~/Home/ForgotPassword">Forgot Password?</a>
+                                @*Don't have an account?
+                            <a href="~/Registrations/Create">Register</a> <br />*@
+
+                            </div>
+                        </div>
+
+                        @* <div class="form-group">
+                         <div class="col-md-offset-2 col-md-10">
+                             <div class="checkbox">
+                                 @Html.CheckBoxFor(m => m.RememberMe)
+                                 @Html.LabelFor(m => m.RememberMe)
+
+                        </div>
+                     </div>
+
+
+                    <p>
+                             @Html.ActionLink("Register as a new user", "Register")
+                         </p>*@
+                        @* Enable this once you have account confirmation enabled for password reset functionality
+                    <p>
+                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                    </p>*@
+                    }
+                </section>
+            </div>
+
+
+
+        </div>
+
+
+    <div class="col-md-6 col-sm-12 col-xs-12" style="margin:0px; padding:0px; height:350px;">
+        <img src="~/Images/loginImage.jpg" style="width:100%;height:289px;" />
+        <section id="socialLoginForm" style="background-color:black; color:white; line-height:2.5em; padding:10px;">
+
+            <h4>
+                To enjoy our trainings kindly login with your account details.
+            </h4>
+        </section>
+       
+    </div>  
+
+    </div>
+          
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

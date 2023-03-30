@@ -1,0 +1,105 @@
+@{
+    ViewBag.Title = "About";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+}
+<div id="content">
+    <b class="alert alert-info">About XAMAGOS</b>
+ 
+    <div class="modal-body" id="donatebody" style="color:black;">
+      <b style="color:black;"> XAMAGOS </b>is an online platform that connects your business to your customers.
+      @*It creates an online presence of the physical shops we have in our markets in Nigeria.*@
+
+
+      <hr style="margin-top:2px;margin-bottom:5px;" />
+      <div style="font-weight:bold;color:black;margin-top:8px;">
+        BENEFITS
+      </div>
+      @foreach (var item in db.PlatformBenefits.ToList())
+      {
+        <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+          <span style="color:green;"> <i class="glyphicon glyphicon-hand-right"></i></span>   @item.Benefit
+          <hr style="margin:1px;padding:1px;" />
+        </div>
+      }
+
+
+      <hr style="margin-top:2px;margin-bottom:5px;" />
+      <div style="font-weight:bold;color:black;margin-top:8px;">
+        Amazing Features of XAMAGOS
+      </div>
+
+      <b> &raquo;&raquo;   Product Finder </b>
+      <br />
+      It enables buyers to find their desired products in a specific location across Nigeria.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+      <b> &raquo;&raquo;   Bargain Market </b>
+      <br />
+      Bargain market is a feature that enable buyers to negotiate product prices with sellers.
+      It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
+
+      <b> &raquo;&raquo;   Google Map Geocoding </b>
+      <br />
+      This is a special feature of XAMAGOS that automatically converts a shop's physical address into geographic coordinates,
+      which shows the exact location of a shop on a Google Map.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
+
+      <b> &raquo;&raquo;   Nearby Shops</b>
+      <br />
+      Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
+
+      <b> &raquo;&raquo;   SMS/Email Notifications</b>
+      <br />
+      This feature provides both sellers and buyers with instant SMS/email notifications on a transaction.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
+
+      @*<b>Why do you need XAMAGOS?</b>
+    <br />
+    1. It creates an online presence of the physical shops we have in our markets in Nigeria.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    2. It brings the market to your fingertips.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    3. It allows you to find products in a specific location across Nigeria.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    4. It creates a platform for products price bargaining.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    5. For easy and speedy delivery of orders.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    6. The platform handles sales on behalf of sellers from orders to delivery.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    7. It helps sellers to reach a wide range of customers.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    8. It drives more people to seller’s physical shop.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    9. For easy sharing of shops/products to different social media platforms.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+    10. You can manage different branches of your shop in one place.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+    <b>Mode of Payment </b><br />
+    &raquo;&raquo; Online payment <br />
+    &raquo;&raquo; Pay on delivery
+    <br>
+    <b>Delivery</b>
+    <br />
+    Our company handles the delivery on behalf of sellers.
+    <hr />
+    <b> Mode of Delivery </b> <br />
+    We offer home delivery services within major towns.*@
+
+
+    </div>
+</div>

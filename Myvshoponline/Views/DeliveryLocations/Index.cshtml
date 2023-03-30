@@ -1,0 +1,177 @@
+﻿@model IEnumerable<Myvshoponline.DeliveryLocation>
+
+@{
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    ViewBag.Title = "Delivery Locations";
+    int ID=(int) ViewBag.ShopID;
+    string shopaddress = db.Shops.Where(s => s.ID == ID).Select(s => s.Address).FirstOrDefault();
+}
+
+
+<div id="content" style="margin-top:-32px">
+    <div class="panel">
+        <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
+            <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@ViewBag.ShopName </h1>
+              <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;">
+                    <i class="lni-map-marker"></i> @shopaddress
+                </h1>
+        </div>
+        @*<div class="panel-body">
+            </div>*@
+    </div>
+
+    <div class="container">
+      
+            <div class="col-md-12">
+                <div class="row">
+                  
+                        <h5 style="font-size:14px" class="h5"> <a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a> &raquo; </b><b style="color:black">Delivery Locations</b></h5>
+                    <div class="col-md-5">
+                        <h4 style="font-size:14px;">Add New Location</h4>
+                        <div style="display:none" id="RecordsSaved" class="alert alert-success"></div>
+                        <div style="display:none" id="RecordsDeleted" class="alert alert-danger"></div>
+                        <input type="hidden" id="shopid" value="@ViewBag.ShopID" />
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownList("LocationID", null, htmlAttributes: new { @class = "form-control", @id = "location" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loader.gif" /><br>Processing..</div>
+                                <input type="button" class="btn btn-common" onclick="AddLocation()" value="Add Location" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h4 style="font-size:14px;">Delivery Locations [<span id="total"> @Model.Count()</span>]</h4>
+                        <div id="LoadLocations">
+                            <table class="table" style="padding:0px;margin:0px;">
+                                <tr>
+
+                                    <th>
+                                        @Html.DisplayName("Location")
+                                    </th>
+
+                                    <th>
+                                        Date Created
+                                    </th>
+                                    <th></th>
+                                </tr>
+
+                                @foreach (var item in Model)
+            {
+                                    <tr style="margin:0px;padding:0px;">
+
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.State.Name)
+                                        </td>
+                                        <td>
+                                            @string.Format("{0:MMM dd, yyyy}", item.DateCreated)
+                                        </td>
+                                        <td>
+                                            <a href="~/DeliveryLocations/Delete/@item.ID?shopid=@item.ShopID" type="button" class="alert alert-danger" value="@item.ID" style="padding:0px;cursor:pointer;"><i class="glyphicon glyphicon-remove"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+            </div>
+        </div>
+
+
+<script type="text/javascript">
+         function AddLocation() {
+             var _shopid = document.getElementById("shopid").value;
+             var _locationid = document.getElementById("location").value;
+            
+                 $(document).ajaxStart(function () {
+                     $("#wait").css("display", "block");
+                 });
+
+                 var url = "/DeliveryLocations/SaveDeliveryLocation/";
+                 $.ajax({
+                     url: url,
+                     data: { shopid: _shopid, locationid: _locationid},
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         LoadLocations();
+                         $.each(data, function (key, item) {
+                             if (item.ProductalreadyExist != null)
+                             {
+                                 $("#RecordsSaved").css("display", "none");
+                                 $("#RecordsDeleted").html(item.ProductalreadyExist + " state already exist!").show();
+                             }
+                             else {
+                                 $("#RecordsDeleted").css("display", "none");
+                                 $("#RecordsSaved").html(item.ProductName + " state added successfully").show();
+                             }
+                         });
+                                               
+                         $("#wait").css("display", "none");
+                         $("#alert").css("display", "block");
+                  
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+
+
+<script type="text/javascript">
+         function LoadLocations() {
+
+             var _shopid = document.getElementById("shopid").value;
+                 $(document).ajaxStart(function () {
+                     $("#wait").css("display", "block");
+                 });
+
+                 var url = "/DeliveryLocations/GetLocations/";
+                 $.ajax({
+                     url: url,
+                     data: { sid: _shopid},
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '<table class="table" style="padding:3px;"><tr><th>Location</th><th>Date Created</th><th></th></tr>';
+                         $.each(data, function (key, item) {
+                             html += '<tr><td>' + item.Location  + '</td><td>' + dateFormat(new Date(parseInt((item.Date).match(/\d+/)[0]))) + '</td><td> <a href="../Delete/' + item.ID + '?shopid=' + item.ShopID + '" onclick=return confirm(Are you sure you want to delete this location?)" type="button" class="alert alert-danger" style="padding:2px;cursor:pointer;"><i class="glyphicon glyphicon-remove"></i></a></td></tr>';
+                             document.getElementById("total").innerHTML = item.Total;
+                         });
+                         html += '</tr></table>';
+                         $("#wait").css("display", "none");
+                         $("#alert").css("display", "block");
+                         $("#total").innerHTML=data.Total;
+                         $("#LoadLocations").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+
+
+    <script>
+
+    function dateFormat(d) {
+        console.log(d);
+        return ((d.getMonth() + 1) + "").padStart(2, "0")
+            + "/" + (d.getDate() + "").padStart(2, "0")
+            + "/" + d.getFullYear();
+    }
+</script>

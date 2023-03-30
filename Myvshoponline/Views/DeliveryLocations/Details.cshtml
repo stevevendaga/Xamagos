@@ -1,0 +1,42 @@
+﻿@model Myvshoponline.DeliveryLocation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DeliveryLocation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Shop.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Shop.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

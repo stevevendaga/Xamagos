@@ -1,0 +1,163 @@
+
+   <br />
+    <!-- Page Header End -->
+    <!-- Content section Start -->
+@{ 
+    ViewBag.Title = "Login";
+}
+
+<body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed"></body>
+@*<div style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed;width:100%;height:100%">*@
+    <section id="content" class="section-padding" >
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-xs-12" style="background-color:#F2F4F6">
+                 
+                    <div class="page-login-form box" >
+                        @if (ViewBag.ax != null)
+                        {
+                            <div class="alert alert-success">@ViewBag.AccountCreated</div>
+                        }
+                        <h3>
+                            Login
+                        </h3>
+                        <form class="login-form" method="post" action="~/Account/Login">
+                            @Html.AntiForgeryToken()
+                            <div class="form-group" >
+                                @if (ViewBag.UserNotExist!=null)
+                                {
+                                    <h6 style="color:red">@ViewBag.UserNotExist!</h6>
+                                }
+                                <div id="invalid_msg"></div>
+                                <div id="success_msg"></div>
+                                <div class="input-icon">
+                                    <i class="lni-envelope"></i>
+                                    <input type="text" id="email" tabindex="1" class="form-control" name="Username" placeholder="Email or Phone Number" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-lock"></i>
+
+                                    <input type="password" id="password" tabindex="3" class="form-control" name="Password" placeholder="Password" required="required">
+                                </div>
+                            </div>
+                            @*<div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Keep Me Signed In</label>
+                            </div>*@
+                           
+                            <input class="btn btn-common log-btn" tabindex="3" type="button" value="LOGIN" id="btnLogin2" onclick="doLogin()">
+                            <button class="btn btn-common log-btn" disabled tabindex="3" type="button" id="loadspinner" style="padding:18px;display:none">
+                                <div class="spinner-container">
+                                    <div class="loading-spinner"></div>
+                                </div>
+                            </button>
+                        </form>
+                        <ul class="form-links">
+                            <li class="text-center" style="color:black;"><input type="checkbox" onchange="rememberPassword()" id="remember">&nbsp; Keep me logged in on this device
+                              </li>
+                        </ul>
+                        <ul class="form-links">
+                            <li class="text-center"><a href="~/Users/Create" id="signupLogin">Don't have an account?<font style="color:#33C6F6;"> Sign up</font></a></li>
+                         </ul>
+
+                        <ul class="form-links">
+                            <li class="text-center"><a href="~/Home/Forgotpassword" style="color:#33C6F6;">Forgot your password?</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+<script>
+    function rememberPassword()
+    {
+        if(document.getElementById("remember").checked==true)
+        {
+            window.localStorage.setItem('rememberMe', 'true');
+        }
+    }
+</script>
+<script type="text/javascript">
+        function doLogin() {
+            var _pw = document.getElementById("password").value;
+            var _email = document.getElementById("email").value;
+            if (_email == '') {
+                $("#email").css("borderColor","red");
+                $("#email").focus();
+                return false;
+            }
+            else if (_pw == '') {
+                $("#password").css("borderColor","red");
+                $("#password").focus();
+                return false;
+            }
+            else {
+                
+                document.getElementById("email").style.borderColor = "green";
+                document.getElementById("password").style.borderColor = "green";
+
+                //$(document).ajaxstart(function () {
+                //    $("#loadspinner").css("display", "none");
+                //});
+                document.getElementById("loadspinner").style.display = "block";
+                document.getElementById("btnLogin2").style.display = "none";
+
+                var url = "/Users/LoginAjax/";
+                $.ajax({
+                    url: url,
+                    data: { email: _email, password: _pw},
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+                        var html = '';
+                      $.each(data, function (key, item) {
+                            if (item.UserNotExist == 'true')
+                            {
+                                $("#loadspinner").css("display", "none");
+                                $("#btnLogin2").css("display", "block");
+                                $("#invalid_msg").html('<p class="alert alert-danger">Invalid login, try again</p>');
+                            }
+                            else if (item.gotoAdminLanding == 'true') {
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                //Swal.fire({
+                                //    position: 'top-end',
+                                //    icon: 'success',
+                                //    title: 'Login successful, redirecting...',
+                                //    showConfirmButton: false,
+                                //    timer: 3000
+                                //})
+                                window.location = '../Users/AdminLanding/' + item.userid;
+                            }
+                            else if(item.gotoUserDashboard=='true')
+                            {
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                //Swal.fire({
+                                //    icon: 'success',
+                                //    title: 'Login successful, redirecting...',
+                                //    width: 600,
+                                //    height:100,
+                                //    padding: '1em',
+                                //    showConfirmButton: false,
+                                //    timer: 3000
+                                //})
+                                window.location.href = '../Users/Dashboard/' + item.userid;
+                            }
+                            else {
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                window.location = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+                            }
+                        });
+                        $("#success_msg").css("display", "block");
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+                return true;
+            }
+        }
+</script>

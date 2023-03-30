@@ -1,0 +1,63 @@
+﻿@model Myvshoponline.ShopCustomer
+
+@{
+    ViewBag.Title = @Model.Name+ " Details";
+}
+
+<div id="content">
+    <h2 style="font-size:14px;">@Model.Name DETAILS</h2>
+
+    <div>
+        <hr />
+        <dl class="dl-horizontal" style="color:black;">
+
+
+            <dt>
+                @Html.DisplayName("Phone Number")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayName("Date Created")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CustomerStatu.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CustomerStatu.Status)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @*@Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |*@
+        @Html.ActionLink("Back to Customers", "Index",new { id = ViewBag.ShopID })
+    </p>
+</div>

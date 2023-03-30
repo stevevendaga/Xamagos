@@ -1,0 +1,550 @@
+﻿
+<link href="~/Content/Panel.css" rel="stylesheet" />
+@model Myvshoponline.Shop
+
+@{
+    ViewBag.Title = "Create New Shop";
+}
+<style>
+    .h5 {
+        color: black !important;
+    }
+
+    .control-label col-md-2{
+        color:black !important;
+    }
+</style>
+<div id="content">
+    <h5 style="font-size:14px" class="h5"><a href="~/Users/Manageshop/@Session["UserID"]"><i class="lni-user"></i> Back to Shops </a> &raquo; Create  New Shop</h5>
+
+    <style>
+        p{
+            color:black;font-weight:bold;
+        }
+    </style>
+    
+
+    <!-- Content section Start -->
+    <section class="section" style="padding:0px">
+        <div class="">
+            <div class="row justify-content-center">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="post-job box">
+                        <form class="form-ad" method="post" action="~/Shops/Create" name="form">
+                            <div id="successmsg"></div>
+                           
+                            @Html.AntiForgeryToken()
+
+                            @if (ViewBag.ShopLimitExceeded != null)
+                            {<h5 class="alert alert-danger" style="color:red;font-size:12px;">@ViewBag.ShopLimitExceeded</h5>
+                            }
+                            <div class="form-group">
+                                @*<input type="text" name="Name" class="form-control" placeholder="Full Shop Name" required="required">*@
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Name/Shop Name", @required = "required", @onchange = "this.value = this.value.toUpperCase()",@id="name" } })
+                                @if (ViewBag.ShopExist != null)
+                                {<h5 class="alert alert-danger" style="color:red;font-size:12px">@ViewBag.ShopExist </h5>
+                                }
+                            </div>
+
+                            <div class="row" style="margin-bottom:5px">
+                                <div class="col-md-12" >
+                                    <textarea class="form-control" rows="2" name="Description" placeholder="Business Description" id="description"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="row" style="margin-bottom:5px">
+                                <div class="col-md-6 col-12">
+                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required", @pattern = "[0-9]{11}", @type = "tel", @id="phone" } })
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="msgemail" class="badge badge-danger" style="display:none;"></div>
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email",@id="email" } })
+                                </div>
+                            </div>
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px;opacity:0.7">Business Physical Address</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                            <div class="col-md-6">
+                                                <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
+                                                <input class="form-control form-control-navbar" onchange="checkcountry();this.value = this.value.toUpperCase();" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" placeholder="Country">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div id="msgstate" class="badge badge-danger" style="display:none;"></div>
+                                                <input type="text" id="state" name="StateID" onchange="checkstate(); this.value = this.value.toUpperCase();" class="form-control form-control-navbar" placeholder="State" required />
+                                                <div id="displaystate">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <div class="row" style="margin-top:5px">
+                                        <div class="col-md-6">
+                                            <input class="form-control form-control-navbar" onchange="this.value = this.value.toUpperCase();" id="city" aria-label="Search" required="required" name="City/Town" type="text" placeholder="City">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <input type="text" id="street" name="Street" onchange="this.value = this.value.toUpperCase();" class="form-control form-control-navbar" placeholder="Street" required />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title" style="color:#0b9be4;font-family:Arial;font-size:14px;">Your custom shop shortname</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        
+                                        <div class="col-md-12">
+                                            <span style="color:black">The shortname forms the last part of your unique shop<b> URL</b> For example
+                                                <span style="color:#0a92d7">  https://xamagos.com/[yourshortname] </span>
+                                            </span>
+                                            <br />
+                                            <p style="color:black;font-weight:lighter; line-height:1.5;text-align:justify">
+                                                When you share your shop URL, customers can enter the URL in the browser’s address 
+                                                bar to go directly to your online shop or can easily search for your shortname in 
+                                                <a href="~/Home/StoreLocator">Shop Locator </a> to find your business .
+                                                </p>
+                                                <div id="msgshortname2"></div>
+                                            <span id="specialchar" class="badge badge-danger"></span>
+                                                <input class="form-control form-control-navbar" maxlength="25" id="shortname" aria-label="Search" required="required" type="text" placeholder="Short name">
+                                                <br />
+                                            <span style="background-color:#F0F0F0;color:black;padding-left:10px;padding-right:10px;border-radius:20px;"> <span id="display_count">0</span> characters.  <span id="word_left">25</span> characters left</span>
+</div>
+                                </div>
+                            </div>
+
+                            </div>
+                                    </div>
+                                    <center>
+                                        <button class="btn btn-common" type="button" id="btnCreate" onclick="return doCreate()">Create Now</button>
+
+                                        <button type="button" class="btn btn-common log-btn mt-3" disabled id="loadspinner" style="display:none;padding:18px;width:150px">
+                                            <div class="spinner-container">
+                                                <div class="loading-spinner"></div>
+                                            </div>
+                                        </button>
+                                    </center>
+                                    <input type="hidden" id="countstate" />
+                                    <input type="hidden" id="countcountry" />
+                                    @*<section id="editor">
+                        <div class="form-group">
+
+                        </div>
+                        <div class="form-group" style="margin-top:1px">
+
+                        </div>
+
+                    </section>*@
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Content section End -->   
+
+    <script type="text/javascript">
+        $(function () {
+            $("#shortname").keypress(function (e) {
+                var keyCode = e.keyCode || e.which;
+                $("#specialchar").html("");
+                //Regex for Valid Characters i.e. Alphabets and Numbers.
+                var regex = /^[A-Za-z0-9]+$/;
+                //Validate TextBox value against the Regex.
+                var isValid = regex.test(String.fromCharCode(keyCode));
+                if (!isValid) {
+                    $("#specialchar").html("Only Alphabets and Numbers allowed.");
+                }
+                return isValid;
+            });
+
+            $("#phone").keypress(function (e) {
+                var keyCode = e.keyCode || e.which;
+                //$("#specialchar").html("");
+                //Regex for Valid Characters i.e. Alphabets and Numbers.
+                var regex = /^[0-9]+$/;
+                //Validate TextBox value against the Regex.
+                var isValid = regex.test(String.fromCharCode(keyCode));
+                if (!isValid) {
+                    //$("#specialchar").html("Only Alphabets and Numbers allowed.");
+                }
+                return isValid;
+            });
+        });
+
+        $("#name").keypress(function (e) {
+            var keyCode = e.keyCode || e.which;
+            //$("#specialchar").html("");
+            //Regex for Valid Characters i.e. Alphabets and Numbers.
+            var regex = /^[a-zA-Z0-9_ ]+$/;
+            //Validate TextBox value against the Regex.
+            var isValid = regex.test(String.fromCharCode(keyCode));
+            if (!isValid) {
+                //$("#specialchar").html("Only Alphabets and Numbers allowed.");
+            }
+            return isValid;
+        });
+
+
+        $(document).ready(function () {
+            $("#shortname").on('keyup', function (e) {
+
+                //CONVERT TO LOVERCASE
+                $('#shortname').val($(this).val().toLowerCase());
+                $("#msgshortname2").html("Your Shop URL:<span style='color:#0a92d7;marging:3px'> https://xamagos.com/" + $('#shortname').val() + "</span>");
+
+                var words = $(this).val().length;
+                if (words <= 25) {
+                    $('#display_count').text(words);
+                    $('#word_left').text(25 - words)
+                } else {
+                    e.preventDefault();
+                    if (e.which !== 8) e.preventDefault();
+                }
+
+            });
+        });
+
+    </script>
+
+
+    
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    
+    }
+</div>
+@*<script>
+    function checkstate2()
+    {
+        if(document.getElementById("countstate").value==0)
+        {
+            document.getElementById("msgstate").style.display = "block";
+            document.getElementById("msgstate").innerHTML = "Please select a valid state";
+            return false;
+        }
+        else {
+            document.getElementById("msgstate").style.display = "none";
+            return true;
+        }
+    }
+</script>*@
+
+<script>
+    function checkcountry2()
+    {
+        if(document.getElementById("countcountry").value==0)
+        {
+            document.getElementById("msgcountry").style.display = "block";
+            document.getElementById("msgcountry").innerHTML = "Please select a valid Country";
+            return false;
+        }
+        else if (document.getElementById("countstate").value == 0 && document.getElementById("loadcountries").value=='NIGERIA') {
+            document.getElementById("msgcountry").style.display = "none";
+            document.getElementById("msgstate").style.display = "block";
+            document.getElementById("msgstate").innerHTML = "Please select a valid state";
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function checkstate() {
+        var state = document.getElementById("state").value;
+                 var url = "/Shops/CheckState/";
+                 $.ajax({
+                     url: url,
+                     data: { state: state },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         $.each(data, function (key, item) {
+                          document.getElementById("countstate").value = item.count;
+                         });
+                       //  $("#msgstate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+<script type="text/javascript">
+    function checkcountry() {
+        var country = document.getElementById("loadcountries").value;
+                 var url = "/Shops/CheckCountry/";
+                 $.ajax({
+                     url: url,
+                     data: { country: country },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         $.each(data, function (key, item) {
+                             document.getElementById("countcountry").value = item.count;
+                         });
+                       //  $("#msgstate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+
+<script type="text/javascript">
+    function displaystateInput(CountryID) {
+
+                 var url = "/Shops/GetCountryName/";
+                 $.ajax({
+                     url: url,
+                     data: { CountryID: CountryID },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         $.each(data, function (key, item) {
+                             if (item.CountryName == "Nigeria") {
+                                 GetStates(CountryID);
+                             }
+                             else {
+                                 html += '<input type="text" id="city" name="StateID" class="form-control" placeholder="City" required="required" onchange="this.value = this.value.toUpperCase();"/>';
+                             }
+                         });
+                         $("#displaystate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+<script type="text/javascript">
+    function GetStates(CountryID) {
+
+                 var url = "/Shops/GetStates/";
+                 $.ajax({
+                     url: url,
+                     data: { CountryID: CountryID },
+                     cache: false,
+                     type: "GET",
+                     success: function (data) {
+                         var html = '';
+                         html += '<span><select name="StateID" class="form-control" id="state">';
+                         html += '<option selected disabled>-- Select State --</option>';
+                         $.each(data, function (key, item) {
+                                 
+                                 html+="<option value='"+item.StateName+"'>"+ item.StateName +"</option>";
+                         });
+                         html+='</select></span>';
+                         $("#displaystate").html(html).show();
+
+                     },
+                     error: function (reponse) {
+                         alert("error : " + reponse);
+                     }
+                 });
+             }
+</script>
+  
+
+<script type="text/javascript">
+        $(function () {
+            $("#loadcountries")
+                .bind("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                    $(this).data("ui-autocomplete").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 1,
+                    source: function (request, response) {
+                        $.getJSON("/Home/AutoLoadCountries", {
+                            term: extractLast(request.term)
+                        }, response);
+                    },
+                });
+        });
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+</script>
+
+<script type="text/javascript">
+        $(function () {
+            $("#state")
+                .bind("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                    $(this).data("ui-autocomplete").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 1,
+                    source: function (request, response) {
+                        $.getJSON("/Home/AutoLoadStates", {
+                            term: extractLast(request.term)
+                        }, response);
+                    },
+                });
+        });
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+</script>
+
+<script type="text/javascript">
+    function doCreate() {
+
+        var _name = document.getElementById("name").value.replace(/\s+/g, ' ').trim();
+        var _description = document.getElementById("description").value;
+        var _phone = document.getElementById("phone").value;
+        var _email = document.getElementById("email").value;
+        var _country = document.getElementById("loadcountries").value;
+        var _state = document.getElementById("state").value;
+        var _city = document.getElementById("city").value;
+        var _street = document.getElementById("street").value;
+        var _shortname = document.getElementById("shortname").value;
+        var _shortnameLength = document.getElementById("shortname").value.length;
+
+            if (_name == '') {
+                $("#name").css("borderColor", "red");
+                $("#name").focus();
+                return false;
+            }
+            else if (_description == '') {
+                $("#description").css("borderColor", "red");
+                $("#description").focus();
+                return false;
+            }
+            else if (_phone == '') {
+                $("#phone").css("borderColor", "red");
+                $("#phone").focus();
+                return false;
+            }
+            else if (_email == '') {
+                $("#email").css("borderColor","red");
+                $("#email").focus();
+
+                $("#phone").css("borderColor", "green");
+                return false;
+            }
+            else if (_country == '') {
+                $("#loadcountries").css("borderColor", "red");
+                $("#loadcountries").focus();
+                return false;
+            }
+            else if (_state == '') {
+                $("#state").css("borderColor","red");
+                $("#state").focus();
+                return false;
+            }
+            else if (_city == '') {
+                $("#city").css("borderColor", "red");
+                $("#city").focus();
+                return false;
+            }
+            else if (_street == '') {
+                $("#street").css("borderColor", "red");
+                $("#street").focus();
+                return false;
+            }
+            else if (_shortnameLength <4) {
+                $("#specialchar").html("Minimun of 4 characters required for shortname");
+                return false;
+            }
+            else {
+                if (ValidateEmail(_email) && checkcountry2())
+                {
+                    $("#name").css("borderColor", "green");
+                    $("#phone").css("borderColor", "green");
+                    $("#email").css("borderColor", "green");
+                    $("#description").css("borderColor", "green");
+                    $("#loadcountries").css("borderColor", "green");
+                    $("#state").css("borderColor", "green");
+                    $("#city").css("borderColor", "green");
+                    $("#street").css("borderColor", "green");
+
+                    $("#loadspinner").css("display", "block");
+                    $("#btnCreate").css("display", "none");
+
+                    var url = "/Shops/CreateAjax/";
+                    $.ajax({
+                        url: url,
+                        data: {name:_name,description:_description, phone:_phone, email: _email,country:_country, state:_state, city:_city,street:_street,shortname:_shortname},
+                        cache: false,
+                        type: "GET",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                if (item.ShopExist == 'true') {
+                                    $("#loadspinner").css("display", "none");
+                                    $("#btnCreate").css("display", "block");
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'Shop name already exist for your account',
+                                        showConfirmButton: false,
+                                        timer: 5800,
+                                        padding: '1em',
+                                        width: '600px',
+                                        height: '30px',
+                                    })
+                                }
+                                else if (item.ShortnameExist == 'true') {
+                                    $("#loadspinner").css("display", "none");
+                                    $("#btnCreate").css("display", "block");
+                                    $("#specialchar").html("Shortname already used!");
+                                }
+                                else if (item.RecordSaved == 'true') {
+                                    $("#successmsg").html('<p class="alert alert-success">Shop created successfully, redirecting...</p>');
+                                    window.location.href = '../ShopDetails/' + item.shopid;
+                                }
+                                else {
+
+                                }
+                            });
+                           
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                    return true;
+
+                }
+                else {
+                    document.getElementById("msgemail").style.display = "block";
+                    document.getElementById("msgemail").innerHTML = "Please enter a valid email";
+                    $("#email").css("borderColor", "red");
+                    $("#email").focus();
+                    return false;
+                }
+            }
+
+        }
+</script>

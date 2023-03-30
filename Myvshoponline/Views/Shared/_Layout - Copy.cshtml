@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="Images/png" href="~/Images/sysmaxlogo.ico" />
+
+    <link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+    
+    <script src="~/TextEditor/jquery-te-1.4.0.js"></script>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+</head>
+
+<body style="background-color:#E5EAEE;">
+    
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+
+                    </button>
+                    @*<div>
+                            <ul class="navbar-brand">
+                                <li style="font-size:20px; list-style:none;font-weight:bold;">@Html.ActionLink("Sysmax Training Center", "Index", "Home")</li>
+                            </ul>
+                        </div>*@
+
+                    <ul class="nav navbar-nav">
+                        <li style="color:#70D8C0; margin-left:50px; font-family:'Century Gothic'; font-weight:500; font-size:30px;"> @Html.ActionLink("V-Shop", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" }) </li>
+
+                    </ul>
+
+
+
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+
+                        @if (String.IsNullOrEmpty((string)Session["Name"]))
+                        {
+
+                        }
+
+                        else if ((string)Session["Name"] != null && (string)(Session["UserRole"]) == "Admin")
+                        {
+                            @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                            <li id="toolbars">@Html.ActionLink("Project", "Index", "Projects")</li>
+                            @*<li>@Html.ActionLink("Trainees", "Index", "Registrations")</li>*@
+                            @*<li>@Html.ActionLink("Comments", "Index", "Comments")</li>*@
+                        }
+                        else if ((string)Session["Name"] != null && (string)(Session["UserRole"]) == "Trainee")
+                        {
+
+                        }
+                        else
+                        {
+                            <li id="toolbars">@Html.ActionLink("Project", "Index", "Projects")</li>
+                            <li id="toolbars">@Html.ActionLink("Trainees", "Index", "Registrations")</li>
+                            <li id="toolbars">@Html.ActionLink("Assign User", "AssignUserRole", "Registrations")</li>
+                        }
+
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+
+        </div>
+        <p></p>
+
+
+        <div class="container .body-content" style="min-height:550px; margin:auto;" >
+            @RenderBody()
+            </div>
+       @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <div class="col-md-12">
+        <div class="row">
+        <footer id="footer">
+            <p style="text-align:center; margin:0px;">&copy; @DateTime.Now.Year - <a href="http://brutechintegrated.com.ng" target="_blank" style="text-decoration:none;" title="Brutech Integrated Technologies">Brutech Integrated Technologies</a></p>
+            <p style="text-align:center; margin:0px;">
+                <i class="glyphicon glyphicon-phone-alt"></i> 08078088233 <br />
+                <i class="glyphicon glyphicon-envelope"></i> info@myvshoponline.net
+            </p>
+
+        </footer>
+    </div></div>
+
+
+    
+</body>
+
+
+</html>
+
+

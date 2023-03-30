@@ -1,0 +1,72 @@
+﻿@model Myvshoponline.Project
+
+<title>Create a Project for Training</title>
+<div id="content">
+    <div class="container">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4 id="colorHeading" style="font-size:15px;">Add New Project</h4>
+
+                @if (@ViewBag.Try != "")
+                {
+                    <h4 style="color:red;">@ViewBag.Try</h4>
+                }
+
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.Label("Project Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @placeholder = "Project Name", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <textarea class="form-control" name="Description" cols="10" rows="4" placeholder="Project Description"></textarea>
+                        @*@Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @placeholder = "Project Description", @class = "form-control",@rows=10, @cols=20 } })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                    @Html.Label("Project Links", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ProjectLinks, new { htmlAttributes = new { @placeholder = "Project Link", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ProjectLinks, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Link Protocol", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <p>
+                            <input required type="radio" value="http" name="radio" /> http
+                            <input type="radio" value="https" name="radio" /> https
+                        </p>
+                    </div>
+                </div>*@
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" id="btnColor" value="Create" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+        </div></div>
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
+
+

@@ -1,0 +1,18 @@
+﻿
+@if ((string)Session["username"]!= null) 
+{
+@*using (Html.BeginForm("LogOff", "Home", FormMethod.Post, new { id = "logoutForm"}))
+{
+@Html.AntiForgeryToken()
+     
+        @Html.ActionLink("Hello! " + Session["Name"], "Index", "Home", routeValues: null, htmlAttributes: new { title = "Home", @class = "nav-link",@style="color:#00B7F4" })
+         <a id="btnLogin" href="javascript:document.getElementById('logoutForm').submit()" class="nav-link">Log off</a>
+
+    }*@
+}
+else
+{
+
+    <a href="~/Account/Login" class="button btn btn-success">Login</a>
+
+}

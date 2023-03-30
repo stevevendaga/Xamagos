@@ -1,0 +1,155 @@
+﻿@model Myvshoponline.Application
+
+       @{
+           ViewBag.Title = "Market Square247 Application Portal";
+           MyvshoponlineEntities db = new MyvshoponlineEntities();
+    }
+    @using Myvshoponline.Controllers;
+
+    <link href="~/Content/Panel.css" rel="stylesheet" />
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color:#71BE50;opacity:0.9">
+                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:16px">Market Square247 2019 Recruitment Exercise</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 style="font-size:14px;">APPLICATION FOR @db.Positions.Find(Model.PositionID).Position1.ToUpper()</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 style="font-size:14px;">
+                                        <span style="color:blue;"><i class="lni lni-user"></i> WELCOME, @db.Applications.Find(Model.ID).Surname.ToUpper() @db.Applications.Find(Model.ID).OtherNames.ToUpper() </span>
+                                        <a href="~/Applications/Logoff" class="badge badge-primary" style="padding:7px"><i class="glyphicon glyphicon-log-out"></i> Logout</a>
+                                    </h4>
+                                </div>
+                            </div>
+
+                            @if (ViewBag.CredentialsUsed != null)
+                            {
+                                <div class="alert alert-danger">@ViewBag.CredentialsUsed</div>
+                            }
+                            <hr style="margin-top:2px;" />
+                            <h4 style="font-size:14px">Edit Details</h4>
+
+                            <div class="row" style="padding-left:10px;">
+                                <div class="col-md-4">
+                                    <a href="~/Applications/Edit/@Model.ID">
+                                        <i class="glyphicon glyphicon-book"></i> Edit Personal Information
+                                    </a>
+                                    <hr style="margin:2px;" />
+                                    <a href="~/Applications/Edit/@Request.QueryString["apx"]">
+                                        <i class="glyphicon glyphicon-picture"></i> Passport
+                                    </a>
+
+                                    <hr style="margin:2px;" />
+                                    <a href="~/Applications/Edit/@Request.QueryString["apx"]">
+                                        <i class="lni lni-write"></i> Curriculum Vitae
+                                    </a>
+                                    <hr style="margin:2px;" />
+                                    <a href="~/Applications/UploadCredentials/?apx=@Model.ID">
+                                        <i class="lni lni-printer"></i> Print Details
+                                    </a>
+
+
+                                </div>
+                                <div class="col-md-8">
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.HiddenFor(model => model.ID)
+                                        @Html.HiddenFor(model => model.PositionID)
+                                        @Html.HiddenFor(model => model.DateSubmitted)
+                                        @Html.HiddenFor(model => model.ApplicationStatus)
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", @placeholder = "Surname", @required = "required" } })
+                                                    @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.OtherNames, new { htmlAttributes = new { @class = "form-control", @placeholder = "Other Names", @required = "required" } })
+                                                    @Html.ValidationMessageFor(model => model.OtherNames, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    @Html.DropDownList("SexID", null, "-- Select Sex --", htmlAttributes: new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.SexID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required" } })
+                                                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Address", @required = "required", @type = "email" } })
+                                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    @Html.DropDownList("StateOriginID", null, "-- Select State of Origin --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.StateOriginID, "", new { @class = "text-danger" })
+
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.LGAResidence, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Local Government of Residence" } })
+                                                    @Html.ValidationMessageFor(model => model.LGAResidence, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-5">
+                                                    @Html.DropDownList("StateResidenceID", null, "-- Select State of Residence --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.StateResidenceID, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "City/Town" } })
+                                                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Choose Password", @type = "password" } })
+                                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <textarea name="ContactAddress" class="form-control" rows="3" cols="10" placeholder="Contact Address" required="required">@Model.ContactAddress</textarea>
+                                                    @Html.ValidationMessageFor(model => model.ContactAddress, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <input type="submit" value="Save" class="btn btn-common" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

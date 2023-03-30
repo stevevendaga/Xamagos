@@ -1,0 +1,34 @@
+﻿@model Myvshoponline.SocialMediaChannel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SocialMediaChannel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Channel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Channel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CostPerDay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CostPerDay)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

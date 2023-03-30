@@ -1,0 +1,1831 @@
+﻿
+@{
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    ViewBag.ProductCategories = db.ProductCategories.Where(c => c.Name != "All Categories").ToList();
+    ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
+    ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
+    ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+    ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
+    int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - XAMAGOS</title>
+    @*<link rel="icon" type="image/x-icon" href="../Images/logosquare.jpg" />*@
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../favicon_io/site.webmanifest">
+    <!--Loading Spinner-->
+    <link href="~/LoadingSpinner/spinner.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    <!--Textarea Editor summernote  -->
+    <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.css">
+
+
+
+
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
+    <link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+    <script src="~/TextEditor/jquery-te-1.4.0.js"></script>
+
+    <!--SUMERNOTE TEXT EDITOR-->
+    <!-- include libraries(jQuery, bootstrap) -->
+    @*<script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+        <script type="text/javascript" src="cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>*@
+
+    <!-- include summernote css/js-->
+    @*<link href="summernote-bs5.css" rel="stylesheet">
+        <script src="summernote-bs5.js"></script>*@
+
+
+    <!-- Sweet alert-->
+    @*<script src="~/Sweetalert/Sweetalert.min.js"></script>*@
+    @*<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="sweetalert2.min.js"></script>
+        <link rel="stylesheet" href="sweetalert2.min.css">*@
+
+    <script src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <link href="~/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!--EMAIL VALIDATION-->
+    <script src="~/ValidateEmail/emailvalidation.js"></script>
+    <!--DATA TABLE-->
+    <link href="~/templates/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="~/flexslider/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="~/templates/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/templates/assets/css/line-icons.css">
+
+    <link rel="stylesheet" href="~/templates/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/templates/assets/css/owl.theme.default.css">
+    <link rel="stylesheet" href="~/templates/assets/css/slicknav.min.css">
+    <link rel="stylesheet" href="~/templates/assets/css/animate.css">
+
+    <!-- Work on this Css-->
+    <link rel="stylesheet" href="~/templates/assets/css/main.css">
+    <!-- Work on this Css-->
+    <link rel="stylesheet" href="~/templates/assets/css/colors/blue.css" type="text/css">
+    <link rel="stylesheet" href="~/templates/assets/css/responsive.css">
+    <link href="~/templates/assets/css/NairaSign.css" rel="stylesheet" />
+    <link href="~/Content/Panel.css" rel="stylesheet" />
+    <link href="~/Content/Modal.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!-- GOOGLE MAPS-->
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <!--GEOCODING-->
+    <script defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMapNearby">
+    </script>
+    <!--END GOOGLE MAP-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    @*<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-9669074385116966",
+              enable_page_level_ads: true
+         });
+        </script>*@
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5d98ecf36c1dde20ed053230/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+    </script>
+    <style>
+        .bg-image {
+            /* The image used */
+            background-image: url("../images/bg1.jpg");
+            /* Add the blur effect */
+            filter: blur(30px);
+            -webkit-filter: blur(30px);
+            background-size: cover;
+        }
+    </style>
+
+    <style>
+        /* The Modal (background) */
+        .modal-backdrop {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            /*padding-top: 100px;*/ /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            /*background-color: rgb(0,0,0);*/ /* Fallback color */
+            /*background-color: rgba(0,0,0,0.4);*/ /* Black w/ opacity */
+            /*margin-left:30%;*/
+        }
+
+        /* Modal Content */
+        .modal-content-backdrop {
+            background-color: blue;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            margin-top: 10%;
+            margin-left: 10%;
+            text-align: center;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+</head>
+
+@*<body class="hold-transition sidebar-mini layout-fixed" style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:initial;filter: blur(8px);-webkit-filter: blur(8px);">*@
+
+@*<body class="hold-transition sidebar-mini layout-fixed" style="background-image:url(../images/bg1.jpg);background-size:cover;">*@
+
+<body class="hold-transition sidebar-mini layout-fixed">
+
+    <!-- The Modal -->
+    <div id="myModalBackdrop" class="modal-backdrop">
+
+        <!-- Modal content -->
+        <div class="modal-content-backdrop">
+            @*<span class="close">&times;</span>*@
+            <p>Loading...</p>
+        </div>
+
+    </div>
+
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top" style="background-color:#17A2B8;position:fixed;border:0px;">
+
+
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="color:white;font-size:16px;"><i class="fas fa-bars"></i></a>
+                </li>
+
+            </ul>
+            <!-- Brand Logo -->
+            <div id="displayonmobile_logo" style="display:none">
+                <center>
+                    @if (MobileLogo == 0)
+                    {
+                        @*<a href="~/Home/Index">
+                                <img src="~/Images/mobilelogo.jpg" alt="Market Square247" style="height:60px;width:120px;border-radius:8px;" >
+                            </a>*@
+                    }
+                    else
+                    {
+                        <a href="~/Home/Index">
+                            <img src="~/Images/mobilelogo.jpg" alt="XAMAGOS" style="height:60px;width:120px;border-radius:8px;">
+                        </a>
+                    }
+                </center>
+            </div>
+            <!--End Brand Logo-->
+            <!-- SEARCH FORM -->
+            <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;">
+                <div class="input-group input-group-sm" style="margin:2px;">
+                    @if (Request.QueryString["search"] != null)
+                    {
+                        <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:700px;">
+                    }
+                    else
+                    {
+                        <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:700px;">
+                    }
+
+                </div>
+
+                @*<div class="input-group input-group-sm" style="margin:2px;">
+                        @Html.DropDownList("CountryID", null, "Country/Region", htmlAttributes: new { @class = "form-control form-control-navbar", @required = "required", @onchange = "displaystateInputbar(this.value)", @style = "margin:2px;" })
+                    </div>
+                    <div class="input-group input-group-sm" style="margin:2px;" id="displaystatebar">
+                        <input type="text" id="city" name="StateID" class="form-control form-control-navbar" placeholder="State or City" />
+                    </div>*@
+                <div class="input-group input-group-sm" style="margin:2px;">
+                    @Html.DropDownList("ProductCategoryID", null, htmlAttributes: new { @class = "form-control form-control-navbar" })
+                    <div class="input-group-append">
+                        <button class="btn btn-common" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-1">
+                <!-- Shopping Cart -->
+                @{
+                    int CountCart = 0;
+                    if (Session["UserID"] != null)
+                    {
+                        int UserID = (int)Session["UserID"];
+                        CountCart = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
+                    }
+                    if (Session["UserID"] != null && CountCart > 0)
+                    {
+                        int UserID = (int)Session["UserID"];
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                                <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCart</span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
+                                <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                                    <!-- Message Start -->
+                                    <div class="media">
+
+                                        <div class="media-body">
+                                            <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
+                                                <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
+                                                <hr style="margin-top:8px;margin-bottom:5px;" />
+                                                @*<span class="float-right text-sm text-danger">*@ @*<i class="fas fa-star"></i></span>*@
+                                            </h3>
+                                            <p class="text-sm">
+                                                @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
+                                                {
+                                                    <ul>
+                                                        <li style="font-size:12px;">
+                                                            &bull; @cart.Product.Name
+                                                        </li>
+                                                    </ul>
+
+                                                }
+                                            </p>
+                                            <hr style="margin-top:3px;margin-bottom:3px;" />
+                                            <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCart</p>
+                                            <p class="badge badge-info">
+                                                <i class="fa fas fa-eye"></i> View Cart
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Message End -->
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                </a>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" data-toggle="dropdown" href="#">
+                                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                                <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
+                            </a>
+                        </li>
+                    }
+                }
+
+                <li class="">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
+                        <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#F8F9FA">
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                            <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
+                                <i class="fa fas fa-map-marker"></i>
+                                Nearby Stores
+
+
+                            </h3>
+
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="media dropdown-item">
+                            <div id="mapnearby"></div>
+                            <div id="nearbystops" style="font-size:12px;"></div>
+
+                        </div>
+                        <!-- Message End -->
+
+                        <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                            <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
+                        </div>
+                        <!-- Message End -->
+                    </div>
+                </li>
+
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item">
+                    @*<a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>*@
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 4 new messages
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-users mr-2"></i> 8 friend requests
+                            <span class="float-right text-muted text-sm">12 hours</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                    </div>
+                </li>
+                @*<li class="nav-item">
+                        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                            <i class="fas fa-th-large"></i>
+                        </a>
+                    </li>*@
+            </ul>
+
+        </nav>
+
+        <!---JAVASCRIPT NEARBY STORES-->
+        <script>
+                "use strict";
+
+                let map, infoWindow;
+
+                function initMapNearby() {
+                    map = new google.maps.Map(document.getElementById("mapnearby"), {
+                        //center: {
+                        //    lat: -34.397,
+                        //    lng: 150.644
+                        //},
+                        //zoom: 6
+                    });
+                    infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
+
+                    //GET USERS CURRENT POSITION-LAT LONG
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                          position => {
+                              const pos = {
+                                  lat: position.coords.latitude,
+                                  lng: position.coords.longitude
+                              };
+                              const marker = new google.maps.Marker({
+                                  position: pos,
+                                  map: map
+                              });
+                              const userlatlong = position.coords.latitude + "," + position.coords.longitude;
+                              //call function retrieve shops
+                              GetNearbyStores(map, infoWindow, userlatlong);
+
+                          }, () => {
+                              handleLocationError(true, infoWindow, map.getCenter());
+                          }
+                        );
+                    } else {
+                        // Browser doesn't support Geolocation
+                        handleLocationError(false, infoWindow, map.getCenter());
+                    }
+                    // infowindow.setContent(results[0].formatted_address);
+
+                }//end of iniMap
+
+                function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent(
+                      browserHasGeolocation
+                        ? "Error: The  service failed."
+                        : "Error: Your browser doesn't support."
+                    );
+                    infoWindow.open(map);
+                }
+
+                //Retrieve all shops addresses and name from shops
+                function GetNearbyStores(map, infoWindow, userlatlong) {
+
+                    var url = "/Shops/Get_ShopsForNearbyStores/";
+                    $.ajax({
+                        url: url,
+                        data: {},
+                        cache: false,
+                        type: "GET",
+                        success: function (data) {
+                            var html = "<table><tr><th>Lat</th><th>lng</th></tr><tr>"
+                            $.each(data, function (key, item) {
+                                geocodeAddress(map, infoWindow, item.ShopAddress, item.ShopName, item.shopid, userlatlong)
+
+                            });
+                            html += "</tr></table>";
+                            $("#DisplayStores").html(html);
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+                //=== END SHOPS
+
+                //GeoCoding for addresses goten from shops
+                function geocodeAddress(map, infowindow, address, shopname, shopid, userlatlong) {
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ address: address }, (results, status) => {
+                        var loc = [];
+                        if (status === "OK") {
+                            //Latitude and longitude for a shop
+                            loc[0] = results[0].geometry.location.lat().toFixed(2);
+                            loc[1] = results[0].geometry.location.lng().toFixed(2);
+                            //=====
+                            //Users Lat Long
+                            const latlngStr = userlatlong.split(",", 2);
+                            const lat = parseFloat(latlngStr[0]).toFixed(2);
+                            const lng = parseFloat(latlngStr[1]).toFixed(2);
+                            const Distance = 150;
+                            // var data = "User Lat= " + loc[0] + " User Long= " + loc[1] + "Shop Lat= " + lat + " Shop Long= " + lng;
+                            //Calculation Longitute and Lat Distance formula
+                            const pi = 3.142;
+                            //if ((acos(Math.sin((loc[0] * pi / 180)) * Math.sin((lat * pi / 180)) + Math.cos((loc[0] * pi / 180)) * Math.cos((lat * pi() / 180)) * Math.cos(((loc[0] - lng) * pi / 180))) * 180 / pi * 60 * 1.1515 * 1.609344) <Distance) {
+                            //    alert(data);
+                            //}
+                            //GET ANOTHER FUNCTION TO DISPLAY STORES
+                            if (distance(loc[0], loc[1], lat, lng, "K") < 200) {
+                                // var ss = '<p><a href="../Shops/Shopdetails/' + shopid +'" style="font-size:12px;">'+ address + ' - ' + shopname + '</a></p>';
+                                var ss = '<p><a href="../../Shops/Shopdetails/' + shopid + '" style="font-size:12px;color:#3AC6F5">' + shopname + '</a></p><div class="dropdown-divider"></div>';
+                                $('#nearbystops').append(ss);
+                                document.getElementById("nearbystorecount").innerHTML = parseInt(document.getElementById("nearbystorecount").innerHTML) + 1;
+                            }
+
+                        } else {
+                            //alert("Geocode was not successful for the following reason: " + status);
+                        }
+
+
+                    }
+
+                    );
+                }
+
+                function distance(lat1, lon1, lat2, lon2, unit) {
+
+                    var radlat1 = Math.PI * lat1 / 180
+                    var radlat2 = Math.PI * lat2 / 180
+                    var theta = lon1 - lon2
+                    var radtheta = Math.PI * theta / 180
+                    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                    if (dist > 1) {
+                        dist = 1;
+                    }
+                    dist = Math.acos(dist)
+                    dist = dist * 180 / Math.PI
+                    dist = dist * 60 * 1.1515
+                    if (unit == "K") { dist = dist * 1.609344 }
+                    if (unit == "N") { dist = dist * 0.8684 }
+                    return dist
+                }
+                //===End of geocode
+        </script>
+
+
+        <!--END JAVASCRIPT NEARBY STORES-->
+        <!-- /.navbar -->
+        <!--Close wrapper-->  @*</div>*@
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#138699;color:white;">
+            <!-- Brand Logo --><center>
+                <a href="~/Home/Index" class="brand-link">
+                    <img src="~/Images/logosquare.jpg" alt="XAMAGOS" style="height:60px;width:120px;border-radius:8px;">
+                    @*<img src="~/Images/logosquare.png" alt="Market Square247" style="opacity: .8;height:70px;width:70px;" class="img-circle elevation-5">*@
+                    @*<br style="margin-top:0px;" />
+                        <span class="brand-text font-weight-light" style="font-size:14px;">MarketSquare247</span>*@
+                </a>
+            </center>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+                    <style>
+                        pp {
+                            color: white;
+                            padding: 0px;
+                            margin: 0px;
+                        }
+                    </style>
+                    <div>
+
+                        @if (String.IsNullOrEmpty((string)Session["Name"]))
+                        {
+                            //if (String.IsNullOrEmpty((string)Session["CustomerName"]))
+                            //{
+                            <nav>
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <li class="nav-item has-treeview">
+                                        @*<a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" data-toggle="modal" data-target="#myModalBackdrop" onclick="clearTextBox();">*@
+                                        <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
+
+                                            <i class="nav-icon fas fa-lock-open"></i>
+                                            <pp>
+                                                Login
+                                            </pp>
+                                        </a>
+                                    </li>
+                                    @*<li class="nav-item has-treeview">
+                                            <a href="~/OnlineTrainings/application" class="nav-link" style="" title="Online Training">
+                                                <i class="nav-icon fas fa-tram"></i>
+                                                <pp>
+                                                    Online Training
+                                                </pp>
+                                            </a>
+                                        </li>*@
+                                    <li class="nav-item has-treeview">
+                                        <a href="~/Users/Create?id=16797&v=1" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
+                                            <i class="nav-icon fas fa-pencil-alt"></i>
+                                            <pp>
+                                                Sign Up
+                                            </pp>
+                                        </a>
+                                    </li>
+                                    @*<li class="nav-item has-treeview">
+                                            <a href="~/Home/CustomerLogin" class="nav-link" style="opacity:.8">
+                                                <i class="nav-icon fas fa-lock-open"></i>
+                                                <pp>
+                                                    Buyer Login
+                                                </pp>
+                                            </a>
+                                        </li>*@
+                                    @*<li class="nav-item has-treeview">
+                                            <a href="~/ShopCustomers/Create/?id=&v=1" class="nav-link" style="opacity:.8" title="Create Account">
+                                                <i class="nav-icon fas fa-pencil-alt"></i>
+                                                <pp>
+                                                    Create Account (Buyer)
+                                                </pp>
+                                            </a>
+                                        </li>*@
+
+                                </ul>
+                            </nav>
+
+                            //}
+
+                        }
+                        else
+                        {
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                <li class="nav-item">
+
+                                    @using (Html.BeginForm("LogOff", "Home", FormMethod.Post, new { id = "logoutForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                                        {
+
+                                            <i class="nav-icon fas fa-user-circle"></i>  @Html.ActionLink("Welcome, " + Session["Name"], "AdminLanding/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                                        }
+                                        else
+                                        {
+                                            int UserID = (int)Session["UserID"];
+                                            if (db.Users.Find(UserID).EmailVerify == 1)
+                                            {
+                                                <i class="nav-icon fas fa-user-circle"></i> @Html.ActionLink("WELCOME, " + Session["Name"], "Dashboard/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                                            }
+                                        }
+                                    }
+                                </li>
+                                @if (Session["UserID"] != null)
+                                {
+                                    int UserID1 = (int)Session["UserID"];
+
+                                    if (db.Users.Find(UserID1).EmailVerify == 1)
+                                    {
+
+                                        if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                                        {
+                                            <li class="nav-item">
+                                                <a href="~/Users/AdminLanding/@Session["UserID"]" class="nav-link">
+                                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                                    <pp>
+                                                        Dashboard
+                                                    </pp>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="nav-item">
+                                                <a href="~/Users/Dashboard/@Session["UserID"]" class="nav-link">
+                                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                                    <pp>
+                                                        Dashboard
+
+                                                    </pp>
+                                                </a>
+                                            </li>
+                                        }
+                                        <li class="nav-item">
+                                            @*<a class="nav-link" style="background-color:#25292D;color:white;height:35px" href="javascript:document.getElementById('logoutForm').submit()"><i class="glyphicon glyphicon-log-out"></i> Log off</a>*@
+                                            <a class="nav-link" style="background-color:#128598;text-shadow: 3px 2px 5px red, 0 0 2px red;color:white;height:35px" href="javascript:document.getElementById('logoutForm').submit()"><i class="glyphicon glyphicon-log-out"></i> Log off</a>
+                                        </li>
+                                        <li><hr style="margin-top:2px;" /></li>
+                                                <li class="nav-item has-treeview">
+                                                    <a href="#" class="nav-link">
+                                                        <i class="fa fas fa-store"></i>
+                                                        <pp>
+                                                            Online Stores
+                                                            <i class="fas fa-angle-left right" style="font-size:22px"></i>
+                                                            <span class="badge badge-info">@db.Shops.Where(s => s.UserID == UserID1).Count()</span>
+                                                        </pp>
+                                                    </a>
+                                                    <ul class="nav nav-treeview">
+                                                        @foreach (var shop in db.Shops.Where(s => s.UserID == UserID1).OrderByDescending(s => s.DateCreated).ToList())
+                                                        {
+                                                            if (shop.Name != null)
+                                                            {
+                                                                <li style="margin-bottom:1px;padding-bottom:0px" class="nav-item">
+
+                                                                    <a class="nav-link" style="font-size:10px" href="~/Shops/ShopDetails/@shop.ID" title="Click here to go to @shop.Name shop">
+
+                                                                        <b> @shop.Name </b>
+                                                                        @if (shop.ShopStatus == "Active")
+                                                                        { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@shop.ShopStatus</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@shop.ShopStatus</span>
+                                                                        }
+
+                                                                    </a>
+                                                                </li>
+
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </li>
+
+
+
+                                    }
+                                }
+                            </ul>
+                        }
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            @if (!string.IsNullOrEmpty((string)Session["CustomerName"]))
+                            {
+                                <li class="nav-item">
+                                    <i class="nav-icon fas fa-user-circle"></i>   @Html.ActionLink("Welcome, " + Session["CustomerName"], "CustomerDashboard/" + Session["CustomerID"], "Users", routeValues: null, htmlAttributes: new { title = Session["CustomerName"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/Users/CustomerDashboard/@Session["CustomerID"]" class="nav-link">
+                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                        <pp>
+                                            Dashboard
+                                        </pp>
+                                    </a>
+                                </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" style="background-color:#128598;text-shadow: 3px 2px 5px red, 0 0 5px red;color:white;height:35px" href="~/Home/LogOffCustomer"><i class="glyphicon glyphicon-log-out"></i> Log off</a>
+                                        </li>
+
+                            }
+                        </ul>
+                    </div>
+
+
+                </div>
+                <!-- Sidebar Menu -->
+                <nav>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item has-treeview">
+                            <a href="~/Home/Index" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <pp>
+                                    Home
+                                </pp>
+                            </a>
+
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="~/Home/Contact" class="nav-link">
+                                <i class="nav-icon fas fa-info-circle"></i>
+                                <pp>
+                                    About
+
+                                </pp>
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-copy"></i>
+                                <pp>
+                                    Product Categories
+                                    <i class="fas fa-angle-left right" style="font-size:22px"></i>
+                                    @*<span class="badge badge-info right">6</span>*@
+                                </pp>
+                            </a>
+                            <ul class="nav nav-treeview">
+
+                                @{
+                                    var item = db.ProductCategories.Where(p => p.Name != "All Categories").ToList();
+
+                                    foreach (var item1 in item)
+                                    {
+                                        var image = @item1.Icon + ".png";
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="~/ProductCategories/BrowseCategories/@item1.ID">
+                                                @*<i class="@item1.Icon"></i>*@
+                                                <img src="~/Images/Icons/@image" style="width:5%;"> @item1.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+
+                        <li class="nav-item has-treeview">
+                            <a href="~/Home/FindItem" class="nav-link" id="finditem">
+                                <i class="nav-icon fas fa-search"></i>
+                                <pp>Product Finder</pp>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="~/Home/BargainMarket" class="nav-link" id="bargainmarket">
+                                <i class="nav-icon fas fa-adjust"></i>
+                                <pp>Enter Bargain Market</pp>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="~/Home/StoreLocator" class="nav-link" id="shoplocator">
+                                <i class="nav-icon fas fa-map-marked-alt"></i>
+                                <pp>Shop Locator</pp>
+                            </a>
+                        </li>
+                        @*<li class="nav-item has-treeview">
+                                <a href="~/Home/Promotion" class="nav-link">
+                                    <i class="nav-icon fas fa-money-bill-wave"></i>
+                                    <pp>Boost Sales</pp>
+                                </a>
+                            </li>*@
+                        <li class="nav-item has-treeview">
+                            <a href="~/TrainingModules/Index?px=1" class="nav-link" id="support">
+                                <i class="nav-icon fas fa-info-circle"></i>
+                                <pp>Support</pp>
+                            </a>
+                        </li>
+                        @*<li class="nav-item has-treeview">
+                                <a href="~/Home/Promotion" class="nav-link">
+                                    <i class="nav-icon fas fa-money-bill-wave"></i>
+                                    <p>Boost Sales</p>
+                                </a>
+                            </li>*@
+                        @*<li class="nav-item has-treeview">
+                                <a href="~/TrainingModules/Index?px=1" class="nav-link">
+                                    <i class="nav-icon fas fa-info-circle"></i>
+                                    <p>Support</p>
+                                </a>
+                            </li>*@
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-circle text-danger"></i>
+                                <pp class="text">Terms & Conditions</pp>
+                            </a>
+
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-circle text-warning"></i>
+                                <pp>Privacy Policy</pp>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+            <p></p>
+            <br />
+
+        </aside>
+
+
+        <div class="row">
+            <div class="col-md-2 col-1" id="colunmleft">
+
+            </div>
+
+            <div class="col-md-10 col-12">
+                @*<section id="job-listings" class="section" style="margin-top:120px;padding-top:10px; background-color:#F2F4F6">*@
+                <section id="job-listings" class="section" style="margin-top:50px;padding-top:10px;">
+                    <div class="container" style="padding:2px">
+                        <!-- Start Post -->
+                        <div class="blog-post" style="padding:5px">
+                            <!-- Post Content -->
+                            <div class="post-content" id="bodyholder">
+                                <div id="displaycshtml">
+                                    @RenderBody()
+                                </div>
+                                <!-- ADSTERRA NATIVE BARNER-->
+                                @*<script async="async" data-cfasync="false" src="//pl15841712.cpmprofitablenetwork.com/3d14d3633f3e6c0b87fbf323be099689/invoke.js"></script>
+                                    <div id="container-3d14d3633f3e6c0b87fbf323be099689"></div>*@
+                                <!-- END ADSTERRA NATIVE BARNER-->
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <div class="modal" id="myModaldonate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
+                @*<div class="modal-dialog modal-dialog-centered">*@
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="font-size:14px">Donate to Support Market Square247</h5>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <div class="modal-body" id="donatebody">
+
+                        <div class="form-group">
+                            @*@Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <div class="col-md-10">
+                                @Html.Editor("Name", new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Enter your name", @id = "Name" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <div class="col-md-10">
+                                @Html.Editor("Email", new { htmlAttributes = new { @class = "form-control", @type = "email", @required = "required", @placeholder = "Enter your email", @id = "Email" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.Label("Phone Number", htmlAttributes: new { @class = "control-label col-md-4" })*@
+                            <div class="col-md-10">
+                                @Html.Editor("Phone", new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Enter your phone number", @id = "Phone" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.Label("Address", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <div class="col-md-10">
+                                @Html.Editor("Address", new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter your contact address", @id = "Address" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.Label("Amount you want to Donate", htmlAttributes: new { @class = "control-label col-md-6" })*@
+                            <div class="col-md-10">
+                                @Html.Editor("Amount", new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Enter the amount you want to donate [NGN-Nigerian Naira]", @id = "Amount" } })
+                            </div>
+                        </div>
+
+                        <form>
+                            <script src="https://js.paystack.co/v1/inline.js"></script>
+                            <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystackDonate()">Donate Now@*<span id="buttonamount"></span>*@ <i class="lni lni-arrow-right-circle"></i></button>
+                        </form>
+                    </div>
+                    <button type="button" class="btn btn-common" id="okbtn" data-dismiss="modal" style="display:none">OK</button>
+                </div>
+
+                @*</div>*@
+            </div>
+
+            <script>
+                    function payWithPaystackDonate() {
+                        var actualamt = document.getElementById("Amount").value;
+                        var myamt = document.getElementById("Amount").value * 100;
+                        var myname = document.getElementById("Name").value;
+                        var email = document.getElementById("Email").value;
+                        var phone = document.getElementById("Phone").value;
+                        var address = document.getElementById("Address").value;
+                        if (myname == '') {
+                            alert("Please enter your name");
+                            return false;
+                        }
+                        else if (email == '') {
+                            alert("Please enter your email address");
+                            return false;
+                        }
+                        else if (phone == '') {
+                            alert("Please enter your phone number");
+                            return false;
+                        }
+                        else if (address == '') {
+                            alert("Please enter your contact address");
+                            return false;
+                        }
+                        else if (actualamt == '') {
+                            alert("Please enter amount");
+                            return false;
+                        }
+                        else {
+                            var handler = PaystackPop.setup({
+                                key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                                //key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+                                email: email,
+                                amount: myamt,
+                                ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                firstname: myname,
+                                number: "",
+                                // label: "Optional string that replaces customer email"
+                                label: myname,
+                                metadata: {
+                                    custom_fields: [
+                                       {
+                                           display_name: "Mobile Number",
+                                           variable_name: "mobile_number",
+                                           value: phone
+                                       }
+                                    ]
+                                },
+                                callback: function (response) {
+                                    var url = "/Donations/Update_Donation/";
+                                    $.ajax({
+                                        url: url,
+                                        data: { refno: response.reference, amount: actualamt, name: myname, phone: phone, address: address, myemail: email },
+                                        cache: false,
+                                        type: "POST",
+                                    })
+                                    // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+                                    // window.location.href = "/Home/Index/";
+                                    $("#donatebody").html("<span class='alert alert-success'>You have successfully donated NGN " + actualamt + " to Market Square247.<br><br>&nbsp&nbsp&nbsp&nbsp Thank you for supporting Market Square247.</span> <br>");
+                                    $("#okbtn").css("display", "block");
+                                },
+                                onClose: function () {
+                                    alert('Transaction aborted by user. Try again');
+                                }
+                            });
+                            handler.openIframe();
+                        }
+                    }
+            </script>
+
+
+
+        </div>
+        <footer class="main-footer" style="padding-top:0px!important;padding:0px;">
+
+            <div class="container" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <h6 style="margin-bottom:2px;text-align:center;font-size:14px;color:#138699">
+                                <i class="fa fas fa-money-bill-alt"></i><br />
+                                Safe Payment
+                            </h6>
+                            <p style="font-size:12px;line-height:12px;text-align:center">
+                                Pay with the world’s most popular and secure payment methods.
+                            </p>
+                            <hr />
+                        </div>
+                        <div class="col-md-2">
+                            <h6 style="margin-bottom:2px;text-align:center;font-size:14px;color:#138699">
+                                <i class="fa fas fa-shopping-basket"></i><br />
+                                Shop with Confidence
+                            </h6>
+                            <p style="font-size:12px;line-height:12px;text-align:center">
+                                Our Buyer Protection covers your purchase from click to delivery.
+                            </p>
+                            <hr />
+                        </div>
+                        <div class="col-md-2">
+                            <h6 style="margin-bottom:2px;text-align:center;font-size:14px;color:#138699">
+                                <i class="fa fas fa-users-cog"></i><br />
+                                24/7 Help Center
+                            </h6>
+                            <p style="font-size:12px;line-height:12px;text-align:center">
+                                Round-the-clock assistance for a smooth shopping experience.
+                            </p>
+                            <hr />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <h6 style="margin-bottom:2px;text-align:center;font-size:14px;color:#138699">
+                                <i class="fa fas fa-andr"></i> <i class="fa fas fa-apple-alt"></i><br />
+                                Shop On-The-Go
+                            </h6>
+                            <p style="font-size:12px;line-height:12px;text-align:center">
+                                <a href="https://play.google.com/store/apps/details?id=com.marketsquare247.marketsquare247" target="_blank">
+                                    <img src="~/Images/download_android_on_google_play.jpg" style="color:#87DDFF;width:150px;height:50px;" />
+                                </a>
+                                @*Download the app
+                                    and get the world of MarketSquare247 at your fingertips.*@
+                            </p>
+                            <hr />
+
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <h6 style="margin-bottom:2px;text-align:center;font-size:14px;color:#138699">
+                                @*<i class="fa fas fa-motorcycle"></i>*@
+                                <i class="fa fas fa-andr"></i> <i class="fa fas fa-apple-alt"></i>
+                                <br />
+                                Shop On-The-Go
+                            </h6>
+                            <p style="font-size:12px;line-height:12px;text-align:center">
+                                <a href="#">
+                                    <img src="~/Images/download_android_on_apple_app_store.jpg" style="color:#87DDFF;width:150px;height:50px;" />
+                                </a>
+                            </p>
+                            <hr />
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Area Start -->
+            <section class="footer-Content" style="margin:0px;padding:10px;">
+                <div class="container">
+                    <div class="row" style="padding-top:0px;">
+
+                        <div class="col-lg-3 col-md-3 col-11">
+                            <div class="widget">
+                                @*<div class="footer-logo">
+                                        <h3 class="block-title">Support</h3>
+                                    </div>*@
+                                <div class="textwidget">
+                                    @*<i class="lni lni-phone-handset"></i>&nbsp; Phone Support<br />
+                                        <h5 class="block-title" style="font-size:15px">
+                                            08081133134
+                                        </h5>*@
+
+                                    <i class="lni-envelope"></i> &nbsp;
+                                    Email Support <br />
+                                    <h3 class="block-title" style="font-size:11px"> support@xamagos.com</h3>
+                                    @*<i class="lni-map-marker"></i> &nbsp;
+                                        Headquarter - <span class="block-title" style="font-size:15px">&nbsp; Nigeria@*#9, Suite 32, Divine Plaza, Opposite Oracle Driving School, Old Otukpo Road, Makurdi, Benue State -</span>*@
+
+                                    <h3 class="block-title" style="font-size:12px"> Connect With Us</h3>
+                                    <ul class="mt-3 footer-social">
+
+
+                                        <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
+                                        <li><a class="linkedin" target="_blank" href="https://www.linkedin.com/company/market-square247"><i class="lni-linkedin-fill"></i></a></li>
+                                        <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
+                                        @*<li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li>*@
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-11">
+                            <div class="widget">
+                                <h3 class="block-title" style="font-size:12px">Share This Platform</h3>
+
+
+                                <script>
+                                            (function (d, s, id) {
+                                                var js, fjs = d.getElementsByTagName(s)[0];
+                                                if (d.getElementById(id)) return;
+                                                js = d.createElement(s); js.id = id;
+                                                js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                                                fjs.parentNode.insertBefore(js, fjs);
+                                            }(document, 'script', 'facebook-jssdk'));</script>
+
+                                <!-- Your share button code -->
+
+                                <ul class="mt-4 footer-social">
+                                    <li>
+                                        @{
+                                            string referallink1 = "http://marketsquare247.com";
+                                        }
+                                        <div class="fb-share-button"
+                                             data-href="@referallink1"
+                                             data-layout="button_count">
+                                        </div>
+                                    </li>
+                                    <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                                    @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+                                        <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                                    <li>
+                                        <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                                            <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-11">
+
+                            <p>Subscribe to our Newsletter.</p>
+
+
+
+
+                            <script>
+// Get the modal
+var modal = document.getElementById("myModalBackdrop");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtnBackdrop");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+                            </script>
+
+
+                            <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
+                                <div class="form-group is-empty">
+                                    <input type="email" value="" name="Email" required="required" class="form-control" id="Email" placeholder="Enter Email...">
+                                    <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn" onclick="Insert_Email_NewsLetter()"><i class="lni-envelope"></i></button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-11">
+
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                @*<li class="nav-item has-treeview">
+                                    <a href="~/users/create" target="_blank" class="nav-link">
+                                            Sell on MarketSquare247
+                                    </a>
+                                    </li>*@
+
+                                @*<li class="nav-item has-treeview">
+                                        <a href="~/Home/StoreLocator" target="_blank" class="nav-link">
+                                                Store Locator
+                                        </a>
+
+                                    </li>
+                                    <li class="nav-item has-treeview">
+                                        <a href="~/TrainingModules/Index?px=1" class="nav-link">
+                                                Support
+                                        </a>
+
+                                    </li>*@
+                            </ul>
+
+
+                            @*<br />
+                                <h5 class="block-title" style="font-size:14px;"> Sell on MarketSquare247 Sell on MarketSquare247Sell on MarketSquare247</h5>
+                                <span class="full-time" style="color:white;padding:3px;margin-top:10px;vertical-align:top;background-color:#138496">
+                                    &nbsp;&nbsp; <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Support Market Square247" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();"> <i class="lni-gift"></i>Donate/Support</a>
+                                </span>*@
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <script type="text/javascript">
+                        function Insert_Email_NewsLetter() {
+                            var _email = document.getElementById("Email").value;
+                            if (_email != '') {
+                                var url = "/Home/Insert_Email_NewsLetter/";
+                                $.ajax({
+                                    url: url,
+                                    data: { email: _email },
+                                    cache: false,
+                                    type: "POST",
+                                    success: function (data) {
+                                        alert('Email subscribed successfully');
+                                    },
+                                    error: function (reponse) {
+                                        alert("error : " + reponse);
+                                    }
+                                });
+                            }
+                        }
+            </script>
+            <!-- Footer area End -->
+            <!-- Copyright Start  -->
+            <div id="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="site-info text-center">
+                                <p>&copy; @DateTime.Now.Year - <a href="#" target="_blank" rel="nofollow"><span style="color:white">XAMAGOS</span></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+    </div>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-circle-up"></i>
+    </a>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+
+
+
+
+
+
+
+
+    <!-- /.control-sidebar -->
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+            $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/plugins/chart.js/Chart.min.js"></script>
+    <!-- Sparkline -->
+    <script src="~/plugins/sparklines/sparkline.js"></script>
+    <!-- JQVMap -->
+    <script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="~/dist/js/pages/dashboard.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
+    <!-- AdminLTE App -->
+    <!-- jQuery Mapael -->
+    <script src="~/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="~/plugins/raphael/raphael.min.js"></script>
+    <script src="~/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="~/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+
+    <!-- DATA TABLE -->
+    <script src="~/templates/extra-libs/multicheck/datatable-checkbox-init.js"></script>
+    <script src="~/templates/extra-libs/multicheck/jquery.multicheck.js"></script>
+    <script src="~/templates/extra-libs/DataTables/datatables.min.js"></script>
+    <script>
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').DataTable();
+        $('#zero_config1').DataTable();
+        $('#zero_config2').DataTable();
+        $('#zero_config3').DataTable();
+        $('#zero_config4').DataTable();
+        $('#zero_config5').DataTable();
+        $('#zero_config6').DataTable();
+        $('#zero_config7').DataTable();
+        $('#zero_config8').DataTable();
+        $('#zero_config9').DataTable();
+    </script>
+
+
+    <!-- ChartJS -->
+    <!-- PAGE SCRIPTS -->
+    <!-- ADSTERRA SOCIAL BARNER-->
+    @*<script type='text/javascript' src='//pl15839651.cpmprofitablenetwork.com/7a/22/6b/7a226b55c2f43b137c3048830906b548.js'></script>*@
+    <!-- ADSTERRA-->
+    <script type="text/javascript">
+            function myFunction(xy) {
+                if (xy.matches) { // If media query matches
+                    document.getElementById("job-listings").style.margin = "140";
+                    document.getElementById("colunmleft").style.display = "none";
+                    document.getElementById("bodyholder").style.padding = "2px";
+
+                    document.getElementById("displayonmobile_logo").style.display = "block";
+                    document.getElementById("search").style.width = "100%";
+
+
+                } else {
+                    document.getElementById("job-listings").style.margin = "0";
+                    document.getElementById("colunmleft").style.display = "block";
+
+                    document.getElementById("displayonmobile_logo").style.display = "none";
+                }
+            }
+
+            var xy = window.matchMedia("(max-width: 600px)")
+            myFunction(xy) // Call listener function at run time
+            xy.addListener(myFunction) // Attach listener function on state changes
+    </script>
+
+    <script type="text/javascript">
+            function myFunction(xy) {
+                if (xy.matches) { // If media query matches
+                    document.getElementById("job-listings").style.margin = "140";
+                    document.getElementById("colunmleft").style.display = "none";
+                    document.getElementById("bodyholder").style.padding = "2px";
+                    document.getElementById("welcomesidebar").style.padding = "0px";
+                    document.getElementById("displayonmobile_logo").style.display = "block";
+                    document.getElementById("search").style.width = "100%";
+
+
+                } else {
+                    document.getElementById("job-listings").style.margin = "0";
+                    document.getElementById("colunmleft").style.display = "block";
+                    document.getElementById("welcomesidebar").style.padding = "0px";
+                    document.getElementById("displayonmobile_logo").style.display = "none";
+                }
+            }
+
+            var xy = window.matchMedia("(max-width: 600px)")
+            myFunction(xy) // Call listener function at run time
+            xy.addListener(myFunction) // Attach listener function on state changes
+    </script>
+    <style type="text/css">
+        .ui-menu-item {
+            /* background-color: #F0F0F0 !important;*/
+            padding-left: 20px;
+            padding-top: 10px;
+            border: medium 0.5px;
+            width: 50%;
+            color: black;
+            background-color: white;
+        }
+
+            .ui-menu-item .ui-menu-item-wrapper:hover {
+                border: none !important;
+                background-color: darkblue;
+                color: white;
+                cursor: pointer;
+            }
+    </style>
+
+
+    <script type="text/javascript">
+        $(function () { $("#search").bind("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                    $(this).data("ui-autocomplete").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 2,
+                    source: function (request, response) {
+                        $.getJSON("/Home/AutoCompleteSearch", {
+                            term: extractLast(request.term)
+                        }, response);
+                    },
+                });
+        });
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+    </script>
+
+
+    <script>
+        $(document).ready(function()
+        {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#loginSidebar').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Account/Login');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+
+                return false;
+            });
+
+            $('#loginIndex').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Account/Login');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+            $('#loginSignup').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Account/Login');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+
+
+                return false;
+            });
+
+
+            $('#signUpSidebar').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Users/Create');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+
+                return false;
+            });
+
+            $('#signUpIndex').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Users/Create');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+            $('#signupLogin').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Users/Create');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+
+
+            $('#finditem').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Home/Finditem');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+
+            $('#bargainmarket').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Home/BargainMarket');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+
+
+            $('#shoplocator').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/Home/StoreLocator');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+
+            $('#support').click(function (e) {
+                e.preventDefault();
+                $('#displaycshtml').load('/TrainingModules/Index?px=1');
+                let timerInterval
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait <b></b>.',
+                    timer: 800,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    showLoaderOnConfirm: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        //$('#displaycshtml').load('/Account/Login');
+                        console.log('I was closed by the timer')
+                    }
+                })
+                return false;
+            });
+
+
+
+
+        });
+    </script>
+</body>
+</html>
+

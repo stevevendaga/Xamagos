@@ -1,0 +1,91 @@
+﻿@model Myvshoponline.TrainingModule
+<link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
+<title> Delete a Module</title>
+
+<h3>Are you sure you want to delete this?</h3>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div>
+    <h4 id="colorHeading">Delete a Training Module</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayName("Project Name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
+        <dt>
+            @Html.DisplayName("Project Title")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Video Url")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VideoUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Date Uploaded")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateUploaded)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Video Length")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeInMins)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activity)
+        </dd>
+
+        
+
+    </dl>
+
+  
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Back to List", "Index")|
+            <input type="submit" id="btnColor" value="Delete" class="btn btn-default" /> 
+           
+            
+        </div>
+    
+</div>
+}

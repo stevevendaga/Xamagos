@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Myvshoponline.Workdone>
+
+@{
+    ViewBag.Title = "Work Done";
+}
+<div id="content">
+    <div class="container">
+        <h2 style="font-size:14px;">Workdone [@Model.Count()]</h2>
+
+        <p>
+            <a href="~/Workdones/Create/?id=@Request.QueryString["id"]"> Create New</a>
+        </p>
+        <table class="table" style="color:black;">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>*@
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @string.Format("{0:MMM dd, yyyy}", item.Date)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>*@
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID, uid = Request.QueryString["id"] }) |
+                       <a href="~/Workdones/Delete/@item.ID?&uid=@Request.QueryString["id"]" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+        </div></div>

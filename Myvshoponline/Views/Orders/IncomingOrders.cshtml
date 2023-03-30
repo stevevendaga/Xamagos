@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Myvshoponline.Order>
+
+@{
+    ViewBag.Title = "Awaiting Delivery";
+    int UserID = Convert.ToInt32(Session["UserID"]);
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+}
+<p></p>
+<h4 style="font-size:14px;"><a href="~/Users/AdminLanding/@UserID"> << Back to Dashboard</a></h4>
+
+<div class="col-12 col-md-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="background:white;color:black;">
+            <h3 class="panel-title" style="font-family:Arial;font-size:14px">View Incoming Orders</h3>
+        </div>
+        <div class="panel-body">
+            <form method="post" action="~/Orders/IncomingOrders">
+                @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control col-6", @required = "required" })
+
+                <input type="hidden" value="@Request.QueryString["id"]" name="userid" />
+                <button type="submit" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View Incoming Orders">
+                    View Orders <i class="glyphicon glyphicon-eye-open"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+@if (Request.QueryString["sid"] != null)
+{
+<input type="hidden" id="stateid" value="@Request.QueryString["sid"]"/>
+}
+else
+{
+    <input type="hidden" id="stateid" value="@ViewBag.State" />
+}
+@{ int sid =Convert.ToInt32(Request.QueryString["sid"]);}
+<h3 style="font-size:16px;color:black;">Incoming Orders </h3>
+
+<div class="alert alert-info" style="font-size:20px;"> Counter<div id="displaycount" class="badge badge-info"></div></div>
+
+    <table id="zero_config" class="table table-responsive table-hover" style="color:black;">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.DateOrdered)
+                </th>
+
+
+
+                <th>
+                    @Html.DisplayName("ProductName")
+                </th>
+                <th>Buyer's Name</th>
+                <th>Delivery Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.Post != null)
+            {
+
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a href="~/Orders/ViewOrder/@item.ID?sid=@item.Product.Shop.StateID">@Html.DisplayFor(modelItem => item.ID)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateOrdered)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopCustomer.Name)
+                        </td>
+                        <td style="color:red">Pending</td>
+
+
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+        </tfoot>
+
+    </table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setInterval(function () {
+            GetOrders();
+        },1000);
+    });
+</script>
+
+<script type="text/javascript">
+    function GetOrders() {
+        var _stateid = document.getElementById("stateid").value;
+            var url = "/Orders/Get_IncomingOrders/";
+            $.ajax({
+                url: url,
+                data: { StateID: _stateid },
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    $.each(data, function (key, item) {
+                        var html = item.count;
+                        $("#displaycount").html(html).show();
+                    });
+                   
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+</script>
+

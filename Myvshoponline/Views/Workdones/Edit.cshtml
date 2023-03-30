@@ -1,0 +1,65 @@
+﻿@model Myvshoponline.Workdone
+
+@{
+    ViewBag.Title = "Edit Workdone";
+}
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="panel panel-success">
+                    <div class="panel-heading" style="background-color:#71BE50;opacity:0.9">
+                        <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">Edit Workdone</h3>
+                    </div>
+                    <div class="panel-body">
+
+
+
+                      
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <textarea name="Description" rows="3" cols="10" class="form-control" placeholder="Enter description of work done" required="required">@Model.Description</textarea>
+                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @Html.HiddenFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Save" class="btn btn-common" /> <a href="~/Workdones/Index/?id=@Request.QueryString["uid"]"> Back to Workdone </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+ 
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

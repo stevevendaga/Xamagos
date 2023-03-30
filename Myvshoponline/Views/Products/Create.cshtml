@@ -1,0 +1,386 @@
+﻿<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+<script src="~/TextEditor/jquery-te-1.4.0.js"></script>
+
+@model Myvshoponline.Product
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
+
+@{
+    ViewBag.Title = "Create Product";
+    int ShopID = ViewBag.ShopID;
+    string PricingPlan = db.Shops.Where(p => p.ID == ShopID).Select(p => p.User.PricingPlan.PlanName).FirstOrDefault();
+    int NumberofProducts = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofProducts).FirstOrDefault();
+    int TotalNumberofProducts = db.Products.Where(s => s.ShopID == ShopID).Count();
+}
+
+<div id="content">
+    <h5 style="font-size:12px"  class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a> &raquo; </b></h5>
+
+    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+    {
+        
+
+        @*<hr style="padding:1px;margin:10px" /><div class="col-12">
+        <div class="row">
+
+            <div class="col-md-3 col-6">
+                <ul style="font-size:14px">
+                    <li>
+                        <span style="margin-top:0px;margin-bottom:3px;">
+                            <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
+                            </a>
+
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-6">
+                <ul style="font-size:14px">
+                    <li>
+                        <span style="margin-top:0px;margin-bottom:3px;">
+                            <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+            <div class="col-md-12" style="margin-top:3px;">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+
+
+
+                <hr style="padding:1px;margin:10px" />
+    }
+    <style>
+        p {
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- Content section Start -->
+    <section class="section" style="padding:0px">
+        <div class="">
+            <div class="row justify-content-center">
+
+                @*@if (TotalNumberofProducts >= NumberofProducts)
+                {
+                    <br />
+                        <span style="color:red;font-size:11px;" class="alert alert-danger">
+                            Maximun number of products reached for your current plan for this shop.
+                        </span>
+                }
+                @if (ViewBag.TotalNumberofProductsExceeded!=null)
+                {
+                    <br />
+                    <span style="color:red;font-size:11px;" class="alert alert-danger">
+                        Maximun number of products reached for your current plan for this shop.
+                    </span>
+                }*@
+                
+                <div class="col-lg-12 col-md-12 col-12">
+                   
+                    <div class="post-job box">
+                      
+                        <form class="form-ad" method="post" action="~/Products/Create" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <b style="color:black">Create New Product</b>
+                        <div id="msg"></div>
+                                <div class="form-horizontal">
+                           
+                                   
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <input type="hidden" name="ShopID" id="shopid" value="@ViewBag.ShopID" />
+                            @if (ViewBag.ProductExist != null)
+                            {
+                                <h5 class="alert alert-danger" style="font-size:14px">@ViewBag.ProductExist </h5>
+                            }
+                                    <div class="form-group">
+                                 
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",@required="required",@id="name",@placeholder= "Product Name"} })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+
+
+                                  
+
+                                    <div class="form-group" style="color:black">
+                                        Product Description
+                                        <textarea class="textarea" name="Details" required="required" placeholder= "Product Description" id="description"></textarea>
+                                        @*<textarea rows="1" name="Details" required="required" class="Editor" placeholder= "Product Description"></textarea>*@
+                                            @*@Html.TextArea("Details", new { htmlAttributes = new { @class = "form-control", @required = "required" } })*@
+                                            @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+                                        
+                                    </div>
+                                    <div class="row" style="margin-bottom:5px;">
+                                        <div class="col-md-12">
+                                            @Html.DropDownList("ProductCategoryID", null, "-- Select Category --", htmlAttributes: new { @class = "form-control", @required = "required",@id="category" })
+                                            @Html.ValidationMessageFor(model => model.ProductCategoryID, "", new { @class = "text-danger" })
+                                        </div>
+                                        @*<div class="col-md-5">
+                                            @Html.DropDownList("ProductStatusID", null, "-- Select Product Status --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.ProductStatusID, "", new { @class = "text-danger" })
+                                        </div>*@
+                                    </div>
+                                    <div class="row" style="margin-bottom:3px">
+                                        <div class="col-md-6" style="margin-bottom:3px">
+                                           @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Enter Selling Price", @min = "1", @type = "number",@id="sellingprice" } })
+                                        @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(model => model.QuantityinStock, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Enter Quantity in Stock" ,@min="1", @type = "number",@id="qty" } })
+                                            @Html.ValidationMessageFor(model => model.QuantityinStock, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                            <div class="row">
+                                <div class="col-md-6" style="margin-bottom:3px">
+                                   
+                                    @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount Purchased", @min = "1", @type="number",@id="amountpurchased" } })
+                                    @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6">
+                                   <select name="Currency" class="form-control" required="required" id="currency">
+                                       @*<option selected disabled >Choose Currency</option>*@
+                                      
+                                       <option value="NGN">
+                                           NGN - Nigerian Naira
+                                       </option>
+                                       <option value="US $">
+                                           USD - US Dollar
+                                       </option>
+                                       <option value="EUR">
+                                          EUR - Euro
+                                       </option>
+                                       <option value="GBP">
+                                           GBP - British Pound
+                                       </option>
+                                       <option value="AUD">
+                                           AUD - Australian Dollar
+                                       </option>
+                                       <option value="CAD">
+                                           CAD - Canadian Dollar
+                                       </option>
+                                       <option value="JPY">
+                                           JPY - Japanese Yen
+                                       </option>
+                                       <option value="SGD">
+                                           SGD - Singapore Dollar
+                                       </option>
+                                   </select>
+                                </div>
+                            </div>
+                                   
+                                          <div class="row" style="background-color:#F2F7FB;margin-top:5px;">
+                                              <div class="alert alert-danger">
+                                                  Note: Amount purchased is not visible to visitors<br />
+                                                  @*It is confidential and is only used by the software to calculate profit/loss after sales.*@
+                                              </div>
+                                        
+                                        @*<div class="col-md-5">
+                                            <strong style="color:black">Product Picture</strong>
+                                            <input type="file" name="files" id="uploadFile" style="width:100%;background-color:#F2F7FB" class="btn btn-default" />
+                                        </div>*@
+@*@if (TotalNumberofProducts < NumberofProducts)
+{*@
+                                        <div class="col-md-6" style="padding-top:0px;margin-top:0px;">
+                                            <input type="button" id="btnSave" value="Add Product" class="btn btn-common" onclick="return doCreate()" />
+                                            <button type="button" class="btn btn-common" disabled id="loadspinner" style="display:none;padding:15px;width:170px">
+                                                <div class="spinner-container">
+                                                    <div class="loading-spinner"></div>
+                                                </div>
+                                            </button>
+                                        </div>
+@*}*@
+                                    </div>
+                                    
+                                    
+                                           
+                                        
+                                </div></form>
+                          </div></div></div></div></section> </div>
+
+                            @section Scripts {
+                                @Scripts.Render("~/bundles/jqueryval")
+                            }
+
+<script type="text/javascript">
+                    function CheckFileName() {
+                        var fileName = document.getElementById("uploadFile").value
+                        //debugger;
+                        if (fileName == "") {
+                            alert("Browse to upload a valid File with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG")
+                            return true;
+                        else {
+                            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png");
+                            return false;
+                        }
+                        return true;
+                    }
+</script>
+
+
+<script type="text/javascript">
+    var maxSize = '15';
+    function fileSizeValidate(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize > maxSize) {
+                alert('Maximum file size exceeded! Image size should not be larger than 15KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+   
+</script>
+
+<script type="text/javascript">
+    var minSize = '12';
+    function fileSizeValidateMin(fdata) {
+        if (fdata.files && fdata.files[0]) {
+            var fsize = fdata.files[0].size / 1024;
+            if (fsize < minSize) {
+                alert('Minimum file size not reached! Image size should not be less than 12KB');
+                document.getElementById("uploadFile").value = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+        $('.Editor').jqte();
+
+        // settings of status
+        var jqteStatus = true;
+        $(".status").click(function () {
+            jqteStatus = jqteStatus ? false : true;
+            $('.Editor').jqte({ "status": jqteStatus })
+        });
+</script>
+
+
+<script type="text/javascript">
+    function doCreate() {
+
+        var _name = document.getElementById("name").value.replace(/\s+/g, ' ').trim();
+        var _description = document.getElementById("description").value;
+        var _category = document.getElementById("category").value;
+        var _sellingprice = document.getElementById("sellingprice").value;
+        var _purchasedprice = document.getElementById("amountpurchased").value;
+        var _qty = document.getElementById("qty").value;
+        var _currency = document.getElementById("currency").value;
+        var _shopid = document.getElementById("shopid").value;
+             if (_name == '') {
+                 $("#name").css("borderColor", "red");
+                 $("#name").focus();
+             }
+             else if (_category == '') {
+                 $("#category").css("borderColor", "red");
+                 $("#category").focus();
+             }
+            else if (_sellingprice == '') {
+                $("#sellingprice").css("borderColor", "red");
+                $("#sellingprice").focus();
+            }
+            else if (_purchasedprice == '') {
+                $("#amountpurchased").css("borderColor", "red");
+                $("#amountpurchased").focus();
+                return false;
+            }
+            else if (_qty == '') {
+                $("#qty").css("borderColor","red");
+                $("#qty").focus();
+                return false;
+            }
+           
+            else {
+                
+                    $("#name").css("borderColor", "green");
+                    $("#category").css("borderColor", "green");
+                    $("#sellingprice").css("borderColor", "green");
+                    $("#amountpurchased").css("borderColor", "green");
+                    $("#qty").css("borderColor", "green");
+                    $("#loadspinner").css("display", "block");
+                    $("#btnSave").css("display", "none");
+                    var url = "/Products/SaveproductAjax/";
+                    $.ajax({
+                        url: url,
+                        data: {shopid:_shopid,name:_name,details:_description ,categoryid:_category,sellingamount:_sellingprice,qty:_qty,purchaseprice:_purchasedprice,currency:_currency},
+                        cache: false,
+                        type: "GET",
+                        success: function (data) {
+                                    $("#loadspinner").css("display", "none");
+                                    $("#btnSave").css("display", "block");
+                                    
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Product added successfully',
+                                        showConfirmButton: false,
+                                        timer: 1800,
+                                        padding:'1em',
+                                        width: '600px',
+                                        height:'30px',
+                                    })
+
+                                    document.getElementById("name").value="";
+                                    document.getElementById("description").value = "";
+                                    document.getElementById("category").value = "";
+                                    document.getElementById("sellingprice").value = "";
+                                    document.getElementById("amountpurchased").value = "";
+                                    document.getElementById("qty").value = "";
+
+                                    $("#name").css("borderColor", "");
+                                    $("#category").css("borderColor", "");
+                                    $("#sellingprice").css("borderColor", "");
+                                    $("#amountpurchased").css("borderColor", "");
+                                    $("#qty").css("borderColor", "");
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                    return true;
+
+            }
+
+        }
+</script>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Myvshoponline.DeliveryAgentAllocation>
+
+@{
+    ViewBag.Title = "Index";
+}
+<p></p>
+<h2 style="font-size:14px;">Delivery Agent Allocation</h2>
+
+<table class="table table-hover table-responsive" id="zero_config" style="color:black;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayName("State")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="~/DeliveryAgentAllocations/ItemDelivered?alloid=@item.ID">   
+                    @Html.DisplayFor(modelItem => item.User.CompanyName)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayName("State")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+
+            <th></th>
+        </tr>
+    </tfoot>
+</table>

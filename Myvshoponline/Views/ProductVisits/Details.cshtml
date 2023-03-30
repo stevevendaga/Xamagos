@@ -1,0 +1,50 @@
+﻿@model Myvshoponline.ProductVisit
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProductVisit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VisitorIP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VisitorIP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductSubProduct.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductSubProduct.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

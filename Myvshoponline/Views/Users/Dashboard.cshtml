@@ -1,0 +1,290 @@
+
+<style>
+    .fade {
+        -webkit-transform: translate(0, -25%);
+        -ms-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+        -webkit-transition: -webkit-transform 0.3s ease-out;
+        -moz-transition: -moz-transform 0.3s ease-out;
+        -o-transition: -o-transform 0.3s ease-out;
+        transition: transform 0.3s ease-out;
+        position: center;
+    }
+</style>
+@model IEnumerable<Myvshoponline.User>
+@using Myvshoponline.Controllers;
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+
+
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
+    @*<div class="modal-dialog modal-dialog-centered">*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" style="font-size:14px">Upload Photo</h5>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("UploadLogo", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" value="@Session["UserID"]" name="UserID" />
+                @*<h5 style="color:red;font-size:12px">
+                    ** Note **
+                    &raquo;  Image size should not be less than 12KB and greater than 15 KB
+                    </h5><hr />*@
+                <font color="black">
+                    @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
+                    <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" />
+                </font><hr />
+                <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
+            }
+        </div>
+        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+    </div>
+
+    @*</div>*@
+</div>
+
+@{
+    ViewBag.Title = ViewBag.CompanyName;
+}
+@{
+    int UserID = ViewBag.CompanyID;
+    string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+    int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+    int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+
+    int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+
+    int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+    int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+    int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+
+    int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+    int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+    int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+
+    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+    DateTime prevd = new DateTime(pYear, pmonth, pday);
+    TimeSpan diff = lauchd.Subtract(prevd);
+    ViewBag.diff = diff.Days;
+    ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+    ViewBag.Ndays = db.Users.Find(UserID).NDays;
+
+
+    string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+    int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+    int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+    double TotalDaysRemaining = Fixeddays - DaysUsed;
+
+    var totalDays = TotalDaysRemaining;
+    var totalYears = Math.Truncate(totalDays / 365);
+    var totalMonths = Math.Truncate((totalDays % 365) / 30);
+    var remainingDays = Math.Truncate((totalDays % 365) % 30);
+
+}<!-- Start Content -->
+<body style="background-color:#f5fcff">
+</body>
+<div id="content">
+  <div class="">
+    <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px"><i class="nav-icon fas fa-user-circle" style="fill:Background"></i> WELCOME,  @ViewBag.CompanyName.ToUpper()</span>
+    <div class="row" style="text-align:center">
+      <input type="hidden" id="shopid" value="@ViewBag.CompanyID" />
+      <div class="col-6 col-md-4">
+        <div class="panel panel-primary" style="background-color:#17A2B8">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:20px">
+              <i class="fa fas fa-store"></i>
+            </h3>
+          </div>
+          <div class="panel-body">
+
+            <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
+              <a href="~/Users/Manageshop?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Manage Shop" id="manageshop"> Manage Shop</a>
+
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="panel panel-primary" style="background-color:#17A2B8">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px;">
+              <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
+              <a href="~/Orders/MyOrders/@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="My Purchases"> My Purchases</a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="panel panel-primary" style="background-color:#17A2B8">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">
+              <i class="nav-icon fas fa-user-circle" style="font-size:20px;color:white;"></i>
+
+            </h3>
+          </div>
+          <div class="panel-body">
+            <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
+              <a href="~/Users/MyProfile?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Profile">Profile</a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-6">
+        <div class="panel panel-primary" style="background-color:#17A2B8">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">
+              <i class="nav-icon fas fa-user-secret" style="font-size:20px;color:white;"></i>
+
+            </h3>
+          </div>
+          <div class="panel-body">
+            <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
+              <a href="~/Users/AccountVerification?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Account Verification">Identity Verification</a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="panel panel-primary" style="background-color:#17A2B8">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">
+              <i class="lni-rocket" style="font-size:20px;color:white;"></i>
+
+            </h3>
+          </div>
+          <div class="panel-body">
+            <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
+              <a href="~/Users/AccountUpgrade?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Account Verification">Upgrade Account</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+        </div>
+<!-- End Content -->
+
+
+<script type="text/javascript">
+function CheckFileName() {
+var fileName = document.getElementById("uploadFile").value
+//debugger;
+if (fileName == "") {
+alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+return false;
+}
+else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+return true;
+else {
+alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+return false;
+}
+return true;
+}
+</script>
+
+
+<script type="text/javascript">
+var maxSize = '15';
+function fileSizeValidate(fdata) {
+if (fdata.files && fdata.files[0]) {
+var fsize = fdata.files[0].size / 1024;
+if (fsize > maxSize) {
+alert('Maximum file size exceed! Image size should not be larger than 15KB');
+document.getElementById("uploadFile").value = null;
+return false;
+} else {
+return true;
+}
+}
+}
+</script>
+
+<script type="text/javascript">
+var minSize = '12';
+function fileSizeValidateMin(fdata) {
+if (fdata.files && fdata.files[0]) {
+var fsize = fdata.files[0].size / 1024;
+if (fsize < minSize) {
+alert('Minimum file size not reached! Image size should not be less than 12KB');
+document.getElementById("uploadFile").value = null;
+return false;
+} else {
+return true;
+}
+}
+}
+</script>
+
+<script type="text/javascript">
+function myFunction(x) {
+if (x.matches) { // If media query matches
+// document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
+document.getElementById("companydetailsmobile").style.display = "block";
+document.getElementById("companydetails").style.display = "none";
+document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
+
+
+document.getElementById("companyheadermobile").style.display = "block";
+document.getElementById("companyheader").style.display = "none";
+document.getElementById("companyheadermobile").innerHTML = document.getElementById("companyheader").innerHTML;
+document.getElementById("companyname").style.display = "none";
+document.getElementById("ondesktopname").style.display = "none";
+document.getElementById("contactinfo").style.display = "none";
+document.getElementById("shopdetailsmobile").style.display = "block";
+document.getElementById("shopdetails").style.display = "none";
+document.getElementById("shopdetailsmobile").innerHTML = document.getElementById("shopdetails").innerHTML;
+document.getElementById("companynameonlymobile").style.display = "block";
+document.getElementById("companynameonlymobile").innerHTML = document.getElementById("ondesktopname").innerHTML;
+
+
+
+
+} else {
+document.getElementById("companydetailsmobile").style.display = "none";
+document.getElementById("companydetails").style.display = "block";
+document.getElementById("companyheadermobile").style.display = "none";
+document.getElementById("companyheader").style.display = "block";
+document.getElementById("contactinfo").style.display = "block";
+
+}
+}
+
+var x = window.matchMedia("(max-width: 700px)")
+myFunction(x) // Call listener function at run time
+x.addListener(myFunction) // Attach listener function on state changes
+</script>
+
+<!-- Content section End -->
+<script type="text/javascript">
+$('.Editor').jqte();
+
+// settings of status
+var jqteStatus = true;
+$(".status").click(function () {
+jqteStatus = jqteStatus ? false : true;
+$('.Editor').jqte({ "status": jqteStatus })
+});
+</script>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

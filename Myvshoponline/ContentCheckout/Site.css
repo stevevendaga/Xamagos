@@ -1,0 +1,363 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 30px; 
+    background-color: #E5EAEE; 
+    
+        
+}
+
+
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 5px;
+    padding-right: 5px;     
+    
+    /*margin:0px 50px;
+    background-color:#CECECE;
+    align-items:center;*/
+    
+    
+}
+
+.container {
+    padding-left: 5px;
+    padding-right: 5px;  
+    
+}
+
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+#colorHeading{
+    color:#346CC0;
+}
+
+#btnColor{
+    background-color:#346CC0;
+    color:white;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#sideTitle{
+    text-decoration:none;    
+    /*background-color:#A6A6FF;*/
+    margin:0px;    
+    font-family:'Franklin Gothic Book';
+    font-size:16px;       
+    min-height:550px; 
+    padding:6px 0px;
+}
+
+#sideTitleInner{
+    text-decoration:none;    
+    background-color:#9AAFCF;
+    margin:0px;
+    padding:6px 6px;
+    
+}
+
+#sideTitleInner:hover{
+    background-color:#2B579A;
+    color:white; 
+}
+
+#sideTitle a{
+    color:black; 
+}
+
+#sideTitle a:hover{
+    color:#f0f0f0;
+}
+
+a:hover{
+    text-decoration:none;
+    color:black;    
+}
+
+#hrID{
+    border-color:#C4C4FF;
+    border-width:0px;
+    margin:2px 0px;
+       
+    padding:0px;
+}
+
+#buttons{
+    float:left; 
+    color:white; 
+    text-decoration:none;
+    font-size:15px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#navigations{
+    width:100px;
+    
+    border:2px solid #C4C4FF;
+    color:white; 
+    background-color:#2B579A;
+
+    font-size:15px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+#navigations:hover {
+    background-color:#5A8AD1;
+
+}
+
+
+
+
+#MiddleButton{ 
+    height:20px;
+    color:black; 
+    text-decoration:none;
+    font-size:12px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align:center;
+    background-color:#CECEFF;
+
+/*top right left  bottom*/
+    margin:1% 1% 1% 25%;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom:20px;
+}
+
+#myBtn:hover {
+  background-color: #555;
+}
+
+#mybtn1{
+    background-color:#1C9A9D;
+    color:white;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+}
+
+#mybtn1:hover {  
+  background-color: #87E7E9;
+  color: black;
+}
+
+#btnProject{
+    border:2px solid #1C9A9D; 
+    margin-top:2px;
+    color:#1C9A9D;
+    font-size:15px;
+    font-family:'Trebuchet MS';
+    
+}
+
+#btnProject:hover{
+    background-color: #1C9A9D;
+    color: white;
+}
+
+#btnLogin{
+    background-color: #1C9A9D;
+    border:2px solid white;     
+    padding:3px 22px; 
+    margin-top:7px;
+    color: white;
+    font-size:17px;
+    font-family:'Trebuchet MS';
+    border-radius:20px;
+}
+
+#LetMe{
+    background-color:#1C9A9D; 
+    border:2px solid white;     
+    color:white; 
+    font-size:15px; 
+    font-family:'Century Gothic'; 
+    font-weight:600; 
+    width:100%; 
+    margin:0px;
+    
+}
+
+#LetMe:hover{
+    background-color: #45D8DC;
+    color: white;
+    border:2px solid #1C9A9D; 
+}
+
+#btnLogin:hover{
+    background-color: #45D8DC;
+    color: white;    
+    border:2px solid white;
+
+}
+
+#loginInputs{   
+    background-color: #FFF7C6;    
+    line-height:3em;
+    padding:10px; 
+    border:2px solid #70D8C0;   
+    font-family:Arial;
+    border-radius:0px;
+    box-shadow:none;
+    
+    
+}
+
+#moduleLabels{
+   font-size:17px;
+   font-family:'Trebuchet MS';
+   color: #1FAAAD;
+}
+
+#inputTrainings{
+    max-width:none; 
+    border:1px solid #818181;
+    border-radius:0px; 
+    line-height:1.2em; 
+    font-size:17px; 
+    font-family:'Century Gothic'; 
+    padding:6px;
+}
+
+#trainingLink{
+    font-size:15px; 
+    font-family:'Century Gothic'; 
+    color: #FF8A15;
+}
+
+#toolbars{
+    color:#70D8C0;
+}
+
+#toolbars:hover{
+    color:white;
+}
+
+#readMore{
+    border-radius:15px;
+    background-color:#FFCB97;
+    color:black;
+    box-shadow:none;
+    border:none;
+
+
+}
+
+#readMore:hover{
+    background-color:#FF8A15;
+    color:white;
+
+}
+
+
+#comment{
+   border-radius:10px 10px 10px 10px; 
+       margin-bottom:5px; 
+       padding:5px 10px;
+       border-left:8px solid #D6691B; 
+       background-color:#F3F3F3; 
+       font-size:17px;
+}
+
+#commentDetails{
+    font-size:20px;
+    font-family:Arial;
+    line-height:1.5em;
+}
+
+#commentBtn{
+    max-width:none;
+    background-color:#1C9A9D; 
+    color:black; width:100%; 
+    font-family: 'Century Gothic'; 
+    font-size:16px; 
+    font-weight:500;
+    border:1px solid #B3B3FF;
+}
+
+#commentBtn:hover{
+    background-color:#26D5D9;
+    color:white;
+
+}
+
+#homeDiv{
+    background-color:white;
+    border-radius:0px;
+    padding:10px; margin:0px; box-shadow:0.5px 1px 2px 1px; width:300px; height:425px;
+    /*border-radius:0px 0px 13px 13px;*/
+}
+
+
+/*
+#bagroundImage {
+      
+    background-image: url('../Images/Image2.jpeg');
+    width: 95%;
+    height: 500px;
+    background-size: 200%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+    */
+#footer{
+    text-align:center;
+    background-color:black;
+    color:#B2B2B2;
+    padding:10px;
+    margin-top:20px;
+    margin-right:-80px;
+}
+
+
+#readMoreText{
+    background-color:#ECECFF;
+    font-size:20px;
+    width:100%;
+    min-height:400px;
+}
+
+#readbtn{
+    background-color:#2E5FA7; 
+    font-size:20px; 
+    text-align:center;
+    color:white; 
+    border:none; 
+    border-radius:23px;
+    padding:5px 15px;
+}
+
+#readbtn:hover{
+    background-color:#6693D5; 
+    color:white;
+}
+

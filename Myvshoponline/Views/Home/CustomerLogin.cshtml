@@ -1,0 +1,88 @@
+﻿
+<br />
+<!-- Page Header End -->
+<!-- Content section Start -->
+@{
+    ViewBag.Title = "Login";
+}
+<body style="background-image:url(../images/bg1.jpg);background-size:cover;">
+</body>
+<section id="content" class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-6 col-xs-12" style="background-color:#F2F4F6">
+
+                <div class="page-login-form box">
+                    @if (ViewBag.ax != null)
+                    {
+                        <div class="alert alert-success">@ViewBag.AccountCreated</div>
+                    }
+                    <h3>
+                        Login
+                    </h3>
+                    <form class="login-form" method="post" action="~/Home/CustomerLogin">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="dcity" value="@ViewBag.dcity" />
+                        <div class="form-group">
+                            @if (ViewBag.UserNotExist != null)
+                            {
+                                <h6 style="color:red">@ViewBag.UserNotExist!</h6>
+                            }
+                            @if(ViewBag.SID!=null)
+                            {
+                                <input type="hidden" name="shopid" value="@ViewBag.SID" />
+                            }
+
+                            @if (ViewBag.pid != null && ViewBag.quantity!=null)
+                            {
+                                
+                                <input type="hidden" name="pid" value="@ViewBag.pid" />
+                                <input type="hidden" name="quantity" value="@ViewBag.quantity" />
+                                <input type="hidden" name="Visitor" value="@ViewBag.v" />
+                                <input type="hidden" name="src" value="@ViewBag.src" />
+                                <input type="hidden" name="negotiate" value="@ViewBag.negotiate" />
+                            }
+                            
+                            <div class="input-icon">
+                                <i class="lni-envelope"></i>
+                                <input type="text" id="sender-email" class="form-control" name="Username" placeholder="Email or Phone Number" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon">
+                                <i class="lni-lock"></i>
+                                <input type="password" class="form-control" name="Password" placeholder="Password" required="required">
+                            </div>
+                        </div>
+                        @*<div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Keep Me Signed In</label>
+                            </div>*@
+                        <button class="btn btn-common log-btn">LOGIN</button>
+                    </form>
+                    @*<ul class="form-links">
+                        <li class="text-center"><a href="~/Users/Create">Don't have an account?<font style="color:#33C6F6;"> Signup</font></a></li>
+                    </ul>*@
+
+                    <ul class="form-links">
+                        <li class="text-center"><a href="~/Home/ForgotpasswordCustomer" style="color:#33C6F6;">Forgot your password?</a></li>
+                    </ul>
+
+                    <ul class="form-links">
+                        <li class="text-center">
+                            <span style="color:black"> Don't have an account?</span> 
+                            <a href="~/ShopCustomers/Create?id=16797&v=1" title="Create Account" style="color:#33C6F6">Create Now </a>
+                        </li>
+                    </ul>
+                    <div>
+                        
+                    </div>
+                   
+</div>
+               
+            </div>
+           
+        </div>
+        
+    </div>
+</section>

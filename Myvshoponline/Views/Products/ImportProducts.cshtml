@@ -1,0 +1,324 @@
+﻿@model IEnumerable<Myvshoponline.Product>
+
+@{
+    ViewBag.Title = "Upload Products";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+}
+
+
+<div id="content" style="margin-top:0px;">
+    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID">Back to Products Menu </a></b></h5>
+
+    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
+    {
+        <hr style="padding:1px;margin:10px" />
+
+        @*<div class="col-12">
+        <div class="row">
+            <div class="col-md-3 col-6">
+                <ul style="font-size:14px">
+                    <li>
+                        <span style="margin-top:0px;margin-bottom:3px;">
+                            <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
+                            </a>
+
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-6">
+                <ul style="font-size:14px">
+                    <li>
+                        <span style="margin-top:0px;margin-bottom:3px;">
+                            <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+            <div class="col-md-12" style="margin-top:3px;">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <ul style="font-size:14px">
+                            <li>
+                                <span style="margin-top:0px;margin-bottom:3px;">
+                                    <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                        <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr style="padding:1px;margin:10px" />*@
+    }
+    <span class="badge badge" style="font-size:14px;" >
+        <i class="glyphicon glyphicon-upload"></i>
+    Import Products</span>
+    <hr />
+    @if (Request.QueryString["upload"] == "true")
+    {
+
+    }
+    else
+    {
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color:#0BACE1;">
+                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px"> STEP 1 - Download Excel Template</h3>
+                </div>
+                <div class="panel-body">
+                    
+                    <p>Kindly download products upload template below and product categories. Copy Product_Category
+ from product categories and paste into Product_Category in products template.
+                    <span style="margin-top:0px;">
+                        <a href="~/Products/Download_Products_template?id=@Request.QueryString["id"]" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                            <font style="color:white">  <i class="glyphicon glyphicon-download"></i> Download Product Template</font>
+                        </a>
+                    </span>
+                    <br />
+                    <span style="margin-top:5px;">
+                        <a href="~/Products/Download_Product_Categories?id=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;margin-top:3px;width:100%">
+                            <font style="color:white">  <i class="glyphicon glyphicon-download"></i> Download Product Categories</font>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color:#0BACE1;">
+                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">STEP 2 - Upload</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Upload_Products", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <p>
+                    Browse to upload the complete Product_Upload_Template.
+                        </p>
+                    <input type="hidden" name="MainShopID" id="shopid" value="@Request.QueryString["id"]" />
+                    <p></p>
+                        <input type="file" name="file" id="uploadFile" style="width: 100%;" />
+                        <br /><br />
+                        <input type="submit" name="submit" value="Upload Now" class="btn btn-info" onclick="return CheckFileName();">
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    }
+
+    @*<h5 style="font-size:14px;"> Total Products Uploaded:<span class="badge badge-info">@Model.Count()</span> </h5>
+    <span style="margin-top:5px;">
+        <a href="~/Products/Download_Product_Categories?id=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+            <font style="color:white">  <i class="glyphicon glyphicon-cloud-upload"></i> Publish Selected</font>
+        </a>
+    </span><p></p>
+<table class="table table table-striped table-hover table table-responsive" style="color:black;">
+    <tr>
+        <th>
+           
+        </th>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Details)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+          Qty
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th>
+           Category
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.ProductStatu.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Shop.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @if (item.ProductStatusID==2)
+            {
+            <input type="checkbox" id="@item.ID" value="@item.ID" onclick="cbox(this.value)" checked />
+            }
+           
+        </td>
+        <td>
+            @{
+                string ImageName= item.ID + ".jpg";
+                int UserID = (int)Session["UserID"];
+                string ShopName = db.Shops.Find(item.ShopID).Name;
+                string businessname = db.Users.Find(UserID).CompanyName;
+               string image="../../BusinessImages/" + businessname + "/" + ShopName + "/" + ImageName;
+                
+            }
+            <img src="@image" style="width:50px; border-radius:60px" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Details)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QuantityinStock)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductCategory.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductStatu.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Shop.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+    <span style="margin-top:5px;">
+        <a href="~/Products/Download_Product_Categories?id=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+            <font style="color:white">  <i class="glyphicon glyphicon-cloud-upload"></i> Publish Selected</font>
+        </a>
+    </span>*@
+</div>
+
+<script type="text/javascript">
+            function CheckFileName() {
+                var fileName = document.getElementById("uploadFile").value
+                //debugger;
+                if (fileName == "") {
+                    alert("Browse to upload a valid excel workbook");
+                    return false;
+                }
+                else if (fileName.split(".")[1].toUpperCase() == "XLS" || fileName.split(".")[1].toUpperCase() == "XLSX")
+                    return true;
+                else {
+                    alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid excel workbook");
+                    return false;
+                }
+                return true;
+            }
+</script>
+
+        <script>
+        function cbox(_select) {
+            if (document.getElementById(_select).checked) {
+                select(_select);
+               //count_selected();
+            }
+            else {
+
+                deselect(_select);
+                //count_selected();
+            }
+        }
+        </script>
+
+<script type="text/javascript">
+            function select(_select) {
+                var url = "/Products/Select_product_for_publishing/";
+                $.ajax({
+                    url: url,
+                    data: { pid: _select },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>
+
+<script type="text/javascript">
+            function deselect(_select) {
+                var url = "/Products/De_selectProduct_for_publishing/";
+                
+                $.ajax({
+                    url: url,
+                    data: { pid: _select },
+                    cache: false,
+                    type: "GET",
+                    success: function (data) {
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>
+
+<script type="text/javascript">
+            function count_selected() {
+                var url = "/Products/Count_Selected/";
+                var _shopid = document.getElementById("shopid").value;
+                $.ajax({
+                    url: url,
+                    data: {shopid:_shopid},
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            $("#total").html(item.CountTotal).show();
+                        });
+
+                    },
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+</script>

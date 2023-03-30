@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Myvshoponline.SocialMediaAd>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Store")
+        </th>
+        <th>
+            @Html.DisplayName("Product")
+        </th>
+        <th>
+            @Html.DisplayName("Channel")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Locations)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TargetPeople)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalDaysPaid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatePaid)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.RefNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentStatus)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmountPaid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DaysActive)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.PopularStoreStatu.Status)
+        </th>
+       
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="~/SocialMediaAds/Details/@item.ID">    @Html.DisplayFor(modelItem => item.Shop.Name)</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Name)
+        </td>
+      
+        <td>
+            @Html.DisplayFor(modelItem => item.SocialMediaChannel.Channel)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Locations)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TargetPeople)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalDaysPaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatePaid)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.RefNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentStatus)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmountPaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DaysActive)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.PopularStoreStatu.Status)
+        </td>
+       
+        @*<td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>*@
+    </tr>
+}
+
+</table>

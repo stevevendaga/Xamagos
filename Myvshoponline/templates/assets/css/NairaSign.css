@@ -1,0 +1,35 @@
+﻿
+ .NairaSign {
+    text-decoration: none;
+    position: relative;
+}
+.NairaSign:after {
+        content: ' ';
+        font-size: inherit;
+        display: block;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 40%;
+        bottom: 40%;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+}
+
+ .NairaSignBold {
+    text-decoration: none;
+    position: relative;
+}
+.NairaSignBold:after {
+        content: ' ';
+        font-size: inherit;
+        display: block;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 40%;
+        bottom: 40%;
+        border-top: 3px solid #000;
+        border-bottom: 3px solid #000;
+}
+

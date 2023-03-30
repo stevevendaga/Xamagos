@@ -1,0 +1,119 @@
+﻿@using Myvshoponline.Models
+@using Myvshoponline.Models 
+@model LoginViewModel
+  
+<link href="~/Content/MaterialLogin.css" rel="stylesheet" />
+
+<title>V-Shop</title>
+
+<body style="background-color:#E5EAEE;">
+
+    <div class="row" style="background-color:#E5EAEE; margin:auto;">
+      
+
+        <div class="col-md-4" style="text-align:center;"></div>
+        <div class="col-md-4" style="text-align:center;">
+            <hgroup>
+                <h1>Please Login</h1>
+            </hgroup>
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                if (ViewBag.UserNotExist != "")
+                {
+                    <h4 style="color:red; text-align:center;"> @ViewBag.UserNotExist </h4>
+                }
+
+                <form>
+                    <!-- Content section Start -->
+                    <section id="content" class="section-padding">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-5 col-md-6 col-xs-12">
+                                    <div class="page-login-form box">
+                                        <h3>
+                                            Login
+                                        </h3>
+                                        <form class="login-form">
+                                            <div class="form-group">
+                                                <div class="input-icon">
+                                                    <i class="lni-user"></i>
+                                                    <input type="text" id="sender-email" class="form-control" name="email" placeholder="Username">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-icon">
+                                                    <i class="lni-lock"></i>
+                                                    <input type="password" class="form-control" placeholder="Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                <label class="form-check-label" for="exampleCheck1">Keep Me Signed In</label>
+                                            </div>
+                                            <button class="btn btn-common log-btn">Submit</button>
+                                        </form>
+                                        <ul class="form-links">
+                                            <li class="text-center"><a href="register.html">Don't have an account?</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Content section End -->
+
+
+
+            }
+
+        </div>
+
+    <div class="col-md-4" style="text-align:center;"> </div>
+        </div>
+
+    
+    
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $(window, document, undefined).ready(function () {
+
+        $('input').blur(function () {
+            var $this = $(this);
+            if ($this.val())
+                $this.addClass('used');
+            else
+                $this.removeClass('used');
+        });
+
+        var $ripples = $('.ripples');
+
+        $ripples.on('click.Ripples', function (e) {
+
+            var $this = $(this);
+            var $offset = $this.parent().offset();
+            var $circle = $this.find('.ripplesCircle');
+
+            var x = e.pageX - $offset.left;
+            var y = e.pageY - $offset.top;
+
+            $circle.css({
+                top: y + 'px',
+                left: x + 'px'
+            });
+
+            $this.addClass('is-active');
+
+        });
+
+        $ripples.on('animationend webkitAnimationEnd mozAnimationEnd oanimationend MSAnimationEnd', function (e) {
+            $(this).removeClass('is-active');
+        });
+
+    });
+</script>

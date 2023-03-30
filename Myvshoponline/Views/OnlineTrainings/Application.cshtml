@@ -1,0 +1,153 @@
+﻿@model Myvshoponline.OnlineTraining
+
+@{
+    ViewBag.Title = "Online Training Portal";
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+}
+@using Myvshoponline.Controllers;
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="panel panel-success">
+                    <div class="panel-heading" style="background-color:#71BE50;opacity:0.9">
+                        <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:16px">Training</h3>
+                        </div>
+                    <p class="alert alert-info">
+                        Learn how to sell on MarketSquare247 and make money without buying, storing,
+                        owning or shipping products. NO WEBSITE, ZERO SKILLS REQUIRED.
+                    </p>
+                    <div class="panel-body">
+
+                        <span style="font-weight:bold;color:blue;">Existing User?<br /><hr /></span>
+                        
+                        @if (Request.QueryString["err"] != null)
+                        {
+                            <h5 style="color:red;font-size:14px;">Access denied, try again!</h5>
+                        }
+                        <form method="post" action="~/OnlineTrainings/Login">
+                            <div class="row">
+
+                                <div class="col-md-4" style="margin-top:7px;">
+
+                                    <input type="text" name="email" placeholder="Enter your email" class="form-control" required="required" />
+                                </div>
+                                <div class="col-md-4" style="margin-top:7px;">
+                                    <input type="password" name="password" placeholder="Enter your password" class="form-control" required="required" />
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="submit" value="Login" class="btn btn-common" />
+                                </div>
+                            </div>
+                        </form>
+                        
+                      
+                        @if (ViewBag.CredentialsUsed != null)
+                        {
+                            <div class="alert alert-danger">@ViewBag.CredentialsUsed</div>
+                        }
+                        <hr style="margin-top:2px;" />
+
+                        <span style="font-weight:bold;color:green;color:white;font-size:18px" class="badge badge-info">New Enrolment<br /></span>
+                        <p>Kindly fill the form below to enrol.</p>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="row">
+
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", @placeholder = "Surname", @required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                                    </div>
+
+
+
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.OtherNames, new { htmlAttributes = new { @class = "form-control", @placeholder = "Other Names", @required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.OtherNames, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.DropDownList("SexID", null, "-- Select Sex --", htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.SexID, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Address", @required = "required", @type = "email" } })
+                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        @Html.DropDownList("StateOriginID", null, "-- Select State of Origin --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.StateOriginID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.LGAResidence, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Local Government of Residence" } })
+                                        @Html.ValidationMessageFor(model => model.LGAResidence, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-5">
+                                        @Html.DropDownList("StateResidenceID", null, "-- Select State of Residence --", htmlAttributes: new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.StateResidenceID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "City/Town" } })
+                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Choose Password", @type = "password" } })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <textarea name="ContactAddress" class="form-control" rows="3" cols="10" placeholder="Contact Address" required="required"></textarea>
+                                        @Html.ValidationMessageFor(model => model.ContactAddress, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <input type="submit" value="Enrol Now" class="btn btn-common" />
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Save and Continue" class="btn btn-common" />
+                                        </div>
+                                    </div>*@
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Myvshoponline.User>
+
+@{
+    ViewBag.Title = "Bonus Percentage";
+}
+<div id="content">
+    <div class="container">
+        <div class="col-md-4">
+            <h4 style="font-size:16px;">Set Bonus Percentage</h4>
+            <form method="post" action="~/Users/Bonus">
+                <input type="number" min="1" class="form-control" name="discount" placeholder="Discount Percentage" required="required" />
+                <br />
+                <input type="number" min="1" class="form-control" name="bonus" placeholder="Bonus Percentage"  required="required" />
+                <br />
+                <input type="submit" value="Set Now" class="btn btn-success" style="padding:3px;" />
+
+            </form><hr />
+
+            <span style="color:black">Percentage Settings</span><br />
+
+            <span style="color:mediumvioletred">Discount Percentage: </span>@ViewBag.DiscountPercentage <br />
+            <span style="color:green">Bonus Percentage: </span>@ViewBag.BonusPercentage
+        </div>
+        </div></div>

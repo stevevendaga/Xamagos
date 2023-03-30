@@ -1,0 +1,47 @@
+﻿@model Myvshoponline.User
+
+@{
+   
+    ViewBag.Title = "Signup";
+}
+<body style="background-color:#FBFBFB"></body>
+
+    <section id="content" class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-xs-12">
+                                
+                    <p style="font-size:14px; background-color:darkblue;color:white"> Briefly Describe Your Business</p>
+                                      
+                           
+                    <form method="post" action="~/Users/CreateDescription">
+                        @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-list"></i>
+                                    <textarea class="Editor" name="Description">@Model.Description</textarea>
+    @*@Html.TextArea("Description", new { htmlAttributes = new { @class = "Editor", @required = "required" } })*@
+                                </div>
+                            </div>
+
+                            <button class="btn btn-common log-btn mt-3">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- Content section End -->
+<script type="text/javascript">
+    $('.Editor').jqte();
+
+    // settings of status
+    var jqteStatus = true;
+    $(".status").click(function () {
+    jqteStatus = jqteStatus ? false : true;
+    $('.Editor').jqte({ "status": jqteStatus })
+    });
+</script>
+   @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

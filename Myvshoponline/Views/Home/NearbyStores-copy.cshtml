@@ -1,0 +1,122 @@
+﻿<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<h3>My Google Maps Demo</h3>
+<div id="floating-panel">
+    <input id="address" type="text" value="Sydney, NSW" />
+    <input id="submit" type="button" value="Geocode" />
+</div>
+<!--The div element for the map -->
+<div id="map"></div>
+
+<style>
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+</style>
+
+<!--GEOCODING-->
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+</script>
+
+<script>
+      "use strict";
+
+      let map, infoWindow;
+
+      function initMap() {
+          map = new google.maps.Map(document.getElementById("map"), {
+              center: {
+                  lat: -34.397,
+                  lng: 150.644
+              },
+              zoom: 6
+          });
+          infoWindow = new google.maps.InfoWindow(); // Try HTML5 geolocation.
+
+          //GET USERS CURRENT POSITION-LAT LONG
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                position => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const marker = new google.maps.Marker({
+                        position: pos,
+                        map: map
+                    });
+                    //call function retrieve shops
+                    GetNearbyStores(map,infoWindow);
+                   
+                },() => {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                }
+              );
+          } else {
+              // Browser doesn't support Geolocation
+              handleLocationError(false, infoWindow, map.getCenter());
+          }
+          // infowindow.setContent(results[0].formatted_address);
+
+      }//end of iniMap
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(
+            browserHasGeolocation
+              ? "Error: The  service failed."
+              : "Error: Your browser doesn't support."
+          );
+          infoWindow.open(map);
+      }
+
+    //Retrieve all shops addresses and name from shops
+  function GetNearbyStores(map,infoWindow)
+    {
+        var url = "/Shops/Get_ShopsForNearbyStores/";
+        $.ajax({
+            url: url,
+            data: { },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                    $.each(data, function (key, item) {
+                        geocodeAddress(map, infoWindow, item.ShopAddress)
+                    });
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+      }
+    //=== END SHOPS
+
+    //GeoCoding for addresses goten from shops
+      function geocodeAddress(map, infowindow, address) {
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ address: address }, (results, status) => {
+              var loc = [];
+              if (status === "OK") {
+                  //Latitude and longitude
+                  loc[0] = results[0].geometry.location.lat();
+                  loc[1] = results[0].geometry.location.lng();
+                  //=====               
+                  map.setCenter(results[0].geometry.location);
+                  const marker = new google.maps.Marker({
+                      map: map,
+                      position: results[0].geometry.location,
+                  });
+                  infowindow.setContent(results[0].formatted_address);
+                  infowindow.open(map, marker);
+              } else {
+                  //alert("Geocode was not successful for the following reason: " + status);
+              }
+          }
+          );
+      }
+
+    //===End of geocode
+</script>

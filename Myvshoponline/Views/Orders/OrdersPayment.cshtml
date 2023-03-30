@@ -1,0 +1,210 @@
+﻿@model List<Myvshoponline.Order>
+
+@{ MyvshoponlineEntities db = new MyvshoponlineEntities();
+    Getdata mydata = new Getdata();
+}
+
+@{
+    ViewBag.Title = "Orders Payment";
+    int CID = Convert.ToInt32(Request.QueryString["id"]);
+    int UserID = Convert.ToInt32(Session["UserID"]);
+    string currency = db.Orders.Where(o => o.ShopCustomerID == CID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
+    ViewBag.OrdersTotalAmount = db.TempPendingPayments.Where(s => s.OrderGroupID == CID).Select(s => s.Amount).FirstOrDefault();
+}
+
+<link href="~/Content/Panel.css" rel="stylesheet" />
+<div class="content" style="margin-top:30px;">
+    <div class="row" style="background-color:white;">
+    <div class="col-md-3"></div>
+        <div class="col-md-6" style="padding:0px;margin:0px;">
+            <!-- Box Comment -->
+            <!-- /.card-header -->
+            @*<div class="card-body">*@
+            <div class="panel panel-primary">
+                <div class="panel-heading" style="background-color:#0BACE1">
+                    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:12px;">ORDER DETAILS
+                        <a href="~/Orders/PendingPayment/@UserID" style="color:#0636d0;background-color:white;padding:10px;">
+                         
+                            << Back to Pending Payments 
+                        </a>
+                    </h3>
+                </div>
+                <div class="panel-body">
+ 
+                    <table style="padding:10px;margin-bottom:0px;color:black;" class="table table-responsive-lg table-hover table-striped">
+                        <tr>
+                            <th style="font-size:12px;">Item</th>
+                            <th style="font-size:12px;">Quantity</th>
+                            <th style="font-size:12px;text-align:center">
+                                Unit Price  (@if (currency == "NGN")
+                                {<span>₦</span>}
+                                else
+                                {<span>@currency</span> })
+                            </th>
+                            <th style="font-weight:bold;font-size:12px;text-align:center">
+                                Amount (@if (currency == "NGN")
+                                {<span>₦</span>}
+                                else
+                                {<span>@currency</span> })
+                            </th>
+                        </tr>
+                        @{
+                            string allID = "";
+                            string allSubProductID = "";
+                            string allProductNameMain = "";
+                            string allProductNameSubproduct = "";
+                            string allRate = "";
+                            string allQuantity = "";
+                            string allAmount = "";
+                            string allDeliveryCost = "";
+                            foreach (var item in ViewBag.Orders)
+                            {
+                                allID += @item.ID + ",";
+                                allSubProductID += @item.SubProductID + ",";
+                                allProductNameMain += @item.Product.Name + ",";
+                                allProductNameSubproduct += @item.ProductSubProduct.Name + ",";
+                                allRate += @item.Rate + ",";
+                                allQuantity += @item.Quantity + ",";
+                                allAmount += @item.Amount + ",";
+                                allDeliveryCost += @item.DeliveryCost + ",";
+                            }
+                            string[] eachID = allID.Split(',');
+                            string[] eachSubprodutID = allSubProductID.Split(',');
+                            string[] eachProductNameMain = allProductNameMain.Split(',');
+                            string[] eachProductNameSub = allProductNameSubproduct.Split(',');
+                            string[] eachRate = allRate.Split(',');
+                            string[] eachQuantity = allQuantity.Split(',');
+                            string[] eachAmount = allAmount.Split(',');
+                            string[] eachDeliveryCost = allDeliveryCost.Split(',');
+                            for (int i = 0; i < ViewBag.OrdersCount; i++)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(m => m[i].ID, new { @Value = eachID[i] })
+                                    @if (eachSubprodutID[i] == "0")
+                                    {
+                                        <td>@eachProductNameMain[i] </td>
+                                    }
+                                    else
+                                    {
+
+                                        <td>@eachProductNameSub[i]</td>
+                                    }
+                                    <td>@eachQuantity[i]</td>
+                                    <td style="font-weight:bold">
+                                        @{
+                                            var ratett = string.Format("{0:#,0}", eachRate[i]);
+                                        }
+                                        @ratett
+                                    </td>
+                                    <td style="font-weight:bold">
+                                        @{
+                                            var amm = string.Format("{0:#,0}", eachAmount[i]);
+                                        }
+                                        @amm
+                                    </td>
+                                </tr>
+                                            }  }
+                        <tr>
+                            <td colspan="8">
+                                
+                                <br />
+                                <h4 style="font-size:16px;">
+                                    
+                                    Total Amount + Delivery Cost = @{var total = string.Format("{0:#,0}", ViewBag.OrdersTotalAmount);}
+                                    @if (currency == "NGN")
+                                    {<span>₦</span>}
+                                    else
+                                    {<span>@currency</span> }@total
+                                </h4>
+                            </td>
+                        </tr>
+                    </table>
+                                        
+                </div> 
+                @{
+                    var email = db.Users.Where(s => s.ID == UserID).Select(s => s.Email).FirstOrDefault();
+                    var phone = db.Users.Where(s => s.ID == UserID).Select(s => s.PhoneNumber).FirstOrDefault();
+                    var customername = db.Users.Where(s => s.ID == UserID).Select(s => s.CompanyName).FirstOrDefault();
+                }
+                <input type="hidden"  id="ordergroupid" value="@CID" />
+                <input type="hidden" name="customerid" id="customerid" value="@UserID" />
+                <input type="hidden" name="customeremail" id="customeremail" value="@email" />
+                <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
+                <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
+                <input type="hidden" name="totalamount" id="totalamount" value="@ViewBag.OrdersTotalAmount" />
+                <input type="hidden" name="shopname" id="shopname" value="@customername" />
+                <center id="pay">
+                    <form>
+                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                        <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
+                            Pay <span>₦</span>@string.Format("{0:#,0}", total)
+                        </button>
+                    </form>
+                </center>
+
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3"></div>
+            </div><!-- /carousel -->
+        </div>
+
+
+
+<script>
+                function payWithPaystack() {
+                    var customername = document.getElementById("customername").value;
+                    var customerid = document.getElementById("customerid").value;
+                    var ordergroupid = document.getElementById("ordergroupid").value;
+                    var myamt = document.getElementById("totalamount").value * 100;
+                    var myname = customername;
+                   // var apikey = document.getElementById("apikey").value;
+                    var customeremail = document.getElementById("customeremail").value;
+                    var customerphone = document.getElementById("customerphone").value;
+                        var handler = PaystackPop.setup({
+                            //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+                            key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+                            email: customeremail,
+                            amount: myamt,
+                            ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                            firstname: myname,
+                            number: "",
+                            // label: "Optional string that replaces customer email"
+                            label: myname,
+                            metadata: {
+                                custom_fields: [
+                                   {
+                                       display_name: "Mobile Number",
+                                       variable_name: "mobile_number",
+                                       value: customerphone
+                                   }
+                                ]
+                            },
+                            callback: function (response) {
+                                var url = "/Orders/Update_Payment_Product_PayLater/";
+                                $.ajax({
+                                    url: url,
+                                    data: { refno: response.reference, OrderGroupID: ordergroupid },
+                                    cache: false,
+                                    type: "POST",
+                                })
+                                // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+                               // window.location.href = "/Orders/Details/" + orderid;
+                                window.location.href = "/Orders/MyOrders/" + customerid;
+                            },
+                            onClose: function () {
+                                alert('Transaction aborted by user. Try again');
+                            }
+                        });
+                        handler.openIframe();
+                    }
+</script>
+
+          
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
+
+
