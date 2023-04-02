@@ -33,7 +33,7 @@
                                     Change Plan @Html.DropDownList("PlanID", null, htmlAttributes: new { @class = "form-control" ,@id="plan", @onchange = "Get_PlanFeatures();Get_Billing();Get_PlanAmount()" })
                                 </div>
                                 <div class="col-md-6">
-                                  Billing Cycle  @Html.DropDownList("BillingID", null, "---Choose---", htmlAttributes: new { @class = "form-control", @id = "billing",@onchange= "Get_Billing()" })
+                                  Billing Cycle  @Html.DropDownList("BillingID", null, htmlAttributes: new { @class = "form-control", @id = "billing",@onchange= "Get_Billing()" })
                                 </div>
                             </div>
                             <hr style="margin:10px" />
@@ -119,7 +119,7 @@
 
     </div>
 </div>
-<body onload="Get_Billing()"></body>
+<body></body>
 
 
 
@@ -205,7 +205,7 @@ function Get_Billing() {
                     var totalYears = Math.trunc(totalDays / 365);
                     var totalMonths = Math.trunc((totalDays % 365) / 30);
                     var remainingDays = Math.trunc((totalDays % 365) % 30);
-                  
+
                     html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
                         html2 += "Payable Amount  = " + '<del class=NairaSign>N</del>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
                         document.getElementById("cycle").innerHTML = item.Cycle;
@@ -216,19 +216,76 @@ function Get_Billing() {
                         document.getElementById("extraperiod").value = extraperiod;
                         document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
                         document.getElementById("discountamount").value=document.getElementById("discount").value * a / 100
-                        
+
 
                     });
                html += "</table>"
 
                $("#amount").html(html).show();
-               $("#total").html(html2).show();
+              $("#total").html(html2).show();
+
             },
             error: function (reponse) {
                 alert("error : " + reponse);
             }
         });
     }
+
+
+  
+
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    var _planID = document.getElementById("plan").value;
+    var _BillingID = 2;
+    var url = "/Users/Get_Billing/";
+    $.ajax({
+      url: url,
+      data: { PlanID: _planID, BillingID: _BillingID },
+      cache: false,
+      type: "GET",
+      success: function (data) {
+
+        var html = '<table class="table" style="font-size:15px;margin-bottom:0px">';
+        var html2 = '';
+
+        $.each(data, function (key, item) {
+          var a = item.Amount;
+          var c = item.Value * 30;
+          var amountperday = item.Amount / c;
+          var extraperiod = (document.getElementById("extrabonus").value * a / 100) / amountperday;
+
+          var totalDays = extraperiod;
+          var totalYears = Math.trunc(totalDays / 365);
+          var totalMonths = Math.trunc((totalDays % 365) / 30);
+          var remainingDays = Math.trunc((totalDays % 365) % 30);
+
+          html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
+          html2 += "Payable Amount  = " + '<del class=NairaSign>N</del>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
+          document.getElementById("cycle").innerHTML = item.Cycle;
+          document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);
+          document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
+          document.getElementById("getplanname").value = item.PlanName;
+          document.getElementById("expectedamount").value = a;
+          document.getElementById("extraperiod").value = extraperiod;
+          document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
+          document.getElementById("discountamount").value = document.getElementById("discount").value * a / 100
+
+
+        });
+        html += "</table>"
+
+        $("#amount").html(html).show();
+        $("#total").html(html2).show();
+
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  });
 
 </script>
 

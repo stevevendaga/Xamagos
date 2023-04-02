@@ -258,6 +258,7 @@
           <Property Name="DateVerified" Type="datetime" />
           <Property Name="VerificationStatus" Type="int" />
           <Property Name="VerificationNote" Type="nvarchar" MaxLength="500" />
+          <Property Name="ImgSrc" Type="nvarchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="MailingListNG">
           <Key>
@@ -3000,6 +3001,7 @@
           <Property Name="DateVerified" Type="DateTime" Precision="3" />
           <Property Name="VerificationStatus" Type="Int32" />
           <Property Name="VerificationNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ImgSrc" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="User" Relationship="MyvshoponlineModel.FK_IdentityVerification_User" FromRole="IdentityVerification" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="MyvshoponlineModel.FK_IdentityVerification_User1" FromRole="IdentityVerification" ToRole="User" />
         </EntityType>
@@ -5015,6 +5017,7 @@
           <EntitySetMapping Name="IdentityVerifications">
             <EntityTypeMapping TypeName="MyvshoponlineModel.IdentityVerification">
               <MappingFragment StoreEntitySet="IdentityVerification">
+                <ScalarProperty Name="ImgSrc" ColumnName="ImgSrc" />
                 <ScalarProperty Name="VerificationNote" ColumnName="VerificationNote" />
                 <ScalarProperty Name="VerificationStatus" ColumnName="VerificationStatus" />
                 <ScalarProperty Name="DateVerified" ColumnName="DateVerified" />

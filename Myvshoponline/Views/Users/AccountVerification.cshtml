@@ -1,15 +1,53 @@
 <link href="~/Content/Panel.css" rel="stylesheet" />
 <style>
-    .fade {
-        -webkit-transform: translate(0, -25%);
-        -ms-transform: translate(0, -25%);
-        transform: translate(0, -25%);
-        -webkit-transition: -webkit-transform 0.3s ease-out;
-        -moz-transition: -moz-transform 0.3s ease-out;
-        -o-transition: -o-transform 0.3s ease-out;
-        transition: transform 0.3s ease-out;
-        position: center;
-    }
+  .fade {
+    -webkit-transform: translate(0, -25%);
+    -ms-transform: translate(0, -25%);
+    transform: translate(0, -25%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition: -moz-transform 0.3s ease-out;
+    -o-transition: -o-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+    position: center;
+  }
+
+  .collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 8px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+
+  .active, .collapsible:hover {
+    background-color: #555;
+  }
+
+  .collapsible:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+
+  .active:after {
+    content: "\2212";
+  }
+
+  .content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }
 </style>
 @model IEnumerable<Myvshoponline.User>
 @using Myvshoponline.Controllers;
@@ -83,11 +121,14 @@
 
                               
                           <div class="col-lg-6 col-md-6 col-12" style="background-color:white;border-radius:5px;border:1px solid #BDE1AE ">
-                            <p style="margin-top:20px;color:black;">
+                            @*<p style="margin-top:20px;color:black;">
                               Government issued ID
-                              <br />Display image after upload, then show Submit button
-                            </p>
-                            
+
+                            </p>*@
+                            <div class="btn btn-common" style="padding-top: 1px; padding-bottom: 1px; padding-left: 9px; padding-right: 9px; border-top-left-radius: 25px; border-top-right-radius: 25px; margin-top: 10px;margin-bottom:0px;width:100%;">
+                              Government issued ID
+                            </div>
+
 
                             <div class="input-group input-group-sm">
                               <select name="idtype" id="idtype" onchange="getIdType(this.value)" class="form-control" style="height:40px;">
@@ -104,7 +145,13 @@
                                 <div class="panel-heading" style="background-color:#71BE50">
                                   <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;" id="lblNumber"> <span id="planname"></span></h3>
                                 </div>
-                                <div class="panel-body">
+                                <div id="divIdentityInfo" style="display:none;">
+                                  <button class="collapsible">VIEW/EDIT INFORMATION</button>
+                                  <div class="content">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                  </div>
+                                </div>
+                                <div class="panel-body" id="divBody">
 
                                   <div id="upload" style="display:none;">
                                     <p style="color:black;margin-top:10px;">
@@ -112,7 +159,7 @@
                                       <div class="alert-danger" id="msgInvalidUpload"> </div>
                                     </p>
                                     <span style="color:black;">
-                                      Kindly upload a clear valid ID card (Government issued ID card)
+                                      Kindly upload a clear valid ID card (<strong>Front</strong>)
                                     </span>
 
                                     <div class="input-group input-group-sm">
@@ -157,17 +204,31 @@
                                       </button>
                                     </div>
 
-
-
-
-
                                   </center>
                                 </div>
-                                </div>
-                                </div>
 
-                                <br />
+                                <center>
+                                  <div class="input-group-append" id="divSubmit" style="display:none;">
+                                    <input type="checkbox" id="chkConfirm" />
+                                    <span style="color:black;">I hereby agreed that the information provided above are accurate and correct.</span>
+                                    <br />
+                                    <button class="btn btn-success log-btn" id="btnUpload" type="button" onclick="return submitInfo();" disabled="disabled">
+                                      <span id="saveacct">Submit Now <i class="fas fa"></i></span>
+                                    </button>
+                                    <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                      <div class="spinner-container">
+                                        <div class="loading-spinner"></div>
+                                      </div>
+                                    </button>
+                                  </div>
+                                </center>
+
+
                               </div>
+                            </div>
+
+                            <br />
+                          </div>
                                    }
                               </div>
                     }
@@ -216,7 +277,8 @@
                 processData: false, // Not to process data  
                 data: fileData,
                 success: function (result) {
-                  alert(result);
+                  document.getElementById("divBody").innerHTML = "<img src='" + result + "' width='100%'>";
+                  document.getElementById("divSubmit").style.display = "block";
                 },
                 error: function (err) {
                   alert(err.statusText);
@@ -307,11 +369,8 @@
       document.getElementById("dissued").style.borderColor = "green";
       document.getElementById("dexpiry").style.borderColor = "green";
 
-      //on success
-      document.getElementById("upload").style.display = "block";
-      document.getElementById("idinfo").style.display = "none";
-      document.getElementById("imgUpload").style.display = "block";
-      document.getElementById("infodiv").style.display = "none";
+     
+      
 
       var url = "/Users/SaveIdentity/";
       $.ajax({
@@ -320,20 +379,14 @@
         cache: false,
         type: "GET",
         success: function (data) {
-          if (data != '') {
-            var html = '<p></p><section class="content" style="marging:0PX;"><div class="container-fluid"><div class="row">';
-            $.each(data, function (key, item) {
-              var passports = item.UserID + ".jpg";
-              html += '<div class="col-md-4 col-lg-4 col-6"><div class="" style="padding:10px;background-color:#FFFFFF;margin-bottom:8px;border-radius:5px;"><div class="">';
-              html += '<h4 style="font-size:12px;color:#33C6F6"><a href="../Shops/ShopDetails/' + item.ID + '">' + item.ShopName + '</a></h4>';
-              html += '<p style="color:black;background-color:white;line-height:15px;font-size:12px">' + item.ShopAddress + '<br><button type="button" value="' + item.ShopAddress + '"class="badge badge-info" id="' + item.ShopName + '" style="padding:10px;border:0px;font-size:12px;" data-toggle="modal" data-target="#myModalMap" onclick="loadStoreAddress(this.value,this.id)">View on Google Map <i class="fas fa-arrow-circle-right"></i></button></p><br><br></div>';
-
-              html += '</div></div>';
-            });
-            html += "</div></div></section>";
-          } else {
-            html = "<br><span class='alert alert-danger'>No record found! </span>";
-          }
+          //on success
+          document.getElementById("upload").style.display = "block";
+          document.getElementById("idinfo").style.display = "none";
+          document.getElementById("imgUpload").style.display = "block";
+          document.getElementById("infodiv").style.display = "none";
+          document.getElementById("idtype").style.display = "none";
+          document.getElementById("divIdentityInfo").style.display = "block";
+          
           $("#loadSpinner").css("display", "none");
           $("#btnUpload").css("display", "block");
           $("#displaystores").html(html);
@@ -345,6 +398,23 @@
     }
   }
 
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
+  }
 </script>
 
 @section Scripts {

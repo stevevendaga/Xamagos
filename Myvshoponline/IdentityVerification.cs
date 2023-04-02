@@ -27,6 +27,7 @@ namespace Myvshoponline
         public Nullable<System.DateTime> DateVerified { get; set; }
         public Nullable<int> VerificationStatus { get; set; }
         public string VerificationNote { get; set; }
+        public string ImgSrc { get; set; }
     
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }

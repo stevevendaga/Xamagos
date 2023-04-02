@@ -1568,6 +1568,10 @@ namespace Myvshoponline.Controllers
         return Json(result, JsonRequestBehavior.AllowGet);
     }
 
+    /// <summary>
+    /// A method to upload user identify document, save source into db.
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public ActionResult UploadIdentity()
     {
@@ -1582,7 +1586,7 @@ namespace Myvshoponline.Controllers
           string hardtoken = db.Users.Find(UserID).HardToken;
          
           string efilepath;
-
+          int id = db.IdentityVerifications.Where(s => s.UserID == UserID).Select(s => s.ID).FirstOrDefault();
           //  Get all files from Request object  
           HttpFileCollectionBase files = Request.Files;
           for (int i = 0; i < files.Count; i++)
@@ -1598,7 +1602,7 @@ namespace Myvshoponline.Controllers
             {
               string[] testfiles = file.FileName.Split(new char[] { '\\' });
               //fname = testfiles[testfiles.Length - 1];
-              fname = UserID +".jpg";
+              fname = UserID + "_" + i + ".jpg";
             }
             else
             {
@@ -1606,6 +1610,7 @@ namespace Myvshoponline.Controllers
               fname = UserID +"_"+ i + ".jpg";
              
             }
+          
 
             // Get the complete folder path and store the file inside it.  
             //fname = Path.Combine(Server.MapPath("~/Identityuploads/"), fname);
@@ -1620,10 +1625,19 @@ namespace Myvshoponline.Controllers
             newName = newName + ".jpg";
             efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + folder + "\\" + newName);
             file.SaveAs(efilepath);
+            //Save to db
+            string path = "../../BusinessImages/" + businessname + hardtoken + "/" + folder + "\\" + newName;
+            
+            var update = db.IdentityVerifications.Find(id);
+            update.ImgSrc = path;
+            db.SaveChanges();
+            //Resize
             mydata.ResizePicture(efilepath);
+
           }
-          // Returns message that successfully uploaded  
-          return Json("File Uploaded Successfully!");
+          // Returns message that successfully uploaded
+          var imgSrc = db.IdentityVerifications.Find(id).ImgSrc;
+          return Json(imgSrc);
         }
         catch (Exception ex)
         {
