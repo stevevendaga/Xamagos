@@ -92,20 +92,21 @@
 </body>
 <div id="content">
   <div class="">
-    <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px"><i class="nav-icon fas fa-user-circle" style="fill:Background"></i> WELCOME,  @ViewBag.CompanyName.ToUpper()</span>
+    <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px">
+    <i class="nav-icon fas fa-user-circle" style="fill:Background"></i> WELCOME,  @ViewBag.CompanyName.ToUpper()</span>
     <div class="row" style="text-align:center">
       <input type="hidden" id="shopid" value="@ViewBag.CompanyID" />
       <div class="col-6 col-md-4">
-        <div class="panel panel-primary" style="background-color:#17A2B8">
+        <div class="panel panel-primary" style="background-color:#A4C9CF">
           <div class="panel-heading">
             <h3 class="panel-title" style="color:white;font-family:Arial;font-size:20px">
               <i class="fa fas fa-store"></i>
             </h3>
           </div>
-          <div class="panel-body">
+          <div class="">
 
             <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
-              <a href="~/Users/Manageshop?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Manage Shop" id="manageshop"> Manage Shop</a>
+              <a href="~/Users/Manageshop?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:80%" title="Manage Store" id="manageshop"> Manage Store</a>
 
             </span>
           </div>
@@ -118,9 +119,9 @@
               <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
             </h3>
           </div>
-          <div class="panel-body">
+          <div class="">
             <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
-              <a href="~/Orders/MyOrders/@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="My Purchases"> My Purchases</a>
+              <a href="~/Orders/MyOrders/@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:80%" title="My Purchases"> My Purchases</a>
             </span>
           </div>
         </div>
@@ -133,9 +134,9 @@
 
             </h3>
           </div>
-          <div class="panel-body">
+          <div class="">
             <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
-              <a href="~/Users/MyProfile?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Profile">Profile</a>
+              <a href="~/Users/MyProfile?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:80%" title="Profile">Profile</a>
             </span>
           </div>
         </div>
@@ -148,9 +149,9 @@
 
             </h3>
           </div>
-          <div class="panel-body">
+          <div class="">
             <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
-              <a href="~/Users/AccountVerification?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Account Verification">Identity Verification</a>
+              <a href="~/Users/AccountVerification?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:80%" title="Account Verification">Identity Verification</a>
             </span>
           </div>
         </div>
@@ -164,9 +165,9 @@
 
             </h3>
           </div>
-          <div class="panel-body">
+          <div class="">
             <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top;width:100%">
-              <a href="~/Users/AccountUpgrade?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:100%" title="Account Verification">Upgrade Account</a>
+              <a href="~/Users/AccountUpgrade?id=@ViewBag.CompanyID" class="btn btn-common" style="height:30px;padding:5px;width:100%;font-size:80%" title="Account Verification">Upgrade Account</a>
             </span>
           </div>
         </div>

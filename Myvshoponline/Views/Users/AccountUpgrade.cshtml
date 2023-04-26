@@ -1,4 +1,4 @@
-﻿
+
 <style>
     .fade {
         -webkit-transform: translate(0, -25%);
@@ -135,10 +135,18 @@
                                             <label>Current Plan Features</label>
                                             @foreach (var item in db.PlanFeatures.Where(p => p.PricingPlanID == PlanID).ToList())
                                             {
-                                                <div class="col-md-6" style="padding-left:15px;line-height:1.5em;color:black">
-                                                    <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Feature
-                                                    <hr style="margin:1px;padding:1px;" />
-                                                </div>
+                                        <div class="col-md-6" style="padding-left:15px;line-height:1.5em;color:black">
+                                          @if (item.Status == 1)
+                                          {
+                                            <img src="~/Images/mark2.png" style="width:15px" />
+
+                                          }
+                                          else
+                                          {
+                                            <img src="~/Images/removeicon.png" style="width:15px" />
+                                          }   @item.Feature
+                                          <hr style="margin:1px;padding:1px;" />
+                                        </div>
                                             }
                                            
 

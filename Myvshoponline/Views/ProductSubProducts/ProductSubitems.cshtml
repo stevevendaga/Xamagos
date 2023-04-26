@@ -1,4 +1,4 @@
-﻿<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
+<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
 @model IEnumerable<Myvshoponline.ProductSubProduct>
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
@@ -206,7 +206,7 @@ else
         <center>
             <span title="Price" style="font-size:18px;color:black;font-weight:bold">
                 @if (item.Currency == "NGN")
-                {<del class="NairaSign">N</del>}
+                {<span class="NairaSign">NGN</span>}
                 else
                 { <span>@item.Currency</span>}@{
                     @*var a = string.Format("{0:#,0}", item.Amount);}@a*@

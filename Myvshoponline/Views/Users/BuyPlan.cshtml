@@ -1,3 +1,82 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <!-- Replace "test" with your own sandbox Business account app client ID -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AceNyVWdhFe--qc7zDGTiJbEL37w8bp0dwVy6e2vY12ioKyaSExTDQ5yVmvAXDSScqiRIY1Pj52zgzsl
+&currency=USD"></script>
+    <!-- Set up a container element for the button -->
+   
+    <script>
+      paypal.Buttons({
+        // Order is created on the server and the order id is returned
+        createOrder() {
+          return fetch("/my-server/create-paypal-order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // use the "body" param to optionally pass additional order information
+            // like product skus and quantities
+            body: JSON.stringify({
+              cart: [
+                {
+                  sku: "3",
+                  quantity: "11",
+                },
+              ],
+            }),
+          })
+          .then((response) => response.json())
+          .then((order) => order.id);
+        },
+        // Finalize the transaction on the server after payer approval
+        onApprove(data) {
+          return fetch("/my-server/capture-paypal-order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              orderID: data.orderID
+            })
+          })
+          .then((response) => response.json())
+          .then((orderData) => {
+            // Successful capture! For dev/demo purposes:
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            const transaction = orderData.purchase_units[0].payments.captures[0];
+            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+            // When ready to go live, remove the alert and show a success message within this page. For example:
+            // const element = document.getElementById('paypal-button-container');
+            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            // Or go to another URL:  window.location.href = 'thank_you.html';
+          });
+        }
+      }).render('#paypal-button-container');
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
 @model Myvshoponline.PricingPlan
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
@@ -12,114 +91,185 @@
 
 }
 
+<head>
+  <style>
+    .divcover {
+      border-radius: 20px;
+      background-color: #F0F0F0;
+      width: 100px;
+      height: 40px;
+      font-weight: bolder;
+      padding: 7px;
+      color: black;
+      font-size: 17px;
+      font-stretch: expanded;
+      font-family: 'Times New Roman';
+      align-content: center;
+    }
 
+    .divtoggle {
+      border-radius: 20px;
+      background-color: #F0F0F0;
+      width: 100px;
+      height: 150px;
+      font-weight: bolder;
+      color: black;
+      padding: 10px;
+      font-size: 17px;
+      font-stretch: expanded;
+      font-family: 'Times New Roman';
+    }
+  </style>
+</head>
 <input type="hidden" id="discount" value="@ViewBag.D" />
 <input type="hidden" id="extrabonus" value="@ViewBag.B" />
 
 <link href="~/Content/Panel.css" rel="stylesheet" />
-<div id="content">
+
+<div id="content"><center>
+  <table class="divcover">
+    <tr>
+      <td>
+        <span class="divtoggle" style="cursor:pointer" id="ngn" onclick="toggleCurrency(this.id)">
+          NGN
+        </span>
+      </td>
+      <td>
+        <span class="divtoggle" style="cursor:pointer" id="usd" onclick="toggleCurrency(this.id)">
+          USD
+        </span>
+      </td>
+    </tr>
+  </table>
+</center>
     <div class="">
         <div class="row">
+
             <div id="companydetailsmobile" style="display:none"></div>
             <div class="col-lg-8 col-md-6 col-xs-12" id="shopdetails">
-                <div class="right-sideabr">
-                    <div class="panel panel-success">
-                        <div class="panel-heading" style="background-color:#71BE50">
-                            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;"> <span id="planname"> @Model.PlanName</span></h3>
-                        </div>
-                        <div class="panel-body" style="color:black">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    Change Plan @Html.DropDownList("PlanID", null, htmlAttributes: new { @class = "form-control" ,@id="plan", @onchange = "Get_PlanFeatures();Get_Billing();Get_PlanAmount()" })
-                                </div>
-                                <div class="col-md-6">
-                                  Billing Cycle  @Html.DropDownList("BillingID", null, htmlAttributes: new { @class = "form-control", @id = "billing",@onchange= "Get_Billing()" })
-                                </div>
-                            </div>
-                            <hr style="margin:10px" />
-                            <ul>
-                                <li style="font-size:14px;font-weight:bold;color:#1DA6E2;padding:6px">
-                                     <div id="nameforfeatures"></div>
-                                </li></ul>
-                            <div class="row">
-                                <div id="planfeatures" class="col-lg-12">
-                                    @foreach (var item in db.PlanFeatures.Where(p => p.PricingPlanID == Model.ID).ToList())
-                                    {
-                                        <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
-                                            <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Feature
-                                           <hr style="margin:1px;padding:1px;" />
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                          @*</ul>*@
-</div>
+              <div class="right-sideabr">
+
+                
+
+                <div class="panel panel-success">
+                  <div class="panel-heading" style="background-color: #17A2B8">
+                    <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;"> <span id="planname"> @Model.PlanName</span></h3>
+                  </div>
+                  <div class="panel-body" style="color:black">
+                    <div class="row">
+                      <div class="col-md-6">
+                        Change Plan @Html.DropDownList("PlanID", null, htmlAttributes: new { @class = "form-control", @id = "plan", @onchange = "Get_PlanFeatures();Get_Billing();Get_PlanAmount()" })
+                      </div>
+                      <div class="col-md-6">
+                        Billing Cycle  @Html.DropDownList("BillingID", null, htmlAttributes: new { @class = "form-control", @id = "billing", @onchange = "Get_Billing()" })
+                      </div>
                     </div>
+                    <hr style="margin:10px" />
+                    <ul>
+                      <li style="font-size:14px;font-weight:bold;color:#1DA6E2;padding:6px">
+                        <div id="nameforfeatures"></div>
+                      </li>
+                    </ul>
+                    <div class="row">
+                      <div id="planfeatures" class="col-lg-12">
+                        @foreach (var item in db.PlanFeatures.Where(p => p.PricingPlanID == Model.ID).ToList())
+                        {
+                        <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+                          @if (item.Status == 1)
+                          {
+                            <img src="~/Images/mark2.png" style="width:15px" />
 
-
+                          }
+                          else
+                          {
+                            <img src="~/Images/removeicon.png" style="width:15px" />
+                          }  @item.Feature
+                          <hr style="margin:1px;padding:1px;" />
+                        </div>
+                        }
+                      </div>
+                    </div>
+                    @*</ul>*@
+                  </div>
                 </div>
+
+
+              </div>
             </div>
 
             <div class="col-lg-4 col-md-6 col-xs-12" id="companydetails" style="display:block">
 
                 <div class="panel panel-success">
-                    <div class="panel-heading" style="background-color:#71BE50">
+                    <div class="panel-heading" style="background-color: #17A2B8">
                         <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9">
-                            Order Summary
+                            Summary
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <div id="planamountpermonth">
-                            @{
-                                int UserID =(int) Session["UserID"];
-                                string email = db.Users.Find(UserID).Email;
-                                string phone = db.Users.Find(UserID).PhoneNumber;
-                                decimal am1 = Convert.ToDecimal(Model.Amount);
-                                var am = string.Format("{0:#,0}", am1);}
-                            <b>  @Model.PlanName </b> &nbsp; <del class="NairaSign">N</del>@am
-                            <span style="font-weight:bold">/Month</span>
-                        </div>
-                            <hr />
-                        <table style="font-weight:bold;font-size:16px;margin-bottom:0px">
-                            <tr>
-                                <td>
-                                    Billing Cycle:          
-                                </td>
-                                <td style="padding-left:5px">
-                                    <div id="cycle"></div>
-                                </td>
-                            </tr>
-                        </table>
-                      
-                       <div id="amount" style="color:black;font-weight:bold;font-size:24px"></div>
-                        <hr style="margin-top:0px;padding-top:0px" />
-                        <div id="total"  style="font-weight:bold;color:black;font-size:20px"></div>
-                        <input id="totalamount" type="hidden" />
-                        <input id="getplanname" type="hidden" />
-                        <input id="planid" type="hidden" />
-                        <input id="billingid" type="hidden" />
-                        <input id="companyname" type="hidden" value="@Session["Name"]"/>
-                        <input id="userid" type="hidden" value="@Session["UserID"]" />
-                        <input id="email" type="hidden" value="@email" />
-                        <input id="phone" type="hidden" value="@phone" />
-                        <input id="extraperiod" type="hidden" />
-                        <input id="extrabonusamount" type="hidden" />
-                        <input id="discountamount" type="hidden" />
-                        <input id="expectedamount" type="hidden" />
-                        <hr />
-                        <form>
-                            <script src="https://js.paystack.co/v1/inline.js"></script>
-                            <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()"> Pay NGN <span id="buttonamount"></span> Now <i class="lni lni-arrow-right-circle"></i></button>
-                        </form>
+                      <div id="planamountpermonth" class="price" style="font-size:12px;font-weight:bold">
+                        @{
+                          int UserID = (int)Session["UserID"];
+                          string email = db.Users.Find(UserID).Email;
+                          string phone = db.Users.Find(UserID).PhoneNumber;
+                          decimal am1 = Convert.ToDecimal(Model.Amount);
+                          var am = string.Format("{0:#,0}", am1);}
+                        <b>  @Model.PlanName PLAN </b> &nbsp;
+                        <span class="" id="currencySignPlan" style="color:black">NGN</span> <d id="amtPremium" style="color:black">@am</d>
+                        <span style="font-weight:bold;color:black;">monthly</span>
+                      </div>
+                      <hr />
+                      <table style="font-weight:bold;font-size:12px;margin-bottom:0px">
+                        <tr>
+                          <td>
+                            Billing Cycle:
+                          </td>
+                          <td style="padding-left:5px">
+                            <div id="cycle" style="color:black;"></div>
+                          </td>
+                        </tr>
+                      </table>
 
-                          </div>
+                      <div id="amount" style="color:black;font-weight:bold;font-size:20px"></div>
+
+                      <hr style="margin-top:0px;padding-top:0px" />
+                      <div id="total" style="font-weight:bold;color:black;font-size:20px"></div>
+
+                      <input type="hidden" id="currentCurrency" value="NGN" />
+                      <input id="totalamount" type="hidden" />
+                      <input id="getplanname" type="hidden" />
+                      <input id="planid" type="hidden" />
+                      <input id="billingid" type="hidden" />
+                      <input id="companyname" type="hidden" value="@Session["Name"]" />
+                      <input id="userid" type="hidden" value="@Session["UserID"]" />
+                      <input id="email" type="hidden" value="@email" />
+                      <input id="phone" type="hidden" value="@phone" />
+                      <input id="extraperiod" type="hidden" />
+                      <input id="extrabonusamount" type="hidden" />
+                      <input id="discountamount" type="hidden" />
+                      <input id="expectedamount" type="hidden" />
+                      <hr />
+                      <form id="btnPayNGN">
+                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                        <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()"> Pay NGN <span id="buttonamount"></span> Now</button>
+                      </form>
+                      <div id="btnPayDollar" style="display:none">
+                        <div id="paypal-button-container"></div>
+                        <button type="button" class="btn btn-primary" style="width:auto;" onclick="payWithPaystack()"> Pay USD <span id="buttonamountdollar"></span> Now</button>
+                      </div>
+
+
+
+                    </div>
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-<body></body>
+<body>
+
+
+</body>
 
 
 
@@ -135,12 +285,12 @@
             var email = document.getElementById("email").value;
             var phone = document.getElementById("phone").value;
 
-            var _extraperiod = document.getElementById("extraperiod").value;
-            var _expectedamount=document.getElementById("expectedamount").value;
-            var _discountpercentage = document.getElementById("discount").value;
-            var _discountamount = document.getElementById("discountamount").value;
-            var _extrabonuspercentage = document.getElementById("extrabonus").value;
-            var _extrabonusamount = document.getElementById("extrabonusamount").value;
+            //var _extraperiod = document.getElementById("extraperiod").value;
+            //var _expectedamount=document.getElementById("expectedamount").value;
+            //var _discountpercentage = document.getElementById("discount").value;
+            //var _discountamount = document.getElementById("discountamount").value;
+            //var _extrabonuspercentage = document.getElementById("extrabonus").value;
+            //var _extrabonusamount = document.getElementById("extrabonusamount").value;
             var handler = PaystackPop.setup({
                 //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
                     key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
@@ -165,7 +315,8 @@
               var url = "/Users/Update_Payment_Company_Plan/";
               $.ajax({
                   url: url,
-                  data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },
+                /*data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },*/
+                data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID},
                   cache: false,
                   type: "POST",
               })
@@ -206,16 +357,26 @@ function Get_Billing() {
                     var totalMonths = Math.trunc((totalDays % 365) / 30);
                     var remainingDays = Math.trunc((totalDays % 365) % 30);
 
-                    html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
-                        html2 += "Payable Amount  = " + '<del class=NairaSign>N</del>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
-                        document.getElementById("cycle").innerHTML = item.Cycle;
-                        document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);
-                        document.getElementById("buttonamount").innerHTML =formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
-                        document.getElementById("getplanname").value = item.PlanName;
-                        document.getElementById("expectedamount").value = a;
-                        document.getElementById("extraperiod").value = extraperiod;
-                        document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
-                        document.getElementById("discountamount").value=document.getElementById("discount").value * a / 100
+                   // html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
+                  /*html2 += "Total  = " + '<span class=NairaSign>NGN</span>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
+                  var CCurrency = document.getElementById("currentCurrency").value;
+                  if (CCurrency == "NGN") {
+                    html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + formatNumber(item.Amount) + '</d>';
+                  }
+                  else {
+                    html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + item.DollarPrice + '</d>';
+                  }
+                  document.getElementById("cycle").innerHTML = item.Cycle;
+                  /*document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);*/
+                  document.getElementById("totalamount").value = item.Amount;
+                  /*document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
+                  document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount);
+                  document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
+                  document.getElementById("getplanname").value = item.PlanName;
+                  document.getElementById("expectedamount").value = a;
+                       // document.getElementById("extraperiod").value = extraperiod;
+                       // document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
+                        //document.getElementById("discountamount").value=document.getElementById("discount").value * a / 100
 
 
                     });
@@ -232,7 +393,7 @@ function Get_Billing() {
     }
 
 
-  
+
 
 </script>
 
@@ -255,23 +416,35 @@ function Get_Billing() {
           var a = item.Amount;
           var c = item.Value * 30;
           var amountperday = item.Amount / c;
-          var extraperiod = (document.getElementById("extrabonus").value * a / 100) / amountperday;
+          //var extraperiod = (document.getElementById("extrabonus").value * a / 100) / amountperday;
 
           var totalDays = extraperiod;
           var totalYears = Math.trunc(totalDays / 365);
           var totalMonths = Math.trunc((totalDays % 365) / 30);
           var remainingDays = Math.trunc((totalDays % 365) % 30);
 
-          html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
-          html2 += "Payable Amount  = " + '<del class=NairaSign>N</del>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
+
+          //html += '<tr><td>' + item.Cycle + " = <del class=NairaSign>N</del>" + formatNumber(item.Amount) + '<br style="margin-top:3px;"><font color="blue" size="2">@string.Format("{0:#,0}",DiscountPercentage)% discount = <del class=NairaSign>N</del>' + formatNumber((document.getElementById("discount").value * a / 100)) + ' </font><tr><td><font color="green"> Extra Bonus: </font>' + checkmonth(totalMonths) + checkday(remainingDays) + '</td></tr> </td></tr>';
+          /*html2 += "Total: " + '<del class=DollarSign>NGN</del>' + formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
+          var CCurrency = document.getElementById("currentCurrency").value;
+          if (CCurrency == "NGN") {
+            html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + formatNumber(item.Amount) + '</d>';
+          }
+          else {
+            html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + item.DollarPrice + '</d>';
+          }
+         
           document.getElementById("cycle").innerHTML = item.Cycle;
-          document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);
-          document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));
+          /*document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);*/
+          document.getElementById("totalamount").value = item.Amount;
+          /*document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
+          document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount);
+          document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
           document.getElementById("getplanname").value = item.PlanName;
           document.getElementById("expectedamount").value = a;
-          document.getElementById("extraperiod").value = extraperiod;
-          document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
-          document.getElementById("discountamount").value = document.getElementById("discount").value * a / 100
+          //document.getElementById("extraperiod").value = extraperiod;
+          //document.getElementById("extrabonusamount").value = document.getElementById("extrabonus").value * a / 100;
+          //document.getElementById("discountamount").value = document.getElementById("discount").value * a / 100
 
 
         });
@@ -340,7 +513,15 @@ function Get_PlanFeatures() {
 
                 $.each(data, function (key, item) {
 
-                    html += '<div class="col-md-6" style="padding-left:15px;line-height:1.5em"> <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span> ' + item.Feature + '<hr style="margin:1px;padding:1px;"></div>';
+                  html += '<div class="col-md-6" style="padding-left:15px;line-height:1.5em">';
+                  if (item.status == '1') {
+                    html += '<img src = "../../Images/mark2.png" style = "width:15px" /></span >' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
+                  }
+                 else
+                  {
+                    
+                    html += '<img src="../../Images/removeicon.png" style="width:15px" />' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
+                  }
                   });
 
                 $("#planfeatures").html(html).show();
@@ -370,8 +551,14 @@ function Get_PlanAmount() {
             var html5 = '';
 
             $.each(data, function (key, item) {
-
-                html1 += '<b>' + item.PlanName + '</b> &nbsp; <del class="NairaSign">N</del>' + formatNumber(item.PlanAmount) + '<span style="font-weight:bold">/Month</span>';
+              var CCurrency = document.getElementById("currentCurrency").value;
+              if (CCurrency == "NGN") {
+                html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + formatNumber(item.PlanAmount) + '</d><span style="font-weight:bold;color:black"> monthly</span>';
+              }
+              else {
+                html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + item.DollarPrice + '</d><span style="font-weight:bold;color:black"> monthly</span>';
+              }
+             
                 html3 += "FEATURES OF " + item.PlanName;
                 html4 += item.PlanName;
                 html5 += item.PlanAmount;
@@ -394,6 +581,58 @@ function Get_PlanAmount() {
     function formatNumber(num) {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
+</script>
+
+
+<script>
+
+  function toggleCurrency(c) {
+    if (c == 'ngn') {
+      document.getElementById("ngn").style.backgroundColor = "#303D4B";
+      document.getElementById("ngn").style.color = "#FFFFFF";
+      document.getElementById("usd").style.color = "#000000";
+      document.getElementById("usd").style.backgroundColor = "#F0F0F0";
+
+      document.getElementById("currentCurrency").value = "NGN";
+      document.getElementById("currencySignPlan").innerHTML = document.getElementById("currentCurrency").value;
+      document.getElementById("currencySignTotal").innerHTML = document.getElementById("currentCurrency").value;
+      Get_PlanAmount();
+      Get_Billing();
+      document.getElementById("btnPayDollar").style.display = "none";
+      document.getElementById("btnPayNGN").style.display = "block";
+
+      document.getElementById("currencySignPay").innerHTML = "NGN";
+      document.getElementById("amtStandard").innerHTML = document.getElementById("txtamtStandard").value;
+      document.getElementById("amtPremium").innerHTML = document.getElementById("txtamtPremium").value;
+      document.getElementById("amtEnterprise").innerHTML = document.getElementById("txtamtEnterprise").value;
+    }
+    else {
+      document.getElementById("ngn").style.backgroundColor = "#F0F0F0";
+      document.getElementById("usd").style.backgroundColor = "#303D4B";
+      document.getElementById("ngn").style.color = "#000000";
+      document.getElementById("usd").style.color = "#FFFFFF";
+
+      document.getElementById("currentCurrency").value = "USD";
+      document.getElementById("currencySignPlan").innerHTML = document.getElementById("currentCurrency").value;
+      document.getElementById("currencySignTotal").innerHTML = document.getElementById("currentCurrency").value;
+      Get_PlanAmount();
+      Get_Billing();
+      document.getElementById("btnPayDollar").style.display = "block";
+      document.getElementById("btnPayNGN").style.display = "none";
+
+      document.getElementById("currencySignPay").innerHTML = "USD";
+      document.getElementById("amtStandard").innerHTML = document.getElementById("txtdollarStandard").value;
+      document.getElementById("amtPremium").innerHTML = document.getElementById("txtdollarPremium").value;
+      document.getElementById("amtEnterprise").innerHTML = document.getElementById("txtdollarEnterprise").value;
+    }
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    document.getElementById("ngn").style.backgroundColor = "#303D4B";
+    document.getElementById("ngn").style.color = "#FFFFFF";
+  });
 </script>
 
     @section Scripts {

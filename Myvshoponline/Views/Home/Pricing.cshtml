@@ -1,237 +1,343 @@
 @{
-    ViewBag.Title = "Pricing";
-    MyvshoponlineEntities db = new MyvshoponlineEntities();
+  ViewBag.Title = "Pricing";
+  MyvshoponlineEntities db = new MyvshoponlineEntities();
 }
 
+
+
+
+
+
+<head>
+  <style>
+    .divcover {
+      border-radius: 20px;
+      background-color: #F0F0F0;
+      width: 100px;
+      height:40px;
+      font-weight: bolder;
+      padding: 7px;
+      color: black;
+      font-size: 17px;
+      font-stretch: expanded;
+      font-family: 'Times New Roman';
+      align-content:center;
+    }
+    .divtoggle {
+      border-radius: 20px;
+      background-color: #F0F0F0;
+      width:100px;
+      height:150px;
+      font-weight:bolder;
+      color:black;
+      padding:10px;
+      font-size:17px;
+      font-stretch:expanded;
+      font-family:'Times New Roman';
+
+    }
+  </style>
+</head>
+
 <div id="pricing" class="section bg-gray">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title" style="padding:0px;color:white;">Pricing</h2>
-            @*<p>
-                Our platform is a subscription-based software providing you with
-                different pricing options to cater for your budget size, you can also pay monthly or
-                annually, change or upgrade your plan any time.
-                Please note that only after Registration (FREE) that you can
-                choose a plan and pay. /p>*@
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title" style="padding:0px;color:white;">Pricing</h2>
+      @*<p>
+    Our platform is a subscription-based software providing you with
+    different pricing options to cater for your budget size, you can also pay monthly or
+    annually, change or upgrade your plan any time.
+    Please note that only after Registration (FREE) that you can
+    choose a plan and pay. /p>*@
+    <center>
+      <table class="divcover">
+        <tr>
+          <td>
+            <span class="divtoggle" style="cursor:pointer" id="ngn" onclick="toggleCurrency(this.id)">
+              NGN
+            </span>
+          </td>
+          <td>
+            <span class="divtoggle" style="cursor:pointer" id="usd" onclick="toggleCurrency(this.id)">
+              USD
+            </span>
+          </td>
+        </tr>
+      </table>
+    </center>
+      
 
-         
-        </div>
-        <div class="row pricing-tables">
-            <div class="col-lg-4 col-md-4 col-xs-12">
-                <div class="pricing-table border-color-green" style="padding:5px">
-                    <div class="pricing-details">
-                        <div class="icon">
-                            <i class="lni-Infinite"></i>
-                        </div>
-                        <h2 style="background-color:#9907e6;color:white">
-                            @{var plan21 = db.PlanFeatures.Where(p => p.PricingPlanID == 4).FirstOrDefault();
-
-                                string plan22 = plan21.PricingPlan.PlanName;
-                            } @plan22
-                        </h2>
-                        <div class="price" style="font-size:30px;font-weight:bold">
-
-                            @{var plan221 = db.PlanFeatures.Where(p => p.PricingPlanID == 4).FirstOrDefault();
-
-                                decimal plan4 = Convert.ToDecimal(plan221.PricingPlan.Amount);
-                                var plan6 = string.Format("{0:#,0}", plan4);
-                            } <del class="NairaSignBold">N</del>@plan6
-                            <span style="font-weight:bold">/Month</span>
-                        </div>
-                        <ul style="text-align:left;padding:0px">
-                            @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 4).ToList())
-                            {
-                          <li>
-                            @if (plan.Status == 1)
-                            {
-                              <img src="~/Images/mark2.png" style="width:15px" />
-
-                            }
-                            else
-                            {
-                              <img src="~/Images/removeicon.png" style="width:15px" />
-                            }
+     
+     
 
 
-                            @plan.Feature <hr style="margin:1px;padding:1px;" />
-                          </li>
-                            }
-
-                        </ul>
-
-                    </div>
-                    <div class="plan-button">
-                        @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
-                        {
-                            <a href="~/Users/BuyPlan/@plan21.PricingPlanID" class="btn btn-border">Choose Plan</a>
-                        }
-                        else
-                        {
-                            <a href="~/Users/Create" class="btn btn-border">Sign Up</a>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-xs-12">
-                <div class="pricing-table border-color-defult" style="padding:5px">
-                    <div class="pricing-details">
-                        <div class="icon">
-                            <i class="lni-rocket"></i>
-                        </div>
-                        <h2 style="background-color:#039BE0;color:white">
-                            @{var plan2 = db.PlanFeatures.Where(p => p.PricingPlanID == 1).FirstOrDefault();
-
-                                string plan3 = plan2.PricingPlan.PlanName;
-                            } @plan3
-                        </h2>
-                        <div class="price" style="font-size:30px;font-weight:bold">
-
-                            @{var plan1 = db.PlanFeatures.Where(p => p.PricingPlanID == 1).FirstOrDefault();
-
-                                decimal plan44 = Convert.ToDecimal(plan1.PricingPlan.Amount);
-                                var plan66 = string.Format("{0:#,0}", plan44);
-                            } <del class="NairaSignBold">N</del>@plan66
-                            <span style="font-weight:bold">/Month</span>
-                        </div>
-                        <ul style="text-align:left">
-                            @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 1).ToList())
-                            {
-                          <li>
-                            @if (plan.Status == 1)
-                            {
-                              <img src="~/Images/mark2.png" style="width:15px" />
-
-                            }
-                            else
-                            {
-                              <img src="~/Images/removeicon.png" style="width:15px" />
-                            }
-                            @plan.Feature <hr style="margin:1px;padding:1px;" />
-                          </li>
-                            }
-
-                        </ul>
-
-                    </div>
-                    <div class="plan-button">
-                        @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
-                        {
-                            <a href="~/Users/BuyPlan/@plan1.PricingPlanID" class="btn btn-border">Choose Plan</a>
-                        }
-                        else
-                        {
-                            <a href="~/Users/Create" class="btn btn-border">Choose Plan</a>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-xs-12">
-                <div class="pricing-table pricing-active border-color-red" style="padding:5px">
-                    <div class="pricing-details">
-                        <div class="icon">
-                            <i class="lni-drop"></i>
-                        </div>
-                        <h2 style="background-color:#09bbbb;color:white">
-                            @{var plan7 = db.PlanFeatures.Where(p => p.PricingPlanID == 2).FirstOrDefault();
-
-                                string plan8 = plan7.PricingPlan.PlanName;
-                            } @plan8
-                        </h2>
-                        <div class="price" style="font-size:30px;font-weight:bold">
-
-                            @{var plan10 = db.PlanFeatures.Where(p => p.PricingPlanID == 2).FirstOrDefault();
-
-                                decimal plan11 = Convert.ToDecimal(plan10.PricingPlan.Amount);
-                                var plan12 = string.Format("{0:#,0}", plan11);
-                            } <del class="NairaSignBold">N</del>@plan12
-                            <span style="font-weight:bold">/Month</span>
-                        </div>
-                        <ul style="text-align:left">
-                            @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 2).ToList())
-                            {
-                          <li>
-                            @if (plan.Status == 1)
-                            {
-                              <img src="~/Images/mark2.png" style="width:15px" />
-
-                            }
-                            else
-                            {
-                              <img src="~/Images/removeicon.png" style="width:15px" />
-                            }
-                            @plan.Feature <hr style="margin:1px;padding:1px;" />
-                          </li>
-                            }
-
-                        </ul>
-
-                    </div>
-                    <div class="plan-button">
-                        @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
-                        {
-                            <a href="~/Users/BuyPlan/@plan10.PricingPlanID" class="btn btn-border">Choose Plan</a>
-                        }
-                        else
-                        {
-                            <a href="~/Users/Create" class="btn btn-border">Choose Plan</a>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-xs-12">
-                <div class="pricing-table border-color-green" style="padding:5px">
-                    <div class="pricing-details">
-                        <div class="icon">
-                            <i class="lni-briefcase"></i>
-                        </div>
-                        <h2 style="background-color:#a1b206;color:white">
-                            @{var plan13 = db.PlanFeatures.Where(p => p.PricingPlanID == 3).FirstOrDefault();
-
-                                string plan14 = plan13.PricingPlan.PlanName;
-                            } @plan14
-                        </h2>
-
-                        <div class="price" style="font-size:30px;font-weight:bold">
-                            @{var plan16 = db.PlanFeatures.Where(p => p.PricingPlanID == 3).FirstOrDefault();
-
-                                decimal plan17 = Convert.ToDecimal(plan16.PricingPlan.Amount);
-                                var plan18 = string.Format("{0:#,0}", plan17);
-                            } <del class="NairaSignBold">N</del>@plan18
-                            <span style="font-weight:bold">/Month</span>
-                        </div>
-                        <ul style="text-align:left">
-                            @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 3).ToList())
-                            {
-                                <li>
-                           @if (plan.Status == 1)
-                            {
-                              <img src="~/Images/mark2.png" style="width:15px" />
-
-                            }
-                            else
-                            {
-                              <img src="~/Images/removeicon.png" style="width:15px" />
-                            }
-                          @plan.Feature <hr style="margin:1px;padding:1px;" /></li>
-                            }
-
-                        </ul>
-
-                    </div>
-                    <div class="plan-button">
-                        @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
-                        {
-                            <a href="~/Users/BuyPlan/@plan16.PricingPlanID" class="btn btn-border">Choose Plan</a>
-                        }
-                        else
-                        {
-                            <a href="~/Users/Create" class="btn btn-border">Choose Plan</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+    <div class="row pricing-tables">
+      <div class="col-lg-4 col-md-4 col-xs-12">
+        <div class="pricing-table border-color-green" style="padding:5px">
+          <div class="pricing-details">
+            <div class="icon">
+              <i class="lni-Infinite"></i>
+            </div>
+            <h2 style="background-color:#9907e6;color:white">
+              @{var plan21 = db.PlanFeatures.Where(p => p.PricingPlanID == 4).FirstOrDefault();
+
+                string plan22 = plan21.PricingPlan.PlanName;
+              } @plan22
+            </h2>
+            <div class="price" style="font-size:30px;font-weight:bold">
+
+              @{var plan221 = db.PlanFeatures.Where(p => p.PricingPlanID == 4).FirstOrDefault();
+
+                decimal plan4 = Convert.ToDecimal(plan221.PricingPlan.Amount);
+                var plan6 = string.Format("{0:#,0}", plan4);
+              }
+              <span class="DollarSign" id="currencySignFree">NGN</span><d id="amtFree">@plan6</d>
+              <span style="font-weight:bold">monthly</span>
+            </div>
+            <ul style="text-align:left;padding:0px">
+              @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 4).ToList())
+              {
+                <li>
+                  @if (plan.Status == 1)
+                  {
+                    <img src="~/Images/mark2.png" style="width:15px" />
+
+                  }
+                  else
+                  {
+                    <img src="~/Images/removeicon.png" style="width:15px" />
+                  }
+
+
+                  @plan.Feature <hr style="margin:1px;padding:1px;" />
+                </li>
+              }
+
+            </ul>
+
+          </div>
+          <div class="plan-button">
+            @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
+            {
+              <a href="~/Users/BuyPlan/@plan21.PricingPlanID" class="btn btn-border">Choose Plan</a>
+            }
+            else
+            {
+              <a href="~/Users/Create" class="btn btn-border">Sign Up</a>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-xs-12">
+        <div class="pricing-table border-color-defult" style="padding:5px">
+          <div class="pricing-details">
+            <div class="icon">
+              <i class="lni-rocket"></i>
+            </div>
+            <h2 style="background-color:#039BE0;color:white">
+              @{var plan2 = db.PlanFeatures.Where(p => p.PricingPlanID == 1).FirstOrDefault();
+
+                string plan3 = plan2.PricingPlan.PlanName;
+              } @plan3
+            </h2>
+            <div class="price" style="font-size:30px;font-weight:bold">
+
+              @{var plan1 = db.PlanFeatures.Where(p => p.PricingPlanID == 1).FirstOrDefault();
+
+                  decimal plan44 = Convert.ToDecimal(plan1.PricingPlan.Amount);
+                  decimal pdollar = Convert.ToDecimal(plan1.PricingPlan.PriceDollar);
+                  var plan66 = string.Format("{0:#,0}", plan44);
+              } <span class="DollarSign" id="currencySignStandard">NGN</span><d id="amtStandard">@plan66</d>
+              <span style="font-weight:bold">monthly</span>
+              <input type="hidden" id="txtamtStandard" value="@plan66" />
+              <input type="hidden" id="txtdollarStandard" value="@pdollar" />
+            </div>
+            <ul style="text-align:left">
+              @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 1).ToList())
+              {
+                <li>
+                  @if (plan.Status == 1)
+                  {
+                    <img src="~/Images/mark2.png" style="width:15px" />
+
+                  }
+                  else
+                  {
+                    <img src="~/Images/removeicon.png" style="width:15px" />
+                  }
+                  @plan.Feature <hr style="margin:1px;padding:1px;" />
+                </li>
+              }
+
+            </ul>
+
+          </div>
+          <div class="plan-button">
+            @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
+            {
+            <a href="~/Users/BuyPlan/@plan1.PricingPlanID" class="btn btn-border">Choose @plan3</a>
+            }
+            else
+            {
+          <a href="~/Users/Create" class="btn btn-border">Choose @plan3</a>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-xs-12">
+        <div class="pricing-table pricing-active border-color-red" style="padding:5px">
+          <div class="pricing-details">
+            <div class="icon">
+              <i class="lni-drop"></i>
+            </div>
+            <h2 style="background-color:#09bbbb;color:white">
+              @{var plan7 = db.PlanFeatures.Where(p => p.PricingPlanID == 2).FirstOrDefault();
+
+                string plan8 = plan7.PricingPlan.PlanName;
+              } @plan8
+            </h2>
+            <div class="price" style="font-size:30px;font-weight:bold">
+
+              @{var plan10 = db.PlanFeatures.Where(p => p.PricingPlanID == 2).FirstOrDefault();
+
+                  decimal plan11 = Convert.ToDecimal(plan10.PricingPlan.Amount);
+                  decimal pdollarP = Convert.ToDecimal(plan10.PricingPlan.PriceDollar);
+                var plan12 = string.Format("{0:#,0}", plan11);
+              } <span class="DollarSign" id="currencySignPremium">NGN</span><d id="amtPremium">@plan12</d>
+              <span style="font-weight:bold">monthly</span>
+              <input type="hidden" id="txtamtPremium" value="@plan12" />
+              <input type="hidden" id="txtdollarPremium" value="@pdollarP" />
+            </div>
+            <ul style="text-align:left">
+              @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 2).ToList())
+              {
+                <li>
+                  @if (plan.Status == 1)
+                  {
+                    <img src="~/Images/mark2.png" style="width:15px" />
+
+                  }
+                  else
+                  {
+                    <img src="~/Images/removeicon.png" style="width:15px" />
+                  }
+                  @plan.Feature <hr style="margin:1px;padding:1px;" />
+                </li>
+              }
+
+            </ul>
+
+          </div>
+          <div class="plan-button">
+            @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
+            {
+            <a href="~/Users/BuyPlan/@plan10.PricingPlanID" class="btn btn-border">Choose @plan8</a>
+            }
+            else
+            {
+          <a href="~/Users/Create" class="btn btn-border">Choose @plan8</a>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12">
+        <div class="pricing-table border-color-green" style="padding:5px">
+          <div class="pricing-details">
+            <div class="icon">
+              <i class="lni-briefcase"></i>
+            </div>
+            <h2 style="background-color:#a1b206;color:white">
+              @{var plan13 = db.PlanFeatures.Where(p => p.PricingPlanID == 3).FirstOrDefault();
+
+                string plan14 = plan13.PricingPlan.PlanName;
+              } @plan14
+            </h2>
+
+            <div class="price" style="font-size:30px;font-weight:bold">
+              @{var plan16 = db.PlanFeatures.Where(p => p.PricingPlanID == 3).FirstOrDefault();
+
+                  decimal plan17 = Convert.ToDecimal(plan16.PricingPlan.Amount);
+                  decimal pdollarE = Convert.ToDecimal(plan16.PricingPlan.PriceDollar);
+                  
+                var plan18 = string.Format("{0:#,0}", plan17);
+              } <span class="DollarSign" id="currencySignEnterprise">NGN</span><d id="amtEnterprise">@plan18</d>
+              <span style="font-weight:bold">monthly</span>
+              <input type="hidden" id="txtamtPremium" value="@plan18" />
+              <input type="hidden" id="txtdollarEnterprise" value="@pdollarE" />
+            </div>
+            <ul style="text-align:left">
+              @foreach (var plan in db.PlanFeatures.Where(p => p.PricingPlanID == 3).ToList())
+              {
+                <li>
+                  @if (plan.Status == 1)
+                  {
+                    <img src="~/Images/mark2.png" style="width:15px" />
+
+                  }
+                  else
+                  {
+                    <img src="~/Images/removeicon.png" style="width:15px" />
+                  }
+                  @plan.Feature <hr style="margin:1px;padding:1px;" />
+                </li>
+              }
+
+            </ul>
+
+          </div>
+          <div class="plan-button">
+            @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
+            {
+            <a href="~/Users/BuyPlan/@plan16.PricingPlanID" class="btn btn-border">Choose @plan14</a>
+            }
+            else
+            {
+          <a href="~/Users/Create" class="btn btn-border">Choose  @plan14</a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<script>
 
+  function toggleCurrency(c) {
+    if (c == 'ngn') {
+      document.getElementById("ngn").style.backgroundColor = "#303D4B";
+      document.getElementById("ngn").style.color = "#FFFFFF";
+      document.getElementById("usd").style.color = "#000000";
+      document.getElementById("usd").style.backgroundColor = "#F0F0F0";
+      document.getElementById("currencySignFree").innerHTML = "NGN";
+
+      document.getElementById("currencySignStandard").innerHTML = "NGN";
+      document.getElementById("currencySignPremium").innerHTML = "NGN";
+      document.getElementById("currencySignEnterprise").innerHTML = "NGN";
+      document.getElementById("amtStandard").innerHTML = document.getElementById("txtamtStandard").value;
+      document.getElementById("amtPremium").innerHTML = document.getElementById("txtamtPremium").value;
+      document.getElementById("amtEnterprise").innerHTML = document.getElementById("txtamtEnterprise").value;
+    }
+    else {
+      document.getElementById("ngn").style.backgroundColor = "#F0F0F0";
+      document.getElementById("usd").style.backgroundColor = "#303D4B";
+      document.getElementById("ngn").style.color = "#000000";
+      document.getElementById("usd").style.color = "#FFFFFF";
+      document.getElementById("currencySignFree").innerHTML = "USD";
+      document.getElementById("currencySignStandard").innerHTML = "USD";
+      document.getElementById("currencySignPremium").innerHTML = "USD";
+      document.getElementById("currencySignEnterprise").innerHTML = "USD";
+      document.getElementById("amtStandard").innerHTML = document.getElementById("txtdollarStandard").value;
+      document.getElementById("amtPremium").innerHTML = document.getElementById("txtdollarPremium").value;
+      document.getElementById("amtEnterprise").innerHTML = document.getElementById("txtdollarEnterprise").value;
+    }
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    document.getElementById("ngn").style.backgroundColor = "#303D4B";
+    document.getElementById("ngn").style.color = "#FFFFFF";
+  });
+  </script>

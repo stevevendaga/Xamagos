@@ -1,4 +1,4 @@
-﻿<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
+<link href="~/TextEditor/jquery-te-1.4.0.css" rel="stylesheet" />
 <script src="~/TextEditor/jquery-te-1.4.0.js"></script>
 
 @model Myvshoponline.Product
@@ -202,7 +202,7 @@
                                    
                                           <div class="row" style="background-color:#F2F7FB;margin-top:5px;">
                                               <div class="alert alert-danger">
-                                                  Note: Amount purchased is not visible to visitors<br />
+                                                  Note: Amount purchased is not visible to customers<br />
                                                   @*It is confidential and is only used by the software to calculate profit/loss after sales.*@
                                               </div>
                                         
@@ -212,14 +212,15 @@
                                         </div>*@
 @*@if (TotalNumberofProducts < NumberofProducts)
 {*@
-                                        <div class="col-md-6" style="padding-top:0px;margin-top:0px;">
+                                          <div class="col-md-6" style="padding-top:0px;margin-top:0px;">
+                                            @*<input type="submit" id="btnSave" value="Add Product" class="btn btn-common" />*@
                                             <input type="button" id="btnSave" value="Add Product" class="btn btn-common" onclick="return doCreate()" />
                                             <button type="button" class="btn btn-common" disabled id="loadspinner" style="display:none;padding:15px;width:170px">
-                                                <div class="spinner-container">
-                                                    <div class="loading-spinner"></div>
-                                                </div>
+                                              <div class="spinner-container">
+                                                <div class="loading-spinner"></div>
+                                              </div>
                                             </button>
-                                        </div>
+                                          </div>
 @*}*@
                                     </div>
                                     
@@ -344,7 +345,7 @@
                         url: url,
                         data: {shopid:_shopid,name:_name,details:_description ,categoryid:_category,sellingamount:_sellingprice,qty:_qty,purchaseprice:_purchasedprice,currency:_currency},
                         cache: false,
-                        type: "GET",
+                        type: "POST",
                         success: function (data) {
                                     $("#loadspinner").css("display", "none");
                                     $("#btnSave").css("display", "block");
@@ -361,7 +362,8 @@
                                     })
 
                                     document.getElementById("name").value="";
-                                    document.getElementById("description").value = "";
+                                    //document.getElementById("description").value = "";
+                                    $("#description").val('');
                                     document.getElementById("category").value = "";
                                     document.getElementById("sellingprice").value = "";
                                     document.getElementById("amountpurchased").value = "";

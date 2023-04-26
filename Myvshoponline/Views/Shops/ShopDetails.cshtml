@@ -1,4 +1,4 @@
-﻿
+
 <style>
     /* Set the size of the div element that contains the map */
     #map {
@@ -127,7 +127,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:14px">Promote <font color="blue"> @Model.Name</font> to get it Listed as Popular Store and stand a chance to get more patronage.</h5>
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal">X</button>
             </div>
             <div class="modal-body" id="promotebody">
 
@@ -246,8 +246,8 @@
         @*<div class="modal-dialog modal-dialog-centered">*@
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="font-size:13px">Advertize your products on social media channels(Facebook,LinkedIn,Twitter) for <font color="blue"> @Model.Name</font> with our API</h5>
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h5 class="modal-title" style="font-size:10px">Advertize your products on social media channels(Facebook,LinkedIn,Twitter) for <font color="blue"> @Model.Name</font> with our API</h5>
+                <button type="button" class="close" data-dismiss="modal">X</button>
             </div>
             <div class="modal-body" id="promotebody">
                 <div class="form-group">
@@ -404,8 +404,8 @@
 
         <div class="panel">
             <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
-                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@Model.Name </h1>
-                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;"><i class="lni-map-marker"></i> @Model.Address</h1>
+                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:14px">@Model.Name </h1>
+                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:8px;"><i class="lni-map-marker"></i> @Model.Address</h1>
             </div>
             @*<div class="panel-body">
                 </div>*@
@@ -918,25 +918,25 @@
                                                                     <span id="onlineorder">
                                                                         @if (Model.EnableOnlineOrder == "Yes")
                                                                         {
-                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            @*if (Model.EmailVerify == null && Model.PhoneVerify == null)
                                                                             {
                                                                                 <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Disable Online Order</span>
                                                                             }
                                                                             else
                                                                             {
                                                                                 <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="disableonlineorder()">Click to Disable Online Order</a></span>
-                                                                            }
+                                                                            }*@
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            @*if (Model.EmailVerify == null && Model.PhoneVerify == null)
                                                                             {
                                                                                 <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Enable Online Order</span>
                                                                             }
                                                                             else
                                                                             {
                                                                                 <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="enableonlineorder()">Click to Enable Online Order</a></span>
-                                                                            }
+                                                                            }*@
                                                                         }
                                                                     </span>
                                                                 }
@@ -950,32 +950,32 @@
                                                                     <span id="onlineorder">
                                                                         @if (Model.EnableOnlineOrder == "Yes")
                                                                         {
-                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            @*if (Model.EmailVerify == null && Model.PhoneVerify == null)
                                                                             {
                                                                                 <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Disable Online Order</span>
                                                                             }
                                                                             else
                                                                             {
                                                                                 <span class="badge-success" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="disableonlineorder()">Click to Disable Online Order</a></span>
-                                                                            }
+                                                                            }*@
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (Model.EmailVerify == null && Model.PhoneVerify == null)
+                                                                            @*if (Model.EmailVerify == null && Model.PhoneVerify == null)
                                                                             {
                                                                                 <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;"><i class="lni lni-cart"></i>Click to Enable Online Order</span>
                                                                             }
                                                                             else
                                                                             {
                                                                                 <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px;cursor:pointer"><i class="lni lni-cart"></i><a onclick="enableonlineorder()">Click to Enable Online Order</a></span>
-                                                                            }
+                                                                            }*@
                                                                         }
                                                                     </span>
                                                                 }
                                                             }
                                                         </div>
                                                     </div>
-                                                    <hr style="margin-bottom:2px;" />
+                                                    @*<hr style="margin-bottom:2px;" />
 
                                                     <div class="row">
                                                         <img src="~/Images/widthdrawal.png" class="img-circle elevation-3 " style="width:25px;height:25px;" />
@@ -986,7 +986,7 @@
                                                         <div class="badge" id="bankaccountinfobtn" style="display:none">
                                                             <img src="~/Images/notverified.png" style="width:15px;height:15px;cursor:pointer" onclick="Close_bankaccountinfo()" />
                                                         </div>
-                                                    </div>
+                                                    </div>*@
                                                     <!--bank account info box-->
                                                     @*<a href="#" data-toggle="popover" title="Popover header" data-content="Some text" data-placement="top" data-trigger="hover">Google Map</a>*@
                                                     <script>

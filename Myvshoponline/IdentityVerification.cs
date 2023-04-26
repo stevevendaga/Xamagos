@@ -28,7 +28,9 @@ namespace Myvshoponline
         public Nullable<int> VerificationStatus { get; set; }
         public string VerificationNote { get; set; }
         public string ImgSrc { get; set; }
+        public Nullable<int> CountryID { get; set; }
     
+        public virtual CountryRegion CountryRegion { get; set; }
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
     }

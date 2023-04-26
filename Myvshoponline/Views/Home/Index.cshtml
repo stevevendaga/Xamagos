@@ -27,98 +27,77 @@
             <button type="button" class="close" data-dismiss="modal">X</button>
         </div>
         <div class="modal-body" id="donatebody" style="color:black;">
-            <b style="color:black;"> XAMAGOS </b>is an online platform that connects your business to your customers.
-            @*It creates an online presence of the physical shops we have in our markets in Nigeria.*@
-            <hr style="margin-top:2px;margin-bottom:5px;" />
-            <div style="font-weight:bold;color:black;margin-top:8px;">
-               BENEFITS
-            </div>
-            @foreach (var item in db.PlatformBenefits.ToList())
-            {
-                <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
-                    <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Benefit
-                    <hr style="margin:1px;padding:1px;" />
-                </div>
-            }
+          <b style="color: #17A2B8;"> XAMAGOS </b>is the ultimate online platform for businesses to connect with their customers.
+          @*It creates an online presence of the physical shops we have in our markets in Nigeria.*@
+          <hr style="margin-top:2px;margin-bottom:5px;" />
+          <span style="font-size:13px;text-align:justify">
+            Our online platform provides you with a unique store URL that allows
+            customers to easily access your store from anywhere, while our mobile
+            app enables them to purchase your products on the go.
+            With integrated
+            payment solutions, product views tracker and location on Google Map,
+            you can take your business to the next level.<br /><br />
+            Xamagos also offers
+            advanced features like Product Finder which helps buyers quickly
+            find what they're looking for and advertises your products on
+            <a href="https://radio.xamagos.com" target="_blank"><span style="color:dodgerblue">Xamagos Radio</span></a> so you'll never miss an opportunity to make a sale.
+          </span>
+          <hr />
+          <span style="font-size: 20px; color: #17A2B8">
+            Get started with Xamagos today and experience the power of online marketing!
+          </span>
+          @if (string.IsNullOrEmpty((string)Session["username"]))
+          {
+            <p style="text-align:center;">
 
-            <div style="font-weight:bold;color:black;margin-top:8px;">
-                Amazing Features of XAMAGOS
-            </div>
+              <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
+                <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+              </a>
 
-            <b> &raquo;&raquo;   Product Finder </b>
-            <br />
-            It enables buyers to find their desired products in a specific location across Nigeria.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
+              <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
+                <i class="fa fas fa-lock-open"></i> Login
+              </a>
+              </p>
+           }
 
-
-            <b> &raquo;&raquo;   Bargain Market </b>
-            <br />
-            Bargain market is a feature that enable buyers to negotiate product prices with sellers.
-            It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            @*<b> &raquo;&raquo;   Google Map Geocoding </b>
-            <br />
-            This is a special feature of XAMAGOS that automatically converts a shop's physical address into geographic coordinates,
-            which shows the exact location of a shop on a Google Map.
-            <hr style="margin-top:2px;margin-bottom:8px;" />*@
-
-            <b> &raquo;&raquo;   Nearby Shops</b>
-            <br />
-            Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            @*<b> &raquo;&raquo;   SMS/Email Notifications</b>
-            <br />
-            This feature provides both sellers and buyers with instant SMS/email notifications on a transaction.
-            <hr style="margin-top:2px;margin-bottom:8px;" />*@
-
-            @*<b>Why do you need XAMAGOS?</b>
-            <br />
-            1. It creates an online presence of the physical shops we have in our markets in Nigeria.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            2. It brings the market to your fingertips.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            3. It allows you to find products in a specific location across Nigeria.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            4. It creates a platform for products price bargaining.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            5. For easy and speedy delivery of orders.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            6. The platform handles sales on behalf of sellers from orders to delivery.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            7. It helps sellers to reach a wide range of customers.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            8. It drives more people to seller’s physical shop.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            9. For easy sharing of shops/products to different social media platforms.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-            10. You can manage different branches of your shop in one place.
-            <hr style="margin-top:2px;margin-bottom:8px;" />
-
-
-            <b>Mode of Payment </b><br />
-            &raquo;&raquo; Online payment <br />
-            &raquo;&raquo; Pay on delivery
-            <br>
-            <b>Delivery</b>
-            <br />
-            Our company handles the delivery on behalf of sellers.
-            <hr />
-            <b> Mode of Delivery </b> <br />
-            We offer home delivery services within major towns.*@
-
-
+              @*<div style="font-weight:bold;color:black;margin-top:8px;">
+          BENEFITS
         </div>
+        @foreach (var item in db.PlatformBenefits.ToList())
+        {
+          <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+            <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Benefit
+            <hr style="margin:1px;padding:1px;" />
+          </div>
+        }*@
+
+              @*<div style="font-weight:bold;color:black;margin-top:8px;">
+          Amazing Features of XAMAGOS
+        </div>
+
+        <b> &raquo;&raquo;   Product Finder </b>
+        <br />
+        It enables buyers to find their desired products in a specific location across Nigeria.
+        <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+        <b> &raquo;&raquo;   Bargain Market </b>
+        <br />
+        Bargain market is a feature that enable buyers to negotiate product prices with sellers.
+        It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
+        <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+
+        <b> &raquo;&raquo;   Nearby Shops</b>
+        <br />
+        Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
+        <hr style="margin-top:2px;margin-bottom:8px;" />*@
+
+
+
+
+          </div>
         <button type="button" class="btn btn-common" id="okbtn" data-dismiss="modal" style="display:none">OK</button>
     </div>
 
@@ -141,77 +120,94 @@
             @foreach (var item in db.Settings)
             {
                 <div class="row">
-                    <div class="col-lg-12 col-12">
-                        <!-- small card -->
-                        <div class="small-box bg-info">
+                  <div class="col-lg-12 col-12">
+                    <h5 class="fancy" style="color:white;text-align:center;padding-top:10px;background-color:#1BACBD;border:none;font-size:16px;">
+                    <br />
+                    @item.AboutSection1</h5>
+                    <!-- small card -->
+                    <div class="small-box bg-info">
 
-                            <div class="inner" style="background-image:url('../images/sell online.jpg');background-size:cover;">
-                                <h5 style="color:white;text-align:center;padding-top:10px;background-color:#1BACBD;border:none">@item.AboutSection1</h5>
-                            </div>
-
-                            <div class="icon">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
+                      @*<div class="inner" style="background-image:url('../images/sell online.jpg');background-size:cover;">
+        <h5 class="fancy" style="color:white;text-align:center;padding-top:10px;background-color:#1BACBD;border:none;font-size:24px;">@item.AboutSection1</h5>
+      </div>*@
 
 
-                            <span href="#" class="small-box-footer">
-                                @item.AboutSection2 <i class="fas fa-arrow-circle-down"></i>
-                            </span>
-                            <hr style="border:0px;margin:5px;" />
 
-                            <div class="attachment-block clearfix">
 
-                                <img class="attachment-img" src="../images/buy icon.jpg " alt="XAMAGOS" style="width:100%">
-                                @*<div class="attachment-pushed">*@
-                                <div class="attachment-text">
-                                    <div class="attachment-text" style="text-align:left">
-                                        @item.AboutSection3 @*<a href="#" style="color:#00BDF5">Read More...</a>*@
-                                        <center> <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Read More" data-toggle="modal" data-target="#readmore" onclick="clearTextBox();"> <i class="lni-more-alt"></i>Read More<i class="lni-more-alt"></i></a></center>
-                                    </div>
-                                    <!-- /.attachment-text -->
-                                </div>
-                                <!-- /.attachment-pushed -->
-                            </div>
-                            @if (string.IsNullOrEmpty((string)Session["username"]))
-                            {
-                            <p style="text-align:center;">
+                      <div class="icon">
+                        <i class="fas fa-shopping-cart"></i>
+                      </div>
 
-                                <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
-                                    @{
-                                        int? trialperiod = db.TrialPeriods.Select(s => s.Period).FirstOrDefault();
-                                    }
 
-                                    <i class="fa fas fa-pencil-alt"></i> Sign Up Now
-                                </a>
+                      <span href="#" class="small-box-footer">
+                        @item.AboutSection2 <i class="fas fa-arrow-circle-down"></i>
+                      </span>
+                      <hr style="border:0px;margin:5px;" />
 
-                                @*<a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();">
-                                    <i class="fa fas fa-lock-open"></i> Login
-                                </a>*@
-                                <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
-                                    <i class="fa fas fa-lock-open"></i> Login
-                                </a>
-                                <br />
-                                @*<a href="~/ShopCustomers/Create/?id=&v=1" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;margin-bottom:5px;font-weight:bold">
-                                        <i class="fa fas fa-pencil-alt"></i> Create account (Buyer)
-                                    </a>
+                      <div class="attachment-block clearfix">
 
-                                    <a href="~/Home/CustomerLogin" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;font-weight:bold">
-                                        <i class="fa fas fa-lock-open"></i> Buyer Login
-                                    </a>*@
-
-                            </p>
-                              }
-
+                        <img class="attachment-img" src="../images/buy icon.jpg " alt="XAMAGOS" style="width:100%">
+                        @*<div class="attachment-pushed">*@
+                        <div class="attachment-text">
+                          <div class="fancy-box" style="text-align:left">
+                            @item.AboutSection3
+                            <center> <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Read More" data-toggle="modal" data-target="#readmore" onclick="clearTextBox();"> <i class="lni-more-alt"></i>Read More<i class="lni-more-alt"></i></a></center>
+                          </div>
+                          <!-- /.attachment-text -->
                         </div>
+                        <!-- /.attachment-pushed -->
+                      </div>
+                      @if (string.IsNullOrEmpty((string)Session["username"]))
+                      {
+                        <p style="text-align:center;">
+
+                          <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
+                            @{
+                              int? trialperiod = db.TrialPeriods.Select(s => s.Period).FirstOrDefault();
+                            }
+
+                            <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+                          </a>
+
+                          @*<a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();">
+              <i class="fa fas fa-lock-open"></i> Login
+          </a>*@
+                          <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
+                            <i class="fa fas fa-lock-open"></i> Login
+                          </a>
+                          <br />
+                          @*<a href="~/ShopCustomers/Create/?id=&v=1" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;margin-bottom:5px;font-weight:bold">
+              <i class="fa fas fa-pencil-alt"></i> Create account (Buyer)
+          </a>
+
+          <a href="~/Home/CustomerLogin" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;font-weight:bold">
+              <i class="fa fas fa-lock-open"></i> Buyer Login
+          </a>*@
+
+                        </p>
+                      }
+
                     </div>
+                  </div>
                 </div>
 
 
                                         }
-            <center>
-                <iframe width="440" height="150" src="https://www.youtube.com/embed/YWS84dCSjng" title="About XAMAGOS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <center>
+          @*<iframe width="440" height="150" src="https://www.youtube.com/embed/YWS84dCSjng" title="About XAMAGOS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+          <label>Listen Live to Xamagos Radio</label>
+          <iframe width="440" height="150" 
+                  src="https://zeno.fm/player/xamagos-radio" 
+                  title="Xamagos Radio" frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen
+                  allowtransparency="true"
+                  style="background-image: url(images/bgcrop2.jpg); "
+                  >
 
-            </center>
+          </iframe>
+
+        </center>
         </div>
         <!-- /.card -->
     </div>

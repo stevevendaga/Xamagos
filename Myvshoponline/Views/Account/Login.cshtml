@@ -78,6 +78,7 @@
         {
             window.localStorage.setItem('rememberMe', 'true');
         }
+
     }
 </script>
 <script type="text/javascript">
@@ -110,7 +111,7 @@
                     url: url,
                     data: { email: _email, password: _pw},
                     cache: false,
-                    type: "GET",
+                    type: "POST",
                     success: function (data) {
                         var html = '';
                       $.each(data, function (key, item) {

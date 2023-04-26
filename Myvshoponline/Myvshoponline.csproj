@@ -46,9 +46,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LocalStorage, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LocalStorage.2.1.0\lib\netstandard2.0\LocalStorage.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="LocalStorage, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LocalStorage.1.1.0\lib\net46\LocalStorage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Cryptography.Internal, Version=7.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Cryptography.Internal.7.0.4\lib\net462\Microsoft.AspNetCore.Cryptography.Internal.dll</HintPath>
@@ -73,8 +72,8 @@
       <HintPath>..\packages\Microsoft.Report.Viewer.11.0.0.0\lib\net\Microsoft.ReportViewer.WebForms.DLL</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
@@ -83,6 +82,9 @@
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -269,6 +271,7 @@
     <Compile Include="Controllers\OurLeadsController.cs" />
     <Compile Include="Controllers\PaymentAccountActivationsController.cs" />
     <Compile Include="Controllers\PaymentStatusController.cs" />
+    <Compile Include="Controllers\PaypalController.cs" />
     <Compile Include="Controllers\PlanFeaturesController.cs" />
     <Compile Include="Controllers\PopularProductPricingsController.cs" />
     <Compile Include="Controllers\PopularProductsController.cs" />
@@ -394,6 +397,7 @@
     <Compile Include="PaymentStatu.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PaypalConfiguration.cs" />
     <Compile Include="PlanFeature.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
@@ -3549,12 +3553,14 @@
     <Content Include="Views\Home\ProductNotFound.cshtml" />
     <Content Include="Views\Home\ProductDetails.cshtml" />
     <Content Include="Views\Home\Pricing.cshtml" />
+    <Content Include="Views\Home\Radio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />
     <Folder Include="ApplicantCV\" />
     <Folder Include="ApplicantPassports\" />
     <Folder Include="App_Data\" />
+    <Folder Include="build\css\" />
     <Folder Include="BusinessImages\" />
     <Folder Include="Identityuploads\" />
     <Folder Include="MailingList\" />
@@ -3564,6 +3570,7 @@
     <Folder Include="templates\datatables.net-bs4\" />
     <Folder Include="templates\datatables\" />
     <Folder Include="templates\extra-libs\" />
+    <Folder Include="Views\Paypal\" />
     <Folder Include="Views\SetSession\" />
     <Folder Include="Views\Settings\" />
   </ItemGroup>

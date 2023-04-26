@@ -117,7 +117,7 @@
                  <div class="modal-content">
                      <div class="modal-header">
                          <h5 class="modal-title" style="font-size:14px">Upload Product Picture for @item.Name</h5>
-                         <button type="button" class="close" data-dismiss="modal">×</button>
+                         <button type="button" class="close" data-dismiss="modal">X</button>
                      </div>
                      <div class="modal-body">
                          @using (Html.BeginForm("UploadProductPicture", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -145,7 +145,7 @@
                      <div class="modal-content">
                          <div class="modal-header">
                              <h5 class="modal-title" style="font-size:12px">@item.Name</h5>
-                             <button type="button" class="close" data-dismiss="modal">×</button>
+                             <button type="button" class="close" data-dismiss="modal">X</button>
                          </div>
                          <div class="modal-body">
                              <center>
@@ -163,10 +163,10 @@
     <div id="content" style="margin-top:-32px" >
         <div class="panel">
             <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
-                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@ViewBag.ShopName </h1>
+                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:14px">@ViewBag.ShopName </h1>
                 @foreach (var item22 in ViewBag.ProductsDetail)
                 {
-                    <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;">
+                    <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:8px;">
                         <i class="lni-map-marker"></i> @item22.Shop.Address
                     </h1>
                 }
@@ -462,7 +462,7 @@
                                         <span class="meta-part" style="padding-left:10px;margin-bottom:0px">
                                             <a href="#" style="color:black;font-weight:bold;font-size:24px;font-family:Arial">
                                                 @if (item.Currency == "NGN")
-                                                {<span>₦</span>}
+                                                {<del class="NairaSign">N</del>}
                                                 else
                                                 {
 

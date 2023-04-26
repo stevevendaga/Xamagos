@@ -2,443 +2,534 @@
 
 @{
 
-    ViewBag.Title = "Create Account";
+  ViewBag.Title = "Create Account";
 
 }
+<script src="https://jsuites.net/v4/jsuites.js"></script>
+<link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
+<style>
+  /*FOR COUNTRIES PHONE NUMBER INPUT*/
+  .iti {
+    width: 100%;
+  }
+</style>
 
-    <!-- Page Header End -->
-    <!-- Content section Start -->
+<!-- Page Header End -->
+<!-- Content section Start -->
 @*<body style="background-color:#FBFBFB"></body>*@
 <body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
 
-    <div class="row">
-        <div class="col-md-3">
+  <div class="row">
+    <div class="col-md-3">
 
-        </div>
-        <div class="col-md-6">
-            <section id="content" class="section-padding" style="padding-top:0px;margin-top:30px;">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-12 col-md-6 col-xs-12" style="background-color:#F2F4F6">
-                            <div class="page-login-form box">
-                                <h3 style="padding:5px">
-                                    Create Your account
-                                </h3>
-                                <form class="login-form" method="post" action="~/Users/Create">
-                                    @Html.AntiForgeryToken()
-                                    <div id="msg"></div>
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-user"></i>
-                                            @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Your Name", @onchange = "this.value= this.value.toUpperCase()", @id = "name" } })
-                                            @if (ViewBag.CompanyExist != null)
-                                            {<div class="alert alert-danger" style="color:red;">@ViewBag.CompanyExist</div>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-phone-handset"></i>
-                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required", @pattern = "[0-9]{11}", @type = "tel", @id = "phone" } })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-envelope"></i>
-                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email", @id = "email" } })
-                                            @if (ViewBag.EmailExist != null)
-                                            {<div class="alert alert-danger" style="color:red;">@ViewBag.EmailExist</div>
-                                            }
-                                        </div>
-                                    </div>
-                                   
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-world-alt"></i>
-                                            @Html.DropDownList("SexID", null, "-- Select Gender --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "sex" })
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-map-marker"></i>
-                                           @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "state" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-map-marker"></i>
-                                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Your Address", @required = "required", @id = "address" } })
-                                        </div>
-                                    </div>
-
-                                    @*<div class="form-group">
-                                            <div class="input-icon">
-                                                <i class="lni-user"></i>
-                                                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username", @required = "required" } })
-                                                @if (ViewBag.UsernameExist != null)
-                                                {<div class="panel panel-danger" style="color:red;">@ViewBag.UsernameExist</div>
-                                                }
-                                            </div>
-                                        </div>*@
-                                    <div class="row">
-                                        <div id="display_count" style="color:red;"></div><div id="word_left"></div><br />
-                                        <div class="col-md-6 col-12 col-lg-6">
-                                            
-                                            <div class="form-group">
-                                                <div class="input-icon">
-                                                    <i class="lni-lock"></i>
-                                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "password", @placeholder = "Password", @type = "password", @required = "required" } })
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 col-12 col-lg-6">
-                                            <div class="form-group">
-                                                <div class="input-icon">
-                                                    <i class="lni-unlock"></i>
-                                                    <input type="password" id="confirmpassword" class="form-control" placeholder="Retype Password" required="required">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-                                   
-
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <i class="lni-reddit"></i>
-                                            @if (Request.QueryString["rx"] != null)
-                                            {
-                                                <input type="hidden" id="referalid" class="form-control" value="@Request.QueryString["rx"]" name="referalid" placeholder="Referal Code">
-                                                <input type="text" readonly="readonly" id="referalid" class="form-control" value="@Request.QueryString["rx"]" name="referalid" placeholder="Referal Code">
-                                            }
-                                            else
-                                            {
-                                                <input type="text" id="referalid" class="form-control" name="referalid" placeholder="Referal Code [optional]">
-                                            }
-
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-common log-btn mt-3" onclick="return doSignup()" id="btnLogin">Register</button>
-                                    <button type="button" class="btn btn-common log-btn mt-3" disabled id="loadspinner" style="display:none;padding:18px">
-                                        <div class="spinner-container">
-                                            <div class="loading-spinner"></div>
-                                        </div>
-                                    </button>
-                                    <p class="text-center">Already have an account?<a href="~/Account/Login" id="loginSignup"> Login</a></p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="col-md-3">
-            <p></p>
-            <br />
-            <p>
-
-            </p>
-        </div>
     </div>
-    <p></p>
-    <p></p>
-    <p></p>
-</body>
-    <!-- Content section End -->
-@*<script>
- 
-    function checkpassword()
-    {
-        if (document.getElementById("password").value != document.getElementById("confirmpassword").value)
-        {
-            //alert("Password Mismatch!");
-            $('#display_count').text('Password do not match');
-            document.getElementById("confirmpassword").style.borderColor = "red";
-            document.getElementById("confirmpassword").focus();
-            return false;
-        }
-    }
-</script>*@
+    <div class="col-md-6">
+      <section id="content" class="section-padding" style="padding-top:0px;margin-top:30px;">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-12 col-md-6 col-xs-12" style="background-color:#F2F4F6">
+              <div class="page-login-form box">
+                <h3 style="padding:5px">
+                  Create Your account
+                </h3>
+                <form class="login-form" method="post" action="~/Users/Create">
+                  @Html.AntiForgeryToken()
+                  <div id="msg"></div>
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="lni-user"></i>
+                      @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Your Name", @onchange = "this.value= this.value.toUpperCase()", @id = "name" } })
+                      @if (ViewBag.CompanyExist != null)
+                      {<div class="alert alert-danger" style="color:red;">@ViewBag.CompanyExist</div>
+                    }
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    @*<div class="input-icon">
+      <i class="lni-phone-handset"></i>*@
+                    <input name="phone" type="text" id="phone" class="form-control" style="width:100%" placeholder="Phone Number" />
+                    @*@Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number", @required = "required", @pattern = "[0-9]{11}", @type = "tel", @id = "phone" } })*@
+                    @*</div>*@
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#password").on('keydown', function(e) {
-        var words = $(this).val().length+1;
-        if (words < 6) {
-            $('#display_count').text('Password must be a minimun of 6 characters');
-          //  $('#word_left').text(160 - words)
-        }else{
-            //if (e.which !== 8) e.preventDefault();
-            $('#display_count').text('');
-        }
-    });
- });
-</script>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#reg").on('click', function(e) {
-        var words = $("#password").val().length;
-        if (words < 6) {
-            $('#display_count').text('Password must be a minimun of 6 characters');
-            document.getElementById("password").style.borderColor = "red";
-            return false;
-          //  $('#word_left').text(160 - words)
-        }
-        else if ($("#password").val() != $("#confirmpassword").val())
-            {
-            $('#display_count').text('Password do not match');
-            document.getElementById("confirmpassword").style.borderColor = "red";
-            return false;
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="lni-envelope"></i>
+                      @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required", @type = "email", @id = "email" } })
+                      @if (ViewBag.EmailExist != null)
+                      {<div class="alert alert-danger" style="color:red;">@ViewBag.EmailExist</div>
+                    }
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="lni-world-alt"></i>
+                      @Html.DropDownList("SexID", null, "-- Select Gender --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "sex" })
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
+                    <div class="input-icon">
+                      <i class="lni-map-marker"></i>
+                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country" })
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="lni-map-marker"></i>
+                      @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "state" })
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-icon">
+                      <i class="lni-map-marker"></i>
+                      @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Your Address", @required = "required", @id = "address" } })
+                    </div>
+                  </div>
+
+                  @*<div class="form-group">
+        <div class="input-icon">
+            <i class="lni-user"></i>
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username", @required = "required" } })
+            @if (ViewBag.UsernameExist != null)
+            {<div class="panel panel-danger" style="color:red;">@ViewBag.UsernameExist</div>
             }
-        else {
-            //if (e.which !== 8) e.preventDefault();
-            document.getElementById("password").style.borderColor = "green";
-            document.getElementById("confirmpassword").style.borderColor = "green";
-            $('#display_count').text('');
+        </div>
+    </div>*@
+                  <div id="display_count" style="color:red;"></div><div id="word_left"></div><br />
+                  <div class="row">
+
+                    <div class="col-md-6 col-12 col-lg-6">
+
+                      <div class="form-group">
+                        <div class="input-icon">
+                          <i class="lni-lock"></i>
+                          @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "password", @placeholder = "Password", @type = "password", @required = "required" } })
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 col-12 col-lg-6">
+                      <div class="form-group">
+                        <div class="input-icon">
+                          <i class="lni-unlock"></i>
+                          <input type="password" id="confirmpassword" class="form-control" placeholder="Retype Password" required="required">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  @*<div class="form-group">
+      <div class="input-icon">
+        <i class="lni-reddit"></i>
+        @if (Request.QueryString["rx"] != null)
+        {
+          <input type="hidden" id="referalid" class="form-control" value="@Request.QueryString["rx"]" name="referalid" placeholder="Referal Code">
+          <input type="text" readonly="readonly" id="referalid" class="form-control" value="@Request.QueryString["rx"]" name="referalid" placeholder="Referal Code">
         }
-    });
- });
-</script>
+        else
+        {
+          <input type="text" id="referalid" class="form-control" name="referalid" placeholder="Referal Code [optional]">
+        }
+
+      </div>
+    </div>*@
+                  <span id="chkConsentmsg" style="color:red"></span>
+                  <ul class="form-links">
+                    <li class="text-center" style="color:black;font-size:12px;">
+                      <input type="checkbox" onchange="consentbox()" id="chkConsent">&nbsp; I agree that I understand the<a href="#"> Terms and conditions  </a> of Xamagos
+                    </li>
+                  </ul>
+                  <button type="button" class="btn btn-common log-btn mt-3" onclick="return doSignup();" id="btnLogin">Register</button>
+                  <button type="button" class="btn btn-common log-btn mt-3" disabled id="loadspinner" style="display:none;padding:18px">
+                    <div class="spinner-container">
+                      <div class="loading-spinner"></div>
+                    </div>
+                  </button>
+                  <p class="text-center">Already have an account?<a href="~/Account/Login" id="loginSignup"> Login</a></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-3">
+      <p></p>
+      <br />
+      <p>
+
+      </p>
+    </div>
+  </div>
+  <p></p>
+  <p></p>
+  <p></p>
+</body>
+<!-- Content section End -->
 @*<script>
-    function verifyemail(_email) {
-        var url = "https://email-checker.p.rapidapi.com/verify/v1?" + _email;
-        $.ajax({
-            url: url,
-            data: { email: _email },
-            async: true,
-            crossDomain: true,
-            cache: false,
-            type: "GET",
-            headers: {
-                "x-rapidapi-host": "email-checker.p.rapidapi.com",
-                "x-rapidapi-key": "SIGN-UP-FOR-KEY"
-            },
-            success: function (response) {
-                alert(response);
-            },
-        });
+
+      function checkpassword()
+      {
+          if (document.getElementById("password").value != document.getElementById("confirmpassword").value)
+          {
+              //alert("Password Mismatch!");
+              $('#display_count').text('Password do not match');
+              document.getElementById("confirmpassword").style.borderColor = "red";
+              document.getElementById("confirmpassword").focus();
+              return false;
+          }
+      }
+  </script>*@
+
+<script>
+  function consentbox() {
+    if (document.getElementById("chkConsent").checked == true) {
+      window.localStorage.setItem('chkconsent', 'true');
     }
-</script>*@
+    else {
+      window.localStorage.removeItem('chkconsent');
+    }
+  }
+</script>
 
 <script type="text/javascript">
-function Check_Email_Existence()
-{
+  $(document).ready(function () {
+    $("#password").on('keydown', function (e) {
+      var words = $(this).val().length + 1;
+      if (words < 6) {
+        $('#display_count').text('Password must be a minimun of 6 characters');
+        //  $('#word_left').text(160 - words)
+      } else {
+        //if (e.which !== 8) e.preventDefault();
+        $('#display_count').text('');
+      }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#reg").on('click', function (e) {
+      var words = $("#password").val().length;
+      if (words < 6) {
+        $('#display_count').text('Password must be a minimun of 6 characters');
+        document.getElementById("password").style.borderColor = "red";
+        return false;
+        //  $('#word_left').text(160 - words)
+      }
+      else if ($("#password").val() != $("#confirmpassword").val()) {
+        $('#display_count').text('Password do not match');
+        document.getElementById("confirmpassword").style.borderColor = "red";
+        return false;
+      }
+      else {
+        //if (e.which !== 8) e.preventDefault();
+        document.getElementById("password").style.borderColor = "green";
+        document.getElementById("confirmpassword").style.borderColor = "green";
+        $('#display_count').text('');
+      }
+    });
+  });
+</script>
+@*<script>
+      function verifyemail(_email) {
+          var url = "https://email-checker.p.rapidapi.com/verify/v1?" + _email;
+          $.ajax({
+              url: url,
+              data: { email: _email },
+              async: true,
+              crossDomain: true,
+              cache: false,
+              type: "GET",
+              headers: {
+                  "x-rapidapi-host": "email-checker.p.rapidapi.com",
+                  "x-rapidapi-key": "SIGN-UP-FOR-KEY"
+              },
+              success: function (response) {
+                  alert(response);
+              },
+          });
+      }
+  </script>*@
+
+<script type="text/javascript">
+  function Check_Email_Existence() {
     var _email = document.getElementById("email").value;
     var url = "/Users/Check_Email_Existence/";
-        $.ajax({
-            url: url,
-            data: { email: _email },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                var html = "";
-                
-            },
-            error: function (reponse) {
-             alert("error : " + reponse);
-            }
-        });
+    $.ajax({
+      url: url,
+      data: { email: _email },
+      cache: false,
+      type: "POST",
+      success: function (data) {
+        var html = "";
 
-}
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
 
-function Check_Shortname_Existence() {
+  }
+
+  function Check_Shortname_Existence() {
     var _shortname = document.getElementById("shortname").value;
     var url = "/Users/Check_shortname_Existence/";
     $.ajax({
-        url: url,
-        data: { shortname: _shortname },
-        cache: false,
-        type: "POST",
-        success: function (data) {
-            var html = "";
+      url: url,
+      data: { shortname: _shortname },
+      cache: false,
+      type: "POST",
+      success: function (data) {
+        var html = "";
 
-        },
-        error: function (reponse) {
-            alert("error : " + reponse);
-        }
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
     });
-}
+  }
 </script>
 
 <script type="text/javascript">
-    function doSignup() {
+  function doSignup() {
 
-        var _name = document.getElementById("name").value.replace(/\s+/g, ' ').trim();
-        var _phone = document.getElementById("phone").value;
-        var _email = document.getElementById("email").value;
-        var _sex = document.getElementById("sex").value;
-        var _state = document.getElementById("state").value;
-        var _address = document.getElementById("address").value;
-        var _pw = document.getElementById("password").value;
-        var _confirmpw = document.getElementById("confirmpassword").value;
-       
-        var words = $("#password").val().length;
-            if (_name == '') {
-                $("#name").css("borderColor", "red");
-                $("#name").focus();
-                return false;
-            }
-            else if (_phone == '') {
-                $("#phone").css("borderColor", "red");
-                $("#phone").focus();
+    var _name = document.getElementById("name").value.replace(/\s+/g, ' ').trim();
+    var _phone = document.getElementById("phone").value;
 
-                $("#name").css("borderColor", "green");
-                return false;
-            }
-            else if (_email == '') {
-                $("#email").css("borderColor","red");
-                $("#email").focus();
+    var input = document.querySelector('#phone');
+    //access the instance again using this method
+    var iti = window.intlTelInputGlobals.getInstance(input);
 
-                $("#phone").css("borderColor", "green");
-                return false;
-            }
-            else if (_sex == '') {
-                $("#sex").css("borderColor", "red");
-                $("#sex").focus();
-                return false;
-            }
-            else if (_state == '') {
-                $("#state").css("borderColor", "red");
-                $("#state").focus();
-                return false;
-            }
-            else if (_address == '') {
-                $("#address").css("borderColor", "red");
-                $("#address").focus();
+    //Validate the current number
+    //Returns: true/false
+    var isValidNumber = iti.isValidNumber();
 
-                $("#email").css("borderColor", "green");
-                return false;
-            }
-            else if (_pw == '') {
-                $("#password").css("borderColor","red");
-                $("#password").focus();
 
-                $("#address").css("borderColor", "green");
-                return false;
-            }
-            else if (_confirmpw == '') {
-                $("#confirmpassword").css("borderColor", "red");
-                $("#confirmpassword").focus();
+    var _email = document.getElementById("email").value;
+    var _sex = document.getElementById("sex").value;
+    var _state = document.getElementById("state").value;
+    var _address = document.getElementById("address").value;
+    var _pw = document.getElementById("password").value;
+    var _confirmpw = document.getElementById("confirmpassword").value;
 
-                $("#password").css("borderColor", "green");
-                return false;
-            }
-            else if (_pw != _confirmpw) {
-                $('#display_count').text('Password do not match');
-                $("#confirmpassword").css("borderColor", "red");
-                return false;
-            }
-            else if (words < 6)
-            {
-                $('#display_count').text('Password must be a minimun of 6 characters');
-                document.getElementById("password").style.borderColor = "red";
-                return false;
-            }
-           
-            else {
-                if (ValidateEmail(_email))
-                {
-                    $("#name").css("borderColor", "green");
-                    $("#phone").css("borderColor", "green");
-                    $("#email").css("borderColor", "green");
-                    $("#sex").css("borderColor", "green");
-                    $("#state").css("borderColor", "green");
-                    $("#address").css("borderColor", "green");
-                    $("#password").css("borderColor", "green");
-                    $("#confirmpassword").css("borderColor", "green");
+    var words = $("#password").val().length;
+    if (_name == '') {
+      $("#name").css("borderColor", "red");
+      $("#name").focus();
+      return false;
+    }
+    else if (_phone == '') {
+      $("#phone").css("borderColor", "red");
+      $("#phone").focus();
 
-                    $("#loadspinner").css("display", "block");
-                    $("#btnLogin").css("display", "none");
-               
-                    var url = "/Users/SignUpAjax/";
-                    $.ajax({
-                        url: url,
-                        data: {name:_name,phone:_phone, email: _email,sex:_sex,state:_state, address:_address, password: _pw},
-                        cache: false,
-                        type: "GET",
-                        success: function (data) {
-                            var html = '';
-                            $.each(data, function (key, item) {
-                                if (item.EmailExist == 'true')
-                                {
-                                    $("#loadspinner").css("display", "none");
-                                    $("#btnLogin").css("display", "block");
-                                    $("#msg").html('<p class="alert alert-danger">Email already registered!</p>');
-                                }
-                                else if (item.PhoneExist == 'true') {
-                                     $("#loadspinner").css("display", "none");
-                                    $("#btnLogin").css("display", "block");
-                                    $("#msg").html('<p class="alert alert-danger">Phone number already registered!</p>');
-                                }
-                                else if (item.GotoVerification == 'true') {
-                                    $("#msg").html('<p class="alert alert-success">Redirecting to verification, email already registered but not verified...</p>');
-                                    window.location = '../Users/VerificationLinkSent/?id=' + item.userid+'&ax=1';
-                                }
-                                
-                                else {
+      $("#name").css("borderColor", "green");
+      return false;
+    }
+    else if (!isValidNumber) {
+      $("#phone").css("borderColor", "red");
+      $("#phone").focus();
+    }
+    else if (_email == '') {
+      $("#email").css("borderColor", "red");
+      $("#email").focus();
 
-                                    $("#msg").html('<p class="alert alert-success">Registration successful, redirecting...</p>');
-                                    window.location.href = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+      $("#phone").css("borderColor", "green");
+      return false;
+    }
+    else if (_sex == '') {
+      $("#sex").css("borderColor", "red");
+      $("#sex").focus();
+      return false;
+    }
+    else if (_state == '') {
+      $("#state").css("borderColor", "red");
+      $("#state").focus();
+      return false;
+    }
+    else if (_address == '') {
+      $("#address").css("borderColor", "red");
+      $("#address").focus();
 
-                                }
-                            });
-                            $("#success_msg").css("display", "block");
+      $("#email").css("borderColor", "green");
+      return false;
+    }
+    else if (_pw == '') {
+      $("#password").css("borderColor", "red");
+      $("#password").focus();
 
-                        },
-                        error: function (reponse) {
-                            alert("error : " + reponse);
-                        }
-                    });
-                    return true;
-               
-                }
-                else {
-                    $("#email").css("borderColor", "red");
-                    $("#email").focus();
-                    return false;
-                }
-            }
-                
-        }
+      $("#address").css("borderColor", "green");
+      return false;
+    }
+    else if (_confirmpw == '') {
+      $("#confirmpassword").css("borderColor", "red");
+      $("#confirmpassword").focus();
+
+      $("#password").css("borderColor", "green");
+      return false;
+    }
+    else if (_pw != _confirmpw) {
+      $('#display_count').text('Password do not match');
+      $("#confirmpassword").css("borderColor", "red");
+      return false;
+    }
+    else if (words < 6) {
+      $('#display_count').text('Password must be a minimun of 6 characters');
+      document.getElementById("password").style.borderColor = "red";
+      return false;
+    }
+    else if (document.getElementById("chkConsent").checked != true) {
+      $('#chkConsentmsg').text('You must tick the checkbox below');
+      return false;
+    }
+
+    else {
+      if (ValidateEmail(_email)) {
+        $("#name").css("borderColor", "green");
+        $("#phone").css("borderColor", "green");
+        $("#email").css("borderColor", "green");
+        $("#sex").css("borderColor", "green");
+        $("#state").css("borderColor", "green");
+        $("#address").css("borderColor", "green");
+        $("#password").css("borderColor", "green");
+        $("#confirmpassword").css("borderColor", "green");
+
+        $('#chkConsentmsg').text('');
+
+        $("#loadspinner").css("display", "block");
+        $("#btnLogin").css("display", "none");
+
+        //Get the current number in the given format
+        //Returns a string e.g. "+17024181234"
+        var number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+
+        var url = "/Users/SignUpAjax/";
+        $.ajax({
+          url: url,
+          data: { name: _name, phone: number, email: _email, sex: _sex, state: _state, address: _address, password: _pw },
+          cache: false,
+          type: "POST",
+          success: function (data) {
+            var html = '';
+            $.each(data, function (key, item) {
+              if (item.EmailExist == 'true') {
+                $("#loadspinner").css("display", "none");
+                $("#btnLogin").css("display", "block");
+                $("#msg").html('<p class="alert alert-danger">Email already registered!</p>');
+              }
+              else if (item.PhoneExist == 'true') {
+                $("#loadspinner").css("display", "none");
+                $("#btnLogin").css("display", "block");
+                $("#msg").html('<p class="alert alert-danger">Phone number already registered!</p>');
+              }
+              else if (item.GotoVerification == 'true') {
+                $("#msg").html('<p class="alert alert-success">Redirecting to verification, email already registered but not verified...</p>');
+                window.location = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+              }
+
+              else {
+
+                $("#msg").html('<p class="alert alert-success">Registration successful, redirecting...</p>');
+                window.location.href = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+
+              }
+            });
+            $("#success_msg").css("display", "block");
+
+          },
+          error: function (reponse) {
+            alert("error : " + reponse);
+          }
+        });
+        return true;
+
+      }
+      else {
+        $("#email").css("borderColor", "red");
+        $("#email").focus();
+        return false;
+      }
+    }
+
+  }
 </script>
 
+
+
 <script>
-    $(function () {
+  $(function () {
     $("#phone").keypress(function (e) {
-        var keyCode = e.keyCode || e.which;
-        //$("#specialchar").html("");
-        //Regex for Valid Characters i.e. Alphabets and Numbers.
-        var regex = /^[0-9]+$/;
-        //Validate TextBox value against the Regex.
-        var isValid = regex.test(String.fromCharCode(keyCode));
-        if (!isValid) {
-            //$("#specialchar").html("Only Alphabets and Numbers allowed.");
-        }
-        return isValid;
+      var keyCode = e.keyCode || e.which;
+      //$("#specialchar").html("");
+      //Regex for Valid Characters i.e. Alphabets and Numbers.
+      var regex = /^[0-9]+$/;
+      //Validate TextBox value against the Regex.
+      var isValid = regex.test(String.fromCharCode(keyCode));
+      if (!isValid) {
+        //$("#specialchar").html("Only Alphabets and Numbers allowed.");
+      }
+      return isValid;
     });
 
     $("#name").keypress(function (e) {
-        var keyCode = e.keyCode || e.which;
-        //$("#specialchar").html("");
-        //Regex for Valid Characters i.e. Alphabets and Numbers.
-        var regex = /^[a-zA-Z0-9_ ]+$/;
-        //Validate TextBox value against the Regex.
-        var isValid = regex.test(String.fromCharCode(keyCode));
-        if (!isValid) {
-            //$("#specialchar").html("Only Alphabets and Numbers allowed.");
-        }
-        return isValid;
+      var keyCode = e.keyCode || e.which;
+      //$("#specialchar").html("");
+      //Regex for Valid Characters i.e. Alphabets and Numbers.
+      var regex = /^[a-zA-Z0-9_ ]+$/;
+      //Validate TextBox value against the Regex.
+      var isValid = regex.test(String.fromCharCode(keyCode));
+      if (!isValid) {
+        //$("#specialchar").html("Only Alphabets and Numbers allowed.");
+      }
+      return isValid;
     });
 
-    });
+  });
 </script>
 
 
-   @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
+<!--International dia code dropdown with flag-->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css">
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+<script>
+  var input = document.querySelector("#phone");
+  window.intlTelInput(input, {
+    separateDialCode: true,
+    /*autoInsertDialCode: true,*/
+    nationalMode: false,
+    autoPlaceholder: "aggressive",
+    placeholderNumberType: "MOBILE",
+    customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
+      return "e.g. " + selectedCountryPlaceholder;
+    },
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
+    //initialCountry: "auto",
+    //geoIpLookup: function (callback) {
+    //  fetch("https://ipapi.co/json")
+    //    .then(function (res) { return res.json(); })
+    //    .then(function (data) { callback(data.country_code); })
+    //    .catch(function () { callback("us"); });
+    //}
+  });
+</script>
+
+
+
+
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
 }
 

@@ -107,7 +107,7 @@
                     @foreach (var item1 in Model)
                     {
                       var passports = item1.ID + ".jpg";
-                        <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:16px"><i class="nav-icon fas fa-user-secret" style="fill:Background"></i> IDENTITY VERIFICATION</span>
+                        <span class="alerts-title" id="ondesktopname" style="margin:0px;padding:2px;font-size:12px"><i class="nav-icon fas fa-user-secret" style="fill:Background"></i> IDENTITY VERIFICATION</span>
                             <br />
                       if (string.IsNullOrEmpty((string)Session["username"]))
                       {
@@ -145,17 +145,39 @@
                                 <div class="panel-heading" style="background-color:#71BE50">
                                   <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;" id="lblNumber"> <span id="planname"></span></h3>
                                 </div>
+
+
                                 <div id="divIdentityInfo" style="display:none;">
-                                  <button class="collapsible">VIEW/EDIT INFORMATION</button>
+                                  <button class="collapsible" id="viewInfo">VIEW/EDIT INFORMATION</button>
                                   <div class="content">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                    <div id="editContent">
+                                    <label style="color:black">ID Number</label>
+                                    <input type="text" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" id="idnoEdit" />
+                                    <label style="color:black">Date Issued </label>
+                                    <input type="date" class="form-control" tabindex="2" style="border-color:#33C6F6;padding:18px;margin-top:5px;margin-bottom:5px;" id="dissuedEdit">
+                                    <label style="color:black">Expiry Date </label>
+                                    <input type="date" class="form-control" tabindex="3" style="border-color:#33C6F6;padding:18px;" id="dexpiryEdit">
+                                    <div id="idinfo-collapse"></div>
+                                    <div class="input-group-append" style="margin-top:2px" id="saveChanges">
+                                      <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return updateIdentity();">
+                                        <span id="saveacct">Save Changes <i class="fas fa-save"></i></span>
+                                      </button>
+                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                        <div class="spinner-container">
+                                          <div class="loading-spinner"></div>
+                                        </div>
+                                      </button>
+                                    </div>
+                                    </div>
+
                                   </div>
+
                                 </div>
                                 <div class="panel-body" id="divBody">
 
                                   <div id="upload" style="display:none;">
                                     <p style="color:black;margin-top:10px;">
-                                      Upload photo of ID (<strong>Front and Back</strong>)
+                                      Upload photo of ID
                                       <div class="alert-danger" id="msgInvalidUpload"> </div>
                                     </p>
                                     <span style="color:black;">
@@ -170,6 +192,10 @@
                                         </button>
                                       </div>
                                     </div>
+                                  </div>
+
+                                  <div class="input-group input-group-sm">
+                                    @Html.DropDownList("CountryID", null, "--Select Country--", htmlAttributes: new { @class = "form-control", @id = "country", @style = "height:40px;margin-bottom:2px;border-color:#33C6F6" })
                                   </div>
 
                                   <div id="idinfo">
@@ -208,11 +234,16 @@
                                 </div>
 
                                 <center>
+                                  <div class="alert alert-success alert-dismissable" id="successmsg_id" style="display:none">
+                                    <h3 style="font-size:14px">Success</h3>
+                                    Identity information submitted successcully.
+                                  </div>
                                   <div class="input-group-append" id="divSubmit" style="display:none;">
-                                    <input type="checkbox" id="chkConfirm" />
-                                    <span style="color:black;">I hereby agreed that the information provided above are accurate and correct.</span>
+                                    <span id="chkConsentmsg" style="color:red"></span><br />
+                                    <input type="checkbox" onchange="consentbox()" id="chkConsent">
+                                    <span style="color:black;">I agree that the information provided above are accurate and correct.</span>
                                     <br />
-                                    <button class="btn btn-success log-btn" id="btnUpload" type="button" onclick="return submitInfo();" disabled="disabled">
+                                    <button class="btn btn-success log-btn" id="btnUpload" type="button" onclick="return submitIdentity();">
                                       <span id="saveacct">Submit Now <i class="fas fa"></i></span>
                                     </button>
                                     <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
@@ -329,14 +360,20 @@
   function changeidnocolor() {
     document.getElementById("idno").style.background = "white";
   }
-  //submit identity
+  //save identity
   function uploadIdentity() {
-
+    var country = document.getElementById("country").value;
     var idno = document.getElementById("idno").value;
     var dissued = document.getElementById("dissued").value;
     var dexpiry = document.getElementById("dexpiry").value;
     var idType = document.getElementById("idtype").value;
-    if (idno == '') {
+    if (country == '') {
+
+      document.getElementById("country").focus();
+      document.getElementById("country").style.borderColor = "red";
+      return false;
+    }
+    else if (idno == '') {
 
       document.getElementById("idno").focus();
       document.getElementById("idno").style.borderColor = "red";
@@ -368,6 +405,7 @@
       document.getElementById("idno").style.borderColor = "green";
       document.getElementById("dissued").style.borderColor = "green";
       document.getElementById("dexpiry").style.borderColor = "green";
+      document.getElementById("country").style.borderColor = "green";
 
      
       
@@ -375,17 +413,20 @@
       var url = "/Users/SaveIdentity/";
       $.ajax({
         url: url,
-        data: { idno: idno, dissued: dissued, dexpiry: dexpiry, idtype: idType },
+        data: { idno: idno, dissued: dissued, dexpiry: dexpiry, idtype: idType, countryid: country },
         cache: false,
-        type: "GET",
+        type: "POST",
         success: function (data) {
           //on success
           document.getElementById("upload").style.display = "block";
           document.getElementById("idinfo").style.display = "none";
+          document.getElementById("country").style.display = "none";
           document.getElementById("imgUpload").style.display = "block";
           document.getElementById("infodiv").style.display = "none";
           document.getElementById("idtype").style.display = "none";
           document.getElementById("divIdentityInfo").style.display = "block";
+
+          getIdentityInfo();
           
           $("#loadSpinner").css("display", "none");
           $("#btnUpload").css("display", "block");
@@ -398,6 +439,38 @@
     }
   }
 
+  //save identity
+  function submitIdentity() {
+   if (document.getElementById("chkConsent").checked != true) {
+      $('#chkConsentmsg').text('You must tick the checkbox below');
+      return false;
+    }
+
+    else {
+      var url = "/Users/SubmitIdentity/";
+      $.ajax({
+        url: url,
+        data: { },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          document.getElementById("viewInfo").innerHTML = "Identity Details";
+          document.getElementById("idnoEdit").disabled = "disabled";
+          document.getElementById("dissuedEdit").disabled = "disabled";
+          document.getElementById("dexpiryEdit").disabled = "disabled";
+          $("#saveChanges").css("display", "none");
+          /*$("#DisplayInfo").css("display", "block");*/
+          $("#successmsg_id").css("display", "block");
+         /* $("#editContent").css("display", "none");*/
+          $("#divSubmit").css("display", "none");
+          $("#loadSpinner").css("display", "none");
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  }
 </script>
 
 <script>
@@ -415,6 +488,37 @@
       }
     });
   }
+</script>
+
+<script type="text/javascript">
+  function getIdentityInfo() {
+    var url = "/Users/GetIdentityInfo/";
+    var html = '';
+    $.ajax({
+      url: url,
+      data: {},
+      cache: false,
+      type: "GET",
+      success: function (data) {
+        $.each(data, function (key, item) {
+          document.getElementById("idnoEdit").value = item.IDNo;
+          document.getElementById("dissuedEdit").value = dateFormat(new Date(parseInt((item.DateIssued).match(/\d+/)[0])));
+          document.getElementById("dexpiryEdit").value = dateFormat(new Date(parseInt((item.ExpiryDate).match(/\d+/)[0])));
+        });
+        $("#idinfo-collapse").html(html);
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
+  //}
+
+  function dateFormat(d) {
+    console.log(d);
+    return d.getFullYear() + "-" + ((d.getMonth() + 1) + "").padStart(2, "0") + "-" + (d.getDate() + "").padStart(2, "0");
+  }
+
 </script>
 
 @section Scripts {

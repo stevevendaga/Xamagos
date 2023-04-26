@@ -6,54 +6,39 @@
     <b class="alert alert-info">About XAMAGOS</b>
  
     <div class="modal-body" id="donatebody" style="color:black;">
-      <b style="color:black;"> XAMAGOS </b>is an online platform that connects your business to your customers.
+      <b style="color: #17A2B8;"> XAMAGOS </b>is the ultimate online platform for businesses to connect with their customers.
       @*It creates an online presence of the physical shops we have in our markets in Nigeria.*@
-
-
       <hr style="margin-top:2px;margin-bottom:5px;" />
-      <div style="font-weight:bold;color:black;margin-top:8px;">
-        BENEFITS
-      </div>
-      @foreach (var item in db.PlatformBenefits.ToList())
+      <span style="font-size:13px;text-align:justify">
+        Our online platform provides you with a unique store URL that allows
+        customers to easily access your store from anywhere, while our mobile
+        app enables them to purchase your products on the go.
+        With integrated
+        payment solutions, product views tracker and location on Google Map,
+        you can take your business to the next level.<br /><br />
+        Xamagos also offers
+        advanced features like Product Finder which helps buyers quickly
+        find what they're looking for and advertises your products on
+        <a href="https://radio.xamagos.com" target="_blank"><span style="color:dodgerblue">Xamagos Radio</span></a> so you'll never miss an opportunity to make a sale.
+      </span>
+      <hr />
+      <span style="font-size: 20px; color: #17A2B8">
+        Get started with Xamagos today and experience the power of online marketing!
+      </span>
+      @if (string.IsNullOrEmpty((string)Session["username"]))
       {
-        <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
-          <span style="color:green;"> <i class="glyphicon glyphicon-hand-right"></i></span>   @item.Benefit
-          <hr style="margin:1px;padding:1px;" />
-        </div>
+        <p style="text-align:center;">
+
+          <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
+            <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+          </a>
+
+          <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
+            <i class="fa fas fa-lock-open"></i> Login
+          </a>
+        </p>
       }
 
-
-      <hr style="margin-top:2px;margin-bottom:5px;" />
-      <div style="font-weight:bold;color:black;margin-top:8px;">
-        Amazing Features of XAMAGOS
-      </div>
-
-      <b> &raquo;&raquo;   Product Finder </b>
-      <br />
-      It enables buyers to find their desired products in a specific location across Nigeria.
-      <hr style="margin-top:2px;margin-bottom:8px;" />
-
-
-      <b> &raquo;&raquo;   Bargain Market </b>
-      <br />
-      Bargain market is a feature that enable buyers to negotiate product prices with sellers.
-      It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
-      <hr style="margin-top:2px;margin-bottom:8px;" />
-
-      <b> &raquo;&raquo;   Google Map Geocoding </b>
-      <br />
-      This is a special feature of XAMAGOS that automatically converts a shop's physical address into geographic coordinates,
-      which shows the exact location of a shop on a Google Map.
-      <hr style="margin-top:2px;margin-bottom:8px;" />
-
-      <b> &raquo;&raquo;   Nearby Shops</b>
-      <br />
-      Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
-      <hr style="margin-top:2px;margin-bottom:8px;" />
-
-      <b> &raquo;&raquo;   SMS/Email Notifications</b>
-      <br />
-      This feature provides both sellers and buyers with instant SMS/email notifications on a transaction.
       <hr style="margin-top:2px;margin-bottom:8px;" />
 
       @*<b>Why do you need XAMAGOS?</b>

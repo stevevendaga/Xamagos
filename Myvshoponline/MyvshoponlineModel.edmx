@@ -259,6 +259,7 @@
           <Property Name="VerificationStatus" Type="int" />
           <Property Name="VerificationNote" Type="nvarchar" MaxLength="500" />
           <Property Name="ImgSrc" Type="nvarchar" MaxLength="150" />
+          <Property Name="CountryID" Type="int" />
         </EntityType>
         <EntityType Name="MailingListNG">
           <Key>
@@ -490,6 +491,7 @@
           <Property Name="NumberofShops" Type="int" />
           <Property Name="NumberofProducts" Type="int" />
           <Property Name="NumberofCustomers" Type="int" />
+          <Property Name="PriceDollar" Type="int" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -836,7 +838,7 @@
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
           <Property Name="Username" Type="nvarchar" MaxLength="50" />
-          <Property Name="Password" Type="nvarchar" MaxLength="3000" />
+          <Property Name="Password" Type="nvarchar" MaxLength="1500" />
           <Property Name="Address" Type="nvarchar" MaxLength="250" />
           <Property Name="State" Type="nvarchar" MaxLength="50" />
           <Property Name="Gender" Type="nvarchar" MaxLength="50" />
@@ -865,6 +867,7 @@
           <Property Name="HardToken" Type="nvarchar" MaxLength="50" />
           <Property Name="PasswordUpdated" Type="datetime" />
           <Property Name="IdentityStatus" Type="int" />
+          <Property Name="CountryID" Type="int" />
         </EntityType>
         <EntityType Name="UserBonus">
           <Key>
@@ -1167,6 +1170,18 @@
             </Principal>
             <Dependent Role="EmailMessageLog">
               <PropertyRef Name="EmailMessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentityVerification_CountryRegion">
+          <End Role="CountryRegion" Type="Self.CountryRegion" Multiplicity="0..1" />
+          <End Role="IdentityVerification" Type="Self.IdentityVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IdentityVerification">
+              <PropertyRef Name="CountryID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1860,6 +1875,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_CountryRegion">
+          <End Role="CountryRegion" Type="Self.CountryRegion" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_PricingPlan">
           <End Role="PricingPlan" Type="Self.PricingPlan" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -2071,6 +2098,10 @@
           <AssociationSet Name="FK_EmailMessageLog_EmailMessage" Association="Self.FK_EmailMessageLog_EmailMessage">
             <End Role="EmailMessage" EntitySet="EmailMessage" />
             <End Role="EmailMessageLog" EntitySet="EmailMessageLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentityVerification_CountryRegion" Association="Self.FK_IdentityVerification_CountryRegion">
+            <End Role="CountryRegion" EntitySet="CountryRegion" />
+            <End Role="IdentityVerification" EntitySet="IdentityVerification" />
           </AssociationSet>
           <AssociationSet Name="FK_IdentityVerification_User" Association="Self.FK_IdentityVerification_User">
             <End Role="User" EntitySet="User" />
@@ -2300,6 +2331,10 @@
             <End Role="BillingCycle" EntitySet="BillingCycle" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <AssociationSet Name="FK_User_CountryRegion" Association="Self.FK_User_CountryRegion">
+            <End Role="CountryRegion" EntitySet="CountryRegion" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
           <AssociationSet Name="FK_User_PricingPlan" Association="Self.FK_User_PricingPlan">
             <End Role="PricingPlan" EntitySet="PricingPlan" />
             <End Role="User" EntitySet="User" />
@@ -2432,6 +2467,10 @@
             <End Role="BillingCycle" EntitySet="BillingCycles" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_IdentityVerification_CountryRegion" Association="MyvshoponlineModel.FK_IdentityVerification_CountryRegion">
+            <End Role="CountryRegion" EntitySet="CountryRegions" />
+            <End Role="IdentityVerification" EntitySet="IdentityVerifications" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShippingInformation_CountryRegion" Association="MyvshoponlineModel.FK_ShippingInformation_CountryRegion">
             <End Role="CountryRegion" EntitySet="CountryRegions" />
             <End Role="ShippingInformation" EntitySet="ShippingInformations" />
@@ -2439,6 +2478,10 @@
           <AssociationSet Name="FK_Shop_CountryRegion" Association="MyvshoponlineModel.FK_Shop_CountryRegion">
             <End Role="CountryRegion" EntitySet="CountryRegions" />
             <End Role="Shop" EntitySet="Shops" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_CountryRegion" Association="MyvshoponlineModel.FK_User_CountryRegion">
+            <End Role="CountryRegion" EntitySet="CountryRegions" />
+            <End Role="User" EntitySet="Users" />
           </AssociationSet>
           <AssociationSet Name="FK_CustomerShop_Shop" Association="MyvshoponlineModel.FK_CustomerShop_Shop">
             <End Role="Shop" EntitySet="Shops" />
@@ -2864,8 +2907,10 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="IdentityVerifications" Relationship="MyvshoponlineModel.FK_IdentityVerification_CountryRegion" FromRole="CountryRegion" ToRole="IdentityVerification" />
           <NavigationProperty Name="ShippingInformations" Relationship="MyvshoponlineModel.FK_ShippingInformation_CountryRegion" FromRole="CountryRegion" ToRole="ShippingInformation" />
           <NavigationProperty Name="Shops" Relationship="MyvshoponlineModel.FK_Shop_CountryRegion" FromRole="CountryRegion" ToRole="Shop" />
+          <NavigationProperty Name="Users" Relationship="MyvshoponlineModel.FK_User_CountryRegion" FromRole="CountryRegion" ToRole="User" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -3002,6 +3047,8 @@
           <Property Name="VerificationStatus" Type="Int32" />
           <Property Name="VerificationNote" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ImgSrc" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CountryID" Type="Int32" />
+          <NavigationProperty Name="CountryRegion" Relationship="MyvshoponlineModel.FK_IdentityVerification_CountryRegion" FromRole="IdentityVerification" ToRole="CountryRegion" />
           <NavigationProperty Name="User" Relationship="MyvshoponlineModel.FK_IdentityVerification_User" FromRole="IdentityVerification" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="MyvshoponlineModel.FK_IdentityVerification_User1" FromRole="IdentityVerification" ToRole="User" />
         </EntityType>
@@ -3266,6 +3313,7 @@
           <Property Name="NumberofShops" Type="Int32" />
           <Property Name="NumberofProducts" Type="Int32" />
           <Property Name="NumberofCustomers" Type="Int32" />
+          <Property Name="PriceDollar" Type="Int32" />
           <NavigationProperty Name="PlanFeatures" Relationship="MyvshoponlineModel.FK_PlanFeatures_PricingPlan" FromRole="PricingPlan" ToRole="PlanFeature" />
           <NavigationProperty Name="Users" Relationship="MyvshoponlineModel.FK_User_PricingPlan" FromRole="PricingPlan" ToRole="User" />
         </EntityType>
@@ -3694,7 +3742,7 @@
           <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="1500" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -3723,7 +3771,9 @@
           <Property Name="HardToken" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PasswordUpdated" Type="DateTime" Precision="3" />
           <Property Name="IdentityStatus" Type="Int32" />
+          <Property Name="CountryID" Type="Int32" />
           <NavigationProperty Name="BillingCycle" Relationship="MyvshoponlineModel.FK_User_BillingCycle" FromRole="User" ToRole="BillingCycle" />
+          <NavigationProperty Name="CountryRegion" Relationship="MyvshoponlineModel.FK_User_CountryRegion" FromRole="User" ToRole="CountryRegion" />
           <NavigationProperty Name="CustomerShops" Relationship="MyvshoponlineModel.FK_CustomerShop_User" FromRole="User" ToRole="CustomerShop" />
           <NavigationProperty Name="DeliveryAgentAllocations" Relationship="MyvshoponlineModel.FK_DeliveryAgentAllocation_User" FromRole="User" ToRole="DeliveryAgentAllocation" />
           <NavigationProperty Name="IdentityVerifications" Relationship="MyvshoponlineModel.FK_IdentityVerification_User" FromRole="User" ToRole="IdentityVerification" />
@@ -3886,6 +3936,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_IdentityVerification_CountryRegion">
+          <End Type="MyvshoponlineModel.CountryRegion" Role="CountryRegion" Multiplicity="0..1" />
+          <End Type="MyvshoponlineModel.IdentityVerification" Role="IdentityVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IdentityVerification">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShippingInformation_CountryRegion">
           <End Type="MyvshoponlineModel.CountryRegion" Role="CountryRegion" Multiplicity="0..1" />
           <End Type="MyvshoponlineModel.ShippingInformation" Role="ShippingInformation" Multiplicity="*" />
@@ -3906,6 +3968,18 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Shop">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_CountryRegion">
+          <End Type="MyvshoponlineModel.CountryRegion" Role="CountryRegion" Multiplicity="0..1" />
+          <End Type="MyvshoponlineModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
               <PropertyRef Name="CountryID" />
             </Dependent>
           </ReferentialConstraint>
@@ -5017,6 +5091,7 @@
           <EntitySetMapping Name="IdentityVerifications">
             <EntityTypeMapping TypeName="MyvshoponlineModel.IdentityVerification">
               <MappingFragment StoreEntitySet="IdentityVerification">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
                 <ScalarProperty Name="ImgSrc" ColumnName="ImgSrc" />
                 <ScalarProperty Name="VerificationNote" ColumnName="VerificationNote" />
                 <ScalarProperty Name="VerificationStatus" ColumnName="VerificationStatus" />
@@ -5274,6 +5349,7 @@
           <EntitySetMapping Name="PricingPlans">
             <EntityTypeMapping TypeName="MyvshoponlineModel.PricingPlan">
               <MappingFragment StoreEntitySet="PricingPlan">
+                <ScalarProperty Name="PriceDollar" ColumnName="PriceDollar" />
                 <ScalarProperty Name="NumberofCustomers" ColumnName="NumberofCustomers" />
                 <ScalarProperty Name="NumberofProducts" ColumnName="NumberofProducts" />
                 <ScalarProperty Name="NumberofShops" ColumnName="NumberofShops" />
@@ -5650,6 +5726,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="MyvshoponlineModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
                 <ScalarProperty Name="IdentityStatus" ColumnName="IdentityStatus" />
                 <ScalarProperty Name="PasswordUpdated" ColumnName="PasswordUpdated" />
                 <ScalarProperty Name="HardToken" ColumnName="HardToken" />

@@ -485,8 +485,9 @@ namespace Myvshoponline.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "ID,ShopID,Name,Details,ProductCategoryID,ProductStatusID,Amount,QuantityinStock,DateCreated,PurchasePrice,Currency")] Product product, HttpPostedFileBase[] files)
-        {
+        //public ActionResult Create([Bind(Include = "ID,ShopID,Name,Details,ProductCategoryID,ProductStatusID,Amount,QuantityinStock,DateCreated,PurchasePrice,Currency")] Product product, HttpPostedFileBase[] files)
+      public ActionResult Create([Bind(Include = "ID,ShopID,Name,Details,ProductCategoryID,ProductStatusID,Amount,QuantityinStock,DateCreated,PurchasePrice,Currency")] Product product)
+    {
             if (ModelState.IsValid)
             {
                 if (db.Products.Where(p => p.Name == product.Name && p.ShopID == product.ShopID && p.ProductCategoryID==product.ProductCategoryID).Count() > 0)
@@ -541,32 +542,32 @@ namespace Myvshoponline.Controllers
                     }
 
                     int UserID = (int)Session["UserID"];
-                    string ShopName = db.Shops.Find(product.ShopID).Name;
-                    string businessname = db.Users.Find(UserID).CompanyName;
-                    string DocumentName = product.ID + ".jpg";
-                    string efilepath;
-                    foreach (HttpPostedFileBase file in files)
-                    {
-                        if (file != null)
-                        {
-                            efilepath = Server.MapPath("~/BusinessImages/" + businessname + "/" + ShopName + "/" + "\\" + DocumentName);
-                            string ext = Path.GetExtension(efilepath);
+                    //string ShopName = db.Shops.Find(product.ShopID).Name;
+                    //string businessname = db.Users.Find(UserID).CompanyName;
+                    //string DocumentName = product.ID + ".jpg";
+                    //string efilepath;
+                    //foreach (HttpPostedFileBase file in files)
+                    //{
+                    //    if (file != null)
+                    //    {
+                    //        efilepath = Server.MapPath("~/BusinessImages/" + businessname + "/" + ShopName + "/" + "\\" + DocumentName);
+                    //        string ext = Path.GetExtension(efilepath);
 
-                            //if file extension is supported, save file and update database
-                            if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".ico")
-                            {
-                                string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
-                                newName = newName + ".jpg";
+                    //        //if file extension is supported, save file and update database
+                    //        if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".ico")
+                    //        {
+                    //            string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
+                    //            newName = newName + ".jpg";
                                
-                                efilepath = Server.MapPath("~/BusinessImages/" + businessname + "/" + ShopName + "/" + "\\" + newName);
-                                file.SaveAs(efilepath);
+                    //            efilepath = Server.MapPath("~/BusinessImages/" + businessname + "/" + ShopName + "/" + "\\" + newName);
+                    //            file.SaveAs(efilepath);
 
-                                mydata.ResizePicture(efilepath);
+                    //            mydata.ResizePicture(efilepath);
                                
-                            }
-                        }
+                    //        }
+                    //    }
 
-                    }
+                    //}
                     //Save the picture ends
 
                     if (db.ShopProductCategories.Where(s => s.ProductCategoryID == product.ProductCategoryID && s.ShopID == product.ShopID).Count() < 1)
@@ -581,16 +582,16 @@ namespace Myvshoponline.Controllers
                     }
                 }
                 // return Redirect("~/Products/ProductCategoryDetails/?id="+product.ProductCategoryID+"&sid="+ product.ShopID);
-                return Redirect("~/Products/ViewProducts?id=" +product.ShopID + "&un_pub=1");
-            }
+                return Redirect("~/Products/Create/?id=" +product.ShopID);
+              //return Redirect("~/Products/ViewProducts?id=" + product.ShopID + "&un_pub=1");
+          }
 
             ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", product.ProductCategoryID);
             ViewBag.ProductStatusID = new SelectList(db.ProductStatus, "ID", "Status", product.ProductStatusID);
             ViewBag.ShopID = new SelectList(db.Shops, "ID", "Name", product.ShopID);
             return View(product);
         }
-
-        [ValidateInput(false)]
+    [ValidateInput(false)]
         public void SaveproductAjax(int shopid,string name,string details,int categoryid,decimal sellingamount,int qty,decimal purchaseprice,string currency)
         {
                 string PricingPlan = db.Shops.Where(p => p.ID == shopid).Select(p => p.User.PricingPlan.PlanName).FirstOrDefault();
@@ -615,8 +616,9 @@ namespace Myvshoponline.Controllers
                     db.Products.Add(product);
                    db.SaveChanges();
                 }
-               
-                if (db.ShopProductCategories.Where(s => s.ProductCategoryID == categoryid && s.ShopID == shopid).Count() < 1)
+           
+
+            if (db.ShopProductCategories.Where(s => s.ProductCategoryID == categoryid && s.ShopID == shopid).Count() < 1)
                 {
                     ShopProductCategory shop = new ShopProductCategory();
                     shop.Date = DateTime.Now;

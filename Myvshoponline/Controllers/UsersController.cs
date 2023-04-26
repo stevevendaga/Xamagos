@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Web.Helpers;
 
+
 namespace Myvshoponline.Controllers
 {
     public class UsersController : Controller
@@ -295,6 +296,8 @@ namespace Myvshoponline.Controllers
             ViewBag.UserRoleID = new SelectList(db.UserRoles, "ID", "Role");
             ViewBag.SexID = new SelectList(db.Sexes, "Sex1", "Sex1");
             ViewBag.StateID = new SelectList(db.States, "Name", "Name");
+            ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+      
             return View();
         }
         public ActionResult VerificationLinkSent(int? id)
@@ -307,7 +310,6 @@ namespace Myvshoponline.Controllers
             }
             return View();
         }
-
 
         public JsonResult Verify_RegisterOTP(int otp_register, int UserID)
         {
@@ -848,7 +850,7 @@ namespace Myvshoponline.Controllers
             var result = (from r in db.PricingPlans
                           from s in db.BillingCycles
                           where r.ID == PlanID && s.ID == BillingID && s.Cycle!="Free"
-                          select new { Amount = r.Amount * s.Value, Cycle = s.Cycle, PlanName = r.PlanName, Value = s.Value }).Distinct();
+                          select new { Amount = r.Amount * s.Value, Cycle = s.Cycle, PlanName = r.PlanName, Value = s.Value, DollarPrice=r.PriceDollar *s.Value }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -860,20 +862,19 @@ namespace Myvshoponline.Controllers
             var result = (from r in db.PlanFeatures
                           from k in db.PricingPlans
                           where k.ID == PlanID && r.PricingPlanID == PlanID && k.PlanName!="FREE PLAN"
-                          select new { Feature = r.Feature, PlanName = k.PlanName }).Distinct();
+                          select new { Feature = r.Feature, PlanName = k.PlanName,status=r.Status }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Get_PlanAmount(int PlanID)
         {
             var result = (from k in db.PricingPlans
                           where k.ID == PlanID
-                          select new { PlanAmount = k.Amount, PlanName = k.PlanName }).Distinct();
+                          select new { PlanAmount = k.Amount, PlanName = k.PlanName,DollarPrice=k.PriceDollar }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-
-        public ActionResult Update_Payment_Company_Plan(string refno, decimal amount, int planid, int billingid, int extraperiod, decimal discountpercentage, decimal extrabonusamount, decimal expectedamount, decimal extrabonuspercentage, decimal discountamount)
-
+    //public ActionResult Update_Payment_Company_Plan(string refno, decimal amount, int planid, int billingid, int extraperiod, decimal discountpercentage, decimal extrabonusamount, decimal expectedamount, decimal extrabonuspercentage, decimal discountamount)
+        public ActionResult Update_Payment_Company_Plan(string refno, decimal amount, int planid, int billingid)
         {
             int UserID = (int)Session["UserID"];
             int BillingDays = (int)db.BillingCycles.Find(billingid).Value;
@@ -883,15 +884,18 @@ namespace Myvshoponline.Controllers
             int existingPlanID=(int) db.Users.Find(UserID).PlanID;
             string PlanName = db.PricingPlans.Find(existingPlanID).PlanName;
             int DaysRemaining = totaldays - Numberused;
-            //int TotalNumberofdays = (BillingDays * 30) + DaysRemaining + extraperiod;
+            //calcuate based on the current plan from daysremaining
+            decimal CurrentPrice =Convert.ToDecimal(db.PricingPlans.Find(planid).Amount);
+            int DaysCurrentPlan= Convert.ToInt32((DaysRemaining/CurrentPrice)*100);
             int TotalNumberofdays;
             if (PlanName != "FREE PLAN")
             {
-                TotalNumberofdays = (BillingDays * 30) + DaysRemaining + extraperiod;
+            //For account upgrade, get days remaining from the previous plan, calculate based on the current plan then add to number of days.
+                TotalNumberofdays = (BillingDays * 30) + DaysCurrentPlan;
             }
             else
             {
-                TotalNumberofdays = (BillingDays * 30) + extraperiod;
+                TotalNumberofdays = (BillingDays * 30);
 
             }
             var update = db.Set<User>().Find(UserID);
@@ -919,24 +923,24 @@ namespace Myvshoponline.Controllers
             db.SaveChanges();
 
             //SET ALL STATUS IN USERBONUS TABLE TO ZERO
-            if (db.UserBonus.Where(s => s.UserID == UserID).Count() > 0)
-            {
-                mydata.UpdateUserBonusStatus(UserID);
-            }
+            //if (db.UserBonus.Where(s => s.UserID == UserID).Count() > 0)
+            //{
+            //    mydata.UpdateUserBonusStatus(UserID);
+            //}
 
             //UPDATE USERBONUS TABLE
-            UserBonu userbonus = new UserBonu();
-            userbonus.UserID = UserID;
-            userbonus.PercentageDiscount = discountpercentage;
-            userbonus.ExpectedAmount = expectedamount;
-            userbonus.DiscountAmount = discountamount;
-            userbonus.PercentageExtraBonus = extrabonuspercentage;
-            userbonus.ExtraBonusAmount = extrabonusamount;
-            userbonus.ExtraPeriod = extraperiod;
-            userbonus.DateCreated = DateTime.Now;
-            userbonus.Status = 1;
-            db.UserBonus.Add(userbonus);
-            db.SaveChanges();
+            //UserBonu userbonus = new UserBonu();
+            //userbonus.UserID = UserID;
+            //userbonus.PercentageDiscount = discountpercentage;
+            //userbonus.ExpectedAmount = expectedamount;
+            //userbonus.DiscountAmount = discountamount;
+            //userbonus.PercentageExtraBonus = extrabonuspercentage;
+            //userbonus.ExtraBonusAmount = extrabonusamount;
+            //userbonus.ExtraPeriod = extraperiod;
+            //userbonus.DateCreated = DateTime.Now;
+            //userbonus.Status = 1;
+            //db.UserBonus.Add(userbonus);
+            //db.SaveChanges();
             mydata.Update_ShopStatus_to_Active_on_Renewal(UserID);
 
             string email = update.Email;
@@ -1353,24 +1357,23 @@ namespace Myvshoponline.Controllers
 
         public ActionResult ChangePW(string oldpw, string pw,int userid)
         {
-            int Count = db.Users.Where(s => s.ID == userid && s.Password == oldpw).Count();
-            if (Count == 1)
+            if (mydata.Is_Password_Verified(db.Users.Where(s=>s.ID==userid).Select(s=>s.Password).FirstOrDefault(), oldpw))
             {
                 //update password
                 var update = db.Set<User>().Find(userid);
-                update.Password = pw;
+                update.Password = Crypto.HashPassword(pw);
                 update.PasswordUpdated = DateTime.Now;
                 db.SaveChanges();
                 var result = from p in db.Users
                              where p.ID == userid
-                             select new { ID = p.ID, count = Count,PasswordChanged="true"};
+                             select new { ID = p.ID,PasswordChanged="true"};
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 var result = from p in db.Users
                              where p.ID == userid
-                             select new { ID = p.ID, count = Count, PasswordChanged ="false"};
+                             select new { ID = p.ID, PasswordChanged ="false"};
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
            
@@ -1396,6 +1399,7 @@ namespace Myvshoponline.Controllers
                 ViewBag.Shops = db.Shops.Where(s => s.UserID == UserID && s.ShopStatus == "Active").OrderByDescending(s => s.DateCreated).ToList();
                 ViewBag.ShopsAdmin = db.Shops.Where(s => s.UserID == UserID).OrderByDescending(s => s.DateCreated).ToList();
                 var user = db.Users.Where(c => c.ID == UserID).ToList();
+              ViewBag.CountryID=new SelectList(db.CountryRegions, "ID", "Country");
                 return View(user);
             }
             else
@@ -1553,10 +1557,11 @@ namespace Myvshoponline.Controllers
 
 
 
-    public JsonResult SaveIdentity(string idno, DateTime dissued, DateTime dexpiry, string idtype)
+    public JsonResult SaveIdentity(string idno, DateTime dissued, DateTime dexpiry, string idtype,int countryid)
     {
         IdentityVerification data=new IdentityVerification();
         data.UserID =(int)Session["UserID"];
+        data.CountryID = countryid;
         data.IDType = idtype;
         data.IDNumber = idno;
         data.DateIssued = dissued;
@@ -1651,6 +1656,25 @@ namespace Myvshoponline.Controllers
     }
 
 
+    public JsonResult GetIdentityInfo()
+    {
+      int UserID = (int)Session["UserID"];
+      var result = (from i in db.IdentityVerifications where i.UserID==UserID
+                   select new { IDNo=i.IDNumber, DateIssued=i.DateIssued,ExpiryDate=i.ExpiryDate}).Distinct();
+      return Json(result, JsonRequestBehavior.AllowGet);
+    }
+
+    public JsonResult SubmitIdentity()
+    {
+      int UserID = (int)Session["UserID"];
+      int id=db.IdentityVerifications.Where(i => i.UserID==UserID).Select(i => i.ID).FirstOrDefault();
+      var update = db.IdentityVerifications.Find(id);
+      update.UploadStatus = 1;
+      update.DateUpdated = DateTime.Now;
+      db.SaveChanges();
+      var result = "success";
+      return Json(result, JsonRequestBehavior.AllowGet);
+    }
 
   }
 }

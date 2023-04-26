@@ -1,4 +1,4 @@
-﻿@model Myvshoponline.SearchOptimization
+@model Myvshoponline.SearchOptimization
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     int ShopID = Convert.ToInt32(Request.QueryString["sid"]);
@@ -12,13 +12,13 @@
 }
 <br /><br /><br />
 <body onload="LoadProductSelections();"></body>
-<h2 style="font-size:15px" class="alert alert-info">Promote Products for Search Optimization for <a href="~/Shops/ShopDetails/@ShopID"> @db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault()</a></h2>
+<h2 style="font-size: 10px; background-color: #A4C9CF" class="alert alert-info" >Promote Products for Search Optimization for <a href="~/Shops/ShopDetails/@ShopID"> @db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault()</a></h2>
  <!-- Start Content -->
 <div id="content" style="padding-top:0px">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12">
-<h3 class="alerts-title" style="font-size:14px;">Click on a product to add or remove from list.</h3>
+<h3 class="alerts-title" style="font-size:10px;">Click on a product to add or remove from list.</h3>
 <input type="hidden" value="@ShopID" id="shopid" />
  <input type="hidden" value="@SEOPricingperday" id="SeoPrincing" />
 <input type="hidden" id="shopname" value="@db.Shops.Where(s=>s.ID==ShopID).Select(s=>s.Name).FirstOrDefault()" />
@@ -29,7 +29,7 @@
         int CatID = item.ProductCategoryID;
     <div class="panel panel-success">
         <div class="panel-heading" style="background-color:#0BACE1;padding:5px;">
-            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">@item.ProductCategory.Name</h3>
+            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:12px">@item.ProductCategory.Name</h3>
         </div>
         <div class="panel-body">
             <div class="row">
@@ -89,10 +89,10 @@
 <!-- End Content -->
 
 <script type="text/javascript">
-    function AddProduct(_productid) {
-        var shopid = document.getElementById("shopid").value;
+  function AddProduct(_productid) {
+   
+    var shopid = document.getElementById("shopid").value;
         var url = "/SearchOptimizations/SaveSelectionsTemp/";
-      
                  $.ajax({
                      url: url,
                      data: { shopid:shopid,productid: _productid},
