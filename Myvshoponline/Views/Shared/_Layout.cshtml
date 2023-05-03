@@ -1192,7 +1192,7 @@
         <div class="container">
           <div class="row" style="padding-top:0px;">
 
-            <div class="col-lg-3 col-md-3 col-11">
+            <div class="col-lg-3 col-md-6 col-11">
               <div class="widget">
                 @*<div class="footer-logo">
                       <h3 class="block-title">Support</h3>
@@ -1210,59 +1210,61 @@
                     Headquarter - <span class="block-title" style="font-size:15px">&nbsp; Nigeria@*#9, Suite 32, Divine Plaza, Opposite Oracle Driving School, Old Otukpo Road, Makurdi, Benue State -</span>*@
 
                   <h3 class="block-title" style="font-size:12px"> Connect With Us</h3>
-                  <ul class="mt-3 footer-social">
-
-
-                    <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
-                    <li><a class="linkedin" target="_blank" href="https://www.linkedin.com/company/market-square247"><i class="lni-linkedin-fill"></i></a></li>
-                    <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
-                    @*<li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li>*@
+                  <ul class="mt-3 footer-social"> 
+                    @{ var xamagos = "@xamagos";}
+                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;"/></a></li>
+                    
                   </ul>
                 </div>
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-11">
               <div class="widget">
-                <h3 class="block-title" style="font-size:12px">Share This Platform</h3>
-
-
-                <script>
-                  (function (d, s, id) {
-                    var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) return;
-                    js = d.createElement(s); js.id = id;
-                    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
-                    fjs.parentNode.insertBefore(js, fjs);
-                  }(document, 'script', 'facebook-jssdk'));</script>
-
-                <!-- Your share button code -->
-
-                <ul class="mt-4 footer-social">
-                  <li>
-                    @{
-                      string referallink1 = "http://marketsquare247.com";
-                    }
-                    <div class="fb-share-button"
-                         data-href="@referallink1"
-                         data-layout="button_count">
-                    </div>
-                  </li>
-                  <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
-                  @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-                    <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
-                  <li>
-                    <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
-                      <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
-                    </a>
-                  </li>
-
-                </ul>
+                <ul class="mt-3 footer-social">
+                  <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="linkedin" target="_blank" href="#"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
+                  <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
+                  </ul>
 
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-11">
+              <h3 class="block-title" style="font-size:12px">Share This Platform</h3>
 
-              <p>Subscribe to our Newsletter.</p>
+
+              <script>
+                (function (d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+
+              <!-- Your share button code -->
+
+              <ul class="mt-4 footer-social">
+                <li>
+                  @{
+                    string referallink1 = "http://marketsquare247.com";
+                  }
+                  <div class="fb-share-button"
+                       data-href="@referallink1"
+                       data-layout="button_count">
+                  </div>
+                </li>
+                <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+      <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                <li>
+                  <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                    <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
+                  </a>
+                </li>
+
+              </ul>
+
+              @*<p>Subscribe to our Newsletter.</p>*@
 
 
 
@@ -1296,13 +1298,13 @@
               </script>
 
 
-              <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
+              @*<form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                 <div class="form-group is-empty">
                   <input type="email" value="" name="Email" required="required" class="form-control" id="Email" placeholder="Enter Email...">
                   <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn" onclick="Insert_Email_NewsLetter()"><i class="lni-envelope"></i></button>
                   <div class="clearfix"></div>
                 </div>
-              </form>
+              </form>*@
 
             </div>
 

@@ -75,14 +75,17 @@
                     <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
                     <div class="input-icon">
                       <i class="lni-map-marker"></i>
-                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country" })
+                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country", @onchange= "displaystateInput(this.value)" })
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="input-icon">
                       <i class="lni-map-marker"></i>
-                      @Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "state" })
+                      <div id="displaystate">
+
+                      </div>
+                      @*@Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "state" })*@
                     </div>
                   </div>
 
@@ -314,13 +317,13 @@
     //Returns: true/false
     var isValidNumber = iti.isValidNumber();
 
-
     var _email = document.getElementById("email").value;
     var _sex = document.getElementById("sex").value;
     var _state = document.getElementById("state").value;
     var _address = document.getElementById("address").value;
     var _pw = document.getElementById("password").value;
     var _confirmpw = document.getElementById("confirmpassword").value;
+    var _countryid = document.getElementById("country").value;
 
     var words = $("#password").val().length;
     if (_name == '') {
@@ -349,6 +352,11 @@
     else if (_sex == '') {
       $("#sex").css("borderColor", "red");
       $("#sex").focus();
+      return false;
+    }
+    else if (_countryid == '') {
+      $("#country").css("borderColor", "red");
+      $("#country").focus();
       return false;
     }
     else if (_state == '') {
@@ -415,7 +423,7 @@
         var url = "/Users/SignUpAjax/";
         $.ajax({
           url: url,
-          data: { name: _name, phone: number, email: _email, sex: _sex, state: _state, address: _address, password: _pw },
+          data: { name: _name, phone: number, email: _email, sex: _sex, state: _state, address: _address, password: _pw, countryid: _countryid },
           cache: false,
           type: "POST",
           success: function (data) {
@@ -515,17 +523,73 @@
       return "e.g. " + selectedCountryPlaceholder;
     },
     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
-    //initialCountry: "auto",
-    //geoIpLookup: function (callback) {
-    //  fetch("https://ipapi.co/json")
-    //    .then(function (res) { return res.json(); })
-    //    .then(function (data) { callback(data.country_code); })
-    //    .catch(function () { callback("us"); });
-    //}
+    initialCountry: "auto",
+    geoIpLookup: function (callback) {
+      fetch("https://ipapi.co/json")
+        .then(function (res) { return res.json(); })
+        .then(function (data) { callback(data.country_code); })
+        .catch(function () { callback("us"); });
+    }
   });
 </script>
 
 
+<script type="text/javascript">
+  function GetStates(CountryID) {
+
+    var url = "/Shops/GetStates/";
+    $.ajax({
+      url: url,
+      data: { CountryID: CountryID },
+      cache: false,
+      type: "GET",
+      success: function (data) {
+        var html = '';
+        html += '<span><select name="StateID" class="form-control" id="state">';
+        html += '<option selected disabled>-- Select State --</option>';
+        $.each(data, function (key, item) {
+
+          html += "<option value='" + item.StateName + "'>" + item.StateName + "</option>";
+        });
+        html += '</select></span>';
+        $("#displaystate").html(html).show();
+
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
+</script>
+
+<script type="text/javascript">
+  function displaystateInput(CountryID) {
+
+    var url = "/Shops/GetCountryName/";
+    $.ajax({
+      url: url,
+      data: { CountryID: CountryID },
+      cache: false,
+      type: "GET",
+      success: function (data) {
+        var html = '';
+        $.each(data, function (key, item) {
+          if (item.CountryName == "Nigeria") {
+            GetStates(CountryID);
+          }
+          else {
+            html += '<input type="text" id="state" name="StateID" class="form-control" placeholder="State" required="required" onchange="this.value = this.value.toUpperCase();"/>';
+          }
+        });
+        $("#displaystate").html(html).show();
+
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
+</script>
 
 
 

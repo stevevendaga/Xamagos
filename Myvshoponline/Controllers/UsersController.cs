@@ -547,7 +547,7 @@ namespace Myvshoponline.Controllers
             return View(user);
         }
 
-        public JsonResult SignUpAjax(string name, string phone,string email,string sex,string state, string address, string password)
+        public JsonResult SignUpAjax(string name, string phone,string email,string sex,string state, string address, string password,int countryid)
         {
               if (db.Users.Where(s => s.Email == email && s.EmailVerify==1).Count() ==1)
                 {
@@ -617,6 +617,7 @@ namespace Myvshoponline.Controllers
                 user.Gender = sex;
                 user.Address = address;
                 user.PhoneNumber = phone;
+                user.CountryID = countryid;
                 user.CompanyName = newname.ToUpper();
                 user.UserRoleID = db.UserRoles.Where(u => u.Role == "Shop Admin").Select(u => u.ID).FirstOrDefault();
                 db.Users.Add(user);

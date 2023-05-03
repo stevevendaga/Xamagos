@@ -43,6 +43,18 @@
             <a href="https://radio.xamagos.com" target="_blank"><span style="color:dodgerblue">Xamagos Radio</span></a> so you'll never miss an opportunity to make a sale.
           </span>
           <hr />
+          <span class=" badge badge-info">
+            Features
+          </span>
+            
+          
+          @foreach (var item in db.PlatformBenefits.ToList())
+          {
+            <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+              <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Benefit
+              <hr style="margin:1px;padding:1px;" />
+            </div>
+          }
           <span style="font-size: 20px; color: #17A2B8">
             Get started with Xamagos today and experience the power of online marketing!
           </span>
@@ -57,47 +69,47 @@
               <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
                 <i class="fa fas fa-lock-open"></i> Login
               </a>
-              </p>
-           }
+            </p>
+          }
 
-              @*<div style="font-weight:bold;color:black;margin-top:8px;">
-          BENEFITS
+          @*<div style="font-weight:bold;color:black;margin-top:8px;">
+      BENEFITS
+    </div>
+    @foreach (var item in db.PlatformBenefits.ToList())
+    {
+      <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+        <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Benefit
+        <hr style="margin:1px;padding:1px;" />
+      </div>
+    }*@
+
+          @*<div style="font-weight:bold;color:black;margin-top:8px;">
+      Amazing Features of XAMAGOS
+    </div>
+
+    <b> &raquo;&raquo;   Product Finder </b>
+    <br />
+    It enables buyers to find their desired products in a specific location across Nigeria.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+    <b> &raquo;&raquo;   Bargain Market </b>
+    <br />
+    Bargain market is a feature that enable buyers to negotiate product prices with sellers.
+    It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
+    <hr style="margin-top:2px;margin-bottom:8px;" />
+
+
+
+    <b> &raquo;&raquo;   Nearby Shops</b>
+    <br />
+    Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
+    <hr style="margin-top:2px;margin-bottom:8px;" />*@
+
+
+
+
         </div>
-        @foreach (var item in db.PlatformBenefits.ToList())
-        {
-          <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
-            <span style="color:green;"> <i class="fas fa-check" style="color:darkgreen;"></i></span>   @item.Benefit
-            <hr style="margin:1px;padding:1px;" />
-          </div>
-        }*@
-
-              @*<div style="font-weight:bold;color:black;margin-top:8px;">
-          Amazing Features of XAMAGOS
-        </div>
-
-        <b> &raquo;&raquo;   Product Finder </b>
-        <br />
-        It enables buyers to find their desired products in a specific location across Nigeria.
-        <hr style="margin-top:2px;margin-bottom:8px;" />
-
-
-        <b> &raquo;&raquo;   Bargain Market </b>
-        <br />
-        Bargain market is a feature that enable buyers to negotiate product prices with sellers.
-        It creates a real-time communication link between a buyer and a seller to reach an agreement on the price of a particular product.
-        <hr style="margin-top:2px;margin-bottom:8px;" />
-
-
-
-        <b> &raquo;&raquo;   Nearby Shops</b>
-        <br />
-        Nearby shops uses the user's current geographical location to display nearby shops within a given radius.
-        <hr style="margin-top:2px;margin-bottom:8px;" />*@
-
-
-
-
-          </div>
         <button type="button" class="btn btn-common" id="okbtn" data-dismiss="modal" style="display:none">OK</button>
     </div>
 

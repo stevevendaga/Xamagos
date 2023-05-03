@@ -3,91 +3,17 @@
 
 
 
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <!-- Replace "test" with your own sandbox Business account app client ID -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AceNyVWdhFe--qc7zDGTiJbEL37w8bp0dwVy6e2vY12ioKyaSExTDQ5yVmvAXDSScqiRIY1Pj52zgzsl
-&currency=USD"></script>
-    <!-- Set up a container element for the button -->
-   
-    <script>
-      paypal.Buttons({
-        // Order is created on the server and the order id is returned
-        createOrder() {
-          return fetch("/my-server/create-paypal-order", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // use the "body" param to optionally pass additional order information
-            // like product skus and quantities
-            body: JSON.stringify({
-              cart: [
-                {
-                  sku: "3",
-                  quantity: "11",
-                },
-              ],
-            }),
-          })
-          .then((response) => response.json())
-          .then((order) => order.id);
-        },
-        // Finalize the transaction on the server after payer approval
-        onApprove(data) {
-          return fetch("/my-server/capture-paypal-order", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              orderID: data.orderID
-            })
-          })
-          .then((response) => response.json())
-          .then((orderData) => {
-            // Successful capture! For dev/demo purposes:
-            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-            const transaction = orderData.purchase_units[0].payments.captures[0];
-            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-            // When ready to go live, remove the alert and show a success message within this page. For example:
-            // const element = document.getElementById('paypal-button-container');
-            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-            // Or go to another URL:  window.location.href = 'thank_you.html';
-          });
-        }
-      }).render('#paypal-button-container');
-    </script>
-  </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
 @model Myvshoponline.PricingPlan
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
 
 
 @{
-    ViewBag.Title = "Buy Plan";
-    decimal DiscountPercentage =(decimal) db.Settings.Select(s => s.DiscountPercentage).FirstOrDefault();
-    decimal BonusPercentage = (decimal)db.Settings.Select(s => s.BonusPercentage).FirstOrDefault();
-    ViewBag.D = DiscountPercentage;
-    ViewBag.B = BonusPercentage;
+  ViewBag.Title = "Buy Plan";
+  decimal DiscountPercentage = (decimal)db.Settings.Select(s => s.DiscountPercentage).FirstOrDefault();
+  decimal BonusPercentage = (decimal)db.Settings.Select(s => s.BonusPercentage).FirstOrDefault();
+  ViewBag.D = DiscountPercentage;
+  ViewBag.B = BonusPercentage;
 
 }
 
@@ -126,145 +52,146 @@
 
 <link href="~/Content/Panel.css" rel="stylesheet" />
 
-<div id="content"><center>
-  <table class="divcover">
-    <tr>
-      <td>
-        <span class="divtoggle" style="cursor:pointer" id="ngn" onclick="toggleCurrency(this.id)">
-          NGN
-        </span>
-      </td>
-      <td>
-        <span class="divtoggle" style="cursor:pointer" id="usd" onclick="toggleCurrency(this.id)">
-          USD
-        </span>
-      </td>
-    </tr>
-  </table>
-</center>
-    <div class="">
-        <div class="row">
+<div id="content">
+  <center>
+    <table class="divcover">
+      <tr>
+        <td>
+          <span class="divtoggle" style="cursor:pointer" id="ngn" onclick="toggleCurrency(this.id)">
+            NGN
+          </span>
+        </td>
+        <td>
+          <span class="divtoggle" style="cursor:pointer" id="usd" onclick="toggleCurrency(this.id)">
+            USD
+          </span>
+        </td>
+      </tr>
+    </table>
+  </center>
+  <div class="">
+    <div class="row">
 
-            <div id="companydetailsmobile" style="display:none"></div>
-            <div class="col-lg-8 col-md-6 col-xs-12" id="shopdetails">
-              <div class="right-sideabr">
+      <div id="companydetailsmobile" style="display:none"></div>
+      <div class="col-lg-8 col-md-6 col-xs-12" id="shopdetails">
+        <div class="right-sideabr">
 
-                
 
-                <div class="panel panel-success">
-                  <div class="panel-heading" style="background-color: #17A2B8">
-                    <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;"> <span id="planname"> @Model.PlanName</span></h3>
-                  </div>
-                  <div class="panel-body" style="color:black">
-                    <div class="row">
-                      <div class="col-md-6">
-                        Change Plan @Html.DropDownList("PlanID", null, htmlAttributes: new { @class = "form-control", @id = "plan", @onchange = "Get_PlanFeatures();Get_Billing();Get_PlanAmount()" })
-                      </div>
-                      <div class="col-md-6">
-                        Billing Cycle  @Html.DropDownList("BillingID", null, htmlAttributes: new { @class = "form-control", @id = "billing", @onchange = "Get_Billing()" })
-                      </div>
-                    </div>
-                    <hr style="margin:10px" />
-                    <ul>
-                      <li style="font-size:14px;font-weight:bold;color:#1DA6E2;padding:6px">
-                        <div id="nameforfeatures"></div>
-                      </li>
-                    </ul>
-                    <div class="row">
-                      <div id="planfeatures" class="col-lg-12">
-                        @foreach (var item in db.PlanFeatures.Where(p => p.PricingPlanID == Model.ID).ToList())
-                        {
-                        <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
-                          @if (item.Status == 1)
-                          {
-                            <img src="~/Images/mark2.png" style="width:15px" />
 
-                          }
-                          else
-                          {
-                            <img src="~/Images/removeicon.png" style="width:15px" />
-                          }  @item.Feature
-                          <hr style="margin:1px;padding:1px;" />
-                        </div>
-                        }
-                      </div>
-                    </div>
-                    @*</ul>*@
-                  </div>
+          <div class="panel panel-success">
+            <div class="panel-heading" style="background-color: #17A2B8">
+              <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;"> <span id="planname"> @Model.PlanName</span></h3>
+            </div>
+            <div class="panel-body" style="color:black">
+              <div class="row">
+                <div class="col-md-6">
+                  Change Plan @Html.DropDownList("PlanID", null, htmlAttributes: new { @class = "form-control", @id = "plan", @onchange = "Get_PlanFeatures();Get_Billing();Get_PlanAmount()" })
                 </div>
-
-
+                <div class="col-md-6">
+                  Billing Cycle  @Html.DropDownList("BillingID", null, htmlAttributes: new { @class = "form-control", @id = "billing", @onchange = "Get_Billing()" })
+                </div>
               </div>
-            </div>
+              <hr style="margin:10px" />
+              <ul>
+                <li style="font-size:14px;font-weight:bold;color:#1DA6E2;padding:6px">
+                  <div id="nameforfeatures"></div>
+                </li>
+              </ul>
+              <div class="row">
+                <div id="planfeatures" class="col-lg-12">
+                  @foreach (var item in db.PlanFeatures.Where(p => p.PricingPlanID == Model.ID).ToList())
+                  {
+                    <div class="col-md-6" style="padding-left:15px;line-height:1.5em">
+                      @if (item.Status == 1)
+                      {
+                        <img src="~/Images/mark2.png" style="width:15px" />
 
-            <div class="col-lg-4 col-md-6 col-xs-12" id="companydetails" style="display:block">
-
-                <div class="panel panel-success">
-                    <div class="panel-heading" style="background-color: #17A2B8">
-                        <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9">
-                            Summary
-                        </h3>
+                      }
+                      else
+                      {
+                        <img src="~/Images/removeicon.png" style="width:15px" />
+                      }  @item.Feature
+                      <hr style="margin:1px;padding:1px;" />
                     </div>
-                    <div class="panel-body">
-                      <div id="planamountpermonth" class="price" style="font-size:12px;font-weight:bold">
-                        @{
-                          int UserID = (int)Session["UserID"];
-                          string email = db.Users.Find(UserID).Email;
-                          string phone = db.Users.Find(UserID).PhoneNumber;
-                          decimal am1 = Convert.ToDecimal(Model.Amount);
-                          var am = string.Format("{0:#,0}", am1);}
-                        <b>  @Model.PlanName PLAN </b> &nbsp;
-                        <span class="" id="currencySignPlan" style="color:black">NGN</span> <d id="amtPremium" style="color:black">@am</d>
-                        <span style="font-weight:bold;color:black;">monthly</span>
-                      </div>
-                      <hr />
-                      <table style="font-weight:bold;font-size:12px;margin-bottom:0px">
-                        <tr>
-                          <td>
-                            Billing Cycle:
-                          </td>
-                          <td style="padding-left:5px">
-                            <div id="cycle" style="color:black;"></div>
-                          </td>
-                        </tr>
-                      </table>
-
-                      <div id="amount" style="color:black;font-weight:bold;font-size:20px"></div>
-
-                      <hr style="margin-top:0px;padding-top:0px" />
-                      <div id="total" style="font-weight:bold;color:black;font-size:20px"></div>
-
-                      <input type="hidden" id="currentCurrency" value="NGN" />
-                      <input id="totalamount" type="hidden" />
-                      <input id="getplanname" type="hidden" />
-                      <input id="planid" type="hidden" />
-                      <input id="billingid" type="hidden" />
-                      <input id="companyname" type="hidden" value="@Session["Name"]" />
-                      <input id="userid" type="hidden" value="@Session["UserID"]" />
-                      <input id="email" type="hidden" value="@email" />
-                      <input id="phone" type="hidden" value="@phone" />
-                      <input id="extraperiod" type="hidden" />
-                      <input id="extrabonusamount" type="hidden" />
-                      <input id="discountamount" type="hidden" />
-                      <input id="expectedamount" type="hidden" />
-                      <hr />
-                      <form id="btnPayNGN">
-                        <script src="https://js.paystack.co/v1/inline.js"></script>
-                        <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()"> Pay NGN <span id="buttonamount"></span> Now</button>
-                      </form>
-                      <div id="btnPayDollar" style="display:none">
-                        <div id="paypal-button-container"></div>
-                        <button type="button" class="btn btn-primary" style="width:auto;" onclick="payWithPaystack()"> Pay USD <span id="buttonamountdollar"></span> Now</button>
-                      </div>
-
-
-
-                    </div>
+                  }
                 </div>
+              </div>
+              @*</ul>*@
             </div>
-        </div>
+          </div>
 
+
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 col-xs-12" id="companydetails" style="display:block">
+
+        <div class="panel panel-success">
+          <div class="panel-heading" style="background-color: #17A2B8">
+            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9">
+              Summary
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div id="planamountpermonth" class="price" style="font-size:12px;font-weight:bold">
+              @{
+                int UserID = (int)Session["UserID"];
+                string email = db.Users.Find(UserID).Email;
+                string phone = db.Users.Find(UserID).PhoneNumber;
+                decimal am1 = Convert.ToDecimal(Model.Amount);
+                var am = string.Format("{0:#,0}", am1);}
+              <b>  @Model.PlanName PLAN </b> &nbsp;
+              <span class="" id="currencySignPlan" style="color:black">NGN</span> <d id="amtPremium" style="color:black">@am</d>
+              <span style="font-weight:bold;color:black;">monthly</span>
+            </div>
+            <hr />
+            <table style="font-weight:bold;font-size:12px;margin-bottom:0px">
+              <tr>
+                <td>
+                  Billing Cycle:
+                </td>
+                <td style="padding-left:5px">
+                  <div id="cycle" style="color:black;"></div>
+                </td>
+              </tr>
+            </table>
+
+            <div id="amount" style="color:black;font-weight:bold;font-size:20px"></div>
+
+            <hr style="margin-top:0px;padding-top:0px" />
+            <div id="total" style="font-weight:bold;color:black;font-size:20px"></div>
+
+            <input type="hidden" id="currentCurrency" value="NGN" />
+            <input id="totalamount" type="hidden" />
+            <input id="getplanname" type="hidden" />
+            <input id="planid" type="hidden" />
+            <input id="billingid" type="hidden" />
+            <input id="companyname" type="hidden" value="@Session["Name"]" />
+            <input id="userid" type="hidden" value="@Session["UserID"]" />
+            <input id="email" type="hidden" value="@email" />
+            <input id="phone" type="hidden" value="@phone" />
+            <input id="extraperiod" type="hidden" />
+            <input id="extrabonusamount" type="hidden" />
+            <input id="discountamount" type="hidden" />
+            <input id="expectedamount" type="hidden" />
+            <hr />
+            <form id="btnPayNGN">
+              <script src="https://js.paystack.co/v1/inline.js"></script>
+              <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()"> Pay NGN <span id="buttonamount"></span> Now</button>
+            </form>
+            <div id="btnPayDollar" style="display:none">
+              <div id="paypal-button-container"></div>
+              @*<button type="button" class="btn btn-primary" style="width:auto;" onclick="payWithPaystack()"> Pay USD <span id="buttonamountdollar"></span> Now</button>*@
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
     </div>
+
+  </div>
 </div>
 <body>
 
@@ -274,61 +201,61 @@
 
 
 <script>
-        function payWithPaystack() {
-            var myamt = document.getElementById("totalamount").value * 100;
-            var companyname = document.getElementById("companyname").value;
-            var myname = document.getElementById("getplanname").value + " -" + companyname;
-            var _planID = document.getElementById("plan").value;
-            var _BillingID = document.getElementById("billing").value;
-            var realplan = document.getElementById("getplanname").value;
-            var userid = document.getElementById("userid").value;
-            var email = document.getElementById("email").value;
-            var phone = document.getElementById("phone").value;
+  function payWithPaystack() {
+    var myamt = document.getElementById("totalamount").value * 100;
+    var companyname = document.getElementById("companyname").value;
+    var myname = document.getElementById("getplanname").value + " -" + companyname;
+    var _planID = document.getElementById("plan").value;
+    var _BillingID = document.getElementById("billing").value;
+    var realplan = document.getElementById("getplanname").value;
+    var userid = document.getElementById("userid").value;
+    var email = document.getElementById("email").value;
+    var phone = document.getElementById("phone").value;
 
-            //var _extraperiod = document.getElementById("extraperiod").value;
-            //var _expectedamount=document.getElementById("expectedamount").value;
-            //var _discountpercentage = document.getElementById("discount").value;
-            //var _discountamount = document.getElementById("discountamount").value;
-            //var _extrabonuspercentage = document.getElementById("extrabonus").value;
-            //var _extrabonusamount = document.getElementById("extrabonusamount").value;
-            var handler = PaystackPop.setup({
-                //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
-                    key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
-                
-          email:email,
-          amount: myamt,
-          ref: ''+ Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
-          firstname: myname,
-          number: "",
-                // label: "Optional string that replaces customer email"
-         label: myname,
-          metadata: {
-             custom_fields: [
-                {
-                    display_name: "Mobile Number",
-                    variable_name: "mobile_number",
-                    value: phone
-                }
-             ]
-          },
-          callback: function (response) {
-              var url = "/Users/Update_Payment_Company_Plan/";
-              $.ajax({
-                  url: url,
-                /*data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },*/
-                data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID},
-                  cache: false,
-                  type: "POST",
-              })
-             // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
-              window.location.href = "/Users/AccountUpgrade/?id=" + userid + "&ug=true";
-          },
-          onClose: function(){
-              alert('Transaction aborted by user. Try again');
+    //var _extraperiod = document.getElementById("extraperiod").value;
+    //var _expectedamount=document.getElementById("expectedamount").value;
+    //var _discountpercentage = document.getElementById("discount").value;
+    //var _discountamount = document.getElementById("discountamount").value;
+    //var _extrabonuspercentage = document.getElementById("extrabonus").value;
+    //var _extrabonusamount = document.getElementById("extrabonusamount").value;
+    var handler = PaystackPop.setup({
+      //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+      key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+
+      email: email,
+      amount: myamt,
+      ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+      firstname: myname,
+      number: "",
+      // label: "Optional string that replaces customer email"
+      label: myname,
+      metadata: {
+        custom_fields: [
+          {
+            display_name: "Mobile Number",
+            variable_name: "mobile_number",
+            value: phone
           }
-        });
-        handler.openIframe();
+        ]
+      },
+      callback: function (response) {
+        var url = "/Users/Update_Payment_Company_Plan/";
+        $.ajax({
+          url: url,
+          /*data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },*/
+          data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID },
+          cache: false,
+          type: "POST",
+        })
+        // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+        window.location.href = "/Users/AccountUpgrade/?id=" + userid + "&ug=true";
+      },
+      onClose: function () {
+        alert('Transaction aborted by user. Try again');
       }
+    });
+    handler.openIframe();
+  }
 </script>
 <!-- End Content -->
 <script type="text/javascript">
@@ -371,7 +298,7 @@ function Get_Billing() {
                   document.getElementById("totalamount").value = item.Amount;
                   /*document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
                   document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount);
-                  document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
+                  //document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
                   document.getElementById("getplanname").value = item.PlanName;
                   document.getElementById("expectedamount").value = a;
                        // document.getElementById("extraperiod").value = extraperiod;
@@ -433,13 +360,13 @@ function Get_Billing() {
           else {
             html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + item.DollarPrice + '</d>';
           }
-         
+
           document.getElementById("cycle").innerHTML = item.Cycle;
           /*document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);*/
           document.getElementById("totalamount").value = item.Amount;
           /*document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount - (document.getElementById("discount").value * a / 100));*/
           document.getElementById("buttonamount").innerHTML = formatNumber(item.Amount);
-          document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
+         // document.getElementById("buttonamountdollar").innerHTML = formatNumber(item.DollarPrice);
           document.getElementById("getplanname").value = item.PlanName;
           document.getElementById("expectedamount").value = a;
           //document.getElementById("extraperiod").value = extraperiod;
@@ -463,124 +390,120 @@ function Get_Billing() {
 </script>
 
 <script type="text/javascript">
-    function calculatediscount(discount,amount)
-    {
-        var totaldis = discount * amount;
-        return totaldis;
-    }
+  function calculatediscount(discount, amount) {
+    var totaldis = discount * amount;
+    return totaldis;
+  }
 
-    function checkmonth(totalmonths) {
-        if (totalmonths > 0) {
-            if (totalmonths > 1) {
-                return totalmonths + " months ";
-            }
-            else
-            {
-                return totalmonths + " month ";
-            }
-        }
-        else
-        {
-            return "";
-        }
+  function checkmonth(totalmonths) {
+    if (totalmonths > 0) {
+      if (totalmonths > 1) {
+        return totalmonths + " months ";
+      }
+      else {
+        return totalmonths + " month ";
+      }
     }
-
-    function checkday(totaldays) {
-        if (totaldays > 0) {
-            if (totaldays > 1) {
-                return totaldays + " days ";
-            }
-            else {
-                return totaldays + " day ";
-            }
-        }
-        else {
-            return "";
-        }
+    else {
+      return "";
     }
+  }
 
-function Get_PlanFeatures() {
+  function checkday(totaldays) {
+    if (totaldays > 0) {
+      if (totaldays > 1) {
+        return totaldays + " days ";
+      }
+      else {
+        return totaldays + " day ";
+      }
+    }
+    else {
+      return "";
+    }
+  }
+
+  function Get_PlanFeatures() {
     var _planID = document.getElementById("plan").value;
     var url = "/Users/Get_PlanFeatures/";
-        $.ajax({
-            url: url,
-            data: { PlanID: _planID},
-            cache: false,
-            type: "GET",
-            success: function (data) {
+    $.ajax({
+      url: url,
+      data: { PlanID: _planID },
+      cache: false,
+      type: "GET",
+      success: function (data) {
 
-                var html = '';
+        var html = '';
 
-                $.each(data, function (key, item) {
+        $.each(data, function (key, item) {
 
-                  html += '<div class="col-md-6" style="padding-left:15px;line-height:1.5em">';
-                  if (item.status == '1') {
-                    html += '<img src = "../../Images/mark2.png" style = "width:15px" /></span >' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
-                  }
-                 else
-                  {
-                    
-                    html += '<img src="../../Images/removeicon.png" style="width:15px" />' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
-                  }
-                  });
+          html += '<div class="col-md-6" style="padding-left:15px;line-height:1.5em">';
+          if (item.status == '1') {
+            html += '<img src = "../../Images/mark2.png" style = "width:15px" /></span >' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
+          }
+          else {
 
-                $("#planfeatures").html(html).show();
-                document.getElementById("getplanname").value = item.PlanName;
-                },
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
+            html += '<img src="../../Images/removeicon.png" style="width:15px" />' + item.Feature + '<hr style = "margin:1px;padding:1px;" ></div > ';
+          }
         });
-    }
+
+        $("#planfeatures").html(html).show();
+        document.getElementById("getplanname").value = item.PlanName;
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
 
 
 
-function Get_PlanAmount() {
+  function Get_PlanAmount() {
     var _planID = document.getElementById("plan").value;
     var url = "/Users/Get_PlanAmount/";
     $.ajax({
-        url: url,
-        data: { PlanID: _planID },
-        cache: false,
-        type: "GET",
-        success: function (data) {
+      url: url,
+      data: { PlanID: _planID },
+      cache: false,
+      type: "GET",
+      success: function (data) {
 
-            var html1 = '';
-            var html3 = '';
-            var html4 = '';
-            var html5 = '';
+        var html1 = '';
+        var html3 = '';
+        var html4 = '';
+        var html5 = '';
 
-            $.each(data, function (key, item) {
-              var CCurrency = document.getElementById("currentCurrency").value;
-              if (CCurrency == "NGN") {
-                html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + formatNumber(item.PlanAmount) + '</d><span style="font-weight:bold;color:black"> monthly</span>';
-              }
-              else {
-                html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + item.DollarPrice + '</d><span style="font-weight:bold;color:black"> monthly</span>';
-              }
-             
-                html3 += "FEATURES OF " + item.PlanName;
-                html4 += item.PlanName;
-                html5 += item.PlanAmount;
-            });
+        $.each(data, function (key, item) {
+          var CCurrency = document.getElementById("currentCurrency").value;
+          if (CCurrency == "NGN") {
+            html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + formatNumber(item.PlanAmount) + '</d><span style="font-weight:bold;color:black"> monthly</span>';
+          }
+          else {
+            html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + item.DollarPrice + '</d><span style="font-weight:bold;color:black"> monthly</span>';
+          }
 
-            $("#planamountpermonth").html(html1).show();
-            $("#nameforfeatures").html(html3).show();
-            $("#planname").html(html4).show();
-            document.getElementById("totalamount").value = item.Amount;
-            document.getElementById("getplanname").value = item.PlanName;
-        },
-        error: function (reponse) {
-            alert("error : " + reponse);
-        }
+          html3 += "FEATURES OF " + item.PlanName;
+          html4 += item.PlanName;
+          html5 += item.PlanAmount;
+        });
+
+        $("#planamountpermonth").html(html1).show();
+        $("#nameforfeatures").html(html3).show();
+        $("#planname").html(html4).show();
+        document.getElementById("totalamount").value = item.Amount;
+        document.getElementById("getplanname").value = item.PlanName;
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
     });
-}
+  }
 </script>
 
 <script type="text/javascript">
-    function formatNumber(num) {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    }
+  function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
 </script>
 
 
@@ -635,6 +558,35 @@ function Get_PlanAmount() {
   });
 </script>
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
+<!-- Replace "test" with your own sandbox Business account app client ID -->
+<!-- Set up a container element for the button -->
+<script src="https://www.paypal.com/sdk/js?client-id=AceNyVWdhFe--qc7zDGTiJbEL37w8bp0dwVy6e2vY12ioKyaSExTDQ5yVmvAXDSScqiRIY1Pj52zgzsl&currency=USD"></script>
+<!-- Set up a container element for the button -->
+
+<script>
+  //PAYPAL
+  paypal.Buttons({
+    createOrder: function (data, actions) {
+      // Set up the transaction details
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '10.00'
+          }
+        }]
+      });
+    },
+    onApprove: function (data, actions) {
+      // Capture the payment
+      return actions.order.capture().then(function (details) {
+        // Show a success message to the customer
+        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+      });
     }
+  }).render('#paypal-button-container');
+</script>
+
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}

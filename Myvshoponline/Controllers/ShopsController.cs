@@ -219,9 +219,9 @@ namespace Myvshoponline.Controllers
             return View(shop);
         }
 
-        public JsonResult CreateAjax(string name, string description, string phone, string email, string country, string state, string city, string street, string shortname)
+        public JsonResult CreateAjax(string name, string description, string phone, string email, int countryid, string state, string city, string street, string shortname)
         {
-            string address = street + " " + city;
+            
               int UserID = (int)Session["UserID"];
                 string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
                 int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
@@ -248,11 +248,21 @@ namespace Myvshoponline.Controllers
                         shop.Description = description;
                         shop.PhoneNumber = phone;
                         shop.Email = email;
+                      //  int CountryID = db.CountryRegions.Where(s => s.Country == country).Select(s => s.ID).FirstOrDefault();
+                        shop.CountryID = countryid;
+                      if (db.States.Where(s => s.Name == state).Count() > 0)
+                       {
                         int StateID = db.States.Where(s => s.Name == state).Select(s => s.ID).FirstOrDefault();
-                        int CountryID = db.CountryRegions.Where(s => s.Country == country).Select(s => s.ID).FirstOrDefault();
-                        shop.StateID = Convert.ToString(StateID);
-                        shop.CountryID = CountryID;
+                        string address = street + " " + city;
                         shop.Address = address;
+                        shop.StateID = Convert.ToString(StateID);
+                        }
+                        else
+                        {
+                        string address = street + " " + city + " " + state;
+                        shop.Address = address;
+                        shop.StateID ="0";
+                         }
                         shop.ShopURL = shortname;
                         shop.EnableOnlineOrder = "Yes";
                         shop.EnableOnlinePayment = "Yes";

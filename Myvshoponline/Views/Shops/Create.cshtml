@@ -79,12 +79,14 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
-                      <input class="form-control form-control-navbar" onchange="checkcountry();this.value = this.value.toUpperCase();" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" placeholder="Country">
+                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country",@onchange= "displaystateInput(this.value)" })
+                      @*<input class="form-control form-control-navbar" onchange="checkcountry();this.value = this.value.toUpperCase();" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" placeholder="Country">*@
                     </div>
 
                     <div class="col-md-6">
                       <div id="msgstate" class="badge badge-danger" style="display:none;"></div>
-                      <input type="text" id="state" name="StateID" onchange="checkstate(); this.value = this.value.toUpperCase();" class="form-control form-control-navbar" placeholder="State" required />
+                      @*<input type="text" id="state" name="StateID" onchange="this.value = this.value.toUpperCase();" class="form-control form-control-navbar" placeholder="State" required />*@
+                      @*<input type="text" id="state" name="StateID" onchange="checkstate(); this.value = this.value.toUpperCase();" class="form-control form-control-navbar" placeholder="State" required />*@
                       <div id="displaystate">
 
                       </div>
@@ -332,7 +334,7 @@
             GetStates(CountryID);
           }
           else {
-            html += '<input type="text" id="city" name="StateID" class="form-control" placeholder="City" required="required" onchange="this.value = this.value.toUpperCase();"/>';
+            html += '<input type="text" id="state" name="StateID" class="form-control" placeholder="State" required="required" onchange="this.value = this.value.toUpperCase();"/>';
           }
         });
         $("#displaystate").html(html).show();
@@ -432,11 +434,11 @@
     var _description = document.getElementById("description").value;
     var _phone = document.getElementById("phone").value;
     var _email = document.getElementById("email").value;
-    var _country = document.getElementById("loadcountries").value;
+    var _countryid = document.getElementById("country").value;
     var _state = document.getElementById("state").value;
     var _city = document.getElementById("city").value;
     var _street = document.getElementById("street").value;
-    var _shortname = document.getElementById("shortname").value;
+    var _shortname = document.getElementById("shortname").value.replace(/\s/g, '');
     var _shortnameLength = document.getElementById("shortname").value.length;
 
     var input = document.querySelector('#phone');
@@ -473,9 +475,9 @@
       $("#phone").css("borderColor", "green");
       return false;
     }
-    else if (_country == '') {
-      $("#loadcountries").css("borderColor", "red");
-      $("#loadcountries").focus();
+    else if (_countryid == '') {
+      $("#country").css("borderColor", "red");
+      $("#country").focus();
       return false;
     }
     else if (_state == '') {
@@ -498,7 +500,8 @@
       return false;
     }
     else {
-      if (ValidateEmail(_email) && checkcountry2()) {
+     /* if (ValidateEmail(_email) && checkcountry2()) {*/
+        if (ValidateEmail(_email)) {
         $("#name").css("borderColor", "green");
         $("#phone").css("borderColor", "green");
         $("#email").css("borderColor", "green");
@@ -518,7 +521,7 @@
         var url = "/Shops/CreateAjax/";
         $.ajax({
           url: url,
-          data: { name: _name, description: _description, phone: number, email: _email, country: _country, state: _state, city: _city, street: _street, shortname: _shortname },
+          data: { name: _name, description: _description, phone: number, email: _email, countryid: _countryid, state: _state, city: _city, street: _street, shortname: _shortname },
           cache: false,
           type: "POST",
           success: function (data) {
@@ -590,12 +593,12 @@
       return "e.g. " + selectedCountryPlaceholder;
     },
     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
-    //initialCountry: "auto",
-    //geoIpLookup: function (callback) {
-    //  fetch("https://ipapi.co/json")
-    //    .then(function (res) { return res.json(); })
-    //    .then(function (data) { callback(data.country_code); })
-    //    .catch(function () { callback("us"); });
-    //}
+    initialCountry: "auto",
+    geoIpLookup: function (callback) {
+      fetch("https://ipapi.co/json")
+        .then(function (res) { return res.json(); })
+        .then(function (data) { callback(data.country_code); })
+        .catch(function () { callback("us"); });
+    }
   });
 </script>

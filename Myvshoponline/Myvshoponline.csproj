@@ -83,9 +83,6 @@
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -271,7 +268,6 @@
     <Compile Include="Controllers\OurLeadsController.cs" />
     <Compile Include="Controllers\PaymentAccountActivationsController.cs" />
     <Compile Include="Controllers\PaymentStatusController.cs" />
-    <Compile Include="Controllers\PaypalController.cs" />
     <Compile Include="Controllers\PlanFeaturesController.cs" />
     <Compile Include="Controllers\PopularProductPricingsController.cs" />
     <Compile Include="Controllers\PopularProductsController.cs" />
@@ -397,7 +393,6 @@
     <Compile Include="PaymentStatu.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PaypalConfiguration.cs" />
     <Compile Include="PlanFeature.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
