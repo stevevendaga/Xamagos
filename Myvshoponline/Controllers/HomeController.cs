@@ -31,7 +31,7 @@ namespace Myvshoponline.Controllers
         {
             if (!string.IsNullOrEmpty(id) && q==null)
             {
-                int count = db.Shops.Where(s => s.ShopURL == id).Count();
+                int count = db.Shops.Where(s => s.ShopURL == id && s.ShopStatus=="Active").Count();
                 if (count == 1)
                 {
                     int ShopID = db.Shops.Where(s => s.ShopURL == id).Select(s => s.ID).FirstOrDefault();
@@ -258,7 +258,7 @@ namespace Myvshoponline.Controllers
 
             return View();
         }
-        public ActionResult TermsandConditions()
+        public ActionResult TnC()
         {
             ViewBag.Message = "Your Terms and Conditions description page.";
 
@@ -509,11 +509,13 @@ namespace Myvshoponline.Controllers
                 int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
                 Session["OTP_Resetpw"] = RegisterOTP_Numeric;
                 //==================SEND MAIL============================//
-                string title = "Password Reset!";
-                string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
-                msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to reset your password on Xamagos.";
-                msg += "<br>This code expires in 10 minutes, do not share it with others.";
-                msg += "Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
+                string title = "Password Reset Code!";
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + user.CompanyName.ToUpper() + "</strong>, <br><br>";
+                msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to reset your password on XAMAGOS.";
+                msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+                msg += "<br><hr>";
+                msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+
                 mydata.SendMail(user.Email, title, msg);
 
                 //string title = "Password Reset";
@@ -593,11 +595,12 @@ namespace Myvshoponline.Controllers
                 int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
                 Session["OTP_Resetpw_buyer"] = RegisterOTP_Numeric;
                 //==================SEND MAIL============================//
-                string title = "Password Reset!";
-                string msg = "<a href='https://marketsquare247.com' title='Market Square247'> <img src='https://marketsquare247.com/Images/logosquare.png' style='width: 120px; height: 60px' /></a>" + "<hr><strong>" + " Hello " + user.Name + "</strong><br><br>";
-                msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to reset your password on Market Square247.";
-                msg += "<br>This code expires in 10 minutes, do not share it with others.";
-                msg += "Regards:  Market Square247" + "<br>" + "Email: info@marketsqaure247.com";
+                string title = "Password Reset Code!";
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + Email + "</strong>, <br><br>";
+                msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to reset your password on XAMAGOS.";
+                msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+                msg += "<br><hr>";
+                msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
                 mydata.SendMail(Email, title, msg);
                 //string msg = "<a href='http://marketsquare247.com' title='Market Square'> <img src='http://marketsquare247.com/Images/logosquare.png' style='width: 65px; height: 35px' /></a>" + "<hr>" + " Dear " + user.Name + ",<br><br>" +
                 //"Recently a request was submitted to reset your password on Market Square. If you did not request this, please ignore this email." + "<br/>" +

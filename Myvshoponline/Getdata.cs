@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Web.Helpers;
+using System.Threading.Tasks;
 
 namespace Myvshoponline
 {
@@ -283,28 +284,32 @@ namespace Myvshoponline
         }
         public void SendMail(string to, string subject, string msg)
         {
-            string from = "support@xamagos.com";
+            //string from = "support@xamagos.com";
             MailMessage mail = new MailMessage();
             //Mail Server IP 172.106.164.2 or mail.marketsquare247.com
-            SmtpClient SmtpServer = new SmtpClient("marketsquare247.com");
-            mail.From = new MailAddress(from, "XAMAGOS");
+            //SmtpClient SmtpServer = new SmtpClient("mail.xamagos.com");
+            SmtpClient SmtpServer = new SmtpClient("mail5019.site4now.net");
+            mail.From = new MailAddress("info@xamagos.com", "XAMAGOS");
             mail.To.Add(to);
             mail.Subject = subject;
             mail.Body = msg;
             mail.IsBodyHtml = true;
             SmtpServer.EnableSsl = true;
-            //SmtpServer.Port = 25;
+            SmtpServer.UseDefaultCredentials = false;
+            // 8889
+            //SmtpServer.Port = 8889;
             //for ssl
-            SmtpServer.Port = 465;
+            SmtpServer.Port = 587;
             //for ssl
             //working one SmtpServer.Port = 587;
-            SmtpServer.Port = 587;
-            SmtpServer.Credentials = new NetworkCredential("support@marketsquare247.com", "Supp@marketsquare247");
+            //SmtpServer.Port = 587;
+            SmtpServer.Credentials = new NetworkCredential("info@xamagos.com", "Xamagosinfo@2023");
             SmtpServer.Send(mail);
 
         }
 
-        public void UpdateUserBonusStatus(int userid)
+    
+    public void UpdateUserBonusStatus(int userid)
         {
             var constring = ConfigurationManager.ConnectionStrings["MarketsquareConnection"].ToString();
             SqlConnection conn = new SqlConnection(constring);

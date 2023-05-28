@@ -311,9 +311,9 @@ namespace Myvshoponline.Controllers
             return View();
         }
 
-        public JsonResult Verify_RegisterOTP(int otp_register, int UserID)
+        public JsonResult Verify_RegisterOTP(string otp_register, int UserID)
         {
-            if (Convert.ToInt32(Session["OTP_Register"]) == otp_register)
+            if (Convert.ToString(Session["OTP_Register"]) == otp_register)
             {
                 var user = db.Set<User>().Find(UserID);
                 user.EmailVerify = 1;
@@ -326,14 +326,20 @@ namespace Myvshoponline.Controllers
                 Session["UserID"] = UserID;
                 //==================SEND MAIL============================//
                 string title = "Xamagos welcomes you";
-                string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
-                msg += "Congratulations! Your account has been created successfully.";
-                msg += "<br>Enjoy the world of Xamagos.";
-                msg += "Best Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + user.CompanyName + "</strong>, <br><br>";
+                msg += "Welcome to Xamagos!";
+                msg += "<br>Congratulations on successfully creating your new account on Xamagos!" +
+                        "<br><br> We're excited to have you on board and ready to help you set up your online store.<br>" +
+                        "<br><br>Follow the link below on how to setup your online store: <br>";
+                msg += "<a href='https://tinyurl.com/w9wrcubs'>How to create a store on Xamagos</a><br><br>";
+                msg += "We're excited to see your online store thrive and wish you the best of success in your e-commerce journey!";
+                msg += "<br><hr>";
+                msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+
                 mydata.SendMail(user.Email, title, msg);
                 //==================SEND SMS=========================//
                 //string sms ="Market Square247 welcomes you.Hello " + user.CompanyName + ", your account has been created successfully.";
-                string sms = "Xamagos welcomes you. Your account has been created successfully. Enjoy the world of Xamagos";
+                string sms = "Xamagos welcomes you. Your account has been created successfully. Enjoy the world of Xamagos. Website: www.xamagos.com";
                 //sms+= "Email:info@marketsqaure247.com";
                 mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
                 //==================END SEND SMS=========================//
@@ -373,15 +379,16 @@ namespace Myvshoponline.Controllers
             //db.SaveChanges();
             //==================SEND MAIL============================//
             string title = "Xamagos - New Verification Code";
-            string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
-            msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to confirm your email on Xamagos.";
-            msg += "<br>This code expires in 10 minutes, do not share it with others.";
-            msg += "Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
-            mydata.SendMail(user.Email, title, msg);
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + user.CompanyName + "</strong>, <br><br>";
+                msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br> Please enter this code to verify your account on XAMAGOS.";
+                msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+                msg += "<br><hr>";
+                msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+                mydata.SendMail(user.Email, title, msg);
             //==================SEND SMS=========================//
             //string sms = "New verification code.Please enter the code sent to your email " + user.Email + " to verify your email on Market Square247.";
-            string sms = "New verification code.Please enter the code sent to your email to verify your email on Xamagos. The code expires in 10 minutes.";
-            mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+            //string sms = "New verification code.Please enter the code sent to your email to verify your email on Xamagos. The code expires in 10 minutes.";
+            //mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
             //==================END SEND SMS=========================//
             var result = from p in db.Users
                          where p.ID == UserID
@@ -505,15 +512,15 @@ namespace Myvshoponline.Controllers
 
                         //==================SEND MAIL============================//
                         string title = "XAMAGOS - Email Verification!";
-                        string msg = "<a href='https://marketsquare247.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
+                        string msg = "<a href='https://marketsquare247.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 100px; height: 50px;background-color:#17A2B8' /></a>" + "<strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
                         msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to confirm your email on XAMAGOS.";
                         msg += "<br>This code expires in 10 minutes, do not share it with others.";
                         msg += "Regards:  XAMAGOS" + "<br>" + "Email: support@xamagos.com";
                         mydata.SendMail(user.Email, title, msg);
                         //==================SEND SMS=========================//
                         //string sms = "Please enter the code sent to your email " + user.Email + " to verify your account email on Market Square247.";
-                        string sms = "Please enter the code sent to your email to verify your account on XAMAGOS. The code expires in 10 minutes.";
-                        mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+                       //string sms = "Please enter the code sent to your email to verify your account on XAMAGOS. The code expires in 10 minutes.";
+                       //mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
                         //==================END SEND SMS=========================//
 
                         // string link = "https://marketsquare247.com/Users/VerificationLinkSent?verifykey=" + user.resetkey;
@@ -625,38 +632,28 @@ namespace Myvshoponline.Controllers
                 string UserLoggedIn = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.CompanyName).FirstOrDefault();
                 string UserRole = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.UserRole.Role).FirstOrDefault();
                 int UserID = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.ID).FirstOrDefault();
-                //Session["UserRole"] = UserRole;
-                //Session["Name"] = UserLoggedIn;
-                //Session["username"] = user.Username;
-                //// Session["password"]=Password;
-                //Session["UserID"] = UserID;
+              //Session["UserRole"] = UserRole;
+              //Session["Name"] = UserLoggedIn;
+              //Session["username"] = user.Username;
+              //// Session["password"]=Password;
+              //Session["UserID"] = UserID;
 
-                // string RegisterOTP_Char = mydata.Generate_OTP_Char();
+              // string RegisterOTP_Char = mydata.Generate_OTP_Char();
+
+                //==================SEND SMS=========================//
+                //string sms = "Please enter the code sent to your email to verify your account on XAMAGOS. The code expires in 10 minutes.";
+               // mydata.Send_SMS_KudiSMS(phone, sms, "XAMAGOS", DateTime.Now);
+                //==================END SEND SMS=========================//
 
                 //==================SEND MAIL============================//
                 string title = "XAMAGOS - Email Verification!";
-                string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
-               msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to confirm your email on XAMAGOS.";
-                msg += "<br>This code expires in 10 minutes, do not share it with others.";
-                msg += "Regards:  XAMAGOS" + "<br>" + "Email: support@xamagos.com";
-              //  mydata.SendMail(user.Email, title, msg);
-                //==================SEND SMS=========================//
-                //string sms = "Please enter the code sent to your email " + user.Email + " to verify your account email on Market Square247.";
-                string sms = "Please enter the code sent to your email to verify your account on XAMAGOS. The code expires in 10 minutes.";
-               // mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "MARKTSQR247", DateTime.Now);
-                //==================END SEND SMS=========================//
-
-                // string link = "https://marketsquare247.com/Users/VerificationLinkSent?verifykey=" + user.resetkey;
-                //Code to get a particular message
-                //var getmessage = HttpUtility.HtmlDecode(db.EmailMessages.Where(s => s.msgKey == "Account_Verification").Select(s => s.Message).FirstOrDefault());
-                //string msg = "<a href='https://marketsquare247.com' title='Market Square247'> <img src='https://marketsquare247.com/Images/logosquare.png' style='width: 100px; height: 100px' /></a>" + "<hr><strong>" + " Hello " + user.CompanyName + "</strong><br>" +
-                // "Click on the link below to verify your email." + "<br/><br>" +
-                // "<a href='"+ link +"'>"+ "VERIFY MY EMAIL" + "</a><br/><br>" +
-                // //"Email:" + user.Email + "<br/>" +
-                // //"Password:" + user.Password + "<hr/>" +
-                // "Regards:  marketsquare247.com" + "<br>" +
-                // "Email: info@marketsqaure247.com";
-                // mydata.SendMail(user.Email, title, msg);
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + newname.ToUpper() + "</strong>, <br><br>";
+                msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your account on XAMAGOS.";
+                msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+                msg += "<br><hr>";
+                msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+                mydata.SendMail(email, title, msg);
+              
                 //==================END SEND MAIL=========================//
 
 

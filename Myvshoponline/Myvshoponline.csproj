@@ -3277,7 +3277,7 @@
     <Content Include="Views\CustomerShops\Details.cshtml" />
     <Content Include="Views\CustomerShops\Edit.cshtml" />
     <Content Include="Views\CustomerShops\Index.cshtml" />
-    <Content Include="Views\Home\TermsandConditions.cshtml" />
+    <Content Include="Views\Home\TnC.cshtml" />
     <Content Include="Views\Home\Privacy.cshtml" />
     <Content Include="Views\Home\AccessDenied.cshtml" />
     <Content Include="Views\RequestOnlineOrders\Create.cshtml" />
@@ -3549,6 +3549,9 @@
     <Content Include="Views\Home\ProductDetails.cshtml" />
     <Content Include="Views\Home\Pricing.cshtml" />
     <Content Include="Views\Home\Radio.cshtml" />
+    <Content Include="Views\Shared\_Layout - Copy %283%29.cshtml" />
+    <Content Include="Views\Shared\_Layout_userguide.cshtml" />
+    <Content Include="Views\Shared\_Layoutproduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />

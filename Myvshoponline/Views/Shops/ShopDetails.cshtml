@@ -740,7 +740,7 @@
                                                     <div class="row">
                                                         <div class="col-12 col-md-5 col-lg-5">
                                                             <div id="onemailverified" style="display:none">
-                                                                <span class="badge badge-primary">
+                                                                <span class="badge badge-info">
                                                                     Email Verified
                                                                 </span>
                                                                 <span class="badge">
@@ -760,7 +760,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span class="badge badge-primary">
+                                                                    <span class="badge badge-info">
                                                                         Email Verified
                                                                     </span>
                                                                     <span class="badge">
@@ -781,9 +781,12 @@
                                                                 <div class="input-group input-group-sm">
                                                                     <input type="text" class="form-control" style="border-color:#33C6F6" id="emailotp_shop" placeholder="Enter Verification code" />
                                                                     <div class="input-group-append">
-                                                                        <button class="btn btn-common" type="button" onclick="return VerifyEmailOTP();">
-                                                                            <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
-                                                                        </button>
+                                                                      <button class="btn btn-common" id="btnVerifyEmail" type="button" onclick="return VerifyEmailOTP();">
+                                                                        <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
+                                                                      </button>
+                                                                      <button class="btn btn-common" type="button" id="btnVerifyingEmail" style="display:none" disabled="disabled">
+                                                                        <img src="~/Images/loaders/ajax-loadergg.gif" />
+                                                                      </button>
                                                                     </div>
                                                                 </div>
                                                                 <a href="#" style="color:blue;display:none" id="rsndemailotp" onclick="return Resend_EmailVerifyOTP()">Didn't get code? Resend</a>
@@ -819,7 +822,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span class="badge badge-primary">
+                                                                    <span class="badge badge-info">
                                                                         Phone Number Verified
                                                                     </span>
                                                                     <span class="badge">
@@ -840,9 +843,12 @@
                                                             <div class="input-group input-group-sm">
                                                                 <input type="text" class="form-control" style="border-color:#33C6F6" id="phoneotp_shop" placeholder="Enter Verification code" />
                                                                 <div class="input-group-append">
-                                                                    <button class="btn btn-common" type="button" onclick="return VerifyPhoneOTP();">
-                                                                        <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
-                                                                    </button>
+                                                                  <button class="btn btn-common" id="btnVerifyPhone" type="button" onclick="return VerifyPhoneOTP();">
+                                                                    <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
+                                                                  </button>
+                                                                  <button class="btn btn-common" type="button" id="btnVerifyingPhone" style="display:none" disabled="disabled">
+                                                                    <img src="~/Images/loaders/ajax-loadergg.gif" />
+                                                                  </button>
                                                                 </div>
                                                             </div>
                                                             <a href="#" style="color:blue;display:none" id="rsndphoneotp" onclick="return Resend_PhoneVerifyOTP()">Didn't get code? Resend</a>
@@ -855,7 +861,7 @@
 
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <span id="enableshop">
+                                                            <span id="enableshop" style="display:none;">
                                                                 @if (Payment_Closed == 1 && paymentstatus == 1)
                                                                 {
                                                                     if (Model.ShopStatus == "Active")
@@ -1173,165 +1179,195 @@
                                                     <div class="row">
                                                         <div class="col-6 col-md-6 col-lg-6">
                                                             <ul style="font-size:13px">
-                                                                <li>
-                                                                    @if (Payment_Closed == 1)
-                                                                    {
-                                                                        if (paymentstatus == 1)
-                                                                        {
-                                                                            <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
-                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="#" id="product">
-                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
-                                                                            </a>
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
-                                                                        {
-                                                                            <a href="#" id="product">
-                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
-                                                                                <i class="lni lni-files"></i> Products (@totalProducts)
-                                                                            </a>
-                                                                        }
+                                                              <li>
+                                                                @if (Payment_Closed == 1)
+                                                                {
+                                                                  if (paymentstatus == 1)
+                                                                  {
+                                                                    <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                      <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                    </a>
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                    <a href="#" id="product">
+                                                                      <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                    </a>
+                                                                  }
+                                                                }
+                                                                else
+                                                                {
+                                                                  if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                  {
+                                                                    <div id="productLinkNotVerified">
+                                                                      <a href="#" id="product">
+                                                                        <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                      </a>
+                                                                    </div>
+                                                                    <div id="productLinkVerified" style="display:none">
+                                                                      <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                        <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                      </a>
+                                                                    </div>
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                        <i class="lni lni-files"></i> Products (@totalProducts)
+                                                                      </a>
+                                                                  }
 
-                                                                    }
-                                                                    <hr style="padding:1px;margin:5px" />
-                                                                </li>
+                                                                }
+                                                                <hr style="padding:1px;margin:5px" />
+                                                              </li>
                                                             </ul>
                                                         </div>
                                                         <div class="col-6 col-md-6 col-lg-6">
                                                             <ul style="font-size:13px">
-                                                                <li>
-                                                                    @if (Payment_Closed == 1)
+                                                              <li>
+                                                                @if (Payment_Closed == 1)
+                                                                {
+                                                                  if (paymentstatus == 1)
+                                                                  {
+                                                                    <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                      <i class="lni lni-cart"></i>
+                                                                      Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                    </a>
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                    <a href="#" id="orders">
+                                                                      <i class="lni lni-cart"></i>
+                                                                      Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                    </a>
+                                                                  }
+                                                                }
+                                                                else
+                                                                {
+                                                                  if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                  {
+                                                                    <div id="ordersLinkNotVerified">
+                                                                      <a href="#" id="orders">
+                                                                        <i class="lni lni-cart"></i>
+                                                                        Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                      </a>
+                                                                    </div>
+                                                                      <div id="ordersLinkVerified" style="display:none">
+                                                                        <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-cart"></i>
+                                                                        Orders (@{var od = Convert.ToInt32(ViewBag.Orders);}@od)
+                                                                        </a>
+                                                                      </div>
+                                                                    }
+                                                                    else
                                                                     {
-                                                                        if (paymentstatus == 1)
-                                                                        {
-                                                                            <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
-                                                                                <i class="lni lni-cart"></i>
-                                                                                Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
-                                                                            </a>
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        <a href="#" id="orders">
-                                                                                            <i class="lni lni-cart"></i>
-                                                                                            Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
-                                                                                        </a>
-                                                                                                    }
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (Model.EmailVerify == null || Model.PhoneVerify == null)
-                                                                                                    {
-                                                                                                        <a href="#" id="orders">
-                                                                                                            <i class="lni lni-cart"></i>
-                                                                                                            Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
-                                                                                                        </a>
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
-                                                                                                                        <i class="lni lni-cart"></i>
-                                                                                                                        Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
-                                                                                                                    </a>
-                                                                                                                                }
-                                                                                                                            }
-                                                                    <hr style="padding:1px;margin:5px" />
-                                                                </li>
+                                                                      <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                        <i class="lni lni-cart"></i>
+                                                                        Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                      </a>
+                                                                    }
+                                                                  }
+                                                                <hr style="padding:1px;margin:5px" />
+                                                              </li>
                                                             </ul>
                                                         </div>
 
                                                         <div class="col-6 col-md-6 col-lg-6">
                                                             <ul style="font-size:13px">
-                                                                <li>
-                                                                    @if (Payment_Closed == 1)
-                                                                    {
-                                                                        if (paymentstatus == 1)
-                                                                        {
-                                                                            <a href="~/Orders/Accounts/?sid=@Model.ID">
-                                                                                <i class="lni lni-stats-down"></i> Sales
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="#">
-                                                                                <i class="lni lni-stats-down"></i> Sales
-                                                                            </a>
+                                                              <li>
+                                                                @if (Payment_Closed == 1)
+                                                                {
+                                                                  if (paymentstatus == 1)
+                                                                  {
+                                                                    <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                      <i class="lni lni-stats-down"></i> Sales
+                                                                    </a>
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                    <a href="#">
+                                                                      <i class="lni lni-stats-down"></i> Sales
+                                                                    </a>
 
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
-                                                                        {
-                                                                            <a href="#" id="sales">
-                                                                                <i class="lni lni-stats-down"></i> Sales
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="~/Orders/Accounts/?sid=@Model.ID">
-                                                                                <i class="lni lni-stats-down"></i> Sales
-                                                                            </a>
-                                                                        }
+                                                                  }
+                                                                }
+                                                                else
+                                                                {
+                                                                  if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                  {
+                                                                    <div id="salesLinkNotVerified">
+                                                                      <a href="#" id="sales">
+                                                                        <i class="lni lni-stats-down"></i> Sales
+                                                                      </a>
+                                                                    </div>
+                                                                    <div id="salesLinkVerified" style="display:none">
+                                                                      <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                        <i class="lni lni-stats-down"></i> Sales
+                                                                      </a>
+                                                                    </div>
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                      <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                        <i class="lni lni-stats-down"></i> Sales
+                                                                      </a>
+                                                                      }
 
-                                                                    }
-                                                                    <hr style="padding:1px;margin:5px" />
-                                                                </li>
+                                                                      }
+                                                                      <hr style="padding:1px;margin:5px" />
+                                                                  </li>
 
                                                             </ul>
                                                         </div>
                                                         <div class="col-6 col-md-6 col-lg-6">
                                                             <ul style="font-size:13px">
-                                                                <li>
-                                                                    @if (Payment_Closed == 1)
-                                                                    {
-                                                                        if (paymentstatus == 1)
-                                                                        {
-                                                                            <a href="~/ShopCustomers/Index/?id=@Model.ID">
-                                                                                <i class="lni lni-users"></i>
-                                                                                My Customers (@totalCust)
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="#" id="customers">
-                                                                                <i class="lni lni-users"></i>
-                                                                                My Customers (@totalCust)
-                                                                            </a>
-                                                                        }
+                                                              <li>
+                                                                @if (Payment_Closed == 1)
+                                                                {
+                                                                  if (paymentstatus == 1)
+                                                                  {
+                                                                    <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                      <i class="lni lni-users"></i>
+                                                                      My Customers (@totalCust)
+                                                                    </a>
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                    <a href="#" id="customers">
+                                                                      <i class="lni lni-users"></i>
+                                                                      My Customers (@totalCust)
+                                                                    </a>
+                                                                  }
 
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (Model.EmailVerify == null || Model.PhoneVerify == null)
-                                                                        {
-                                                                            <a href="#" id="customers">
-                                                                                <i class="lni lni-users"></i>
-                                                                                My Customers (@totalCust)
-                                                                            </a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <a href="~/ShopCustomers/Index/?id=@Model.ID">
-                                                                                <i class="lni lni-users"></i>
-                                                                                My Customers (@totalCust)
-                                                                            </a>
-                                                                        }
+                                                                }
+                                                                else
+                                                                {
+                                                                  if (Model.EmailVerify == null || Model.PhoneVerify == null)
+                                                                  {
+                                                                    <div id="customersLinkNotVerified">
+                                                                      <a href="#" id="customers">
+                                                                        <i class="lni lni-users"></i>
+                                                                        My Customers (@totalCust)
+                                                                      </a>
+                                                                    </div>
+                                                                    <div id="customersLinkVerified" style="display:none">
+                                                                      <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                        <i class="lni lni-users"></i>
+                                                                        My Customers (@totalCust)
+                                                                      </a>
+                                                                    </div>
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                      <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                        <i class="lni lni-users"></i>
+                                                                        My Customers (@totalCust)
+                                                                      </a>
+                                                                      }
 
-                                                                    }
-                                                                    <hr style="padding:1px;margin:5px" />
-                                                                </li>
+                                                                      }
+                                                                      <hr style="padding:1px;margin:5px" />
+                                                                  </li>
                                                             </ul>
                                                         </div>
 
@@ -1562,15 +1598,6 @@
                                                     </h4>
 
 
-
-
-
-
-
-
-
-
-
                                                 </div>
                                                 <!--The div element for the map -->
                                                 <div id="map"></div>
@@ -1607,7 +1634,7 @@
                                                 </div>
                                                 <div class="contact-icon">
                                                     <i class="lni-link"></i>
-                                                    <a> Shop URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@Model.ShopURL</span></a>
+                                                    <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@Model.ShopURL</span></aa>
                                                 </div>
 
                                                 <div class="contact-icon">
@@ -1797,7 +1824,7 @@
                                 {
                                     int ProductID = item.ID;
                                     int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
-                                    <div class="col-6 col-sm-4 col-md-2 style=" padding:0px;margin:0px">
+                                    <div class="col-6 col-sm-4 col-md-2" style=" padding:0px;margin:0px">
                                         @if (countproductinsubitems > 0)
                                         {
                                             <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
@@ -2267,10 +2294,10 @@
     <script type="text/javascript">
             function Send_EmailVerifyOTP() {
                 var _ShopID = document.getElementById("shopid").value;
-                $(document).ajaxStart(function () {
+              /*  $(document).ajaxStart(function () {*/
                     var img = ' <img src="../../Images/loaders/ajax-loadergg.gif" />';
                     $("#msgsendcode").html(img);
-                });
+                /*});*/
                 var url = "/Shops/Send_EmailVerifyOTP/";
                 $.ajax({
                     url: url,
@@ -2302,6 +2329,8 @@
                     return false;
                 }
                 else {
+                  $("#btnVerifyEmail").css("display", "none");
+                  $("#btnVerifyingEmail").css("display", "block");
                     var url = "/Shops/Verify_EmailOTP_Shop/";
                     $.ajax({
                         url: url,
@@ -2311,12 +2340,34 @@
                         success: function (data) {
                             var html = '';
                             $.each(data, function (key, item) {
-                                if (item.OTPExist == 'true') {
-                                    $("#verifyemailbox").css("display", "none");
-                                    $("#onemailverified").css("display", "block");
-                                    $("#email").css("display", "none");
+                              if (item.OTPExist == 'true') {
+                                  $("#verifyemailbox").css("display", "none");
+                                  $("#onemailverified").css("display", "block");
+                                $("#email").css("display", "none");
+                                if (item.PhoneVerifyStatus == 'Yes') {
+                                  $("#productLinkNotVerified").css("display", "none");
+                                  $("#productLinkVerified").css("display", "block");
+
+                                  $("#ordersLinkNotVerified").css("display", "none");
+                                  $("#ordersLinkVerified").css("display", "block");
+
+                                  $("#salesLinkNotVerified").css("display", "none");
+                                  $("#salesLinkVerified").css("display", "block");
+
+                                  $("#customersLinkNotVerified").css("display", "none");
+                                  $("#customersLinkVerified").css("display", "block");
                                 }
+                                
+                              }
+                              //else if (item.OTPExist == 'true' && item.VerificationComplete == 'true') {
+                              //  document.getElementById("productLinkNotVerified").innerHTML = document.getElementById("productLinkVerified").innerHTML;
+                              //  $("#verifyemailbox").css("display", "none");
+                              //  $("#onemailverified").css("display", "block");
+                              //  $("#email").css("display", "none");
+                              //  }
                                 else {
+                                  $("#btnVerifyEmail").css("display", "block");
+                                  $("#btnVerifyingEmail").css("display", "none");
                                     $("#msgsendcode").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
                                     var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
                                     //$("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();
@@ -2335,9 +2386,11 @@
     <script type="text/javascript">
             function Resend_EmailVerifyOTP() {
                 var _ShopID = document.getElementById("shopid").value;
-                $(document).ajaxStart(function () {
-                    $("#resendemailotp").css("display", "block");
-                });
+               /* $(document).ajaxStart(function () {*/
+              $("#resendemailotp").css("display", "block");
+              $("#rsndemailotp").css("display", "none");
+
+               /* });*/
                 //var ans = confirm('Are you sure you want to resend verification code?');
                 //if (ans) {
 
@@ -2352,7 +2405,8 @@
                         $.each(data, function (key, item) {
                             $("#msgsendcode").html("<div> A new verification code has been sent to @Model.Email.</div>").show();
                         });
-                        $("#resendemailotp").css("display", "none");
+                      $("#resendemailotp").css("display", "none");
+                      $("#rsndemailotp").css("display", "block");
 
                     },
                     error: function (reponse) {
@@ -2368,10 +2422,10 @@
                 var _ShopID = document.getElementById("shopid").value;
                 var phone = document.getElementById("phone").value;
 
-                $(document).ajaxStart(function () {
+                //$(document).ajaxStart(function () {
                     var img = ' <img src="../../Images/loaders/ajax-loadergg.gif" />';
                     $("#msgphonesendcode").html(img);
-                });
+              /*  });*/
                 var url = "/Shops/PhoneOTP_Shop/";
                 $.ajax({
                     url: url,
@@ -2405,6 +2459,8 @@
                     return false;
                 }
                 else {
+                  $("#btnVerifyPhone").css("display", "none");
+                  $("#btnVerifyingPhone").css("display", "block");
                     var url = "/Shops/Verify_PhoneOTP_Shop/";
                     $.ajax({
                         url: url,
@@ -2418,8 +2474,24 @@
                                     $("#verifyphonebox").css("display", "none");
                                     $("#onphoneverified").css("display", "block");
                                     $("#phone_block").css("display", "none");
+
+                                  if (item.EmailVerifyStatus == 'Yes') {
+                                    $("#productLinkNotVerified").css("display", "none");
+                                    $("#productLinkVerified").css("display", "block");
+
+                                    $("#ordersLinkNotVerified").css("display", "none");
+                                    $("#ordersLinkVerified").css("display", "block");
+
+                                    $("#salesLinkNotVerified").css("display", "none");
+                                    $("#salesLinkVerified").css("display", "block");
+
+                                    $("#customersLinkNotVerified").css("display", "none");
+                                    $("#customersLinkVerified").css("display", "block");
+                                  }
                                 }
                                 else {
+                                  $("#btnVerifyPhone").css("display", "block");
+                                  $("#btnVerifyingPhone").css("display", "none");
                                     $("#msgphonesendcode").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
                                     //$("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();
                                 }
@@ -2438,9 +2510,10 @@
             function Resend_PhoneVerifyOTP() {
                 var _ShopID = document.getElementById("shopid").value;
                 var _shopurl = document.getElementById("shopurl").value;
-                $(document).ajaxStart(function () {
-                    $("#resendphoneotp").css("display", "block");
-                });
+               /* $(document).ajaxStart(function () {*/
+              $("#resendphoneotp").css("display", "block");
+              $("#rsndphoneotp").css("display", "none");
+               /* });*/
                 //var ans = confirm('Are you sure you want to resend verification code?');
                 //if (ans) {
 
@@ -2455,7 +2528,8 @@
                         $.each(data, function (key, item) {
                             $("#msgphonesendcode").html("<div> A new verification code has been sent to @Model.PhoneNumber.</div>").show();
                         });
-                        $("#resendphoneotp").css("display", "none");
+                      $("#resendphoneotp").css("display", "none");
+                      $("#rsndphoneotp").css("display", "block");
 
                     },
                     error: function (reponse) {

@@ -49,7 +49,7 @@
   <!-- Daterange picker -->
   <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
   <!--Textarea Editor summernote  -->
-  @*<link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.css">*@
+  <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.css">
 
 
   <link href="~/Content/style.css" rel="stylesheet" />
@@ -197,11 +197,11 @@
       text-align: center;
       /* Same trick as previously used to make circles */
       box-sizing: border-box;
-      width: 80%;
+      width: 100%;
       height: 90px;
       padding: 80px 1em 0 1em;
       /* We make room for the "ears" of our cloud */
-      margin: 0 30px;
+      margin: 0 60px;
       position: relative;
       /* background-color: #a4c9cf;*/
       background-color: white;
@@ -337,11 +337,11 @@
         <div class="input-group input-group-sm" style="margin:2px;">
           @if (Request.QueryString["search"] != null)
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:400px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:700px;">
           }
           else
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:400px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:700px;">
           }
 
         </div>
@@ -937,7 +937,7 @@
                   </a>
               </li>*@
             <li class="nav-item has-treeview">
-              <a href="~/Home/TnC" class="nav-link">
+              <a href="#" class="nav-link">
                 <i class="nav-icon far fa-circle text-danger"></i>
                 <pp class="text">Terms & Conditions</pp>
               </a>
@@ -995,7 +995,7 @@
         @*<div class="modal-dialog modal-dialog-centered">*@
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" style="font-size:14px">Donate to Support Xamagos</h5>
+            <h5 class="modal-title" style="font-size:14px">Donate to Support Market Square247</h5>
             <button type="button" class="close" data-dismiss="modal">×</button>
           </div>
           <div class="modal-body" id="donatebody">
@@ -1221,7 +1221,7 @@
             <div class="col-lg-3 col-md-4 col-11">
               <div class="widget">
                 <ul class="mt-3 footer-social">
-                  <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
                   <li><a class="linkedin" target="_blank" href="#"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
                   <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
                   </ul>
@@ -1246,15 +1246,14 @@
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                    string referallink1 = "https://xamagos.com";
-
+                    string referallink1 = "http://marketsquare247.com";
                   }
                   <div class="fb-share-button"
                        data-href="@referallink1"
                        data-layout="button_count">
                   </div>
                 </li>
-                <li><a class="twitter" href="http://twitter.com/share?url=http://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
       <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
@@ -1306,16 +1305,16 @@
 
             <div class="col-lg-3 col-md-4 col-11">
 
-              <p style="font-size:12px;line-height:12px;text-align:left;margin-top:10px;">
+              <p style="font-size:12px;line-height:12px;text-align:center;margin-top:5px;">
                 <a href="https://play.google.com/store/apps/details?id=com.marketsquare247.marketsquare247" target="_blank">
-                  <img src="~/Images/download_android_on_google_play.jpg" style="color:#87DDFF;width:70px;height:30px;" />
+                  <img src="~/Images/download_android_on_google_play.jpg" style="color:#87DDFF;width:150px;height:50px;" />
                 </a>
 
               </p>
 
-              <p style="font-size: 12px; line-height: 12px; text-align: left; margin-top: 10px;">
+              <p style="font-size: 12px; line-height: 12px; text-align: center; margin-top: 5px;">
                 <a href="#">
-                  <img src="~/Images/download_android_on_apple_app_store.jpg" style="color:#87DDFF;width:70px;height:30px;" />
+                  <img src="~/Images/download_android_on_apple_app_store.jpg" style="color:#87DDFF;width:150px;height:50px;" />
                 </a>
               </p>
 
@@ -1437,7 +1436,7 @@
   <!-- Tempusdominus Bootstrap 4 -->
   <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
   <!-- Summernote -->
-  @*<script src="~/plugins/summernote/summernote-bs4.min.js"></script>*@
+  <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
   <!-- overlayScrollbars -->
   <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- AdminLTE App -->

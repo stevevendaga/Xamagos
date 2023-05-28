@@ -562,7 +562,7 @@ var a = string.Format("{0:#,0}", Total);}@a
                             <input type="hidden" id="FromStateID" value="@item.Product.Shop.StateID" />
                             <input type="hidden" id="DeliveryCity_ID" name="dcity" />
 
-                            <a name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreament()">&minus;</a>
+                            <button type="button" name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreament()">&minus;</button>
                             <input type="number" min="1" id="quantity" readonly value="1" name="quantity" style="width:40px;height:35px;vertical-align:central;text-align:center;font-weight:bold;font-size:14px" />
                             <input type="hidden" value="@Total" name="amount" />
                             <input type="hidden" id="quantityinstock" value="@item.QuantityinStock" />
@@ -628,7 +628,7 @@ function quantity()
 </script>
                             <input type="hidden" id="quantityinstock" value="@item.QuantityinStock" />
 
-                            <a style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament()">+</a>
+                            <button type="button" style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament()">+</button>
                             &nbsp;&nbsp;&nbsp;
                             @if (!string.IsNullOrEmpty((string)Session["CustomerName"]))
                             {
@@ -685,7 +685,7 @@ function quantity()
 
                                     <div class="contact-icon">
                                         <i class="lni-link"></i>
-                                        <a> Shop URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></a>
+                                        <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></aa>
                                     </div>
 
                                 </li>

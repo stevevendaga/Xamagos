@@ -1,4 +1,4 @@
-﻿@model Myvshoponline.Product
+@model Myvshoponline.Product
 
 @{
     ViewBag.Title = "Edit";
@@ -108,63 +108,89 @@
                                         @Html.ValidationMessageFor(model => model.ProductCategoryID, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-md-5">
-                                        Product Status
-                                        @Html.DropDownList("ProductStatusID", null, "-- Select Product Status --", htmlAttributes: new { @class = "form-control", @required = "required" })
-                                        @Html.ValidationMessageFor(model => model.ProductStatusID, "", new { @class = "text-danger" })
+                                      @*Product Status
+    @Html.DropDownList("ProductStatusID", null, "-- Select Product Status --", htmlAttributes: new { @class = "form-control", @required = "required" })
+    @Html.ValidationMessageFor(model => model.ProductStatusID, "", new { @class = "text-danger" })*@
+                                      Selling Price
+                                      @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount", @min = "1" } })
+                                      @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
+                               
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        Selling Price
-                                        @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount", @min = "1" } })
-                                        @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="col-md-5">
-                                        Qty in Stock
-                                        @Html.EditorFor(model => model.QuantityinStock, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Quantity in Stock", @min = "1" } })
-                                        @Html.ValidationMessageFor(model => model.QuantityinStock, "", new { @class = "text-danger" })
-                                    </div>
+                                  <div class="col-md-5">
+                                    Qty in Stock
+                                    @Html.EditorFor(model => model.QuantityinStock, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Quantity in Stock", @min = "1" } })
+                                    @Html.ValidationMessageFor(model => model.QuantityinStock, "", new { @class = "text-danger" })
+                                  </div>
+                                  <div class="col-md-5">
+                                    @*Amount Purchased
+      @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount Purchased", @min = "1" } })
+      @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })*@
+                                    Currency
+                                    <select name="Currency" class="form-control" required="required">
+                                      <option selected>@Model.Currency</option>
+                                      <option value="USD">
+                                        USD - US Dollar
+                                      </option>
+                                      <option value="NGN">
+                                        NGN - Nigerian Naira
+                                      </option>
+
+                                      <option value="EUR">
+                                        EUR - Euro
+                                      </option>
+                                      <option value="GBP">
+                                        GBP - British Pound
+                                      </option>
+                                      <option value="AUD">
+                                        AUD - Australian Dollar
+                                      </option>
+                                      <option value="CAD">
+                                        CAD - Canadian Dollar
+                                      </option>
+                                      <option value="JPY">
+                                        JPY - Japanese Yen
+                                      </option>
+                                      <option value="SGD">
+                                        SGD - Singapore Dollar
+                                      </option>
+                                    </select>
+                                  </div>
+                                  @*<div class="col-md-5">
+        Currency
+        <select name="Currency" class="form-control" required="required">
+            <option selected>@Model.Currency</option>
+            <option value="USD">
+                USD - US Dollar
+            </option>
+            <option value="NGN">
+                NGN - Nigerian Naira
+            </option>
+
+            <option value="EUR">
+                EUR - Euro
+            </option>
+            <option value="GBP">
+                GBP - British Pound
+            </option>
+            <option value="AUD">
+                AUD - Australian Dollar
+            </option>
+            <option value="CAD">
+                CAD - Canadian Dollar
+            </option>
+            <option value="JPY">
+                JPY - Japanese Yen
+            </option>
+            <option value="SGD">
+                SGD - Singapore Dollar
+            </option>
+        </select>
+    </div>*@
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        Amount Purchased
-                                        @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Amount Purchased", @min = "1" } })
-                                        @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
-                                        </div>
-                                    <div class="col-md-5">
-                                        Currency
-                                        <select name="Currency" class="form-control" required="required">
-                                            <option selected>@Model.Currency</option>
-                                            <option value="USD">
-                                                USD - US Dollar
-                                            </option>
-                                            <option value="NGN">
-                                                NGN - Nigerian Naira
-                                            </option>
 
-                                            <option value="EUR">
-                                                EUR - Euro
-                                            </option>
-                                            <option value="GBP">
-                                                GBP - British Pound
-                                            </option>
-                                            <option value="AUD">
-                                                AUD - Australian Dollar
-                                            </option>
-                                            <option value="CAD">
-                                                CAD - Canadian Dollar
-                                            </option>
-                                            <option value="JPY">
-                                                JPY - Japanese Yen
-                                            </option>
-                                            <option value="SGD">
-                                                SGD - Singapore Dollar
-                                            </option>
-                                        </select>
-                                    </div>
-                                    </div>
-
-                                <div class="row" style="background-color:#F2F7FB;margin-top:5px;">
+                                <div class="row" style="background-color;margin-top:5px;">
                                      
                                     <div class="col-md-3" style="padding-top:10px">
                                         <input type="button" value="Save" class="btn btn-common"/>

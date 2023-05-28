@@ -22,7 +22,7 @@ namespace Myvshoponline.Controllers
 
             if (shopurl != null)
             {
-                int countexistence = db.Shops.Where(s => s.ShopURL == shopurl).Count();
+                int countexistence = db.Shops.Where(s => s.ShopURL == shopurl && s.ShopStatus=="Active").Count();
                 if (countexistence > 0)
                 {
                     int shopid = db.Shops.Where(s => s.ShopURL == shopurl).Select(s => s.ID).FirstOrDefault();
@@ -30,7 +30,7 @@ namespace Myvshoponline.Controllers
                 }
                 else
                 {
-                    return Redirect("~/Home/AccessDenied");
+                    return Redirect("~/Home/ShopNotFound");
                 }
             }
             if (mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
@@ -592,11 +592,13 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //shop.PhoneVerify = Convert.ToString(RegisterOTP_Numeric);
             //db.SaveChanges();
             //==================SEND MAIL============================//
-            string title = "Xamagos - Email Verification";
-            string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + shop.Name + "</strong><br><br>";
-            msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to verify your store email on Xamagos.";
-            msg += "<br>This code expires in 10 minutes, do not share it with others.";
-            msg += "Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
+            string title = "Xamagos - Store Email Verification";
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
+            msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+            msg += "<br><hr>";
+            msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+
             mydata.SendMail(shop.Email, title, msg);
             var result = from p in db.Shops
                          where p.ID == ShopID
@@ -606,31 +608,47 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
         }
 
 
-        public JsonResult Verify_EmailOTP_Shop(int ShopID,int emailotp_shop_received)
+        public JsonResult Verify_EmailOTP_Shop(int ShopID,string emailotp_shop_received)
         {
-            if (Convert.ToInt32(Session["OTP_ShopEmailVerifyOTP"]) == emailotp_shop_received)
+            if (Convert.ToString(Session["OTP_ShopEmailVerifyOTP"]) == emailotp_shop_received)
             {
                 int Payment_Closed = (int)db.Settings.Select(s => s.Payment_Account_Activation).FirstOrDefault();
                 var shop = db.Set<Shop>().Find(ShopID);
+                string PhoneVerify = db.Set<Shop>().Find(ShopID).PhoneVerify;
                 shop.EmailVerify ="Yes";
                 if (shop.PhoneVerify == "Yes")
                 {
                     if (Payment_Closed == 0)
                     {
-                        shop.ShopStatus = "Active";
+                      shop.ShopStatus = "Active";
+                      //Send store URL to email and some movtivation message
+                      string Mailtitle = "New Store Details";
+                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+                      msgURL += "<b>Congratulations!</b> You store details has been verified successfuly.<br><br> Here is your store details<br>";
+                      msgURL += "<b>Store:</b> " + shop.Name + " <br>";
+                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>htpps://xamagos.com/" + shop.ShopURL + "</a> <br>";
+                      msgURL += "<b>Store Email:</b> " + shop.Email+" <br>";
+                      msgURL += "<b>Phone Number:</b> " + shop.PhoneNumber + " <br><br>";
+                      msgURL += "You can now proceed to add products to your store.";
+                      msgURL += "<br><br>Follow the link below on how to add products to your online store: <br>";
+                      msgURL += "<a href='https://tinyurl.com/mrx7zjne'>Adding Products to Your Store on Xamagos</a><br><br>";
+                      msgURL += "<br><hr>";
+                      msgURL += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+                      mydata.SendMail(shop.Email, Mailtitle, msgURL);
                     }
-                }
+        }
                 db.SaveChanges();
                 //==================SEND MAIL============================//
-                string title = "Email Verified";
-                string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.jpg' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + shop.Name + "</strong><br><br>";
-                msg += "Congratulations! Your email has been verified.";
-                msg += "<br>Enjoy the world of Xamagos.";
-                msg += "Best Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
-                mydata.SendMail(shop.Email, title, msg);
+              string title = "Email Verified";
+              string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+              msg += "Your " + shop.Name + " store email has been verified.";
+              msg += "<br><hr>";
+              msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+              mydata.SendMail(shop.Email, title, msg);
+              Session["OTP_ShopEmailVerifyOTP"] = null;
                 var result = from p in db.Shops
                              where p.ID == ShopID
-                             select new { ID = p.ID, OTPExist = "true" };
+                             select new { ID = p.ID, OTPExist = "true", PhoneVerifyStatus= PhoneVerify };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
@@ -651,11 +669,12 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //shop.PhoneVerify = Convert.ToString(RegisterOTP_Numeric);
             //db.SaveChanges();
             //==================SEND MAIL============================//
-            string title = "Xamagos - New Email Verification Code";
-            string msg = "<a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + shop.Name + "</strong><br><br>";
-            msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to verify your store email on Xamagos.";
-            msg += "<br>This code expires in 10 minutes, do not share it with others.";
-            msg += "Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";
+            string title = "Xamagos - New Store Email Verification Code";
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
+            msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+            msg += "<br><hr>";
+            msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
             mydata.SendMail(shop.Email, title, msg);
             var result = from p in db.Shops
                          where p.ID == ShopID
@@ -692,8 +711,9 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             Session["OTP_ShopPhoneVerifyOTP"] = RegisterOTP_Numeric;
             //==================SEND SMS=========================//
             string Phone = db.Shops.Where(s => s.ID == ShopID).Select(s => s.PhoneNumber).FirstOrDefault();
-            string sms = RegisterOTP_Numeric + " use this OTP to confirm your store on Xamagos. Enjoy the world of Xamagos.";
-            mydata.Send_SMS_KudiSMS(Phone, sms, "XAMAGOS", DateTime.Now);
+      //string sms = RegisterOTP_Numeric + " use this OTP to verify your Xamagos store phone number. Enjoy the world of Xamagos. www.xamagos.com";
+      string sms = "Your OTP is " + RegisterOTP_Numeric + " www.xamagos.com";
+      mydata.Send_SMS_KudiSMS(Phone, sms, "XAMAGOS", DateTime.Now);
             //==================END SEND SMS=========================//
             var result = from p in db.Shops
                             where p.ID == ShopID
@@ -702,28 +722,44 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             }
            
 
-        public JsonResult Verify_PhoneOTP_Shop(int ShopID, int phoneotp_shop)
+        public JsonResult Verify_PhoneOTP_Shop(int ShopID, string phoneotp_shop)
         {
-            if (Convert.ToInt32(Session["OTP_ShopPhoneVerifyOTP"]) == phoneotp_shop)
+            if (Convert.ToString(Session["OTP_ShopPhoneVerifyOTP"]) == phoneotp_shop)
             {
                 int Payment_Closed = (int)db.Settings.Select(s => s.Payment_Account_Activation).FirstOrDefault();
                 var shop = db.Set<Shop>().Find(ShopID);
+                string EmailVerify = db.Set<Shop>().Find(ShopID).EmailVerify;
                 shop.PhoneVerify = "Yes";
                 if (shop.EmailVerify == "Yes")
                 {
                     if (Payment_Closed == 0)
                     {
                         shop.ShopStatus = "Active";
+                      //Send store URL to email and some movtivation message
+                      string Mailtitle = "New Store Details";
+                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+                      msgURL += "<b>Congratulations!</b> You store details has been verified successfuly.<br><br> Here is your store details<br>";
+                      msgURL += "<b>Store:</b> " + shop.Name + " <br>";
+                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>htpps://xamagos.com/" + shop.ShopURL + "</a> <br>";
+                      msgURL += "<b>Store Email:</b> " + shop.Email + " <br>";
+                      msgURL += "<b>Phone Number:</b> " + shop.PhoneNumber + " <br><br>";
+                      msgURL += "You can now proceed to add products to your store.";
+                      msgURL += "<br><br>Follow the link below on how to add products to your online store: <br>";
+                      msgURL += "<a href='https://tinyurl.com/mrx7zjne'>Adding Products to Your Store on Xamagos</a><br><br>";
+                      msgURL += "<br><hr>";
+                      msgURL += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+                      mydata.SendMail(shop.Email, Mailtitle, msgURL);
                     }
                 }
                 db.SaveChanges();
+                Session["OTP_ShopPhoneVerifyOTP"] = null;
                 //==================SEND SMS=========================//
-                string sms = "Hello " + shop.Name + ", your phone number has been verified. Enjoy the world of Xamagos";
-                mydata.Send_SMS_KudiSMS(shop.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+                //string sms = "Hello " + shop.Name + ", your phone number has been verified. Enjoy the world of Xamagos. www.xamagos.com";
+                //mydata.Send_SMS_KudiSMS(shop.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
                 //==================END SEND SMS=========================//
-                var result = from p in db.Shops
+          var result = from p in db.Shops
                              where p.ID == ShopID
-                             select new { ID = p.ID, OTPExist = "true" };
+                             select new { ID = p.ID, OTPExist = "true", EmailVerifyStatus= EmailVerify };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
@@ -741,12 +777,12 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
             Session["OTP_ShopPhoneVerifyOTP"] = RegisterOTP_Numeric;
             var shop = db.Set<Shop>().Find(ShopID);
-            //shop.EmailVerify = Convert.ToString(RegisterOTP_Numeric);
-            //db.SaveChanges();
-            //==================SEND SMS=========================//
-            string sms = RegisterOTP_Numeric + " use this OTP to confirm your store on Xamagos. Enjoy the world of Xamagos";
-            //sms += "The code expires in 10 minutes, do not share it with others.";
-            mydata.Send_SMS_KudiSMS(shop.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+      //shop.EmailVerify = Convert.ToString(RegisterOTP_Numeric);
+      //db.SaveChanges();
+      //==================SEND SMS=========================//
+      string sms = "Your OTP is " + RegisterOTP_Numeric + " www.xamagos.com";
+      //sms += "The code expires in 10 minutes, do not share it with others.";
+      mydata.Send_SMS_KudiSMS(shop.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
             //==================END SEND SMS=========================//
             var result = from p in db.Shops
                          where p.ID == ShopID

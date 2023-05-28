@@ -1,4 +1,4 @@
-﻿@model Myvshoponline.Models.ForgotPasswordViewModel
+@model Myvshoponline.Models.ForgotPasswordViewModel
 @{ 
     ViewBag.Title = "Verification Link";
 }
@@ -22,14 +22,16 @@
                         <div id="msg"></div>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" style="border-color:#33C6F6" name="registerotp" id="otp_register" placeholder="Verification code" />
-                            <div class="input-group-append" >
-                                <button class="btn btn-common" type="button" onclick="return VerifyOTP();">
-                                    <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
-                                   
-                                </button>
+                            <div class="input-group-append">
+                              <button class="btn btn-common" type="button" id="btnVerify" onclick="return VerifyOTP();">
+                                <span id="process"><i class="lni lni-check-mark-circle"></i> Verify</span>
+                              </button>
+                              <button class="btn btn-common" type="button" id="btnProcessing" style="display:none" disabled="disabled">
+                                <img src="~/Images/loaders/ajax-loadergg.gif" />
+                              </button>
                             </div>
                         </div><br />
-                        <a href="#" style="color:blue;" onclick="return Resend_VerifyOTP()">Didn't get code? Resend</a>
+                        <a href="#" style="color:blue;" id="lnkDintgetcode" onclick="return Resend_VerifyOTP()">Didn't get code? Resend</a>
                         <div id="resendotp" style="display:none"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
                    
                     <input type="hidden" id="userid" value="@ViewBag.vid"/>
@@ -53,6 +55,8 @@
             document.getElementById("otp_register").focus();
         }
         else {
+          $("#btnVerify").css("display", "none");
+          $("#btnProcessing").css("display", "block");
             var url = "/Users/Verify_RegisterOTP/";
             $.ajax({
                 url: url,
@@ -65,13 +69,15 @@
                         if(item.OTPExist=='true')
                         {
                             window.location = '../BusinessLanding/' + item.ID;
-                            var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
-                            $("#process").html(html).show();
+                            //var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
+                            //$("#process").html(html).show();
                         }
                         else {
                             $("#msg").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
-                            var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
-                            $("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();
+                            /*var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';*/
+                          /*$("#process").html('<i class="lni lni-check-mark-circle"></i>Verify').show();*/
+                          $("#btnVerify").css("display", "block");
+                          $("#btnProcessing").css("display", "none");
                         }
                     });
                    
@@ -87,9 +93,7 @@
 <script type="text/javascript">
     function Resend_VerifyOTP() {
         var _UserID = document.getElementById("userid").value;
-        $(document).ajaxStart(function () {
-            $("#resendotp").css("display", "block");
-        });
+        
         Swal.fire({
             title: 'Are you sure?',
             text: "You want to resend verification code!",
@@ -105,6 +109,8 @@
 
             }
             else if (result.isConfirmed) {
+              $("#lnkDintgetcode").css("display", "none");
+              $("#resendotp").css("display", "block");
             var url = "/Users/Resend_VerifyRegisterOTP/";
             $.ajax({
                 url: url,
@@ -117,7 +123,8 @@
                         $("#msg").html("<div class='alert alert-success'> A new verification code has been sent to your email.</div>").show();
                        
                     });
-                    $("#resendotp").css("display", "none");
+                  $("#resendotp").css("display", "none");
+                  $("#lnkDintgetcode").css("display", "block");
                     
                 },
                 error: function (reponse) {

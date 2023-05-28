@@ -75,7 +75,7 @@
                     <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
                     <div class="input-icon">
                       <i class="lni-map-marker"></i>
-                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country", @onchange= "displaystateInput(this.value)" })
+                      @Html.DropDownList("CountryID", null, "-- Select Country --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "country", @onchange = "displaystateInput(this.value)" })
                     </div>
                   </div>
 
@@ -127,7 +127,7 @@
                       </div>
                     </div>
                   </div>
-
+                  <span id="StrengthDisp" class="badge displayBadge" style="margin:4px;"></span>
 
 
                   @*<div class="form-group">
@@ -151,6 +151,7 @@
                       <input type="checkbox" onchange="consentbox()" id="chkConsent">&nbsp; I agree that I understand the<a href="#"> Terms and conditions  </a> of Xamagos
                     </li>
                   </ul>
+                  @*<button type="submit" class="btn btn-common log-btn mt-3" id="btnLogin">Register Now</button>*@
                   <button type="button" class="btn btn-common log-btn mt-3" onclick="return doSignup();" id="btnLogin">Register</button>
                   <button type="button" class="btn btn-common log-btn mt-3" disabled id="loadspinner" style="display:none;padding:18px">
                     <div class="spinner-container">
@@ -204,7 +205,7 @@
   }
 </script>
 
-<script type="text/javascript">
+@*<script type="text/javascript">
   $(document).ready(function () {
     $("#password").on('keydown', function (e) {
       var words = $(this).val().length + 1;
@@ -217,7 +218,7 @@
       }
     });
   });
-</script>
+</script>*@
 
 <script type="text/javascript">
   $(document).ready(function () {
@@ -324,7 +325,8 @@
     var _pw = document.getElementById("password").value;
     var _confirmpw = document.getElementById("confirmpassword").value;
     var _countryid = document.getElementById("country").value;
-
+    let strongPassword = new RegExp('((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
+    let strengthBadge = document.getElementById('StrengthDisp')
     var words = $("#password").val().length;
     if (_name == '') {
       $("#name").css("borderColor", "red");
@@ -390,16 +392,20 @@
       $("#confirmpassword").css("borderColor", "red");
       return false;
     }
-    else if (words < 6) {
-      $('#display_count').text('Password must be a minimun of 6 characters');
-      document.getElementById("password").style.borderColor = "red";
-      return false;
+    //else if (words < 6) {
+    //  $('#display_count').text('Password must be a minimun of 6 characters');
+    //  document.getElementById("password").style.borderColor = "red";
+    //  return false;
+    //}
+    else if (!strongPassword.test(_pw)) {
+      $('#display_count').text('Weak password strength');
+      strengthBadge.style.backgroundColor = 'red'
+      strengthBadge.textContent = 'Weak'
     }
     else if (document.getElementById("chkConsent").checked != true) {
-      $('#chkConsentmsg').text('You must tick the checkbox below');
+      $('#chkConsentmsg').text('Tick the box below');
       return false;
     }
-
     else {
       if (ValidateEmail(_email)) {
         $("#name").css("borderColor", "green");
@@ -412,7 +418,6 @@
         $("#confirmpassword").css("borderColor", "green");
 
         $('#chkConsentmsg').text('');
-
         $("#loadspinner").css("display", "block");
         $("#btnLogin").css("display", "none");
 
@@ -591,6 +596,58 @@
   }
 </script>
 
+<script type="text/javascript">
+  // timeout before a callback is called
+
+  let timeout;
+
+  // traversing the DOM and getting the input and span using their IDs
+
+  let password = document.getElementById('password')
+  let strengthBadge = document.getElementById('StrengthDisp')
+
+  // The strong and weak password Regex pattern checker
+
+  //let strongPassword = new RegExp('(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.{8,})')
+  let strongPassword = new RegExp('((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
+  /*let strongPassword = new RegExp('((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))')*/
+  /*let mediumPassword = new RegExp('((?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')*/
+
+  function StrengthChecker(PasswordParameter) {
+    // We then change the badge's color and text based on the password strength
+
+    if (strongPassword.test(PasswordParameter)) {
+      strengthBadge.style.backgroundColor = "green"
+      strengthBadge.style.color = "white"
+      strengthBadge.textContent = 'Strong'
+    } 
+     //else if (mediumPassword.test(PasswordParameter)) {
+    //  strengthBadge.style.backgroundColor = 'blue'
+    //  strengthBadge.style.color = "white"
+    //  strengthBadge.textContent = 'Medium'
+    //} 
+     else {
+      strengthBadge.style.backgroundColor = 'red'
+      strengthBadge.textContent = 'Weak'
+      $('#display_count').text('Password must contain atleast 1 UPPERCASE, 1 lowercase, 1 digit, 1 special character and 6 characters minimun');
+    }
+  }
+
+  // Adding an input event listener when a user types to the  password input 
+  password.addEventListener("input", () => {
+    //The badge is hidden by default, so we show it
+    strengthBadge.style.display = 'block'
+    clearTimeout(timeout);
+    //We then call the StrengChecker function as a callback then pass the typed password to it
+    timeout = setTimeout(() => StrengthChecker(password.value), 500);
+    //Incase a user clears the text, the badge is hidden again
+    if (password.value.length !== 0) {
+      strengthBadge.style.display != 'block'
+    } else {
+      strengthBadge.style.display = 'none'
+    }
+  });
+</script>
 
 
 @section Scripts {

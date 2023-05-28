@@ -1,12 +1,12 @@
 
 @{
-    MyvshoponlineEntities db = new MyvshoponlineEntities();
-    ViewBag.ProductCategories = db.ProductCategories.Where(c => c.Name != "All Categories").ToList();
-    ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
-    ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
-    ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
-    ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
-    int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
+  MyvshoponlineEntities db = new MyvshoponlineEntities();
+  ViewBag.ProductCategories = db.ProductCategories.Where(c => c.Name != "All Categories").ToList();
+  ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
+  ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
+  ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+  ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
+  int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
 }
 
 
@@ -23,7 +23,7 @@
   <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/css/countrySelect.css">
 
 
- 
+
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
@@ -337,11 +337,11 @@
         <div class="input-group input-group-sm" style="margin:2px;">
           @if (Request.QueryString["search"] != null)
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:400px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:700px;">
           }
           else
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:400px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:700px;">
           }
 
         </div>
@@ -995,7 +995,7 @@
         @*<div class="modal-dialog modal-dialog-centered">*@
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" style="font-size:14px">Donate to Support Xamagos</h5>
+            <h5 class="modal-title" style="font-size:14px">Donate to Support Market Square247</h5>
             <button type="button" class="close" data-dismiss="modal">×</button>
           </div>
           <div class="modal-body" id="donatebody">
@@ -1210,10 +1210,10 @@
                     Headquarter - <span class="block-title" style="font-size:15px">&nbsp; Nigeria@*#9, Suite 32, Divine Plaza, Opposite Oracle Driving School, Old Otukpo Road, Makurdi, Benue State -</span>*@
 
                   <h3 class="block-title" style="font-size:12px"> Connect With Us</h3>
-                  <ul class="mt-3 footer-social"> 
+                  <ul class="mt-3 footer-social">
                     @{ var xamagos = "@xamagos";}
-                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;"/></a></li>
-                    
+                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;" /></a></li>
+
                   </ul>
                 </div>
               </div>
@@ -1221,10 +1221,10 @@
             <div class="col-lg-3 col-md-4 col-11">
               <div class="widget">
                 <ul class="mt-3 footer-social">
-                  <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
                   <li><a class="linkedin" target="_blank" href="#"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
                   <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
-                  </ul>
+                </ul>
 
               </div>
             </div>
@@ -1246,17 +1246,16 @@
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                    string referallink1 = "https://xamagos.com";
-
+                    string referallink1 = "http://marketsquare247.com";
                   }
                   <div class="fb-share-button"
                        data-href="@referallink1"
                        data-layout="button_count">
                   </div>
                 </li>
-                <li><a class="twitter" href="http://twitter.com/share?url=http://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-      <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                  <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
                   <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
@@ -1265,7 +1264,7 @@
 
               </ul>
 
-              
+
 
               @*<p>Subscribe to our Newsletter.</p>*@
 
@@ -1306,14 +1305,14 @@
 
             <div class="col-lg-3 col-md-4 col-11">
 
-              <p style="font-size:12px;line-height:12px;text-align:left;margin-top:10px;">
+              <p style="font-size:12px;line-height:12px;text-align:center;margin-top:5px;">
                 <a href="https://play.google.com/store/apps/details?id=com.marketsquare247.marketsquare247" target="_blank">
                   <img src="~/Images/download_android_on_google_play.jpg" style="color:#87DDFF;width:70px;height:30px;" />
                 </a>
 
               </p>
 
-              <p style="font-size: 12px; line-height: 12px; text-align: left; margin-top: 10px;">
+              <p style="font-size: 12px; line-height: 12px; text-align: center; margin-top: 5px;">
                 <a href="#">
                   <img src="~/Images/download_android_on_apple_app_store.jpg" style="color:#87DDFF;width:70px;height:30px;" />
                 </a>
@@ -1327,31 +1326,31 @@
 
 
                 @*<li class="nav-item has-treeview">
-      <a href="~/users/create" target="_blank" class="nav-link">
-              Sell on MarketSquare247
-      </a>
-      </li>*@
+                  <a href="~/users/create" target="_blank" class="nav-link">
+                          Sell on MarketSquare247
+                  </a>
+                  </li>*@
 
                 @*<li class="nav-item has-treeview">
-          <a href="~/Home/StoreLocator" target="_blank" class="nav-link">
-                  Store Locator
-          </a>
+                      <a href="~/Home/StoreLocator" target="_blank" class="nav-link">
+                              Store Locator
+                      </a>
 
-      </li>
-      <li class="nav-item has-treeview">
-          <a href="~/TrainingModules/Index?px=1" class="nav-link">
-                  Support
-          </a>
+                  </li>
+                  <li class="nav-item has-treeview">
+                      <a href="~/TrainingModules/Index?px=1" class="nav-link">
+                              Support
+                      </a>
 
-      </li>*@
+                  </li>*@
               </ul>
 
 
               @*<br />
-    <h5 class="block-title" style="font-size:14px;"> Sell on MarketSquare247 Sell on MarketSquare247Sell on MarketSquare247</h5>
-    <span class="full-time" style="color:white;padding:3px;margin-top:10px;vertical-align:top;background-color:#138496">
-        &nbsp;&nbsp; <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Support Market Square247" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();"> <i class="lni-gift"></i>Donate/Support</a>
-    </span>*@
+                <h5 class="block-title" style="font-size:14px;"> Sell on MarketSquare247 Sell on MarketSquare247Sell on MarketSquare247</h5>
+                <span class="full-time" style="color:white;padding:3px;margin-top:10px;vertical-align:top;background-color:#138496">
+                    &nbsp;&nbsp; <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Support Market Square247" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();"> <i class="lni-gift"></i>Donate/Support</a>
+                </span>*@
             </div>
           </div>
         </div>
@@ -1421,7 +1420,7 @@
     $.widget.bridge('uibutton', $.ui.button)
   </script>
   <!-- Bootstrap 4 -->
-  <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  @*<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>*@
   <!-- ChartJS -->
   <script src="~/plugins/chart.js/Chart.min.js"></script>
   <!-- Sparkline -->
@@ -1629,13 +1628,13 @@
     });
   </script>
 
-  
 
 
 
 
 
- 
+
+
 </body>
 </html>
 
