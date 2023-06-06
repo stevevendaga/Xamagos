@@ -27,7 +27,7 @@ namespace Myvshoponline
         public Nullable<int> NumberofShops { get; set; }
         public Nullable<int> NumberofProducts { get; set; }
         public Nullable<int> NumberofCustomers { get; set; }
-        public Nullable<int> PriceDollar { get; set; }
+        public Nullable<decimal> PriceDollar { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanFeature> PlanFeatures { get; set; }

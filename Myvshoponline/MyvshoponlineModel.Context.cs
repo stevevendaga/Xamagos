@@ -91,6 +91,7 @@ namespace Myvshoponline
         public virtual DbSet<SocialMediaChannel> SocialMediaChannels { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<TempPendingPayment> TempPendingPayments { get; set; }
+        public virtual DbSet<TermsandPrivacy> TermsandPrivacies { get; set; }
         public virtual DbSet<Testimonial> Testimonials { get; set; }
         public virtual DbSet<TrainingModule> TrainingModules { get; set; }
         public virtual DbSet<TrainingPricing> TrainingPricings { get; set; }

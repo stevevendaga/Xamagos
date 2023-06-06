@@ -26,9 +26,10 @@
 
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+  @*<link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">*@
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon.ico">
   <link rel="manifest" href="../favicon_io/site.webmanifest">
   <!--Loading Spinner-->
   <link href="~/LoadingSpinner/spinner.css" rel="stylesheet" />
@@ -127,17 +128,30 @@
      });
     </script>*@
   <!--Start of Tawk.to Script-->
+  @*<script type="text/javascript">
+      var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/5d98ecf36c1dde20ed053230/default';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+      })();
+    </script>*@
+  <!--Start of Tawk.to Script-->
   <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function () {
       var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
       s1.async = true;
-      s1.src = 'https://embed.tawk.to/5d98ecf36c1dde20ed053230/default';
+      s1.src = 'https://embed.tawk.to/63cfdf7a47425128790f625f/1gni029bf';
       s1.charset = 'UTF-8';
       s1.setAttribute('crossorigin', '*');
       s0.parentNode.insertBefore(s1, s0);
     })();
   </script>
+  <!--End of Tawk.to Script-->
   <style>
     .bg-image {
       /* The image used */
@@ -337,11 +351,11 @@
         <div class="input-group input-group-sm" style="margin:2px;">
           @if (Request.QueryString["search"] != null)
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:700px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:400px;">
           }
           else
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:700px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:400px;">
           }
 
         </div>
@@ -1221,9 +1235,9 @@
             <div class="col-lg-3 col-md-4 col-11">
               <div class="widget">
                 <ul class="mt-3 footer-social">
-                  <li><a class="facebook" href="https://www.facebook.com/marketsquare247" target="_blank"><i class="lni-facebook-filled"></i></a></li>
-                  <li><a class="linkedin" target="_blank" href="#"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
-                  <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
+                  <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="instagram" target="_blank" href="https://www.instagram.com/xamagosmain"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
+                  <li><a class="twitter" href="https://twitter.com/xamagos"><i class="lni-twitter-filled"></i></a></li>
                 </ul>
 
               </div>
@@ -1246,14 +1260,14 @@
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                    string referallink1 = "http://marketsquare247.com";
+                    string referallink1 = "https://xamagos.com";
                   }
                   <div class="fb-share-button"
                        data-href="@referallink1"
                        data-layout="button_count">
                   </div>
                 </li>
-                <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                <li><a class="twitter" href="http://twitter.com/share?url=https://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
                   <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>

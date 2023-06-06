@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Myvshoponline;
 using System.IO;
 using System.Text;
+using System.Globalization;
 
 namespace Myvshoponline.Controllers
 {
@@ -16,8 +17,9 @@ namespace Myvshoponline.Controllers
     {
         private MyvshoponlineEntities db = new MyvshoponlineEntities();
         Getdata mydata = new Getdata();
-        // GET: Shops
-        public ActionResult Index(string shopurl)
+        TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+    // GET: Shops
+    public ActionResult Index(string shopurl)
         {
 
             if (shopurl != null)
@@ -593,7 +595,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //db.SaveChanges();
             //==================SEND MAIL============================//
             string title = "Xamagos - Store Email Verification";
-            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
             msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
             msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
             msg += "<br><hr>";
@@ -623,10 +625,10 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
                       shop.ShopStatus = "Active";
                       //Send store URL to email and some movtivation message
                       string Mailtitle = "New Store Details";
-                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
-                      msgURL += "<b>Congratulations!</b> You store details has been verified successfuly.<br><br> Here is your store details<br>";
+                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
+                      msgURL += "<b>Congratulations!</b> Your store details has been verified successfuly.<br><br> Here is your store details<br>";
                       msgURL += "<b>Store:</b> " + shop.Name + " <br>";
-                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>htpps://xamagos.com/" + shop.ShopURL + "</a> <br>";
+                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>https://xamagos.com/" + shop.ShopURL + "</a> <br>";
                       msgURL += "<b>Store Email:</b> " + shop.Email+" <br>";
                       msgURL += "<b>Phone Number:</b> " + shop.PhoneNumber + " <br><br>";
                       msgURL += "You can now proceed to add products to your store.";
@@ -640,7 +642,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
                 db.SaveChanges();
                 //==================SEND MAIL============================//
               string title = "Email Verified";
-              string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+              string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
               msg += "Your " + shop.Name + " store email has been verified.";
               msg += "<br><hr>";
               msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
@@ -670,7 +672,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //db.SaveChanges();
             //==================SEND MAIL============================//
             string title = "Xamagos - New Store Email Verification Code";
-            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
             msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
             msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
             msg += "<br><hr>";
@@ -737,10 +739,10 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
                         shop.ShopStatus = "Active";
                       //Send store URL to email and some movtivation message
                       string Mailtitle = "New Store Details";
-                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + shop.User.CompanyName.ToUpper() + "</strong>, <br><br>";
-                      msgURL += "<b>Congratulations!</b> You store details has been verified successfuly.<br><br> Here is your store details<br>";
+                      string msgURL = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
+                      msgURL += "<b>Congratulations!</b> Your store details has been verified successfuly.<br><br> Here is your store details<br>";
                       msgURL += "<b>Store:</b> " + shop.Name + " <br>";
-                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>htpps://xamagos.com/" + shop.ShopURL + "</a> <br>";
+                      msgURL += "<b>Store URL:</b> <a href='https://xamagos.com/" + shop.ShopURL + "'>https://xamagos.com/" + shop.ShopURL + "</a> <br>";
                       msgURL += "<b>Store Email:</b> " + shop.Email + " <br>";
                       msgURL += "<b>Phone Number:</b> " + shop.PhoneNumber + " <br><br>";
                       msgURL += "You can now proceed to add products to your store.";
@@ -799,8 +801,22 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
                          select new { EmailVerify = p.EmailVerify, PhoneVerify =p.PhoneVerify };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        //====================
+    //====================
 
+    public ActionResult BusinessCard(int? id)
+    {
+      if (id == null)
+      {
+        return Redirect("~/Home/AccessDenied");
+      }
+      Shop shop = db.Shops.Find(id);
+      if (shop == null)
+      {
+        return Redirect("~/Home/AccessDenied");
+      }
+
+        return View(shop);
+    }
 
        
 

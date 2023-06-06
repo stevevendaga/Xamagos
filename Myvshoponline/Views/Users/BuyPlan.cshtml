@@ -179,7 +179,9 @@
               <script src="https://js.paystack.co/v1/inline.js"></script>
               <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()"> Pay NGN <span id="buttonamount"></span> Now</button>
             </form>
+
             <div id="btnPayDollar" style="display:none">
+              <input type="hidden" id="totalDollar" />
               <div id="paypal-button-container"></div>
               @*<button type="button" class="btn btn-primary" style="width:auto;" onclick="payWithPaystack()"> Pay USD <span id="buttonamountdollar"></span> Now</button>*@
             </div>
@@ -219,8 +221,8 @@
     //var _extrabonuspercentage = document.getElementById("extrabonus").value;
     //var _extrabonusamount = document.getElementById("extrabonusamount").value;
     var handler = PaystackPop.setup({
-      //key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
-      key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',
+      key: 'pk_live_0440497e3b0ab4eecc0e3356dfbbca4246c27e8b',
+      /*key: 'pk_test_30f35faf090ef8870e4f411d1b463dc16d432942',*/
 
       email: email,
       amount: myamt,
@@ -248,10 +250,32 @@
           type: "POST",
         })
         // alert('You have succesfully paid for' + realplan + '\n Your trasaction reference: ' + response.reference);
+        //Swal.fire({
+        //  position: 'top-end',
+        //  /*icon: 'success',*/
+        //  title: 'Transaction completed successfully',
+        //  showConfirmButton: false,
+        //  timer: 1800,
+        //  padding: '0em',
+        //  width: '600px',
+        //  height: '8px',
+
+        //})
         window.location.href = "/Users/AccountUpgrade/?id=" + userid + "&ug=true";
       },
       onClose: function () {
-        alert('Transaction aborted by user. Try again');
+        //alert('Transaction aborted by user. Try again');
+        Swal.fire({
+          position: 'top-end',
+          /*icon: 'success',*/
+          title: 'Transaction aborted by user. Try again',
+          showConfirmButton: false,
+          timer: 1800,
+          padding: '0em',
+          width: '600px',
+          height: '8px',
+
+        })
       }
     });
     handler.openIframe();
@@ -292,6 +316,9 @@ function Get_Billing() {
                   }
                   else {
                     html2 += "Total: " + '<span class=""  id="currencySignTotal" >' + CCurrency + '</span> <d id="amtTotal">' + item.DollarPrice + '</d>';
+                    //fill the dollar input box
+                    document.getElementById("totalDollar").value = item.DollarPrice
+
                   }
                   document.getElementById("cycle").innerHTML = item.Cycle;
                   /*document.getElementById("totalamount").value = item.Amount - (document.getElementById("discount").value * a / 100);*/
@@ -480,6 +507,7 @@ function Get_Billing() {
           }
           else {
             html1 += '<b>' + item.PlanName + ' PLAN </b> &nbsp; <span class="" id="currencySignPlan" style="color:black">' + CCurrency + ' </span> <d id="amtTotal" style="color:black">' + item.DollarPrice + '</d><span style="font-weight:bold;color:black"> monthly</span>';
+           
           }
 
           html3 += "FEATURES OF " + item.PlanName;
@@ -560,18 +588,23 @@ function Get_Billing() {
 
 <!-- Replace "test" with your own sandbox Business account app client ID -->
 <!-- Set up a container element for the button -->
-<script src="https://www.paypal.com/sdk/js?client-id=AceNyVWdhFe--qc7zDGTiJbEL37w8bp0dwVy6e2vY12ioKyaSExTDQ5yVmvAXDSScqiRIY1Pj52zgzsl&currency=USD"></script>
+<!--Sandbox account-->
+@*<script src="https://www.paypal.com/sdk/js?client-id=AceNyVWdhFe--qc7zDGTiJbEL37w8bp0dwVy6e2vY12ioKyaSExTDQ5yVmvAXDSScqiRIY1Pj52zgzsl&currency=USD"></script>*@
+
+<!--Live account-->
+<script src="https://www.paypal.com/sdk/js?client-id=Addb0mmwTUpupIW35SCNGJS4_-ejuJ5_Nsy2vI8Ep3X5Py5lFEVDIrUiDRP22QFB_TUwmWE6QEjRRfGP&currency=USD"></script>
 <!-- Set up a container element for the button -->
 
 <script>
   //PAYPAL
+  //document.getElementById("totalDollar").value
   paypal.Buttons({
     createOrder: function (data, actions) {
       // Set up the transaction details
       return actions.order.create({
         purchase_units: [{
           amount: {
-            value: '10.00'
+            value: document.getElementById("totalDollar").value
           }
         }]
       });
@@ -580,7 +613,34 @@ function Get_Billing() {
       // Capture the payment
       return actions.order.capture().then(function (details) {
         // Show a success message to the customer
-        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+        //alert('Transaction completed by successfully ' + details.payer.name.given_name + '!');
+        Swal.fire({
+          position: 'top-end',
+          /*icon: 'success',*/
+          title: 'Transaction completed successfully',
+          showConfirmButton: false,
+          timer: 1800,
+          padding: '0em',
+          width: '600px',
+          height: '8px',
+
+        })
+        var _planID = document.getElementById("plan").value;
+        var _BillingID = document.getElementById("billing").value;
+        //var reference = '' + Math.floor((Math.random() * 1000000000) + 1);
+        var reference = details.payer.payer_id;
+        var userid = document.getElementById("userid").value;
+        //update payment status
+        var url = "/Users/Update_Payment_Company_Plan/";
+        $.ajax({
+          url: url,
+          /*data: { refno: response.reference, amount: myamt, planid: _planID, billingid: _BillingID, extraperiod: _extraperiod, discountpercentage: _discountpercentage, extrabonusamount: _extrabonusamount, expectedamount: _expectedamount, extrabonuspercentage: _extrabonuspercentage, discountamount: _discountamount },*/
+          data: { refno: reference, amount: document.getElementById("totalDollar").value*100, planid: _planID, billingid: _BillingID },
+          cache: false,
+          type: "POST",
+        })
+        window.location.href = "/Users/AccountUpgrade/?id=" + userid + "&ug=true";
+
       });
     }
   }).render('#paypal-button-container');

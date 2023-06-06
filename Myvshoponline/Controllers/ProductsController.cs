@@ -1115,7 +1115,7 @@ namespace Myvshoponline.Controllers
         public ActionResult Publish_Products(int ShopID)
         {
             
-            var prod = db.Products.Where(s => s.ShopID == ShopID).ToList();
+            var prod = db.Products.Where(s => s.ShopID == ShopID && s.Ready_for_Publishing==1 && s.Published==0 && s.ProductStatusID==2).ToList();
             foreach (var item in prod)
             {
                 string ImageName = item.ID + ".jpg";
@@ -1127,7 +1127,7 @@ namespace Myvshoponline.Controllers
 
                 if (System.IO.File.Exists(filepath))
                 {
-                    mydata.Publish_Products(ShopID);
+                    mydata.Publish_Products(ShopID,item.ID);
                     mydata.Update_ready_for_publishing_back(item.ID);
                 }
             }

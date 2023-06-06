@@ -159,7 +159,7 @@
                                     <input type="date" class="form-control" tabindex="3" style="border-color:#33C6F6;padding:18px;" id="dexpiryEdit">
                                     <div id="idinfo-collapse"></div>
                                     <div class="input-group-append" style="margin-top:2px" id="saveChanges">
-                                      <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return updateIdentity();">
+                                      <button class="btn btn-common log-btn" id="btnSaveChanges" type="button" onclick="return updateIdentity();">
                                         <span id="saveacct">Save Changes <i class="fas fa-save"></i></span>
                                       </button>
                                       <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
@@ -209,10 +209,10 @@
                                   <br />
                                   <center>
                                     <div class="input-group-append" id="infodiv">
-                                      <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return uploadIdentity();">
+                                      <button class="btn btn-common log-btn" id="btnContinue" type="button" onclick="return uploadIdentity();">
                                         <span id="saveacct">Save & Continue <i class="fas fa-save"></i></span>
                                       </button>
-                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinnerContinue" style="padding:18px;display:none;width:130px">
                                         <div class="spinner-container">
                                           <div class="loading-spinner"></div>
                                         </div>
@@ -223,13 +223,12 @@
                                       <button class="btn btn-common log-btn" id="btnUpload" type="button" onclick="return CheckFileName();">
                                         <span id="saveacct">Upload <i class="fas fa-upload"></i></span>
                                       </button>
-                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                      <button class="btn btn-common log-btn" disabled type="button" id="loadSpinnerUpload" style="padding:18px;display:none;width:130px">
                                         <div class="spinner-container">
                                           <div class="loading-spinner"></div>
                                         </div>
                                       </button>
                                     </div>
-
                                   </center>
                                 </div>
 
@@ -243,10 +242,10 @@
                                     <input type="checkbox" onchange="consentbox()" id="chkConsent">
                                     <span style="color:black;">I agree that the information provided above are accurate and correct.</span>
                                     <br />
-                                    <button class="btn btn-success log-btn" id="btnUpload" type="button" onclick="return submitIdentity();">
+                                    <button class="btn btn-success log-btn" id="btnSubmit" type="button" onclick="return submitIdentity();">
                                       <span id="saveacct">Submit Now <i class="fas fa"></i></span>
                                     </button>
-                                    <button class="btn btn-common log-btn" disabled type="button" id="loadSpinner" style="padding:18px;display:none;width:130px">
+                                    <button class="btn btn-common log-btn" disabled type="button" id="loadSpinnerSubmit" style="padding:18px;display:none;width:130px">
                                       <div class="spinner-container">
                                         <div class="loading-spinner"></div>
                                       </div>
@@ -278,7 +277,7 @@
           var fileName = document.getElementById("fileUpload").value
             //debugger;
           if (fileName == "") {
-            document.getElementById("msgInvalidUpload").innerHTML = "Browse to upload a valid File with jpg/jpeg/gif/png";
+            document.getElementById("msgInvalidUpload").innerHTML = "Browse to upload a valid image";
             //document.getElementById("fileUpload").value = "";
             return false;
           }
@@ -301,6 +300,8 @@
               }
 
               // Adding one more key to FormData object  
+              $("#loadSpinnerUpload").css("display", "block");
+              $("#btnUpload").css("display", "none");
               $.ajax({
                 url: '/Users/UploadIdentity',
                 type: "POST",
@@ -310,6 +311,7 @@
                 success: function (result) {
                   document.getElementById("divBody").innerHTML = "<img src='" + result + "' width='100%'>";
                   document.getElementById("divSubmit").style.display = "block";
+                  $("#loadSpinnerUpload").css("display", "none");
                 },
                 error: function (err) {
                   alert(err.statusText);
@@ -321,7 +323,7 @@
            return true;
                }
             else {
-              document.getElementById("msgInvalidUpload").innerHTML = "File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png";
+              document.getElementById("msgInvalidUpload").innerHTML = "Invalid file selected, please select a valid image to upload";
               //document.getElementById("fileUpload").value = "";
                 return false;
             }
@@ -400,15 +402,12 @@
     }
    
     else {
-      document.getElementById("loadSpinner").style.display = "block";
-      document.getElementById("btnUpload").style.display = "none";
+      document.getElementById("btnContinue").style.display = "none";
       document.getElementById("idno").style.borderColor = "green";
       document.getElementById("dissued").style.borderColor = "green";
       document.getElementById("dexpiry").style.borderColor = "green";
       document.getElementById("country").style.borderColor = "green";
-
-     
-      
+      $("#loadSpinnerContinue").css("display", "block");
 
       var url = "/Users/SaveIdentity/";
       $.ajax({
@@ -428,9 +427,8 @@
 
           getIdentityInfo();
           
-          $("#loadSpinner").css("display", "none");
-          $("#btnUpload").css("display", "block");
-          $("#displaystores").html(html);
+          $("#loadSpinnerContinue").css("display", "none");
+          $("#btnContinue").css("display", "none");
         },
         error: function (reponse) {
           alert("error : " + reponse);
@@ -446,7 +444,9 @@
       return false;
     }
 
-    else {
+   else {
+     $("#loadSpinnerSubmit").css("display", "block");
+     $("#btnSubmit").css("display", "none");
       var url = "/Users/SubmitIdentity/";
       $.ajax({
         url: url,
@@ -463,7 +463,7 @@
           $("#successmsg_id").css("display", "block");
          /* $("#editContent").css("display", "none");*/
           $("#divSubmit").css("display", "none");
-          $("#loadSpinner").css("display", "none");
+          $("#loadSpinnerSubmit").css("display", "none");
         },
         error: function (reponse) {
           alert("error : " + reponse);

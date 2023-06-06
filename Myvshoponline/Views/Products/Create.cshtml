@@ -23,7 +23,16 @@
 }
 
 <div id="content">
-  <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a> &raquo; </b></h5>
+  <h5 style="font-size:12px" class="h5">
+    <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a>
+    &laquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a></b>
+    <span style="margin-top:0px">
+      <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:1px;padding-bottom:1px;padding-left:5px;width:150px;height:30px">
+        <font style="color:white;font-size:11px;">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
+      </a>
+    </span>
+
+  </h5>
 
   @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
   {
@@ -250,7 +259,7 @@
                     {*@
                   <div class="col-md-6" style="padding-top:0px;margin-top:0px;">
                     @*<input type="submit" id="btnSave" value="Add Product" class="btn btn-common" />*@
-                    <input type="button" id="btnSave" value="Add Product" class="btn btn-common" onclick="return doCreate()" />
+                    <input type="button" id="btnSave" value="Add Product" class="btn btn-common" onclick="return doCreate()" style="background-color:cornflowerblue;color:white" />
                     <button type="button" class="btn btn-common" disabled id="loadspinner" style="display:none;padding:15px;width:170px">
                       <div class="spinner-container">
                         <div class="loading-spinner"></div>
@@ -403,7 +412,7 @@
             timer: 1800,
             padding: '0em',
             width: '600px',
-            height: '5px',
+            height: '8px',
            
           })
 

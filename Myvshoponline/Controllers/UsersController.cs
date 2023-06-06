@@ -16,7 +16,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Web.Helpers;
-
+using System.Globalization;
 
 namespace Myvshoponline.Controllers
 {
@@ -24,8 +24,9 @@ namespace Myvshoponline.Controllers
     {
         private MyvshoponlineEntities db = new MyvshoponlineEntities();
         Getdata mydata = new Getdata();
-        // GET: Users
-        public ActionResult Index()
+        TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+    // GET: Users
+    public ActionResult Index()
         {
             if (mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
@@ -313,7 +314,9 @@ namespace Myvshoponline.Controllers
 
         public JsonResult Verify_RegisterOTP(string otp_register, int UserID)
         {
-            if (Convert.ToString(Session["OTP_Register"]) == otp_register)
+            
+
+      if (Convert.ToString(Session["OTP_Register"]) == otp_register)
             {
                 var user = db.Set<User>().Find(UserID);
                 user.EmailVerify = 1;
@@ -326,7 +329,7 @@ namespace Myvshoponline.Controllers
                 Session["UserID"] = UserID;
                 //==================SEND MAIL============================//
                 string title = "Xamagos welcomes you";
-                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + user.CompanyName + "</strong>, <br><br>";
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(user.CompanyName.ToLower()) + "</strong>, <br><br>";
                 msg += "Welcome to Xamagos!";
                 msg += "<br>Congratulations on successfully creating your new account on Xamagos!" +
                         "<br><br> We're excited to have you on board and ready to help you set up your online store.<br>" +
@@ -379,7 +382,7 @@ namespace Myvshoponline.Controllers
             //db.SaveChanges();
             //==================SEND MAIL============================//
             string title = "Xamagos - New Verification Code";
-            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + user.CompanyName + "</strong>, <br><br>";
+            string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(user.CompanyName.ToLower()) + "</strong>, <br><br>";
                 msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br> Please enter this code to verify your account on XAMAGOS.";
                 msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
                 msg += "<br><hr>";
@@ -512,7 +515,7 @@ namespace Myvshoponline.Controllers
 
                         //==================SEND MAIL============================//
                         string title = "XAMAGOS - Email Verification!";
-                        string msg = "<a href='https://marketsquare247.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 100px; height: 50px;background-color:#17A2B8' /></a>" + "<strong>" + " Hello " + user.CompanyName + "</strong><br><br>";
+                        string msg = "<a href='https://marketsquare247.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 100px; height: 50px;background-color:#17A2B8' /></a>" + "<strong>" + " Hello " + textInfo.ToTitleCase(user.CompanyName.ToLower()) + "</strong><br><br>";
                         msg += "Please enter the code <b>" + RegisterOTP_Numeric + "</b> to confirm your email on XAMAGOS.";
                         msg += "<br>This code expires in 10 minutes, do not share it with others.";
                         msg += "Regards:  XAMAGOS" + "<br>" + "Email: support@xamagos.com";
@@ -647,7 +650,7 @@ namespace Myvshoponline.Controllers
 
                 //==================SEND MAIL============================//
                 string title = "XAMAGOS - Email Verification!";
-                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " DEAR " + newname.ToUpper() + "</strong>, <br><br>";
+                string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(newname.ToLower()) + "</strong>, <br><br>";
                 msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your account on XAMAGOS.";
                 msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
                 msg += "<br><hr>";
@@ -1088,7 +1091,7 @@ namespace Myvshoponline.Controllers
             string phone = db.Shops.Find(shopid).PhoneNumber;
             //==================SEND MAIL============================//
             string title = "Xamagos-Account Activation";
-            string msg = "<a href='https://marketsquare247.com' title='Xamagos'><img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + shopname + "</strong><br><br>";
+            string msg = "<a href='https://marketsquare247.com' title='Xamagos'><img src='https://xamagos.com/Images/logosquare.png' style='width: 160px; height: 50px;background-color:#17A2B8' /></a>" + "<hr><strong>" + " Hello " + textInfo.ToTitleCase(shopname.ToLower()) + "</strong><br><br>";
             msg += "Your store has been activated successfully";
             msg += "<br><br>Enjoy the world of Xamagos.";
             // msg += "Regards:  Xamagos" + "<br>" + "Email: support@xamagos.com";

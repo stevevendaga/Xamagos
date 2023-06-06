@@ -122,7 +122,7 @@
                                 $("#invalid_msg").html('<p class="alert alert-danger">Invalid login, try again</p>');
                             }
                             else if (item.gotoAdminLanding == 'true') {
-                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful...</p>');
                                 //Swal.fire({
                                 //    position: 'top-end',
                                 //    icon: 'success',
@@ -134,7 +134,7 @@
                             }
                             else if(item.gotoUserDashboard== 'true')
                             {
-                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful...</p>');
                                 //Swal.fire({
                                 //    icon: 'success',
                                 //    title: 'Login successful, redirecting...',
@@ -147,7 +147,7 @@
                                 window.location.href = '../Users/Dashboard/' + item.userid;
                             }
                             else {
-                                $("#invalid_msg").html('<p class="alert alert-success">Login successful, redirecting...</p>');
+                                $("#invalid_msg").html('<p class="alert alert-success">Login successful...</p>');
                                 window.location = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
                             }
                         });

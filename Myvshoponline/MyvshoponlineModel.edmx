@@ -491,7 +491,7 @@
           <Property Name="NumberofShops" Type="int" />
           <Property Name="NumberofProducts" Type="int" />
           <Property Name="NumberofCustomers" Type="int" />
-          <Property Name="PriceDollar" Type="int" />
+          <Property Name="PriceDollar" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -789,6 +789,14 @@
           <Property Name="DateCreated" Type="datetime" />
           <Property Name="OrderGroupID" Type="int" />
           <Property Name="UserID" Type="int" />
+        </EntityType>
+        <EntityType Name="TermsandPrivacy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Terms" Type="text" />
+          <Property Name="PrivacyPolicy" Type="text" />
         </EntityType>
         <EntityType Name="Testimonial">
           <Key>
@@ -2003,6 +2011,7 @@
           <EntitySet Name="SocialMediaChannel" EntityType="Self.SocialMediaChannel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TempPendingPayment" EntityType="Self.TempPendingPayment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TermsandPrivacy" EntityType="Self.TermsandPrivacy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Testimonial" EntityType="Self.Testimonial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingModule" EntityType="Self.TrainingModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingPricing" EntityType="Self.TrainingPricing" Schema="dbo" store:Type="Tables" />
@@ -2423,6 +2432,7 @@
           <EntitySet Name="SocialMediaChannels" EntityType="MyvshoponlineModel.SocialMediaChannel" />
           <EntitySet Name="States" EntityType="MyvshoponlineModel.State" />
           <EntitySet Name="TempPendingPayments" EntityType="MyvshoponlineModel.TempPendingPayment" />
+          <EntitySet Name="TermsandPrivacies" EntityType="MyvshoponlineModel.TermsandPrivacy" />
           <EntitySet Name="Testimonials" EntityType="MyvshoponlineModel.Testimonial" />
           <EntitySet Name="TrainingModules" EntityType="MyvshoponlineModel.TrainingModule" />
           <EntitySet Name="TrainingPricings" EntityType="MyvshoponlineModel.TrainingPricing" />
@@ -3313,7 +3323,7 @@
           <Property Name="NumberofShops" Type="Int32" />
           <Property Name="NumberofProducts" Type="Int32" />
           <Property Name="NumberofCustomers" Type="Int32" />
-          <Property Name="PriceDollar" Type="Int32" />
+          <Property Name="PriceDollar" Type="Decimal" Precision="18" Scale="2" />
           <NavigationProperty Name="PlanFeatures" Relationship="MyvshoponlineModel.FK_PlanFeatures_PricingPlan" FromRole="PricingPlan" ToRole="PlanFeature" />
           <NavigationProperty Name="Users" Relationship="MyvshoponlineModel.FK_User_PricingPlan" FromRole="PricingPlan" ToRole="User" />
         </EntityType>
@@ -3692,6 +3702,14 @@
           <Property Name="UserID" Type="Int32" />
           <NavigationProperty Name="Order" Relationship="MyvshoponlineModel.FK_TempPendingPayment_Order" FromRole="TempPendingPayment" ToRole="Order" />
           <NavigationProperty Name="User" Relationship="MyvshoponlineModel.FK_TempPendingPayment_User" FromRole="TempPendingPayment" ToRole="User" />
+        </EntityType>
+        <EntityType Name="TermsandPrivacy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Terms" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PrivacyPolicy" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Testimonial">
           <Key>
@@ -5676,6 +5694,15 @@
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="ShopCustomerID" ColumnName="ShopCustomerID" />
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TermsandPrivacies">
+            <EntityTypeMapping TypeName="MyvshoponlineModel.TermsandPrivacy">
+              <MappingFragment StoreEntitySet="TermsandPrivacy">
+                <ScalarProperty Name="PrivacyPolicy" ColumnName="PrivacyPolicy" />
+                <ScalarProperty Name="Terms" ColumnName="Terms" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -27,6 +27,7 @@
             <button type="button" class="close" data-dismiss="modal">X</button>
         </div>
         <div class="modal-body">
+          <div id="displaymsg"></div>
             @using (Html.BeginForm("UploadLogo", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <input type="hidden" value="@Session["UserID"]" name="UserID" id="userid" />
@@ -36,7 +37,7 @@
                         </h5><hr />*@
                     <font color="black">
                         @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
-                        <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" />
+                        <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" required="required" />
                     </font><hr />
                     <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
             }
@@ -55,59 +56,62 @@
         <button type="button" class="close" data-dismiss="modal">X</button>
     </div>
     <div class="modal-body">
-        <div class="alert alert-success alert-dismissable" id="successmsg_pw" style="display:none">
-            @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
-            <h3 style="font-size:14px">Success</h3>
-            Password changed successfully
-        </div>
-        <div class="alert alert-danger alert-dismissable" id="invalidmsg_oldpw" style="display:none">
-            @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
-            <h3 style="font-size:14px">Failed</h3>
-           Your old password is incorrect
-        </div>
-        @using (Html.BeginForm("Change Password", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <input type="hidden" value="@Session["UserID"]" name="UserID" />
 
-            <label>Old Password</label>
-            <div class="input-group input-group-sm">
-                    <input type="password" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" placeholder="Old Password" id="oldpw" />
-                <div class="input-group-append">
-                    <button class="btn btn-common" type="button" onclick="viewOldPw()">
-                        <i class="fas fa-eye" id="eyeoldpw" ></i>
-                    </button>
-                </div>
-            </div>
-            <br />
-            
-            <label>New Password</label>
+      <div class="alert alert-success alert-dismissable" id="successmsg_pw" style="display:none">
+        @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+        <h3 style="font-size:14px">Success</h3>
+        Password changed successfully
+      </div>
+      <div class="alert alert-danger alert-dismissable" id="invalidmsg_oldpw" style="display:none">
+        @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+        <h3 style="font-size:14px">Failed</h3>
+        Your old password is incorrect
+      </div>
+      @using (Html.BeginForm("Change Password", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+      {
+        <input type="hidden" value="@Session["UserID"]" name="UserID" />
 
-            <span id="display_count" style="color:red"></span>
-            <div class="input-group input-group-sm">
-                <input type="password" class="form-control" tabindex="2" style="border-color:#33C6F6;padding:18px;" placeholder="New Password" id="newpw" />
-                <div class="input-group-append">
-                    <button class="btn btn-common" type="button" onclick="viewNewPw()">
-                        <i class="fas fa-eye" id="eyenewpw" ></i>
-                    </button>
-                </div>
-            </div>
-            <br />
-            <div class="alert alert-danger alert-dismissable" id="successmsg_pw_mismatch" style="display:none">
-                @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
-                Password do not match!
-            </div>
-            <label>Confirm Password</label>
-            <div class="input-group input-group-sm">
-                <input type="password" class="form-control" tabindex="3" style="border-color:#33C6F6;padding:18px;" placeholder="Confirm Password" id="confirmpw" />
-                <div class="input-group-append">
-                    <button class="btn btn-common" type="button" onclick="viewConfirmPw()">
-                        <i class="fas fa-eye" id="eyeconfirmpw" ></i>
-                    </button>
-                </div>
-            </div>
-            <br />
-           <button type="button" tabindex="4" class="btn btn-common" onclick="return changePw();">Save Password <i class="fas fa-save"></i> </button>
-        }
+        <label>Old Password</label>
+        <div class="input-group input-group-sm">
+          <input type="password" class="form-control" tabindex="1" style="border-color:#33C6F6;padding:18px;" placeholder="Old Password" id="oldpw" />
+          <div class="input-group-append">
+            <button class="btn btn-common" type="button" onclick="viewOldPw()">
+              <i class="fas fa-eye" id="eyeoldpw"></i>
+            </button>
+          </div>
+        </div>
+        <br />
+
+        <label>New Password</label>
+
+        @*<span id="display_count" style="color:red"></span>*@
+        <div id="display_msgpw" style="color:red"></div>
+        <div class="input-group input-group-sm">
+          <input type="password" class="form-control" tabindex="2" style="border-color:#33C6F6;padding:18px;" placeholder="New Password" id="newpw" />
+          <div class="input-group-append">
+            <button class="btn btn-common" type="button" onclick="viewNewPw()">
+              <i class="fas fa-eye" id="eyenewpw"></i>
+            </button>
+          </div>
+        </div>
+        <span id="StrengthDisp" class="badge displayBadge" style="margin:4px;"></span>
+        <br />
+        <div class="alert alert-danger alert-dismissable" id="successmsg_pw_mismatch" style="display:none">
+          @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+          Password do not match!
+        </div>
+        <label>Confirm Password</label>
+        <div class="input-group input-group-sm">
+          <input type="password" class="form-control" tabindex="3" style="border-color:#33C6F6;padding:18px;" placeholder="Confirm Password" id="confirmpw" />
+          <div class="input-group-append">
+            <button class="btn btn-common" type="button" onclick="viewConfirmPw()">
+              <i class="fas fa-eye" id="eyeconfirmpw"></i>
+            </button>
+          </div>
+        </div>
+        <br />
+        <button type="button" tabindex="4" class="btn btn-common" onclick="return changePw();">Save Password <i class="fas fa-save"></i> </button>
+      }
     </div>
     @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
 </div>
@@ -715,13 +719,15 @@
             var fileName = document.getElementById("uploadFile").value
             //debugger;
             if (fileName == "") {
-                alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+              // alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+              document.getElementById("displaymsg").innerHTML = "<span class='badge badge-danger'>Please select a valid image file to upload</span>";
                 return false;
             }
             else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
                 return true;
             else {
-                alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+               // alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+              document.getElementById("displaymsg").innerHTML = "<span class='badge badge-danger'>Invalid file selected, please select a valid image file to upload</span>";
                 return false;
             }
             return true;
@@ -924,3 +930,56 @@ $(document).ready(function() {
     @Scripts.Render("~/bundles/jqueryval")
 }
 
+
+<script type="text/javascript">
+  // timeout before a callback is called
+
+  let timeout;
+
+  // traversing the DOM and getting the input and span using their IDs
+
+  let password = document.getElementById('newpw')
+  let strengthBadge = document.getElementById('StrengthDisp')
+
+  // The strong and weak password Regex pattern checker
+
+  //let strongPassword = new RegExp('(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.{8,})')
+  let strongPassword = new RegExp('((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
+  /*let strongPassword = new RegExp('((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))')*/
+  /*let mediumPassword = new RegExp('((?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')*/
+
+  function StrengthChecker(PasswordParameter) {
+    // We then change the badge's color and text based on the password strength
+
+    if (strongPassword.test(PasswordParameter)) {
+      strengthBadge.style.backgroundColor = "green"
+      strengthBadge.style.color = "white"
+      strengthBadge.textContent = 'Strong'
+    }
+    //else if (mediumPassword.test(PasswordParameter)) {
+    //  strengthBadge.style.backgroundColor = 'blue'
+    //  strengthBadge.style.color = "white"
+    //  strengthBadge.textContent = 'Medium'
+    //}
+    else {
+      strengthBadge.style.backgroundColor = 'red'
+      strengthBadge.textContent = 'Weak'
+      $('#display_msgpw').text('Password must contain atleast 1 UPPERCASE, 1 lowercase, 1 digit, 1 special character and 6 characters minimun');
+    }
+  }
+
+  // Adding an input event listener when a user types to the  password input
+  password.addEventListener("input", () => {
+    //The badge is hidden by default, so we show it
+    strengthBadge.style.display = 'block'
+    clearTimeout(timeout);
+    //We then call the StrengChecker function as a callback then pass the typed password to it
+    timeout = setTimeout(() => StrengthChecker(password.value), 500);
+    //Incase a user clears the text, the badge is hidden again
+    if (password.value.length !== 0) {
+      strengthBadge.style.display != 'block'
+    } else {
+      strengthBadge.style.display = 'none'
+    }
+  });
+</script>

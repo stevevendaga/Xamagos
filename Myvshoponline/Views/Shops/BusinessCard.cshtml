@@ -1,0 +1,54 @@
+@{
+  Layout = null;
+}
+@model Myvshoponline.Shop
+<head>
+
+  <link href="~/Content/businesscard.css" rel="stylesheet" />
+</head>
+
+
+<p>
+
+</p>
+<br />
+<center>
+  <a href="~/Shops/ShopDetails/@Model.ID" class="btn btn-info"><i class=" glyphicon glyphicon-circle-arrow-left"></i> Back</a>
+</center>
+<br />
+<div class="container">
+
+
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="141" height="32" viewBox="0 0 20 32" id="logo" style="float:right;">
+    <title>Xamagos</title>
+    <path d="M12.101 0.223c-0.131 0.139-0.267 0.269-0.408 0.392l-0.007 0.006c-2.36 1.764-3.815 4.11-4.225 6.993-0.477 3.388 0.386 6.437 2.775 9.003 1.568 1.678 3.65 2.857 5.994 3.287l0.067 0.010c0.299 0.056 0.643 0.088 0.995 0.088 0.009 0 0.018-0 0.026-0h-0.001c1.163 0.012 1.328-0.057 1.335-1.225 0-1.867-0.477-3.576-1.719-5.076-1.345-1.616-3.102-2.346-5.093-2.732-0.846-0.167-0.87-0.207-0.87-1.071 0-2.348-0.195-1.762 1.714-2.501 2.124-0.823 4.079-1.907 5.508-3.762 0.522-0.624 0.84-1.435 0.84-2.32 0-0.048-0.001-0.097-0.003-0.145l0 0.007c-0.005-0.077-0.007-0.167-0.007-0.258s0.003-0.181 0.008-0.27l-0.001 0.012c0.048-0.66 0.15-0.751 0.799-0.596 2.241 0.524 4.207 1.463 5.905 2.74l-0.040-0.029c3.128 2.358 5.245 5.412 6.113 9.229 1.135 4.954 0.186 9.537-2.861 13.611-2.623 3.507-6.223 5.519-10.507 6.18-4.74 0.732-9.048-0.522-12.682-3.607-3.204-2.713-5.083-6.23-5.62-10.464-0.086-0.617-0.136-1.33-0.136-2.055 0-2.648 0.658-5.142 1.819-7.328l-0.041 0.085c2.12-4.134 5.484-6.859 9.959-8.187 0.084-0.012 0.182-0.018 0.281-0.018 0.029 0 0.057 0.001 0.086 0.002l-0.004-0z">
+    </path>
+
+
+  </svg>
+  <div class="triangle-topleft">
+
+  </div>
+  <span style="float: right; color: #0F6CBC; margin-right: 10px; font-size: 14px; margin-top: -50px"><i></i> https://xamagos.com/@Model.ShopURL</span>
+
+  @*<span style="background-color: #35AAF9; border-radius: 100px; font-weight: 300; font-size: 50px;">@Model.Name.Substring(0, 2) </span>*@
+
+  <div class="main" style="margin-top:-30px">
+    <center>    <h1 style="font-size:15px;text-align:center;font-weight:bold;">@Model.Name</h1></center>
+
+    <hr style="margin-bottom:15px;" class="hr2" />
+    <h2 style="font-size:12px;">@Model.Description</h2>
+  </div>
+  <div class="phyx__footer" style="font-size:12px;">
+    <i class="glyphicon  glyphicon-phone-alt"></i> @Model.PhoneNumber <br>
+    <i class="glyphicon  glyphicon-envelope"></i> @Model.Email <br>
+    <i class="glyphicon  glyphicon-map-marker"></i> @Model.Address
+    @*<div class="phyx__social">
+        <a href="https://facebook.com/lyft" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com/lyft" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="https://instagram.com/lyft" target="_blank"><i class="fab fa-instagram"></i></a>
+      </div>*@
+
+  </div>
+
+</div>

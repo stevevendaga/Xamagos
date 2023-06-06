@@ -694,14 +694,15 @@ conn.Close();
             conn.Close();
         }
 
-        public void Publish_Products(int ShopID)
+        public void Publish_Products(int ShopID, int productid)
         {
             var constring = ConfigurationManager.ConnectionStrings["MarketsquareConnection"].ToString();
             SqlConnection conn = new SqlConnection(constring);
             conn.Open();
-            string oString = "update Product set ProductStatusID=1,Published=1 where ShopID=@ShopID and Ready_for_Publishing=1 and Published=0";
+            string oString = "update Product set ProductStatusID=1,Published=1 where ShopID=@ShopID and Ready_for_Publishing=1 and Published=0 and id=@productid";
             SqlCommand comm = new SqlCommand(oString, conn);
             comm.Parameters.AddWithValue("@ShopID", ShopID);
+            comm.Parameters.AddWithValue("@productid", productid);
             comm.ExecuteScalar();
             conn.Close();
         }
