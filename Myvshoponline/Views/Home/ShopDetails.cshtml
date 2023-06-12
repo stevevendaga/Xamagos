@@ -1,4 +1,4 @@
-﻿
+
 <style>
     /* Set the size of the div element that contains the map */
     #map {
@@ -1793,7 +1793,7 @@
                                 {
                                     int ProductID = item.ID;
                                     int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
-                                    <div class="col-6 col-sm-4 col-md-2 style=" padding:0px;margin:0px">
+                                    <div class="col-6 col-sm-4 col-md-2" style=" padding:0px;margin:0px">
                                         @if (countproductinsubitems > 0)
                                         {
                                             <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
@@ -1818,7 +1818,7 @@
                                                             </h3>
                                                             <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
                                                             @{
-                                                                int sid = item.StateID;
+                                                                int sid =Convert.ToInt32(Model.StateID);
                                                                 var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
                                                             }
                                                             <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
@@ -1854,7 +1854,7 @@
                                                                                     </h3>
                                                                                     <hr style="padding-bottom:1px;margin-bottom:0px;" />
                                                                                     @{
-                                                                                        int sid = item.StateID;
+                                                                                        int sid =Convert.ToInt32(Model.StateID);
                                                                                         var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
                                                                                     }
                                                                                     <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>

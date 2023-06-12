@@ -24,6 +24,35 @@
 
 
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11212682445"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'AW-11212682445');
+  </script>
+  <!-- Event snippet for Purchase conversion page
+  In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+  <script>
+    function gtag_report_conversion(url) {
+      var callback = function () {
+        if (typeof (url) != 'undefined') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion', {
+        'send_to': 'AW-11212682445/PdZ-CNTwoKkYEM3pz-Ip',
+        'transaction_id': '',
+        'event_callback': callback
+      });
+      return false;
+    }
+  </script>
+
+
+
 
 
   @*<link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
@@ -1260,8 +1289,7 @@
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                    string referallink1 = "https://xamagos.com";
-
+                     string referallink1 = "https://xamagos.com";
                   }
                   <div class="fb-share-button"
                        data-href="@referallink1"
