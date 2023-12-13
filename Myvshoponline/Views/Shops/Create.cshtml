@@ -22,7 +22,7 @@
 </style>
 
 <div id="content">
-  <h5 style="font-size:14px" class="h5"><a href="~/Users/Manageshop/@Session["UserID"]"><i class="lni-user"></i> Back to Stores </a> &raquo; Create Store</h5>
+  <h5 style="font-size:14px" class="h5"><a href="~/Users/Manageshop"><i class="lni-user"></i> Back to Stores </a> &raquo; Create Store</h5>
 
   <style>
     p {
@@ -115,7 +115,7 @@
                     <div class="col-md-12">
                       <span style="color:black">
                         The shortname forms the last part of your unique store<b> URL</b> For example
-                        <span style="color:#0a92d7">  https://xamagos.com/[yourstore] </span>
+                        <span style="color:#0a92d7">  www.xamagos.com/[yourstore] </span>
                       </span>
                       <br />
                       <p style="color:black;font-weight:lighter; line-height:1.5;text-align:justify">
@@ -211,7 +211,7 @@
 
       //CONVERT TO LOVERCASE
       $('#shortname').val($(this).val().toLowerCase());
-      $("#msgshortname2").html("Your Shop URL:<span style='color:#0a92d7;marging:3px'> https://xamagos.com/" + $('#shortname').val() + "</span>");
+      $("#msgshortname2").html("Your Shop URL:<span style='color:#0a92d7;marging:3px'> www.xamagos.com/" + $('#shortname').val() + "</span>");
 
       var words = $(this).val().length;
       if (words <= 25) {
@@ -547,7 +547,7 @@
               }
               else if (item.RecordSaved == 'true') {
                 $("#successmsg").html('<p class="alert alert-success">Shop created successfully, redirecting...</p>');
-                window.location.href = '../ShopDetails/' + item.shopid;
+                window.location.href = '../Shops/ShopDetails';
               }
               else {
 

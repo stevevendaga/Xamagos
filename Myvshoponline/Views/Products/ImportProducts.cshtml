@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Product>
+@model IEnumerable<Myvshoponline.Product>
 
 @{
     ViewBag.Title = "Upload Products";
@@ -7,7 +7,7 @@
 
 
 <div id="content" style="margin-top:0px;">
-    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID">Back to Products Menu </a></b></h5>
+    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts">Back to Products Menu </a></b></h5>
 
     @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
     {

@@ -425,6 +425,22 @@
         //Returns a string e.g. "+17024181234"
         var number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
 
+        //try {
+        //  // Your asynchronous code, for example, an AJAX request
+        //  await new Promise(resolve => setTimeout(resolve, 10000)); // Simulated asynchronous delay
+
+        //  // Continue with the rest of your code after the asynchronous operation
+        //  $("#loadspinner").css("display", "none");
+        //  $("#btnLogin").css("display", "block");
+        //  //$("#msg").html('<p class="alert alert-success">Async operation completed.</p>');
+
+        //} catch (error) {
+        //  //console.error('Error during asynchronous operation:', error);
+        //  $("#loadspinner").css("display", "none");
+        //  $("#btnLogin").css("display", "block");
+        //  $("#msg").html('<p class="alert alert-danger">Network anomay, please try again.</p>');
+        //}
+
         var url = "/Users/SignUpAjax/";
         $.ajax({
           url: url,
@@ -434,6 +450,8 @@
           success: function (data) {
             var html = '';
             $.each(data, function (key, item) {
+              
+                
               if (item.EmailExist == 'true') {
                 $("#loadspinner").css("display", "none");
                 $("#btnLogin").css("display", "block");
@@ -445,14 +463,16 @@
                 $("#msg").html('<p class="alert alert-danger">Phone number already registered!</p>');
               }
               else if (item.GotoVerification == 'true') {
+                //Save userid to local storage
+                //window.localStorage.setItem("uuid", item.userid);
                 $("#msg").html('<p class="alert alert-success">Redirecting to verification, email already registered but not verified...</p>');
-                window.location = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+                window.location = '../Users/VerifyEmail';
               }
-
               else {
-
+                //Save userid to local storage
+               // window.localStorage.setItem("uuid", item.userid);
                 $("#msg").html('<p class="alert alert-success">Registration successful, redirecting...</p>');
-                window.location.href = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+                window.location.href = '../Users/VerifyEmail';
 
               }
             });
@@ -648,6 +668,7 @@
     }
   });
 </script>
+
 
 
 @section Scripts {

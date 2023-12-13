@@ -21,9 +21,9 @@
 <div id="content">
   <h5 class="h5" style="font-size:12px">
     <a href="~/Users/Dashboard"><i class="lni-user"></i> @Model.Shop.User.CompanyName </a>
-    &laquo;<b style="color:black"><a href="~/Products/MyProducts/@Model.ShopID"> Back to Products Menu </a></b>
+    &laquo;<b style="color:black"><a href="~/Products/MyProducts"> Back to Products Menu </a></b>
     <span style="margin-top:0px">
-      <a href="~/Products/ViewProducts?id=@Model.ShopID&un_pub=0" class="btn btn-info" style="padding-top:1px;padding-bottom:1px;padding-left:5px;width:150px;height:30px">
+      <a href="~/Products/ViewProducts/?un_pub=0" class="btn btn-info" style="padding-top:1px;padding-bottom:1px;padding-left:5px;width:150px;height:30px">
         <font style="color:white;font-size:11px;">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
       </a>
     </span>
@@ -106,6 +106,7 @@
             <div class="form-horizontal">
               @Html.HiddenFor(m => m.DateCreated)
               @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+              @Html.HiddenFor(m => m.ID)
               @Html.HiddenFor(m => m.ShopID)
               @Html.HiddenFor(m => m.Published)
               @Html.HiddenFor(m => m.Ready_for_Publishing)

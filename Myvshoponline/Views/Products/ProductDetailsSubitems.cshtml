@@ -517,7 +517,7 @@ var a = string.Format("{0:#,0}", Total);}@a
 
                     </script>
 
-                    if (!string.IsNullOrEmpty((string)Session["CustomerName"]))
+                    if (!string.IsNullOrEmpty((string)Session["UserID"]))
                     {
                         <a class="btn btn-danger" onclick="return quantity_negotiate_Loggedin()" style="background-color:#3CCBF4; padding-bottom:2px;padding-top:2px;margin:0px;height:25px;"><i class="fa fas fa-adjust"></i>Click here to Negotiate</a>
 
@@ -560,7 +560,7 @@ var a = string.Format("{0:#,0}", Total);}@a
                         <div class="row" style="padding-left:10px;">
                             <b style="color:black;padding:10px;padding-top:7px;vertical-align:central"> Quantity &nbsp; </b>
                             <input type="hidden" id="FromStateID" value="@item.Product.Shop.StateID" />
-                            <input type="hidden" id="DeliveryCity_ID" name="dcity" />
+                            <input type="hidden" id="dcity" name="dcity" />
 
                             <button type="button" name="decrement" style="cursor:pointer; padding-left:9px;width:40px;height:35px;vertical-align:central; border:solid 1px grey;background-color:white;color:black;font-size:20px;" onclick="decreament()">&minus;</button>
                             <input type="number" min="1" id="quantity" readonly value="1" name="quantity" style="width:40px;height:35px;vertical-align:central;text-align:center;font-weight:bold;font-size:14px" />
@@ -581,7 +581,7 @@ var a = string.Format("{0:#,0}", Total);}@a
 </script>*@
         <script>
         function check_location() {
-        var dcity = document.getElementById("DeliveryCity_ID").value;
+        var dcity = document.getElementById("city").value;
         var stateid = document.getElementById("StateID").value;
         if (stateid == null || stateid == '') {
             document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
@@ -604,7 +604,7 @@ var a = string.Format("{0:#,0}", Total);}@a
 function quantity()
 {
     var q = document.getElementById("quantity").value;
-    var dcity = document.getElementById("DeliveryCity_ID").value;
+    var dcity = document.getElementById("city").value;
     var stateid = document.getElementById("StateID").value;
     if (stateid == null || stateid=='') {
         //alert('Please choose delivery location');
@@ -1062,7 +1062,7 @@ x.addListener(myFunction) // Attach listener function on state changes
         }
 </script>
 
-<script type="text/javascript">
+@*<script type="text/javascript">
         function GetDelivieryInfo() {
             var _StateID = document.getElementById("StateID").value;
             var _city = document.getElementById("city").value;
@@ -1088,6 +1088,13 @@ x.addListener(myFunction) // Attach listener function on state changes
                 }
             });
         }
+</script>*@
+
+<script type="text/javascript">
+  function GetDelivieryInfo() {
+    document.getElementById("dcity").value= document.getElementById("city").value;
+  
+  }
 </script>
 
 <script type="text/javascript">

@@ -142,7 +142,6 @@
 @*<div class="row" style="background-color:#F2F4F6;padding-top:10px;">*@
 @*<div class="row" style="padding-top:10px;background-color:#232D3D">*@
 
-<!--Put the Slider here and Xamagos Radio-->
 <div class="row" style="margin-top:14px;padding-top:8px;">
   <div class="col-md-5" id="welcomesidebar">
     <!-- Box Comment -->
@@ -154,20 +153,9 @@
         <div class="row">
           <div class="col-lg-12 col-12">
             <h5 class="fancy" style="color:white;text-align:center;padding-top:10px;background-color:#1BACBD;border:none;font-size:16px;">
-              <label style="color:#f7129e;font-size:9px;color:white;font-family:'Gill Sans MT'">Listen Live to Xamagos Radio</label>
-
-              <iframe src="https://d1uzdx1j6g4d0a.cloudfront.net/players/top/3/245822?identifier=Top%20Bar&source=5291"
-                      border="0" scrolling="no" frameborder="0"
-                      allow="autoplay; clipboard-write" allowtransparency="true"
-                      style="background-color:unset;width: 100%;">
-              </iframe>
-              @*<span style="color:black;">
-                  For your products to be advertised on Xamagos Radio,
-                  simply sign up, create a store, upload and publish your producs on Xamagos.
-                </span>*@
+              <br />
+              @item.AboutSection1
             </h5>
-            <!--Display some products here-->
-            <!--End of display some products-->
             <!-- small card -->
             <div class="small-box bg-info">
 
@@ -176,104 +164,78 @@
                 </div>*@
 
 
+
+
               <div class="icon">
                 <i class="fas fa-shopping-cart"></i>
               </div>
 
 
+              <span href="#" class="small-box-footer">
+                @item.AboutSection2 <i class="fas fa-arrow-circle-down"></i>
+              </span>
+              <hr style="border:0px;margin:5px;" />
 
+              <div class="attachment-block clearfix">
 
-              @*<span href="#" class="small-box-footer">
-                  @item.AboutSection2 <i class="fas fa-arrow-circle-down"></i>
-                </span>
-                <hr style="border:0px;margin:5px;" />
-
-                <div class="attachment-block clearfix">
-
-                  <img class="attachment-img" src="../images/buy icon.jpg " alt="XAMAGOS" style="width:100%">
-                  <div class="attachment-text">
-                    <div class="fancy-box" style="text-align:left">
-                      @item.AboutSection3
-                      <center> <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Read More" data-toggle="modal" data-target="#readmore" onclick="clearTextBox();"> <i class="lni-more-alt"></i>Read More<i class="lni-more-alt"></i></a></center>
-                    </div>
+                <img class="attachment-img" src="../images/buy icon.jpg " alt="XAMAGOS" style="width:100%">
+                @*<div class="attachment-pushed">*@
+                <div class="attachment-text">
+                  <div class="fancy-box" style="text-align:left">
+                    @item.AboutSection3
+                    <center> <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Read More" data-toggle="modal" data-target="#readmore" onclick="clearTextBox();"> <i class="lni-more-alt"></i>Read More<i class="lni-more-alt"></i></a></center>
                   </div>
+                  <!-- /.attachment-text -->
                 </div>
-                @if (string.IsNullOrEmpty((string)Session["username"]))
-                {
-                  <p style="text-align:center;">
+                <!-- /.attachment-pushed -->
+              </div>
+              @if (string.IsNullOrEmpty((string)Session["username"]))
+              {
+                <p style="text-align:center;">
 
-                    <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
-                      @{
-                        int? trialperiod = db.TrialPeriods.Select(s => s.Period).FirstOrDefault();
-                      }
+                  <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
+                    @{
+                      int? trialperiod = db.TrialPeriods.Select(s => s.Period).FirstOrDefault();
+                    }
 
-                      <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+                    <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+                  </a>
+
+                  @*<a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();">
+                        <i class="fa fas fa-lock-open"></i> Login
+                    </a>*@
+                  <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
+                    <i class="fa fas fa-lock-open"></i> Login
+                  </a>
+                  <br />
+                  @*<a href="~/ShopCustomers/Create/?id=&v=1" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;margin-bottom:5px;font-weight:bold">
+                        <i class="fa fas fa-pencil-alt"></i> Create account (Buyer)
                     </a>
 
-                    <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
-                      <i class="fa fas fa-lock-open"></i> Login
-                    </a>
-                    <br />
+                    <a href="~/Home/CustomerLogin" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:10px;font-weight:bold">
+                        <i class="fa fas fa-lock-open"></i> Buyer Login
+                    </a>*@
 
-
-                  </p>
-                }*@
+                </p>
+              }
 
             </div>
           </div>
         </div>
 
 
-        <section id="featured-products" class="section" style="padding:0px;">
-          <div class="">
-
-            <div class="row">
-
-              @foreach (var itemp in ViewBag.LastProducts)
-              {
-                int ProductID = itemp.ID;
-                <div class="col-4 col-sm-4 col-md-4" style="padding:0px;margin:0px">
-                  <a class="job-listings-featured" href="" style="background-color:white" onclick="setProductSession(@itemp.ID,@itemp.ShopID)">
-                    <div class="row">
-                      <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
-
-                        @{ var image = itemp.Shop.User.CompanyName + itemp.Shop.User.HardToken + "/" + itemp.Shop.Name + "/" + itemp.ID + ".jpg";}
-                        <center>
-                          <img src="~/BusinessImages/@image" alt="@itemp.Name" style="width:126px;height:120px;">
-                          <br />
-                          <strong style="font-size:13px;color:black">
-                            @{ if (itemp.Name.Length > 16)
-                              {
-                                @itemp.Name.Substring(0, 16) <span>...</span>
-                              }
-                              else
-                              {
-                                @itemp.Name
-                              }
-                            }
-                          </strong>
-
-
-                        </center>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              }
-
-
-            </div>
-
-          </div>
-
-
-        </section>
-
-
       }
+      <center>
+        @*<iframe width="440" height="150" src="https://www.youtube.com/embed/YWS84dCSjng" title="About XAMAGOS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+        <label style="color:#f7129e">Listen Live to Xamagos Radio</label>
 
+        <iframe src="https://d1uzdx1j6g4d0a.cloudfront.net/players/top/3/245822?identifier=Top%20Bar&source=5291"
+                border="0" scrolling="no" frameborder="0"
+                allow="autoplay; clipboard-write" allowtransparency="true"
+                style="background-color:unset;width: 100%;">
+        </iframe>
+      </center>
     </div>
-
     <!-- /.card -->
   </div>
   <!-- /.col -->
@@ -297,7 +259,7 @@
 
           <div class="item active">
 
-            <img src="~/Images/market square pic.jpg" style="height:280px;" />
+            <img src="~/Images/market square pic.jpg" style="height:210px;" />
             <!-- Static Header -->
             <div class="header-text hidden-xs">
               <div class="col-md-12 text-center">
@@ -307,23 +269,7 @@
           </div>
 
           <div class="item">
-            <img src="~/Images/sellonline.jpg" style="height:280px" />
-            <!-- Static Header -->
-            <div class="header-text hidden-xs">
-              <div class="col-md-12 text-center">
-
-                <br>
-                <div class="">
-
-                </div>
-              </div>
-            </div><!-- /header-text -->
-          </div>
-
-
-          <div class="item">
-
-            <img src="~/Images/Market-Square-Banner-4.jpg" style="height:280px" />
+            <img src="~/Images/sellonline.jpg" style="height:210px" />
             <!-- Static Header -->
             <div class="header-text hidden-xs">
               <div class="col-md-12 text-center">
@@ -336,9 +282,25 @@
             </div><!-- /header-text -->
           </div>
 
+
           <div class="item">
 
-            <img src="~/Images/market square 3.jpg" style="height:280px" />
+            <img src="~/Images/Market-Square-Banner-4.jpg" style="height:210px" />
+            <!-- Static Header -->
+            <div class="header-text hidden-xs">
+              <div class="col-md-12 text-center">
+
+                <br>
+                <div class="">
+
+                </div>
+              </div>
+            </div><!-- /header-text -->
+          </div>
+
+          <div class="item">
+
+            <img src="~/Images/market square 3.jpg" style="height:210px" />
             <!-- Static Header -->
             <div class="header-text hidden-xs">
               <div class="col-md-12 text-center">
@@ -351,14 +313,80 @@
         </div>
 
         <!-- Controls -->
-        <span class="left carousel-control" href="#carousel-example-generic" data-slide="prev" style="cursor:pointer;">
+        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
           <span class="glyphicon glyphicon-chevron-left"></span>
-        </span>
-        <span class="right carousel-control" href="#carousel-example-generic" data-slide="next" style="cursor:pointer;">
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
           <span class="glyphicon glyphicon-chevron-right"></span>
 
-        </span>
+        </a>
       </div><!-- /carousel -->
+
+
+
+      <div class="row">
+        <!-- ADSTERRA NATIVE BARNER-->
+        @*<script async="async" data-cfasync="false" src="//pl15841712.cpmprofitablenetwork.com/3d14d3633f3e6c0b87fbf323be099689/invoke.js"></script>
+          <div id="container-3d14d3633f3e6c0b87fbf323be099689"></div>*@
+        <!-- END ADSTERRA NATIVE BARNER-->
+        @foreach (var item in db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").Take(12).ToList())
+        {
+          int ProductID = item.ID;
+          if (db.PopularProducts.Where(s => s.ProductID == ProductID && s.PopularStoreStatu.Status == "Active").Count() < 1)
+          {
+            int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
+            <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
+              @if (countproductinsubitems > 0)
+              {
+                <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:100px;background-color:#F8F9FA;">
+                  <div class="row">
+                    <div class="col-lg-12 col-md-6 col-xs-6" style="padding-left:3px;">
+
+                      @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                      <center>
+                        <img src="~/BusinessImages/@image" title="@item.Name" style="width:56px;height:50px;">
+                        <br />
+                        <strong style="font-size:9px;color:black;font-weight:bold">@item.Name</strong>
+                      </center>
+
+                    </div>
+                  </div>
+                </a>
+              }
+              else
+              {
+
+                <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:100px;background-color:#F8F9FA;">
+                  <div class="row">
+                    <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px;">
+
+                      @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                      <center>
+                        <img src="~/BusinessImages/@image" title="@item.Name" style="width:56px;height:50px;">
+                        <br />
+                        <strong style="font-size:9px;color:black">
+                          @{ if (item.Name.Length > 16)
+                            {
+                              @item.Name.Substring(0, 16) <span>...</span>
+                            }
+                            else
+                            {
+                              @item.Name
+                            }
+                          }
+                        </strong>
+                      </center>
+                    </div>
+                  </div>
+                </a>
+              }
+
+
+
+            </div>
+          }
+        }
+      </div>
       <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -368,34 +396,35 @@
 
 
 
+
 @if (db.PopularStores.Where(i => i.PopularStoreStatu.Status == "Active").Count() > 0)
 {
-  <!--Section for popular stores-->
-  <div id="popularstores" style="margin:20px;padding:20px;">
+<!--Section for popular stores-->
+<div id="popularstores" style="margin:0px;padding:0px;">
 
 
-    <div class="panel panel-success">
-      <div class="panel-heading" style="background-color:#0BACE1;">
-        <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">POPULAR STORES</h3>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          @foreach (var item in db.PopularStores.Where(i => i.PopularStoreStatu.Status == "Active").ToList())
-          {
-            <div class="col-md-4" style="margin-bottom:15px;">
-              <a href="~/Shops/ShopDetails" style="color:#0BACE1;font-size:12px;" onclick="setObjectSession('ShopID',@item.ShopID)"><img src="~/Images/onlinestoreimg.jpg" style="width:5%;" /> @item.Shop.Name</a>
-            </div>
-            int ShopIDStore = Convert.ToInt32(item.ShopID);
-            mydata.Loop_through_popularstores_to_update_expiry(ShopIDStore);
-            mydata.Loop_through_searchoptimizations_to_update_expiry();
-            mydata.Loop_through_PopularProducts_to_update_expiry();
-            //UPDATE SEOs
-          }
-        </div>
+  <div class="panel panel-success">
+    <div class="panel-heading" style="background-color:#0BACE1;">
+      <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px">POPULAR STORES</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        @foreach (var item in db.PopularStores.Where(i => i.PopularStoreStatu.Status == "Active").ToList())
+        {
+          <div class="col-md-4" style="margin-bottom:15px;">
+            <a href="~/Shops/ShopDetails/@item.ShopID" style="color:#0BACE1;font-size:12px;"><img src="~/Images/onlinestoreimg.jpg" style="width:5%;" /> @item.Shop.Name</a>
+          </div>
+          int ShopIDStore = Convert.ToInt32(item.ShopID);
+          mydata.Loop_through_popularstores_to_update_expiry(ShopIDStore);
+          mydata.Loop_through_searchoptimizations_to_update_expiry();
+          mydata.Loop_through_PopularProducts_to_update_expiry();
+          //UPDATE SEOs
+        }
       </div>
     </div>
-
   </div>
+
+</div>
 }
 <!--END Section for popular stores-->
 <!-- Listings Section Start -->
@@ -413,129 +442,129 @@
   <br />*@
 @if (db.PopularProducts.Where(i => i.PopularStoreStatu.Status == "Active").Count() > 0)
 {
-  <div class="panel panel-success">
-    @*<div class="panel-heading" style="background-color:#0BACE1;">*@
-    <div class="panel-heading" style="background-color:#00B3E4;opacity:0.9;">
-      <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">POPULAR PRODUCTS</h3>
-    </div>
-    <div class="panel-body">
-      <div class="row">
+<div class="panel panel-success">
+  @*<div class="panel-heading" style="background-color:#0BACE1;">*@
+  <div class="panel-heading" style="background-color:#00B3E4;opacity:0.9;">
+    <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">POPULAR PRODUCTS</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
 
-        @foreach (var item in db.PopularProducts.Where(i => i.PopularStoreStatu.Status == "Active").ToList())
-        {
-          int ProductID = item.ID;
-          int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
-          <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
-            @if (countproductinsubitems > 0)
-            {
-              @*<a href="~/ProductSubProducts/ProductSubitems/@item.ProductSubProduct.ID?sid=@item.ProductSubProduct.Product.ShopID" title="@item.ProductSubProduct.Product.Name" class="job-listings-featured" style="height:285px;">*@
-              <a href="~/ProductSubProducts/ProductSubitems" title="@item.ProductSubProduct.Product.Name" class="job-listings-featured" onclick="setProductSession(@item.ProductSubProduct.ID,@item.ProductSubProduct.Product.ShopID)">
+      @foreach (var item in db.PopularProducts.Where(i => i.PopularStoreStatu.Status == "Active").ToList())
+      {
+        int ProductID = item.ID;
+        int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == ProductID).Count();
+        <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
+          @if (countproductinsubitems > 0)
+          {
+            @*<a href="~/ProductSubProducts/ProductSubitems/@item.ProductSubProduct.ID?sid=@item.ProductSubProduct.Product.ShopID" title="@item.ProductSubProduct.Product.Name" class="job-listings-featured" style="height:285px;">*@
+            <a href="~/ProductSubProducts/ProductSubitems/@item.ProductSubProduct.ID?sid=@item.ProductSubProduct.Product.ShopID" title="@item.ProductSubProduct.Product.Name" class="job-listings-featured">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                  @{ var image = item.ProductSubProduct.Product.Shop.User.CompanyName + item.ProductSubProduct.Product.Shop.User.HardToken + "/" + item.ProductSubProduct.Product.Shop.Name + "/" + item.ProductSubProduct.Product.ID + ".jpg";}
+                  <center>
+                    <img src="~/BusinessImages/@image" alt="@item.ProductSubProduct.Product.Name" style="width:126px;height:120px;">
+                    <br />
+                    <strong style="font-size:13px;color:black;font-weight:bold">
+                      @{ if (item.ProductSubProduct.Product.Name.Length > 16)
+                          {
+                          @item.ProductSubProduct.Product.Name.Substring(0, 16) <span>...</span>
+                          }
+                          else
+                          {
+                          @item.ProductSubProduct.Product.Name
+                          }
+                      }
+
+                    </strong>
+
+                    <h3 style="margin:0px;padding:0px">
+
+                      <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+
+                        @if (item.ProductSubProduct.Currency == "NGN")
+                        {<del class="NairaSign">N</del>}
+                        else
+                        { <span>@item.ProductSubProduct.Currency</span>}@{
+                          @*var a = string.Format("{0:#,0}", item.ProductSubProduct.Amount);}@a*@
+      //decimal totalCommission = Convert.ToDecimal(item.ProductSubProduct.Amount * c_percent);
+      //decimal Total = Convert.ToDecimal(item.ProductSubProduct.Amount + totalCommission);
+
+      decimal Total = Convert.ToDecimal(item.ProductSubProduct.Amount);
+      var a = string.Format("{0:#,0}", Total);}@a
+                        </span>
+                      </h3>
+                      @*<hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                        <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.ProductSubProduct.Product.Shop.CountryRegion.Country - @item.ProductSubProduct.Product.Shop.StateID</span>*@
+                      @*<br />
+                        <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.ProductSubProduct.Product.Shop.Name.ToUpper()</span>*@
+                    </center>
+
+                  </div>
+                </div>
+              </a>
+      }
+      else
+      {
+
+              @*<a class="job-listings-featured" href="~/Products/ProductDetails/@item.Product.ID?sid=@item.Product.ShopID" style="height:285px;">*@
+              <a class="job-listings-featured" href="~/Products/ProductDetails/@item.Product.ID?sid=@item.Product.ShopID">
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 
-                    @{ var image = item.ProductSubProduct.Product.Shop.User.CompanyName + item.ProductSubProduct.Product.Shop.User.HardToken + "/" + item.ProductSubProduct.Product.Shop.Name + "/" + item.ProductSubProduct.Product.ID + ".jpg";}
+                    @{ var image = item.Product.Shop.User.CompanyName + item.Product.Shop.User.HardToken + "/" + item.Product.Shop.Name + "/" + item.Product.ID + ".jpg";}
                     <center>
-                      <img src="~/BusinessImages/@image" alt="@item.ProductSubProduct.Product.Name" style="width:126px;height:120px;">
+                      <img src="~/BusinessImages/@image" alt="@item.Product.Name" style="width:126px;height:120px;">
                       <br />
-                      <strong style="font-size:13px;color:black;font-weight:bold">
-                        @{ if (item.ProductSubProduct.Product.Name.Length > 16)
-                          {
-                            @item.ProductSubProduct.Product.Name.Substring(0, 16) <span>...</span>
-                          }
-                          else
-                          {
-                            @item.ProductSubProduct.Product.Name
-                          }
-                        }
+                      <strong style="font-size:13px;color:black">
 
+                        @{ if (item.Product.Name.Length > 16)
+                            {
+                            @item.Product.Name.Substring(0, 16) <span>...</span>
+                            }
+                            else
+                            {
+                            @item.Product.Name
+                            }
+                        }
                       </strong>
 
-                      <h3 style="margin:0px;padding:0px">
+                      <h3 style="margin:0px;padding:0px;">
+                        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
 
-                        <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
-
-                          @if (item.ProductSubProduct.Currency == "NGN")
+                          @if (item.Product.Currency == "NGN")
                           {<del class="NairaSign">N</del>}
                           else
-                          { <span>@item.ProductSubProduct.Currency</span>}@{
-                            @*var a = string.Format("{0:#,0}", item.ProductSubProduct.Amount);}@a*@
-                            //decimal totalCommission = Convert.ToDecimal(item.ProductSubProduct.Amount * c_percent);
-                            //decimal Total = Convert.ToDecimal(item.ProductSubProduct.Amount + totalCommission);
+                          { <span>@item.Product.Currency</span>}@{
 
-                            decimal Total = Convert.ToDecimal(item.ProductSubProduct.Amount);
-                            var a = string.Format("{0:#,0}", Total);}@a
+                            @*var a = string.Format("{0:#,0}", item.Product.Amount);}@a*@
+    //decimal totalCommission = Convert.ToDecimal(item.Product.Amount * c_percent);
+    //decimal Total = Convert.ToDecimal(item.Product.Amount + totalCommission);
+    decimal Total = Convert.ToDecimal(item.Product.Amount);
+    var a = string.Format("{0:#,0}", Total);}@a
                           </span>
                         </h3>
-                        @*<hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
-                          <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.ProductSubProduct.Product.Shop.CountryRegion.Country - @item.ProductSubProduct.Product.Shop.StateID</span>*@
-                        @*<br />
-                          <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.ProductSubProduct.Product.Shop.Name.ToUpper()</span>*@
-                      </center>
+                        @*<hr style="padding-bottom:1px;margin-bottom:0px;" />
 
+                          <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Product.Shop.CountryRegion.Country - @item.Product.Shop.StateID</span>*@
+                        @*<br /> <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Product.Shop.Name.ToUpper()</span>*@
+                      </center>
                     </div>
                   </div>
                 </a>
-              }
-              else
-              {
-
-                @*<a class="job-listings-featured" href="~/Products/ProductDetails/@item.Product.ID?sid=@item.Product.ShopID" style="height:285px;">*@
-                <a class="job-listings-featured" href="~/Products/ProductDetails" onclick="setProductSession(@item.Product.ID,@item.Product.ShopID)">
-                  <div class="row">
-                    <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
-
-                      @{ var image = item.Product.Shop.User.CompanyName + item.Product.Shop.User.HardToken + "/" + item.Product.Shop.Name + "/" + item.Product.ID + ".jpg";}
-                      <center>
-                        <img src="~/BusinessImages/@image" alt="@item.Product.Name" style="width:126px;height:120px;">
-                        <br />
-                        <strong style="font-size:13px;color:black">
-
-                          @{ if (item.Product.Name.Length > 16)
-                            {
-                              @item.Product.Name.Substring(0, 16) <span>...</span>
-                            }
-                            else
-                            {
-                              @item.Product.Name
-                            }
-                          }
-                        </strong>
-
-                        <h3 style="margin:0px;padding:0px;">
-                          <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
-
-                            @if (item.Product.Currency == "NGN")
-                            {<del class="NairaSign">N</del>}
-                            else
-                            { <span>@item.Product.Currency</span>}@{
-
-                              @*var a = string.Format("{0:#,0}", item.Product.Amount);}@a*@
-                              //decimal totalCommission = Convert.ToDecimal(item.Product.Amount * c_percent);
-                              //decimal Total = Convert.ToDecimal(item.Product.Amount + totalCommission);
-                              decimal Total = Convert.ToDecimal(item.Product.Amount);
-                              var a = string.Format("{0:#,0}", Total);}@a
-                            </span>
-                          </h3>
-                          @*<hr style="padding-bottom:1px;margin-bottom:0px;" />
-
-                            <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Product.Shop.CountryRegion.Country - @item.Product.Shop.StateID</span>*@
-                          @*<br /> <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Product.Shop.Name.ToUpper()</span>*@
-                        </center>
-                      </div>
-                    </div>
-                  </a>
-                }
+    }
 
 
 
-          </div>
-        }
+        </div>
+    }
 
 
-      </div>
     </div>
   </div>
-}
+</div>
+    }
 <!--End of popular products-->
 
 
@@ -555,7 +584,7 @@
           <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
             @if (countproductinsubitems > 0)
             {
-              <a href="~/ProductSubProducts/ProductSubitems" title="@item.Name" class="job-listings-featured" style="background-color:white" onclick="setProductSession(@item.ID,@item.ShopID)">
+              <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="background-color:white">
                 @*<a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">*@
                 <div class="row">
                   <div class="col-lg-12 col-md-6 col-xs-6" style="padding-left:3px;">
@@ -584,44 +613,44 @@
                           {<del class="NairaSign">N</del>}
                           else
                           { <span>@item.Currency</span>}@{*@
-                      @*//var a = string.Format("{0:#,0}", item.Amount);
+                            @*//var a = string.Format("{0:#,0}", item.Amount);
                             //decimal totalCommission = item.Amount * c_percent;
                             //decimal Total = item.Amount + totalCommission;
                             decimal Total = item.Amount;
                             var a = string.Format("{0:#,0}", Total);}@a
                           </span>
                         </h3>*@
-                      @*<hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
-                        <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @item.Shop.StateID</span>*@
-                      @*<br />
-                        <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-                    </center>
+                        @*<hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                          <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @item.Shop.StateID</span>*@
+                        @*<br />
+                          <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                      </center>
 
+                    </div>
                   </div>
-                </div>
-              </a>
-            }
-            else
-            {
+                </a>
+              }
+              else
+              {
 
-              <a class="job-listings-featured" href="~/Products/ProductDetails" style="background-color:white" onclick="setProductSession(@item.ID,@item.ShopID)">
-                @*<a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">*@
-                <div class="row">
-                  <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
+                <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="background-color:white">
+                  @*<a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">*@
+                  <div class="row">
+                    <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
 
-                    @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
-                    <center>
-                      <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
-                      <br />
-                      <strong style="font-size:13px;color:black">
-                        @{ if (item.Name.Length > 16)
-                          {
-                            @item.Name.Substring(0, 16) <span>...</span>
-                          }
-                          else
-                          {
-                            @item.Name
-                          }
+                      @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                      <center>
+                        <img src="~/BusinessImages/@image" alt="@item.Name" style="width:126px;height:120px;">
+                        <br />
+                        <strong style="font-size:13px;color:black">
+                          @{ if (item.Name.Length > 16)
+                            {
+                              @item.Name.Substring(0, 16) <span>...</span>
+                            }
+                            else
+                            {
+                              @item.Name
+                            }
                         }
                       </strong>
 
@@ -633,23 +662,23 @@
                           else
                           { <span>@item.Currency</span>}@{*@
 
-                      @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
-                      @*//decimal totalCommission = item.Amount * c_percent;
+                            @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                            @*//decimal totalCommission = item.Amount * c_percent;
                             //decimal Total = item.Amount + totalCommission;
 
                             decimal Total = item.Amount;
                             var a = string.Format("{0:#,0}", Total);}@a
                           </span>
                         </h3>*@
-                      @*<hr style="padding-bottom:1px;margin-bottom:0px;" />
+                        @*<hr style="padding-bottom:1px;margin-bottom:0px;" />
 
-                        <span style="font-size:11px;color:#007ACC;"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @item.Shop.StateID</span>*@
-                      @*<br /> <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-                    </center>
+                          <span style="font-size:11px;color:#007ACC;"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @item.Shop.StateID</span>*@
+                        @*<br /> <span style="font-size:9px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                      </center>
+                    </div>
                   </div>
-                </div>
-              </a>
-            }
+                </a>
+              }
 
 
 
@@ -1172,25 +1201,6 @@
         document.getElementById("displayst").style.display = "block";
         $("#displaystate").html(html).show();
 
-      },
-      error: function (reponse) {
-        alert("error : " + reponse);
-      }
-    });
-  }
-</script>
-
-<script type="text/javascript">
-  function setProductSession(_productid, _shopid) {
-    //alert(_productid +"s"+ _shopid)
-    var url = "/SetSession/SetProductSession/";
-    $.ajax({
-      url: url,
-      data: { shopid: _shopid, productid: _productid },
-      cache: false,
-      type: "POST",
-      success: function (data) {
-        window.location.href = "../../Products/ProductDetails";
       },
       error: function (reponse) {
         alert("error : " + reponse);

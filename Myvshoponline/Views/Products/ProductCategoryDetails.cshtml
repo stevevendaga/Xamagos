@@ -1,4 +1,4 @@
-﻿<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
+<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
 @model IEnumerable<Myvshoponline.Product>
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
@@ -66,11 +66,11 @@
     <div class="row">
         <div class="col-lg-7 col-md-12 col-xs-12">
             <h6 style="font-size:12px">
-                @*<a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a>*@ &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a>  </b>
+                @*<a href="~/Users/BusinessLanding/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a>*@ &raquo;<b style="color:black"><a href="~/Shops/ShopDetails"> @ViewBag.ShopName </a>  </b>
                 @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
                 {
 
-                  <b style="color:black">  &raquo; <a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a></b>
+                  <b style="color:black">  &raquo; <a href="~/Products/MyProducts"> Back to Products Menu </a></b>
                 }
             </h6>
 @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
@@ -168,11 +168,11 @@
             <div class="col-lg-5 col-md-12 col-xs-12">
                 <!-- Search Widget -->
                 <div class="widget">
-                    <form action="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID" method="get">
+                    <form action="~/Products/ProductCategoryDetails" method="get">
                         <div class="input-group">
-                            <input type="hidden" name="id" value="@ViewBag.CategoryID" />
-                            <input type="hidden" name="sid" value="@ViewBag.ShopID" />
-                            <input type="text" name="search" class="form-control" placeholder="Search for products in @ViewBag.CategoryName category">
+                            @*<input type="hidden" name="id" value="@ViewBag.CategoryID" />
+                            <input type="hidden" name="sid" value="@ViewBag.ShopID" />*@
+                            <input type="text" name="search" class="form-control" placeholder="Search for products in @ViewBag.CategoryName category" style="height:48px;">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit" name="submit" style="width:20px">
                                     <i class="lni-search"></i>
@@ -279,7 +279,7 @@
 {
     <span style="color:black;padding:0px">Search Results</span>
     <h5 style="background-color:white;font-family:'Bookman Old Style';font-size:14px"> 
-  <b style="color:black"><a href="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID">@ViewBag.CategoryName</a></b> <i class="lni-chevron-right" style="font-size:10px"></i> "<b>@ViewBag.search</b>" (@Model.Count() Results)                              
+  <b style="color:black"><a href="~/Products/ProductCategoryDetails">@ViewBag.CategoryName</a></b> <i class="lni-chevron-right" style="font-size:10px"></i> "<b>@ViewBag.search</b>" (@Model.Count() Results)                              
    </h5>
 }
 else
@@ -298,7 +298,7 @@ else
                             <div class="right-sideabr" style="padding:5px;">
                                    @if (countproductinsubitems > 0)
                                    {
-                                    <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name"  style="height:285px;background-color:white">
+                                    <a href="~/ProductSubProducts/ProductSubitems" title="@item.Name"  style="height:285px;background-color:white" onclick="setObjectSession('ShopID',@item.ShopID);setObjectSession('ProductID',@item.ID);">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 
@@ -339,7 +339,7 @@ else
                                                                 else
                                                                 {
 
-                                                                    <a  href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                                                                    <a  href="~/Products/ProductDetails" style="height:285px;background-color:white" onclick="setObjectSession('ProductID',@item.ID)">
                                                                         <div class="row">
                                                                             <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 

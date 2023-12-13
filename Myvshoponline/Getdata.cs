@@ -303,7 +303,7 @@ namespace Myvshoponline
             //for ssl
             //working one SmtpServer.Port = 587;
             //SmtpServer.Port = 587;
-            SmtpServer.Credentials = new NetworkCredential("info@xamagos.com", "Xamagosinfo@2023");
+            SmtpServer.Credentials = new NetworkCredential("info@xamagos.com", "xamagosinfo@2023");
             SmtpServer.Send(mail);
 
         }
@@ -360,32 +360,45 @@ namespace Myvshoponline
         //    var response = (HttpWebResponse)request.GetResponse();
         //}
 
-        public void Send_SMS_KudiSMS(string strPhoneNumber, string strMessage, string strSender, DateTime datetime)
+        public async void Send_SMS_KudiSMS(string strPhoneNumber, string strMessage, string strSender, DateTime datetime)
         {
-            // Initialize variables ( set your variables here )
-            string username = "ukormvendagas@gmail.com";
-            string password = "Pascal@1992";
-            // Separate multiple numbers by comma
-            // Set your domain's API URL
-            string url = "https://account.kudisms.net/api/";
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            var postData = "username=" + Uri.EscapeDataString(username);
-            postData += "&password=" + Uri.EscapeDataString(password);
-            // postData += "&message=" + Uri.EscapeDataString(strMessage);
-            postData += "&message=" + Uri.EscapeDataString(strMessage);
-            postData += "&sender=" + Uri.EscapeDataString(strSender);
-            postData += "&mobiles=" + (strPhoneNumber);
-            var data = Encoding.ASCII.GetBytes(postData);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
+          var client = new HttpClient();
+          var request = new HttpRequestMessage(HttpMethod.Post, "https://my.kudisms.net/api/corporate");
+          var content = new MultipartFormDataContent();
+          content.Add(new StringContent("1u2ogxi0Q5dbvTYfGBCUNVpZErHKszMPJ8hcmtl3ySOwjkXn9ea76FIRW4LAqD"), "token");
+          content.Add(new StringContent("XAMAGOS"), "senderID");
+          content.Add(new StringContent(strPhoneNumber), "recipients");
+          content.Add(new StringContent(strMessage), "message");
+          request.Content = content;
+          var response = await client.SendAsync(request);
+          response.EnsureSuccessStatusCode();
+          //Console.WriteLine(await response.Content.ReadAsStringAsync());
 
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(data, 0, data.Length);
-            }
 
-            var response = (HttpWebResponse)request.GetResponse();
+      // Initialize variables ( set your variables here )
+            //string username = "ukormvendagas@gmail.com";
+            //string password = "Pascal@1992";
+            //// Separate multiple numbers by comma
+            //// Set your domain's API URL
+            //string url = "https://account.kudisms.net/api/";
+            //var request = (HttpWebRequest)WebRequest.Create(url);
+            //var postData = "username=" + Uri.EscapeDataString(username);
+            //postData += "&password=" + Uri.EscapeDataString(password);
+            //// postData += "&message=" + Uri.EscapeDataString(strMessage);
+            //postData += "&message=" + Uri.EscapeDataString(strMessage);
+            //postData += "&sender=" + Uri.EscapeDataString(strSender);
+            //postData += "&mobiles=" + (strPhoneNumber);
+            //var data = Encoding.ASCII.GetBytes(postData);
+            //request.Method = "POST";
+            //request.ContentType = "application/x-www-form-urlencoded";
+            //request.ContentLength = data.Length;
+
+            //using (var stream = request.GetRequestStream())
+            //{
+            //    stream.Write(data, 0, data.Length);
+            //}
+
+            //var response = (HttpWebResponse)request.GetResponse();
         }
 
         public void Send_SMS_WebClient(string strPhoneNumber, string strMessage, string strSender, DateTime datetime)
@@ -847,7 +860,20 @@ conn.Close();
     //    comm.ExecuteScalar();
     //    conn.Close();
     //}
-
+    public async void Send_VoiceSMS(string strPhoneNumber, string strMessage)
+    {
+      var client = new HttpClient();
+      var request = new HttpRequestMessage(HttpMethod.Post, "https://kudisms.vtudomain.com/api/texttospeech");
+      var content = new MultipartFormDataContent();
+      content.Add(new StringContent("1u2ogxi0Q5dbvTYfGBCUNVpZErHKszMPJ8hcmtl3ySOwjkXn9ea76FIRW4LAqD"), "token");
+      content.Add(new StringContent("2347054050041"), "callerID");
+      content.Add(new StringContent(strPhoneNumber), "recipients");
+      content.Add(new StringContent(strMessage), "message");
+      request.Content = content;
+      var response = await client.SendAsync(request);
+      response.EnsureSuccessStatusCode();
+      Console.WriteLine(await response.Content.ReadAsStringAsync());
+    }
 
   }
 }

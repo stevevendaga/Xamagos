@@ -1,4 +1,4 @@
-﻿@model List<Myvshoponline.Order>
+@model List<Myvshoponline.Order>
 
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
@@ -31,13 +31,13 @@
                             <th style="font-size:12px;">Quantity</th>
                             <th style="font-size:12px;text-align:center">
                                 Unit Price  (@if (currency == "NGN")
-                                {<span>₦</span>}
+                                {<del class="NairaSign">N</del>}
                                 else
                                 {<span>@currency</span> })
                             </th>
                             <th style="font-weight:bold;font-size:12px;text-align:center">
                                 Amount (@if (currency == "NGN")
-                                {<span>₦</span>}
+                                {<del class="NairaSign">N</del>}
                                 else
                                 {<span>@currency</span> })
                             </th>
@@ -101,18 +101,18 @@
                         <tr>
                             <td colspan="8">
                                 <h5 style="font-size:12px;">
-                                    <span style="float:right;font-weight:bold;color:red">
+                                    @*<span style="float:right;font-weight:bold;color:red">
                                         Shipping Cost:
                                         (@if (ViewBag.currency == "NGN")
 
-                                        {<span>₦</span>}
+                                        {<del class="NairaSign">N</del>}
                                         else
                                         {<span>@currency</span>
                                             //Use ViewBag.SumTotalDeliveryCost to add different items delivery cost
                                             //use ViewBag.SingleDeliveryCost to pick single delivery cost from the first item
                                         })
                                         @string.Format("{0:#,0}", ViewBag.SumTotalDeliveryCost)
-                                    </span>
+                                    </span>*@
 
                                 </h5>
                                 <br />
@@ -120,7 +120,7 @@
                                     
                                     Total Amount = @{var total = string.Format("{0:#,0}", ViewBag.OrdersTotalAmount);}
                                     @if (currency == "NGN")
-                                    {<span>₦</span>}
+                                    {<del class="NairaSign">N</del>}
                                     else
                                     {<span>@currency</span> }@total
                                 </h4>
@@ -152,172 +152,173 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <div class="form-horizontal">
-                        @{
-                            int ShopID = ViewBag.ShopID;
-                            int OrderID = ViewBag.OrderID;
-                            string State = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.State.Name).FirstOrDefault();
-                            string City = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.City).FirstOrDefault();
-                            string Country = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.CountryRegion.Country).FirstOrDefault(); ;
-                            @*if (db.Shops.Where(s => s.ID == ShopID).Select(s => s.EnableOnlinePayment).FirstOrDefault() == "Yes")
-                            {
-                                string allID2 = "";
-                                foreach (var item2 in ViewBag.Orders)
-                                {
-                                    allID2 += @item2.ID + ",";
-                                }
-                                string[] eachID2 = allID2.Split(',');
-                                for (int i = 0; i < ViewBag.OrdersCount; i++)
-                                {
-                                    @Html.TextBoxFor(m => m[i].ID, new { @Value = eachID2[i], @id = "orderid" })
-                                }
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        @Html.Editor("Address", new { htmlAttributes = new { @class = "form-control", @placeholder = "Full Delivery Address", @required = "required", @id = "address" } })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        @Html.Editor("Notes", new { htmlAttributes = new { @class = "form-control", @placeholder = "Delivery Note [optional]", @id = "notes" } })
-                                    </div>
-                                </div>
+                  <div class="form-horizontal">
+                    @{
+                      int ShopID = ViewBag.ShopID;
+                      int OrderID = ViewBag.OrderID;
+                      string State = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.State.Name).FirstOrDefault();
+                      string City = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.City).FirstOrDefault();
+                      string Country = db.ShippingInformations.Where(s => s.OrderID == OrderID).Select(s => s.CountryRegion.Country).FirstOrDefault(); ;
+                      @*if (db.Shops.Where(s => s.ID == ShopID).Select(s => s.EnableOnlinePayment).FirstOrDefault() == "Yes")
+      {
+          string allID2 = "";
+          foreach (var item2 in ViewBag.Orders)
+          {
+              allID2 += @item2.ID + ",";
+          }
+          string[] eachID2 = allID2.Split(',');
+          for (int i = 0; i < ViewBag.OrdersCount; i++)
+          {
+              @Html.TextBoxFor(m => m[i].ID, new { @Value = eachID2[i], @id = "orderid" })
+          }
+          <div class="form-group">
+              <div class="col-md-10">
+                  @Html.Editor("Address", new { htmlAttributes = new { @class = "form-control", @placeholder = "Full Delivery Address", @required = "required", @id = "address" } })
+              </div>
+          </div>
+          <div class="form-group">
+              <div class="col-md-10">
+                  @Html.Editor("Notes", new { htmlAttributes = new { @class = "form-control", @placeholder = "Delivery Note [optional]", @id = "notes" } })
+              </div>
+          </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" value="@City" id = "city1"  readonly="readonly"/>
-                                    </div>
-                                </div>
+          <div class="form-group">
+              <div class="col-md-10">
+                  <input type="text" class="form-control" value="@City" id = "city1"  readonly="readonly"/>
+              </div>
+          </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" value="@State" id="state"  readonly="readonly" />
-                                    </div>
-                                </div>
+          <div class="form-group">
+              <div class="col-md-10">
+                  <input type="text" class="form-control" value="@State" id="state"  readonly="readonly" />
+              </div>
+          </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" value="@Country" id="country1" readonly="readonly" />
-                                    </div>
-                             </div>
+          <div class="form-group">
+              <div class="col-md-10">
+                  <input type="text" class="form-control" value="@Country" id="country1" readonly="readonly" />
+              </div>
+       </div>
 
-                                string ShopAPIKey = db.ShopAPIKeys.Where(s => s.ShopID == ShopID).Select(s => s.APIKey).FirstOrDefault();
-                                string email = db.ShopCustomers.Where(s => s.ID == CID).Select(s => s.Email).FirstOrDefault();
-                                string phone = db.Shops.Where(s => s.ID == ShopID).Select(s => s.PhoneNumber).FirstOrDefault();
-                                string shopname = db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault();
-                                <input type="hidden" value="@ShopAPIKey" id="apikey" name="apikey" />
-                                <input type="hidden" value="1" id="onlinepayment" name="onlinepayment" />
-                                <input type="hidden" name="customeremail" id="customeremail" value="@email" />
-                                <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
-                                <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
-                                <input type="hidden" name="totalamount" id="totalamount" value="@(ViewBag.OrdersTotalAmount+ViewBag.SumTotalDeliveryCost)" />
-                                <input type="hidden" name="shopname" id="shopname" value="@shopname" />
-                                
-                                <button type="submit" class="btn btn-success" style="width:auto;" onclick="return SubmitOrder()" id="submitorder"> Submit Order <i class="lni lni-check-mark-circle"></i></button>
-                                <center id="pay" style="display:none;">
-                                    <form>
-                                        <script src="https://js.paystack.co/v1/inline.js"></script>
-                                        <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
-                                           Pay <span>₦</span>@string.Format("{0:#,0}",(ViewBag.OrdersTotalAmount + ViewBag.SumTotalDeliveryCost))
-                                        </button> 
-                                    </form>
-                                </center>
+          string ShopAPIKey = db.ShopAPIKeys.Where(s => s.ShopID == ShopID).Select(s => s.APIKey).FirstOrDefault();
+          string email = db.ShopCustomers.Where(s => s.ID == CID).Select(s => s.Email).FirstOrDefault();
+          string phone = db.Shops.Where(s => s.ID == ShopID).Select(s => s.PhoneNumber).FirstOrDefault();
+          string shopname = db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault();
+          <input type="hidden" value="@ShopAPIKey" id="apikey" name="apikey" />
+          <input type="hidden" value="1" id="onlinepayment" name="onlinepayment" />
+          <input type="hidden" name="customeremail" id="customeremail" value="@email" />
+          <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
+          <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
+          <input type="hidden" name="totalamount" id="totalamount" value="@(ViewBag.OrdersTotalAmount+ViewBag.SumTotalDeliveryCost)" />
+          <input type="hidden" name="shopname" id="shopname" value="@shopname" />
 
-                                <div id="ordermsg" style="display:none;">
-                                    <div class="alert alert-success alert-dismissable" id="successmsg_bank" style="display:none">
-                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                        <h3 style="font-size:14px">Success</h3>
-                                        Shipping information submitted successfully.
-                                    </div>
-                                    </div>
-                                    }*@
-                            //  else
-                            if (Request.QueryString["txn"] != null && Request.QueryString["txn"] == "updated")
-                            {
-                                string ShopAPIKey = db.ShopAPIKeys.Where(s => s.ShopID == ShopID).Select(s => s.APIKey).FirstOrDefault();
-                                string email = db.Users.Where(s => s.ID == CID).Select(s => s.Email).FirstOrDefault();
-                                string phone = db.Shops.Where(s => s.ID == ShopID).Select(s => s.PhoneNumber).FirstOrDefault();
-                                string shopname = db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault();
-                                <input type="hidden" value="@ShopAPIKey" id="apikey" name="apikey" />
-                                <input type="hidden" value="1" id="onlinepayment" name="onlinepayment" />
-                                <input type="hidden" name="customeremail" id="customeremail" value="@email" />
-                                <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
-                                <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
-                                <input type="hidden" name="totalamount" id="totalamount" value="@(ViewBag.OrdersTotalAmount+ViewBag.SumTotalDeliveryCost)" />
-                                <input type="hidden" name="shopname" id="shopname" value="@shopname" />
-                                <center id="pay" style="display:none;">
-                                    <form>
-                                        <script src="https://js.paystack.co/v1/inline.js"></script>
-                                        <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
-                                            Pay <span>₦</span>@string.Format("{0:#,0}", (ViewBag.OrdersTotalAmount + ViewBag.SumTotalDeliveryCost))
-                                        </button>
-                                    </form>
-                                </center>
-                            }
-                            else
-                            {
-                                //{
-                                using (Html.BeginForm("CreateOrderShippingInfo", "Orders", FormMethod.Post))
-                                {
-                                @Html.AntiForgeryToken()
+          <button type="submit" class="btn btn-success" style="width:auto;" onclick="return SubmitOrder()" id="submitorder"> Submit Order <i class="lni lni-check-mark-circle"></i></button>
+          <center id="pay" style="display:none;">
+              <form>
+                  <script src="https://js.paystack.co/v1/inline.js"></script>
+                  <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
+                     Pay <span>₦</span>@string.Format("{0:#,0}",(ViewBag.OrdersTotalAmount + ViewBag.SumTotalDeliveryCost))
+                  </button>
+              </form>
+          </center>
 
-                                      string allID1 = "";
+          <div id="ordermsg" style="display:none;">
+              <div class="alert alert-success alert-dismissable" id="successmsg_bank" style="display:none">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <h3 style="font-size:14px">Success</h3>
+                  Shipping information submitted successfully.
+              </div>
+              </div>
+              }*@
+                      //  else
+                      if (Request.QueryString["txn"] != null && Request.QueryString["txn"] == "updated")
+                      {
+                        string ShopAPIKey = db.ShopAPIKeys.Where(s => s.ShopID == ShopID).Select(s => s.APIKey).FirstOrDefault();
+                        string email = db.Users.Where(s => s.ID == CID).Select(s => s.Email).FirstOrDefault();
+                        string phone = db.Shops.Where(s => s.ID == ShopID).Select(s => s.PhoneNumber).FirstOrDefault();
+                        string shopname = db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault();
+                        <input type="hidden" value="@ShopAPIKey" id="apikey" name="apikey" />
+                        <input type="hidden" value="1" id="onlinepayment" name="onlinepayment" />
+                        <input type="hidden" name="customeremail" id="customeremail" value="@email" />
+                        <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
+                        <input type="hidden" name="customername" id="customername" value="@Session["CustomerName"]" />
+                        <input type="hidden" name="totalamount" id="totalamount" value="@(ViewBag.OrdersTotalAmount)" />
+                        <input type="hidden" name="shopname" id="shopname" value="@shopname" />
+                        <center id="pay" style="display:none;">
+                          <form>
+                            <script src="https://js.paystack.co/v1/inline.js"></script>
+                            <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
+                              Pay <span>₦</span>@string.Format("{0:#,0}", (ViewBag.OrdersTotalAmount))
+                            </button>
+                          </form>
+                        </center>
+                      }
+                      else
+                      {
+                        //{
+                        using (Html.BeginForm("CreateOrderShippingInfo", "Orders", FormMethod.Post))
+                        {
+                          @Html.AntiForgeryToken()
 
-
-                                      foreach (var item1 in ViewBag.Orders)
-                                      {
-                                          allID1 += @item1.ID + ",";
-
-                                      }
-                                      string[] eachID1 = allID1.Split(',');
-
-                                      for (int i = 0; i < ViewBag.OrdersCount; i++)
-                                      {
-
-                                    @Html.HiddenFor(m => m[i].ID, new { @Value = eachID1[i] })
-                                      }
-                                
-                                <input type="hidden" name="ShopID" value="@ShopID" />
-                                <input type="hidden" name="CustomerID"  value="@CID" />
-                                <input type="hidden" name="amount" id="amount" value="@(ViewBag.OrdersTotalAmount+ViewBag.SumTotalDeliveryCost)" />
-                                           <div class="form-group">
-                                               <div class="col-md-10">
-                                                   @Html.Editor("Address", new { htmlAttributes = new { @class = "form-control", @placeholder = "Full Delivery Address", @required = "required", @id = "address" } })
-                                               </div>
-                                           </div>
-                                           <div class="form-group">
-                                               <div class="col-md-10">
-                                                   @Html.Editor("Notes", new { htmlAttributes = new { @class = "form-control", @placeholder = "Delivery Note [optional]", @id = "notes" } })
-                                               </div>
-                                           </div>
-
-                                           <div class="form-group">
-                                               <div class="col-md-10">
-                                                   <input type="text" class="form-control" value="@City" id="city1" readonly="readonly" />
-                                               </div>
-                                           </div>
+                          string allID1 = "";
 
 
-                                           <div class="form-group">
-                                               <div class="col-md-10">
-                                                   <input type="text" class="form-control" value="@State" id="state" readonly="readonly" />
-                                               </div>
-                                           </div>
+                          foreach (var item1 in ViewBag.Orders)
+                          {
+                            allID1 += @item1.ID + ",";
 
-                                           <div class="form-group">
-                                               <div class="col-md-10">
-                                                   <input type="text" class="form-control" value="@Country" id="country1" readonly="readonly" />
-                                               </div>
-                                           </div>
-                                        <button type="submit" class="btn btn-success" style="width:auto;"  onclick="return SubmitOrder()"> Submit Order <i class="lni lni-check-mark-circle"></i></button>
-                                  }
-                              }
-                            }
-                               @*}*@
+                          }
+                          string[] eachID1 = allID1.Split(',');
+
+                          for (int i = 0; i < ViewBag.OrdersCount; i++)
+                          {
+
+                            @Html.HiddenFor(m => m[i].ID, new { @Value = eachID1[i] })
+                          }
+
+                          <input type="hidden" name="ShopID" value="@ShopID" />
+                          <input type="hidden" name="CustomerID" value="@CID" />
+                          <input type="hidden" name="amount" id="amount" value="@(ViewBag.OrdersTotalAmount)" />
+                          <input type="hidden" value="" id="apikey" name="apikey" />
+                          <div class="form-group">
+                            <div class="col-md-10">
+                              @Html.Editor("Address", new { htmlAttributes = new { @class = "form-control", @placeholder = "Full Delivery Address", @required = "required", @id = "address" } })
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-md-10">
+                              @Html.Editor("Notes", new { htmlAttributes = new { @class = "form-control", @placeholder = "Delivery Note [optional]", @id = "notes" } })
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-md-10">
+                              <input type="text" class="form-control" value="@City" id="city1" readonly="readonly" />
+                            </div>
+                          </div>
+
+
+                          <div class="form-group">
+                            <div class="col-md-10">
+                              <input type="text" class="form-control" value="@State" id="state" readonly="readonly" />
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-md-10">
+                              <input type="text" class="form-control" value="@Country" id="country1" readonly="readonly" />
+                            </div>
+                          </div>
+                          <button type="submit" class="btn btn-success" style="width:auto;" onclick="return SubmitOrder()"> Submit Order <i class="lni lni-check-mark-circle"></i></button>
+                        }
+                      }
+                    }
+                    @*}*@
 
 
 
 
-                                </div>
+                  </div>
                 </div>
                 @*</div>*@
 

@@ -3,87 +3,93 @@
     MyvshoponlineEntities db = new MyvshoponlineEntities();
 }
 <div id="content">
-    <b class="alert alert-info">About XAMAGOS</b>
+    @*<b class="alert alert-info">About XAMAGOS</b>*@
  
-    <div class="modal-body" id="donatebody" style="color:black;">
-      <b style="color: #17A2B8;"> XAMAGOS </b>is the ultimate online platform for businesses to connect with their customers.
-      @*It creates an online presence of the physical shops we have in our markets in Nigeria.*@
+  <div class="modal-body" id="donatebody" style="color:black;">
+    <p style="text-align: justify;color:black;font-size:12px;">
+      <b style="color: #17A2B8;"> XAMAGOS </b> is an online platform that connects your business to your customers.<br />
+      @*<b style="color: #17A2B8;"> XAMAGOS </b>is an all-in-one online platform that effectively addresses the key challenges faced by both sellers and buyers.
+      It creates a comprehensive online presence for all markets in Nigeria, empowering buyers to easily search for desired
+      products based on location (country, state, city).
+      This feature ensures that buyers can locate the precise shops and locations where their desired products are available.*@
+    </p>
       <hr style="margin-top:2px;margin-bottom:5px;" />
-      <span style="font-size:13px;text-align:justify">
+      <p style="font-size:12px;text-align:justify;color:black">
         Our online platform provides you with a unique store URL that allows
         customers to easily access your store from anywhere, while our mobile
         app enables them to purchase your products on the go.
         With integrated
         payment solutions, product views tracker and location on Google Map,
-        you can take your business to the next level.<br /><br />
+        you can take your business to the next level.<br />
         Xamagos also offers
         advanced features like Product Finder which helps buyers quickly
         find what they're looking for and advertises your products on
+
         <a href="https://radio.xamagos.com" target="_blank"><span style="color:dodgerblue">Xamagos Radio</span></a> so you'll never miss an opportunity to make a sale.
-      </span>
+      </p>
       <hr />
       <span style="font-size: 20px; color: #17A2B8">
         Get started with Xamagos today and experience the power of online marketing!
       </span>
       @if (string.IsNullOrEmpty((string)Session["username"]))
       {
-        <p style="text-align:center;">
+      <p style="text-align:center;">
 
-          <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
-            <i class="fa fas fa-pencil-alt"></i> Sign Up Now
-          </a>
+        <a href="~/Users/Create" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px;margin-bottom:5px;" id="signUpIndex">
+          <i class="fa fas fa-pencil-alt"></i> Sign Up Now
+        </a>
 
-          <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
-            <i class="fa fas fa-lock-open"></i> Login
-          </a>
-        </p>
-      }
+        <a href="~/Account/Login" class="btn btn-common" style="border-radius:15px;padding:3px 30px 3px 30px;font-size:12px" id="loginIndex">
+          <i class="fa fas fa-lock-open"></i> Login
+        </a>
+      </p>
+    }
 
       <hr style="margin-top:2px;margin-bottom:8px;" />
 
       @*<b>Why do you need XAMAGOS?</b>
-    <br />
-    1. It creates an online presence of the physical shops we have in our markets in Nigeria.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      <br />
+      1. It creates an online presence of the physical shops we have in our markets in Nigeria.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    2. It brings the market to your fingertips.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      2. It brings the market to your fingertips.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    3. It allows you to find products in a specific location across Nigeria.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      3. It allows you to find products in a specific location across Nigeria.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    4. It creates a platform for products price bargaining.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      4. It creates a platform for products price bargaining.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    5. For easy and speedy delivery of orders.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      5. For easy and speedy delivery of orders.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    6. The platform handles sales on behalf of sellers from orders to delivery.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      6. The platform handles sales on behalf of sellers from orders to delivery.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    7. It helps sellers to reach a wide range of customers.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      7. It helps sellers to reach a wide range of customers.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    8. It drives more people to seller’s physical shop.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      8. It drives more people to seller’s physical shop.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    9. For easy sharing of shops/products to different social media platforms.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      9. For easy sharing of shops/products to different social media platforms.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
-    10. You can manage different branches of your shop in one place.
-    <hr style="margin-top:2px;margin-bottom:8px;" />
+      10. You can manage different branches of your shop in one place.
+      <hr style="margin-top:2px;margin-bottom:8px;" />
 
 
-    <b>Mode of Payment </b><br />
-    &raquo;&raquo; Online payment <br />
-    &raquo;&raquo; Pay on delivery
-    <br>
-    <b>Delivery</b>
-    <br />
-    Our company handles the delivery on behalf of sellers.
-    <hr />
-    <b> Mode of Delivery </b> <br />
-    We offer home delivery services within major towns.*@
+      <b>Mode of Payment </b><br />
+      &raquo;&raquo; Online payment <br />
+      &raquo;&raquo; Pay on delivery
+      <br>
+      <b>Delivery</b>
+      <br />
+      Our company handles the delivery on behalf of sellers.
+      <hr />
+      <b> Mode of Delivery </b> <br />
+      We offer home delivery services within major towns.*@
 
 
     </div>

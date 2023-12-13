@@ -130,7 +130,7 @@
                                 //    showConfirmButton: false,
                                 //    timer: 3000
                                 //})
-                                window.location = '../Users/AdminLanding/' + item.userid;
+                                window.location = '../Users/AdminLanding';
                             }
                             else if(item.gotoUserDashboard== 'true')
                             {
@@ -144,11 +144,11 @@
                                 //    showConfirmButton: false,
                                 //    timer: 3000
                                 //})
-                                window.location.href = '../Users/Dashboard/' + item.userid;
+                                window.location.href = '../Users/Dashboard';
                             }
                             else {
                                 $("#invalid_msg").html('<p class="alert alert-success">Login successful...</p>');
-                                window.location = '../Users/VerificationLinkSent/?id=' + item.userid + '&ax=1';
+                                window.location = '../Users/VerifyEmail';
                             }
                         });
                         $("#success_msg").css("display", "block");

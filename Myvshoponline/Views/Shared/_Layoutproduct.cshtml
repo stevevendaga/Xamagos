@@ -318,15 +318,39 @@
 
   <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top" style="background-color:#17A2B8;position:fixed;border:0px;">
-
-
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top flex-container" style="background-color:#17A2B8;position:fixed;border:0px;">
       <!-- Left navbar links -->
-      <ul class="navbar-nav">
+
+
+
+      <ul class="navbar-nav item" style="margin-top:-10px" id="menu-button">
         <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="color:white;font-size:16px;"><i class="fas fa-bars"></i></a>
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="color:white;font-size:12px;text-align:center"><i class="fas fa-bars"></i><br />Menu</a>
         </li>
 
+      </ul>
+      @*<ul class="navbar-nav ml-1 item" style="margin-top:-10px;" id="home-nav-button">
+          <li class="nav-item">
+            <a href="~/Home/Index" class="nav-link" style="color:white;font-size:12px;text-align:center">
+              <i class="nav-icon fas fa-home"></i>
+              <br />
+              <pp>
+                Home
+              </pp>
+            </a>
+          </li>
+        </ul>*@
+
+      <ul class="navbar-nav ml-1 item" style="margin-top:-10px" id="search-nav-button">
+        <li class="nav-item">
+          <a href="#" class="nav-link" style="color:white;font-size:12px;text-align:center" onclick="showSearchBox()">
+            <i class="fas fa-search"></i>
+            <br />
+            <pp>
+              Search
+            </pp>
+          </a>
+        </li>
       </ul>
       <!-- Brand Logo -->
       <div id="displayonmobile_logo" style="display:none">
@@ -347,160 +371,416 @@
       </div>
       <!--End Brand Logo-->
       <!-- SEARCH FORM -->
-      <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;">
-        <div class="input-group input-group-sm" style="margin:2px;">
-          @if (Request.QueryString["search"] != null)
-          {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:400px;">
-          }
-          else
-          {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:400px;">
-          }
 
-        </div>
+      <form method="get" action="~/Home/Search" style="padding:10px;display:none;left:0;width:100%" id="search-mobile-view">
         <div class="input-group input-group-sm" style="margin:2px;">
-          @Html.DropDownList("ProductCategoryID", null, htmlAttributes: new { @class = "form-control form-control-navbar" })
+          <a href="#" style="color: white; margin-top: 10px">
+            <i class="lni lni-arrow-left-circle" style="color:white;font-size:20px;font-weight:400" onclick="hideSearchBox();"></i>
+          </a>
+          <input type="text" name="search" id="searchshop" required="required" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
           <div class="input-group-append">
-            <button class="btn btn-common" type="submit">
+            <button class="btn btn-common" type="submit" style="width:35px;">
               <i class="fas fa-search"></i>
             </button>
           </div>
         </div>
       </form>
-      <!-- Right navbar links -->
-      <ul class="navbar-nav ml-1">
-        <!-- Shopping Cart -->
-        @{
-          int CountCart = 0;
-          if (Session["UserID"] != null)
+
+
+      <div id="search-form" style="display:none;">
+        <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;width:100%">
+          @if (Request.QueryString["search"] != null)
           {
-            int UserID = (int)Session["UserID"];
-            CountCart = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
-          }
-          if (Session["UserID"] != null && CountCart > 0)
-          {
-            int UserID = (int)Session["UserID"];
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
-                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
-                <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCart</span>
-              </a>
-
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
-                <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
-                  <!-- Message Start -->
-                  <div class="media">
-
-                    <div class="media-body">
-                      <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
-                        <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
-                        <hr style="margin-top:8px;margin-bottom:5px;" />
-                        @*<span class="float-right text-sm text-danger">*@ @*<i class="fas fa-star"></i></span>*@
-                      </h3>
-                      <p class="text-sm">
-                        @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
-                        {
-                          <ul>
-                            <li style="font-size:12px;">
-                              &bull; @cart.Product.Name
-                            </li>
-                          </ul>
-
-                        }
-                      </p>
-                      <hr style="margin-top:3px;margin-bottom:3px;" />
-                      <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCart</p>
-                      <p class="badge badge-info">
-                        <i class="fa fas fa-eye"></i> View Cart
-                      </p>
-                    </div>
-                  </div>
-                  <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                </a>
-              </div>
-            </li>
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:800px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
+            <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
           }
           else
           {
-            <li class="nav-item dropdown">
-              <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
-                <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
-              </a>
-            </li>
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+            <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
           }
-        }
+        </form>
+      </div>
 
-        <li class="">
-          <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
-            <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#F8F9FA">
-            <!-- Message Start -->
-            <div class="media dropdown-item">
-              <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
-                <i class="fa fas fa-map-marker"></i>
-                Nearby Stores
+      <div>
+        <ul class="navbar-nav ml-1 item" style="margin-top:-10px" id="account-button">
+          <!-- Account Dropdown Menu -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="dropdown" href="#" style="color:white;font-size:12px;text-align:center">
+              <i class="glyphicon glyphicon-user"></i>
+              <br />
+              <span>Account</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#F8F9FA">
+
+              <div>
+
+                @if (String.IsNullOrEmpty((string)Session["Name"]))
+                {
+                  <nav>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                      <li class="nav-item has-treeview">
+                        <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
+
+                          <i class="nav-icon fas fa-sign-in-alt"></i>
+                          LOGIN
+                        </a>
+                        <div class="dropdown-divider"></div>
+                      </li>
+
+                      <li class="nav-item has-treeview">
+                        <a href="~/Users/Create" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
+                          <i class="nav-icon fas fa-pencil-alt"></i>
+                          SIGN UP
+                        </a>
+                      </li>
 
 
-              </h3>
+                    </ul>
+                  </nav>
+
+                }
+                else
+                {
+                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="color:dodgerblue;font-size:12px;padding-top:5px;">
+                    <li class="nav-item">
+
+                      @if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                      {
+
+                        <i class="nav-icon fas fa-user-circle" style="margin-left: 10px; color: dodgerblue"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"] })
+                      }
+                      else
+                      {
+                        int UserID = (int)Session["UserID"];
+                        if (db.Users.Find(UserID).EmailVerify == 1)
+                        {
+                          <i class="nav-icon fas fa-user-circle" style="margin-left: 10px; color: dodgerblue;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"] })
+                        }
+                      }
+                    </li>
+                    @if (Session["UserID"] != null)
+                    {
+                      int UserID1 = (int)Session["UserID"];
+
+                      if (db.Users.Find(UserID1).EmailVerify == 1)
+                      {
+
+                        if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                        {
+                          <li class="nav-item">
+                            <a href="~/Users/AdminLanding" class="nav-link" style="margin-left: 0px;">
+                              <i class="nav-icon fas fa-tachometer-alt"></i>
+                              <pp style="color: dodgerblue">
+                                Dashboard
+                              </pp>
+                            </a>
+                          </li>
+                        }
+                        else
+                        {
+                          <li class="nav-item">
+                            <a href="~/Users/Dashboard" class="nav-link" style="margin-left: 0px;">
+                              <i class="nav-icon fas fa-tachometer-alt"></i>
+                              <pp style="color: dodgerblue">
+                                Dashboard
+
+                              </pp>
+                            </a>
+                          </li>
+                        }
+                        <li class="nav-item">
+                          <center>
+                            <a class="nav-link" style="background-color:#128598;color:white;height:35px;width:50%;text-align:center" href="~/Home/LogOff" onclick="clearLocalStorage();">
+                              <i class="glyphicon glyphicon-log-out"></i> Log Out
+                            </a>
+                          </center>
+                        </li>
+                        <li><hr style="margin-top:2px;" /></li>
+
+
+
+
+                      }
+                    }
+                  </ul>
+                }
+
+              </div>
+
+
+
+
 
             </div>
-            <div class="dropdown-divider"></div>
-            <div class="media dropdown-item">
-              <div id="mapnearby"></div>
-              <div id="nearbystops" style="font-size:12px;"></div>
+          </li>
+        </ul>
+      </div>
+      <!-- Right navbar Web links -->
+      <div id="cart" style="margin-right:10px;display:none;">
+        <ul class="navbar-nav ml-1 item">
+          <!-- Shopping Cart -->
+          @{
+            int CountCartweb = 0;
+            if (Session["UserID"] != null)
+            {
+              int UserID = (int)Session["UserID"];
+              CountCartweb = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
+            }
+            if (Session["UserID"] != null && CountCartweb > 0)
+            {
+              int UserID = (int)Session["UserID"];
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                  <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                  <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCartweb</span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
+                  <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+
+                      <div class="media-body">
+                        <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
+                          <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
+                          <hr style="margin-top:8px;margin-bottom:5px;" />
+
+                        </h3>
+                        <p class="text-sm">
+                          @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
+                          {
+                            <ul>
+                              <li style="font-size:12px;">
+                                &bull; @cart.Product.Name
+                              </li>
+                            </ul>
+
+                          }
+                        </p>
+                        <hr style="margin-top:3px;margin-bottom:3px;" />
+                        <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCartweb</p>
+                        <p class="badge badge-info">
+                          <i class="fa fas fa-eye"></i> View Cart
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Message End -->
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="#" class="dropdown-item">
+                  </a>
+                </div>
+              </li>
+            }
+            else
+            {
+              <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                  <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                  <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
+                </a>
+              </li>
+            }
+          }
+
+          <li class="">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
+              <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right item" style="background-color:#F8F9FA">
+              <!-- Message Start -->
+              <div class="media dropdown-item">
+                <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
+                  <i class="fa fas fa-map-marker"></i>
+                  Nearby Stores
+
+
+                </h3>
+
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="media dropdown-item">
+                <div id="mapnearby"></div>
+                <div id="nearbystops" style="font-size:12px;"></div>
+
+              </div>
+              <!-- Message End -->
+
+              <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
+              <!-- Message Start -->
+              <div class="media dropdown-item">
+                <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
+              </div>
+              <!-- Message End -->
+            </div>
+          </li>
+
+
+        </ul>
+      </div>
+      <!--Web-->
+      <div>
+
+        <ul class="navbar-nav ml-1 item" style="margin-top: -10px; " id="more-button-mobile">
+          <!-- Account Dropdown Menu -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="dropdown" id="elipsis" href="#" style="color:white;font-size:12px;text-align:center;margin-top:20px;margin-right:10px;">
+              <i class="fa fas fa-ellipsis-v"></i>
+              <br />
+              @*<span>More</span>*@
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color: #40578D;">
+              <div>
+
+                <!-- Right navbar Mobile links -->
+                <div id="cart">
+                  <ul class="navbar-nav ml-1 item">
+                    <!-- Shopping Cart -->
+                    @{
+                      int CountCart = 0;
+                      if (Session["UserID"] != null)
+                      {
+                        int UserID = (int)Session["UserID"];
+                        CountCart = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
+                      }
+                      if (Session["UserID"] != null && CountCart > 0)
+                      {
+                        int UserID = (int)Session["UserID"];
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                            <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                            <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCart</span>
+                          </a>
+
+                          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
+                            <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                              <!-- Message Start -->
+                              <div class="media">
+
+                                <div class="media-body">
+                                  <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
+                                    <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
+                                    <hr style="margin-top:8px;margin-bottom:5px;" />
+
+                                  </h3>
+                                  <p class="text-sm">
+                                    @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
+                                    {
+                                      <ul>
+                                        <li style="font-size:12px;">
+                                          &bull; @cart.Product.Name
+                                        </li>
+                                      </ul>
+
+                                    }
+                                  </p>
+                                  <hr style="margin-top:3px;margin-bottom:3px;" />
+                                  <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCart</p>
+                                  <p class="badge badge-info">
+                                    <i class="fa fas fa-eye"></i> View Cart
+                                  </p>
+                                </div>
+                              </div>
+                              <!-- Message End -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                            </a>
+                          </div>
+                        </li>
+                      }
+                      else
+                      {
+                        <li class="nav-item dropdown">
+                          <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                            <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
+                          </a>
+                        </li>
+                      }
+                    }
+
+                    <li class="">
+                      <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
+                        <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right item" style="background-color:#F8F9FA">
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                          <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
+                            <i class="fa fas fa-map-marker"></i>
+                            Nearby Stores
+
+
+                          </h3>
+
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="media dropdown-item">
+                          <div id="mapnearby"></div>
+                          <div id="nearbystops" style="font-size:12px;"></div>
+
+                        </div>
+                        <!-- Message End -->
+
+                        <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                          <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
+                        </div>
+                        <!-- Message End -->
+                      </div>
+                    </li>
+
+                    <!-- Notifications Dropdown Menu -->
+                    <!--<li class="nav-item">
+                      <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-envelope mr-2"></i> 4 new messages
+                          <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-users mr-2"></i> 8 friend requests
+                          <span class="float-right text-muted text-sm">12 hours</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-file mr-2"></i> 3 new reports
+                          <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                      </div>
+                    </li>-->
+
+                  </ul>
+                </div>
+
+              </div>
 
             </div>
-            <!-- Message End -->
+          </li>
+        </ul>
+      </div>
 
-            <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
-            <!-- Message Start -->
-            <div class="media dropdown-item">
-              <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
-            </div>
-            <!-- Message End -->
-          </div>
-        </li>
-
-        <!-- Notifications Dropdown Menu -->
-        <li class="nav-item">
-          @*<a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <span class="badge badge-warning navbar-badge">15</span>
-            </a>*@
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-item dropdown-header">15 Notifications</span>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-envelope mr-2"></i> 4 new messages
-              <span class="float-right text-muted text-sm">3 mins</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-users mr-2"></i> 8 friend requests
-              <span class="float-right text-muted text-sm">12 hours</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-file mr-2"></i> 3 new reports
-              <span class="float-right text-muted text-sm">2 days</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-          </div>
-        </li>
-        @*<li class="nav-item">
-              <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                  <i class="fas fa-th-large"></i>
-              </a>
-          </li>*@
-      </ul>
 
     </nav>
 
@@ -1507,17 +1787,25 @@
 
         document.getElementById("displayonmobile_logo").style.display = "block";
         document.getElementById("search").style.width = "100%";
-
-
+        document.getElementById("search-form").style.display = "none";
+        document.getElementById("search-nav-button").style.display = "block";
+        document.getElementById("cart").style.display = "none";
+        document.getElementById("more-button-mobile").style.display = "block";
       } else {
         document.getElementById("job-listings").style.margin = "0";
         document.getElementById("colunmleft").style.display = "block";
 
         document.getElementById("displayonmobile_logo").style.display = "none";
+        document.getElementById("search-form").style.display = "block";
+        document.getElementById("search-nav-button").style.display = "none";
+        //document.getElementById("home-nav-button").style.display = "none";
+        document.getElementById("search-mobile-view").style.display = "none";
+        document.getElementById("cart").style.display = "block";
+        document.getElementById("more-button-mobile").style.display = "none";
       }
     }
 
-    var xy = window.matchMedia("(max-width: 600px)")
+    var xy = window.matchMedia("(max-width: 780px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
@@ -1541,7 +1829,7 @@
       }
     }
 
-    var xy = window.matchMedia("(max-width: 600px)")
+    var xy = window.matchMedia("(max-width: 780px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
@@ -1642,7 +1930,50 @@
     });
   </script>
 
+  <!--Show search box on click of Search button on the menu bar-->
+  <script>
+    function showSearchBox() {
 
+      //document.getElementById("home-nav-button").style.display = "none";
+      document.getElementById("search-nav-button").style.display = "none";
+      document.getElementById("account-button").style.display = "none";
+      document.getElementById("search-mobile-view").style.display = "block";
+      document.getElementById("menu-button").style.display = "none";
+      document.getElementById("elipsis").style.display = "none";
+
+
+
+    }
+    function hideSearchBox() {
+      document.getElementById("search-mobile-view").style.display = "none";
+
+      //document.getElementById("home-nav-button").style.display = "block";
+      document.getElementById("search-nav-button").style.display = "block";
+
+      document.getElementById("account-button").style.display = "block";
+      document.getElementById("menu-button").style.display = "block";
+      document.getElementById("elipsis").style.display = "block";
+
+    }
+  </script>
+  <!--Set Session function-->
+  <script type="text/javascript">
+    function setObjectSession(_key, _value) {
+      var url = "/SetSession/SetObjectSession/";
+      $.ajax({
+        url: url,
+        data: { key: _key, value: _value },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          //alert('Success');
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  </script>
 
 
 

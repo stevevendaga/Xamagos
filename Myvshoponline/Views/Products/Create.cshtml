@@ -24,10 +24,10 @@
 
 <div id="content">
   <h5 style="font-size:12px" class="h5">
-    <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a>
-    &laquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a></b>
+    <a href="~/Users/Dashboard"><i class="lni-user"></i> @ViewBag.CompanyName </a>
+    &laquo;<b style="color:black"><a href="~/Products/MyProducts"> Back to Products Menu </a></b>
     <span style="margin-top:0px">
-      <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:1px;padding-bottom:1px;padding-left:5px;width:150px;height:30px">
+      <a href="~/Products/ViewProducts?un_pub=0" class="btn btn-info" style="padding-top:1px;padding-bottom:1px;padding-left:5px;width:150px;height:30px">
         <font style="color:white;font-size:11px;">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
       </a>
     </span>
@@ -154,7 +154,7 @@
 
                 <div class="form-group" style="color:black">
                   @*Product Description*@
-                  <textarea class="textarea" name="Details" required="required" placeholder="Product Description" id="summernote"></textarea>
+                  <textarea class="textarea" name="Details" required="required" placeholder="Product Description" id="summernote">Product description</textarea>
                   @*<textarea class="textarea" name="Details" required="required" placeholder="Product Description" id="description"></textarea>*@
                   @*<textarea rows="1" name="Details" required="required" class="Editor" placeholder= "Product Description"></textarea>*@
                   @*@Html.TextArea("Details", new { htmlAttributes = new { @class = "form-control", @required = "required" } })*@
@@ -415,10 +415,17 @@
             height: '8px',
            
           })
-
           document.getElementById("name").value = "";
-          //document.getElementById("description").value = "";
-          $("#description").val('');
+
+          // Get the Summernote editor instance
+          var summernoteInstance = $('#summernote').summernote();
+
+          // Set the content of the Summernote editor to an empty string
+          summernoteInstance.summernote('code', '');
+
+          // If you want to clear the underlying textarea as well
+          $('#summernote').val('');
+
           document.getElementById("category").value = "";
           document.getElementById("sellingprice").value = "";
           /*document.getElementById("amountpurchased").value = "";*/
@@ -447,6 +454,11 @@
   $('#summernote').summernote({
     placeholder: 'Product description',
     tabsize: 2,
-    height: 200
+    height: 200,
+    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+    defaultFontName: 'Arial', // or any other font you prefer
+    default: 'normal', // or any other font you prefer
+    defaultFontSize: '14px', // or any other font size you prefer
+   
   });
 </script>

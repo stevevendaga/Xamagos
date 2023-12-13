@@ -750,8 +750,8 @@
                                                             <div id="email">
                                                                 @if (Model.EmailVerify == null)
                                                                 {
-                                                                    <span class="btn btn-common" onclick="Show_verifyemailbox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:2px;padding-right:2px;font-size:10px;">
-                                                                        Verify Email
+                                                                    <span class="btn btn-common" onclick="Show_verifyemailbox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:5px;padding-right:5px;font-size:10px;">
+                                                                        Click to Verify store Email
                                                                     </span>
                                                                     <span class="badge">
                                                                         <img src="~/Images/notverified.png" style="width:15px;height:15px;cursor:pointer;display:none;" onclick="Close_verifyemailbox()" id="emailclose" />
@@ -808,8 +808,8 @@
                                                             <div id="phone_block">
                                                                 @if (Model.PhoneVerify == null)
                                                                 {
-                                                                    <span class="btn btn-common" onclick="Show_verifyphonebox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:2px;padding-right:2px;font-size:10px;">
-                                                                        Verify Phone Number
+                                                                    <span class="btn btn-common" onclick="Show_verifyphonebox()" style="cursor:pointer;padding-top:2px;padding-bottom:2px;padding-left:5px;padding-right:5px;font-size:10px;">
+                                                                        Click to Verify store Phone Number
                                                                     </span>
                                                                     @*<button type="button" class="btn btn-success" style="width:auto;padding-top:2px;padding-bottom:2px;" data-toggle="modal" data-target="#verifyphone" onclick="clearTextBox();">Verify Phone<i class="fa fas fa-check-double"></i><span id="totalamtpay"></span></button>*@
                                                                     <span class="badge">
@@ -1184,7 +1184,7 @@
                                                             {
                                                               if (paymentstatus == 1)
                                                               {
-                                                                <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                <a href="~/Products/MyProducts" onclick="gotoProducts(@Model.ID)">
                                                                   <i class="lni lni-files"></i> Products (@totalProducts)
                                                                 </a>
                                                               }
@@ -1205,14 +1205,14 @@
                                                                   </a>
                                                                 </div>
                                                                 <div id="productLinkVerified" style="display:none">
-                                                                  <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                  <a href="~/Products/MyProducts" onclick="gotoProducts(@Model.ID)">
                                                                     <i class="lni lni-files"></i> Products (@totalProducts)
                                                                   </a>
                                                                 </div>
                                                               }
                                                               else
                                                               {
-                                                                <a href="~/Products/MyProducts/?id=@Model.ID" onclick="gotoProducts(@Model.ID)">
+                                                                <a href="~/Products/MyProducts" onclick="gotoProducts(@Model.ID)">
                                                                   <i class="lni lni-files"></i> Products (@totalProducts)
                                                                 </a>
                                                               }
@@ -1802,7 +1802,7 @@
                                 <h5 class="widget-title">Search This Shop</h5>
                                 <div class="widget-search widget-box">
                                     <form method="get">
-                                        <input type="hidden" name="id" value="@Model.ID" />
+                                        
                                         @*<input class="form-control search" required="required" name="search" type="search" placeholder="SEARCH @Model.Name" />
                                             <button class="search-btn" type="submit"><b><i class="lni-search" style="color:blue"></i></b></button>*@
                                         <div class="input-group input-group-sm" style="margin:2px;">
@@ -1843,7 +1843,7 @@
                                                     int PCID = item.ProductCategoryID;
                                                     int total = db.Products.Where(p => p.ProductCategoryID == PCID && p.ShopID == ShopID && p.ProductStatu.Status == "Available").Count();
                                                     <li>
-                                                        <a href="~/Products/ProductCategoryDetails/?id=@item.ProductCategoryID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                                        <a href="~/Products/ProductCategoryDetails" style="color:#0BACE1;" onclick="setObjectSession('ProductCategoryID',@item.ProductCategoryID)">
                                                             @item.ProductCategory.Name
                                                             <span class="num-posts">(@total)</span>
                                                         </a>

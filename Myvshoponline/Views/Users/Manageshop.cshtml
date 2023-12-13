@@ -1,484 +1,492 @@
 
 <style>
-    .fade {
-        -webkit-transform: translate(0, -25%);
-        -ms-transform: translate(0, -25%);
-        transform: translate(0, -25%);
-        -webkit-transition: -webkit-transform 0.3s ease-out;
-        -moz-transition: -moz-transform 0.3s ease-out;
-        -o-transition: -o-transform 0.3s ease-out;
-        transition: transform 0.3s ease-out;
-        position: center;
-    }
+  .fade {
+    -webkit-transform: translate(0, -25%);
+    -ms-transform: translate(0, -25%);
+    transform: translate(0, -25%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition: -moz-transform 0.3s ease-out;
+    -o-transition: -o-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+    position: center;
+  }
 </style>
 @model IEnumerable<Myvshoponline.User>
 @using Myvshoponline.Controllers;
+@using System.Web.Helpers;
+
+
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
-    Getdata mydata = new Getdata();
+  Getdata mydata = new Getdata();
+
 }
 <link href="~/Content/Panel.css" rel="stylesheet" />
 
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
-    @*<div class="modal-dialog modal-dialog-centered">*@
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" style="font-size:14px">Upload Photo</h5>
-            <button type="button" class="close" data-dismiss="modal">×</button>
-        </div>
-        <div class="modal-body">
-            @using (Html.BeginForm("UploadLogo", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <input type="hidden" value="@Session["UserID"]" name="UserID" />
-                    @*<h5 style="color:red;font-size:12px">
-                            ** Note **
-                            &raquo;  Image size should not be less than 12KB and greater than 15 KB
-                        </h5><hr />*@
-                    <font color="black">
-                        @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
-                        <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" />
-                    </font><hr />
-                    <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
-            }
-        </div>
-        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+  @*<div class="modal-dialog modal-dialog-centered">*@
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" style="font-size:14px">Upload Photo</h5>
+      <button type="button" class="close" data-dismiss="modal">×</button>
     </div>
+    <div class="modal-body">
+      @using (Html.BeginForm("UploadLogo", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+      {
+        <input type="hidden" value="@Session["UserID"]" name="UserID" />
+        @*<h5 style="color:red;font-size:12px">
+              ** Note **
+              &raquo;  Image size should not be less than 12KB and greater than 15 KB
+          </h5><hr />*@
+        <font color="black">
+          @*<input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" onchange="fileSizeValidate(this);fileSizeValidateMin(this);" />*@
+          <input type="file" name="files" id="uploadFile" style="width: 100%;" class="btn btn-default" />
+        </font><hr />
+        <input type="submit" class="btn btn-common" value="Upload" onclick="return CheckFileName();">
+      }
+    </div>
+    @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+  </div>
 
-    @*</div>*@
+  @*</div>*@
 </div>
 
 @{
-    ViewBag.Title = ViewBag.CompanyName;
+  ViewBag.Title = ViewBag.CompanyName;
 }
 @{
-    int UserID = ViewBag.CompanyID;
-    string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
-    int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
-    int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
+  int UserID = ViewBag.CompanyID;
+  string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
+  int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
+  int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
 
-    int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
+  int paymentstatus = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.PaymentStatus).FirstOrDefault();
 
-    int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
-    int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
-    int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
+  int lYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchYear).FirstOrDefault();
+  int lmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchMonth).FirstOrDefault();
+  int lday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.LaunchDay).FirstOrDefault();
 
-    int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
-    int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
-    int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
+  int pYear = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousYear).FirstOrDefault();
+  int pmonth = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousMonth).FirstOrDefault();
+  int pday = (int)db.Users.Where(k => k.ID == UserID).Select(k => k.PreviousDay).FirstOrDefault();
 
-    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-    DateTime prevd = new DateTime(pYear, pmonth, pday);
-    TimeSpan diff = lauchd.Subtract(prevd);
-    ViewBag.diff = diff.Days;
-    ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
-    ViewBag.Ndays = db.Users.Find(UserID).NDays;
+  DateTime lauchd = new DateTime(lYear, lmonth, lday);
+  DateTime prevd = new DateTime(pYear, pmonth, pday);
+  TimeSpan diff = lauchd.Subtract(prevd);
+  ViewBag.diff = diff.Days;
+  ViewBag.FixedDays = db.Users.Find(UserID).FixedDays;
+  ViewBag.Ndays = db.Users.Find(UserID).NDays;
 
 
-    string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
-    int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
-    int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
-    double TotalDaysRemaining = Fixeddays - DaysUsed;
+  string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+  int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+  int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+  double TotalDaysRemaining = Fixeddays - DaysUsed;
 
-    var totalDays = TotalDaysRemaining;
-    var totalYears = Math.Truncate(totalDays / 365);
-    var totalMonths = Math.Truncate((totalDays % 365) / 30);
-    var remainingDays = Math.Truncate((totalDays % 365) % 30);
+  var totalDays = TotalDaysRemaining;
+  var totalYears = Math.Truncate(totalDays / 365);
+  var totalMonths = Math.Truncate((totalDays % 365) / 30);
+  var remainingDays = Math.Truncate((totalDays % 365) % 30);
 
 }<!-- Start Content -->
- 
+
 <div id="content" style="margin-top:-32px">
-    <div class="">
-        <div class="row">
+  <div class="">
+    <div class="row">
 
-            <div class="col-3">
-                <div id="companyheadermobile" style="display:none;"></div>
-            </div>
-            <div class="col-9">
-                <div id="shopdetailsmobile" style="display:none;"></div>
-            </div>
+      <div class="col-3">
+        <div id="companyheadermobile" style="display:none;"></div>
+      </div>
+      <div class="col-9">
+        <div id="shopdetailsmobile" style="display:none;"></div>
+      </div>
 
-            <div class="col-lg-6 col-md-6 col-xs-12" id="shopdetails">
-                <div class="right-sideabr">
+      <div class="col-lg-6 col-md-6 col-xs-12" id="shopdetails">
+        <div class="right-sideabr">
 
-                    @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
-                    {
-                        <input type="hidden" value="@ViewBag.CompanyID" id="userid" />
-                        <h4>
-                            Manage Store
-                            @if (TotalNumberofShops >= NumberofShops)
-                            {
-                            @*<span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
-                                <a class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="glyphicon glyphicon-plus-sign"></i>Create New Shop</a>
-                            </span>*@
-                            }
-                            else
-                            {
-                                
-                                <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
-                                    <a href="~/Shops/Create/@ViewBag.CompanyID" class="btn btn-common" id="createshop" style="height:25px;padding:2px" title="Add New Store"> <i class="glyphicon glyphicon-plus-sign"></i>Create Store</a>
-                                </span>
-                            }
-                            <p  style="background-color:white;border-radius:5px;border:1px solid #BDE1AE;padding:2px;margin-top:2px; ">
-                                You can only create @NumberofShops shop(s) for your current plan &raquo; <b style="color:#002D95"> @PricingPlan</b> &laquo;
-                                <a class="btn btn-success" href="~/Users/BuyPlan?id=1" id="upgradeaccount" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px">
-                                    <i class="lni lni-licencse"></i> Upgrade Now
-                                </a> to enjoy more benefits of XAMAGOS
-                             </p>
+          @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+          {
+            <input type="hidden" value="@ViewBag.CompanyID" id="userid" />
+            <h4>
+              Manage Store
+              @if (TotalNumberofShops >= NumberofShops)
+              {
+                @*<span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
+                      <a class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="glyphicon glyphicon-plus-sign"></i>Create New Shop</a>
+                  </span>*@
+              }
+              else
+              {
 
-                                @*@if (ViewBag.diff > ViewBag.FixedDays)
-            {
-              //  mydata.Update_ShopStatus_to_Inactive_on_Expiry(UserID);
                 <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
-                        <a href="~/Shops/Create/@ViewBag.CompanyID" class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="lni-plus"></i></a>
-                    </span>
-            }
-            else
-            {
-                @*if (TotalNumberofShops > NumberofShops)
-                    {
-                        <br />
-                        <span style="color:red;font-size:11px;">
-                            Maximun number of shops reached for your current plan
+                  <a href="~/Shops/Create" class="btn btn-common" id="createshop" style="height:25px;padding:2px" title="Add New Store"> <i class="glyphicon glyphicon-plus-sign"></i>Create Store</a>
+                </span>
+              }
+              <p style="background-color:white;border-radius:5px;border:1px solid #BDE1AE;padding:2px;margin-top:2px; ">
+                You can only create @NumberofShops shop(s) for your current plan &raquo; <b style="color:#002D95"> @PricingPlan</b> &laquo;
+                <a class="btn btn-success" href="~/Users/BuyPlan" id="upgradeaccount" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px">
+                  <i class="lni lni-licencse"></i> Upgrade Now
+                </a> to enjoy more benefits of XAMAGOS
+              </p>
+
+              @*@if (ViewBag.diff > ViewBag.FixedDays)
+                {
+                  //  mydata.Update_ShopStatus_to_Inactive_on_Expiry(UserID);
+                    <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
+                            <a href="~/Shops/Create/@ViewBag.CompanyID" class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="lni-plus"></i></a>
                         </span>
+                }
+                else
+                {
+                    @*if (TotalNumberofShops > NumberofShops)
+                        {
+                            <br />
+                            <span style="color:red;font-size:11px;">
+                                Maximun number of shops reached for your current plan
+                            </span>
+                        }
+                        else
+                        {
+                    <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
+                        <a href="~/Shops/Create/@ViewBag.CompanyID" class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="lni-plus"></i>Create Shop</a>
+                    </span>
+                    // }
+                }*@
+
+            </h4>
+            @*if (db.Shops.Where(s => s.UserID == UserID).Count() < 1)
+              {
+                  <hr />
+                  <span class="badge badge-info" style="padding:10px;font-size:14px;">Click on <b>Create Shop</b> above to add shop and products.</span>
+              }*@
+
+            <ul class="list-item">
+              @*<li><a class="active" href="~/Shops/Create">Create New</a></li>*@
+              @foreach (var item in ViewBag.ShopsAdmin)
+              {
+                
+                if (item.Name != null)
+                {
+                  <li style="margin-bottom:1px;padding-bottom:0px">
+
+                    <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails" title="Click here to go to @item.Name" onclick="setObjectSession('ShopID',@item.ID);">
+
+                      <b>  <i class="lni-briefcase"></i> @item.Name </b>
+                      @if (item.ShopStatus == "Active")
+                      {<span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
                     }
                     else
                     {
-                <span class="full-time" style="color:white; background-color:white;padding:0px;margin:0px;vertical-align:top">
-                    <a href="~/Shops/Create/@ViewBag.CompanyID" class="btn btn-common" style="height:25px;padding:2px" title="Add New Shop"> <i class="lni-plus"></i>Create Shop</a>
-                </span>
-                // }
-            }*@
+                      <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
+                    }
+                    </a>
 
-</h4>
-                            @*if (db.Shops.Where(s => s.UserID == UserID).Count() < 1)
-                                {
-                                    <hr />
-                                    <span class="badge badge-info" style="padding:10px;font-size:14px;">Click on <b>Create Shop</b> above to add shop and products.</span>
-                                }*@
+                    @*@if (ViewBag.diff > ViewBag.FixedDays)
+                      {
+                                              <a style="color:#00B7F4;font-size:14px" href="#" title="Click here to go to @item.Name shop">
 
-                            <ul class="list-item">
-                                @*<li><a class="active" href="~/Shops/Create">Create New</a></li>*@
-                                @foreach (var item in ViewBag.ShopsAdmin)
+                                                  <b>  <i class="lni-briefcase"></i> @item.Name </b>
+                                                  @if (item.ShopStatus == "Active")
+                                                  { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
+                                                  }
+                                                  else
+                                                  {
+                                                      <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
+                                                  }
+
+                                              </a>
+                                          }
+                                          else
+                                          {
+                                              <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name">
+
+                                                  <b>  <i class="lni-briefcase"></i> @item.Name </b>
+                                                  @if (item.ShopStatus == "Active")
+                                                  { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
+                                                  }
+                                                  else
+                                                  {
+                                                      <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
+                                                  }
+                                              </a>
+
+
+                                          }*@
+                    <div class="contact-icon">
+                      <i class="lni-map-marker"></i>
+                      @{
+                        int sid = Convert.ToInt32(item.StateID);
+                        string State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                      }
+                      <a>@item.CountryRegion.Country - @State</a>
+                    </div>
+
+                    <div class="contact-icon">
+                      <i class="lni-phone-handset"></i>
+                      <a>@item.PhoneNumber</a>
+                    </div>
+
+                    <div class="contact-icon">
+                      <i class="lni-envelope"></i>
+                      <a>@item.Email</a>
+                    </div>
+                    <div class="contact-icon">
+                      <i class="lni-link"></i>
+                      <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></aa>
+                    </div>
+                    @*<div class="contact-icon">
+                          <i class="lni-link"></i>
+                          <a> Shop URL: </a><span style="color:#613bff;font-size:13px">marketsquare247.com/Shops/?shopURL=@item.ShopURL</span>
+                      </div>*@
+                    <div class="contact-icon">
+                      <i class="lni-map-marker"></i>
+                      <a style="font-size:10px"> Address: @item.Address </a>
+                    </div>
+                    <div class="contact-icon">
+                      <h4>Share Your Business</h4>
+                      <script>
+                        (function (d, s, id) {
+                          var js, fjs = d.getElementsByTagName(s)[0];
+                          if (d.getElementById(id)) return;
+                          js = d.createElement(s); js.id = id;
+                          js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                          fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+
+                      <!-- Your share button code -->
+
+                      <ul class="mt-4 footer-social">
+                        <li>
+                          @{
+                            string referallink1 = "https://xamagos.com/" + item.ShopURL;
+                          }
+                          <div class="fb-share-button"
+                               data-href="@referallink1"
+                               data-layout="button_count">
+                          </div>
+                        </li>
+                        <li><a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                        @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+                          <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                        <li>
+                          <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                            <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
+                          </a>
+                        </li>
+
+                      </ul>
+
+                    </div>
+
+
+                    @*<div class="contact-icon">
+                          <i class="lni-map-marker"></i>
+                          <a> Location:  @item.State.Name</a>
+                      </div>
+
+                      <div class="contact-icon">
+                          <i class="lni-phone-handset"></i>
+                          <a> Phone:&nbsp;&nbsp; @item.PhoneNumber</a>
+                      </div>
+
+                      <div class="contact-icon">
+                          <i class="lni-envelope"></i>
+                          <a> Email:&nbsp;&nbsp; @item.Email</a>
+                      </div>
+                      <div class="contact-icon">
+                          <i class="lni-link"></i>
+                          <a> Shop URL: </a><span style="color:#613bff;font-size:13px">www.myvshoponline.com/Shops/?shopURL=@item.ShopURL</span>
+                      </div>
+                      <div class="contact-icon">
+                          <i class="lni-map-marker"></i>
+                          <a> Address: @item.Address </a>
+                      </div>*@
+                  </li>
+                }
+
+              }
+            </ul>
+          }
+          else
+          {
+            <h4> Shops </h4>
+
+            <ul class="list-item">
+              @*<li><a class="active" href="~/Shops/Create">Create New</a></li>*@
+              @foreach (var item in ViewBag.Shops)
+              {
+                if (item.Name != null)
                 {
-                    if (item.Name != null)
-                    {
-                                        <li style="margin-bottom:1px;padding-bottom:0px">
+                  <li style="margin-bottom:1px;padding-bottom:0px">
+                    @*@if (ViewBag.diff > ViewBag.FixedDays)
+                      {
+                          <a style="color:#00B7F4;font-size:14px" href="#" title="Click here to go to @item.Name shop">
 
-                                            <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name" onclick="gotoShop(@item.ID)">
+                              <b>  <i class="lni-briefcase"></i> @item.Name </b>
+                          </a>
+                      }
+                      else
+                      {*@
+                    <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
 
-                                                <b>  <i class="lni-briefcase"></i> @item.Name </b>
-                                                @if (item.ShopStatus == "Active")
-                                                { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                }
-                                            </a>
+                      <b>  <i class="lni-briefcase"></i> @item.Name </b>
+                    </a>
+                    @*}*@
+                    <div class="contact-icon">
+                      <i class="lni-map-marker"></i>
+                      @{
+                        int sid = Convert.ToInt32(item.StateID);
+                        string State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
+                      }
+                      <a>@item.CountryRegion.Country - @State</a>
+                    </div>
 
-                                            @*@if (ViewBag.diff > ViewBag.FixedDays)
-                                                {
-                                                                        <a style="color:#00B7F4;font-size:14px" href="#" title="Click here to go to @item.Name shop">
+                    <div class="contact-icon">
+                      <i class="lni-phone-handset"></i>
+                      <a>@item.PhoneNumber</a>
+                    </div>
 
-                                                                            <b>  <i class="lni-briefcase"></i> @item.Name </b>
-                                                                            @if (item.ShopStatus == "Active")
-                                                                            { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                                            }
+                    <div class="contact-icon">
+                      <i class="lni-envelope"></i>
+                      <a>@item.Email</a>
+                    </div>
+                    <div class="contact-icon">
+                      <i class="lni-link"></i>
+                      <a> Shop URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></a>
+                    </div>
+                    @*<div class="contact-icon">
+                          <i class="lni-link"></i>
+                          <a> Shop URL: </a><span style="color:#613bff;font-size:13px">marketsquare247.com/Shops/?shopURL=@item.ShopURL</span>
+                      </div>*@
+                    <div class="contact-icon">
+                      <i class="lni-map-marker"></i>
+                      <a style="font-size:10px"> Address: @item.Address </a>
+                    </div>
 
-                                                                        </a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name">
+                  </li>
+                }
 
-                                                                            <b>  <i class="lni-briefcase"></i> @item.Name </b>
-                                                                            @if (item.ShopStatus == "Active")
-                                                                            { <span class="badge-info" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <span class="badge-danger" style="padding:2px;border-radius:3px;font-size:11px">@item.ShopStatus</span>
-                                                                            }
-                                                                        </a>
-
-
-                                                                    }*@
-                                            <div class="contact-icon">
-                                                <i class="lni-map-marker"></i>
-                                                @{
-                                                    int sid = Convert.ToInt32(item.StateID);
-                                                    string State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
-                                                }
-                                                <a>@item.CountryRegion.Country - @State</a>
-                                            </div>
-
-                                            <div class="contact-icon">
-                                                <i class="lni-phone-handset"></i>
-                                                <a>@item.PhoneNumber</a>
-                                            </div>
-
-                                            <div class="contact-icon">
-                                                <i class="lni-envelope"></i>
-                                                <a>@item.Email</a>
-                                            </div>
-                                            <div class="contact-icon">
-                                                <i class="lni-link"></i>
-                                                <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></aa>
-                                            </div>
-                                            @*<div class="contact-icon">
-                                                    <i class="lni-link"></i>
-                                                    <a> Shop URL: </a><span style="color:#613bff;font-size:13px">marketsquare247.com/Shops/?shopURL=@item.ShopURL</span>
-                                                </div>*@
-                                            <div class="contact-icon">
-                                                <i class="lni-map-marker"></i>
-                                                <a style="font-size:10px"> Address: @item.Address </a>
-                                            </div>
-                                            <div class="contact-icon">
-                                                <h4>Share Your Business</h4>
-                                                <script>
-                                                    (function (d, s, id) {
-                                                        var js, fjs = d.getElementsByTagName(s)[0];
-                                                        if (d.getElementById(id)) return;
-                                                        js = d.createElement(s); js.id = id;
-                                                        js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
-                                                        fjs.parentNode.insertBefore(js, fjs);
-                                                    }(document, 'script', 'facebook-jssdk'));</script>
-
-                                                <!-- Your share button code -->
-
-                                                <ul class="mt-4 footer-social">
-                                                    <li>
-                                                        @{
-                                                            string referallink1 = "https://xamagos.com/" + item.ShopURL;
-                                                        }
-                                                        <div class="fb-share-button"
-                                                             data-href="@referallink1"
-                                                             data-layout="button_count">
-                                                        </div>
-                                                    </li>
-                                                    <li><a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
-                                                    @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-                                                        <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
-                                                    <li>
-                                                        <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
-                                                            <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-
-                                            </div>
-
-
-                                            @*<div class="contact-icon">
-                                                    <i class="lni-map-marker"></i>
-                                                    <a> Location:  @item.State.Name</a>
-                                                </div>
-
-                                                <div class="contact-icon">
-                                                    <i class="lni-phone-handset"></i>
-                                                    <a> Phone:&nbsp;&nbsp; @item.PhoneNumber</a>
-                                                </div>
-
-                                                <div class="contact-icon">
-                                                    <i class="lni-envelope"></i>
-                                                    <a> Email:&nbsp;&nbsp; @item.Email</a>
-                                                </div>
-                                                <div class="contact-icon">
-                                                    <i class="lni-link"></i>
-                                                    <a> Shop URL: </a><span style="color:#613bff;font-size:13px">www.myvshoponline.com/Shops/?shopURL=@item.ShopURL</span>
-                                                </div>
-                                                <div class="contact-icon">
-                                                    <i class="lni-map-marker"></i>
-                                                    <a> Address: @item.Address </a>
-                                                </div>*@
-                                        </li>
-                                                                }
-
-                                                            }
-                            </ul>
-                                                            }
-                                                            else
-                                                            {
-                                                                <h4> Shops </h4>
-
-                                                                <ul class="list-item">
-                                                                    @*<li><a class="active" href="~/Shops/Create">Create New</a></li>*@
-                                                                    @foreach (var item in ViewBag.Shops)
-                                                                    {
-                                                                        if (item.Name != null)
-                                                                        {
-                                                                            <li style="margin-bottom:1px;padding-bottom:0px">
-                                                                                @*@if (ViewBag.diff > ViewBag.FixedDays)
-                                                                                    {
-                                                                                        <a style="color:#00B7F4;font-size:14px" href="#" title="Click here to go to @item.Name shop">
-
-                                                                                            <b>  <i class="lni-briefcase"></i> @item.Name </b>
-                                                                                        </a>
-                                                                                    }
-                                                                                    else
-                                                                                    {*@
-                                                                                <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@item.ID" title="Click here to go to @item.Name shop">
-
-                                                                                    <b>  <i class="lni-briefcase"></i> @item.Name </b>
-                                                                                </a>
-                                                                                @*}*@
-                                                                                <div class="contact-icon">
-                                                                                    <i class="lni-map-marker"></i>
-                                                                                    @{
-                                                                                        int sid = Convert.ToInt32(item.StateID);
-                                                                                        string State = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
-                                                                                    }
-                                                                                    <a>@item.CountryRegion.Country - @State</a>
-                                                                                </div>
-
-                                                                                <div class="contact-icon">
-                                                                                    <i class="lni-phone-handset"></i>
-                                                                                    <a>@item.PhoneNumber</a>
-                                                                                </div>
-
-                                                                                <div class="contact-icon">
-                                                                                    <i class="lni-envelope"></i>
-                                                                                    <a>@item.Email</a>
-                                                                                </div>
-                                                                                <div class="contact-icon">
-                                                                                    <i class="lni-link"></i>
-                                                                                    <a> Shop URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></a>
-                                                                                </div>
-                                                                                @*<div class="contact-icon">
-                                                                                        <i class="lni-link"></i>
-                                                                                        <a> Shop URL: </a><span style="color:#613bff;font-size:13px">marketsquare247.com/Shops/?shopURL=@item.ShopURL</span>
-                                                                                    </div>*@
-                                                                                <div class="contact-icon">
-                                                                                    <i class="lni-map-marker"></i>
-                                                                                    <a style="font-size:10px"> Address: @item.Address </a>
-                                                                                </div>
-
-                                                                            </li>}
-
-                                                                                        }
-                                                                </ul>
-                                                                                        }
-                </div>
-            </div>
-
-            <div id="companydetailsmobile" style="display:none;"></div>
-
-
-           
+              }
+            </ul>
+          }
         </div>
+      </div>
+
+      <div id="companydetailsmobile" style="display:none;"></div>
+
+
+
     </div>
+  </div>
 </div>
 <!-- End Content -->
 
 
 <script type="text/javascript">
-        function CheckFileName() {
-            var fileName = document.getElementById("uploadFile").value
-            //debugger;
-            if (fileName == "") {
-                alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
-                return false;
-            }
-            else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
-                return true;
-            else {
-                alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
-                return false;
-            }
-            return true;
-        }
+  function CheckFileName() {
+    var fileName = document.getElementById("uploadFile").value
+    //debugger;
+    if (fileName == "") {
+      alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+      return false;
+    }
+    else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
+      return true;
+    else {
+      alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+      return false;
+    }
+    return true;
+  }
 </script>
 
 
 <script type="text/javascript">
-        var maxSize = '15';
-        function fileSizeValidate(fdata) {
-            if (fdata.files && fdata.files[0]) {
-                var fsize = fdata.files[0].size / 1024;
-                if (fsize > maxSize) {
-                    alert('Maximum file size exceed! Image size should not be larger than 15KB');
-                    document.getElementById("uploadFile").value = null;
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        }
+  var maxSize = '15';
+  function fileSizeValidate(fdata) {
+    if (fdata.files && fdata.files[0]) {
+      var fsize = fdata.files[0].size / 1024;
+      if (fsize > maxSize) {
+        alert('Maximum file size exceed! Image size should not be larger than 15KB');
+        document.getElementById("uploadFile").value = null;
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 </script>
 
 <script type="text/javascript">
-        var minSize = '12';
-        function fileSizeValidateMin(fdata) {
-            if (fdata.files && fdata.files[0]) {
-                var fsize = fdata.files[0].size / 1024;
-                if (fsize < minSize) {
-                    alert('Minimum file size not reached! Image size should not be less than 12KB');
-                    document.getElementById("uploadFile").value = null;
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        }
+  var minSize = '12';
+  function fileSizeValidateMin(fdata) {
+    if (fdata.files && fdata.files[0]) {
+      var fsize = fdata.files[0].size / 1024;
+      if (fsize < minSize) {
+        alert('Minimum file size not reached! Image size should not be less than 12KB');
+        document.getElementById("uploadFile").value = null;
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 </script>
 
 <script type="text/javascript">
-        function myFunction(x) {
-            if (x.matches) { // If media query matches
-                // document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
-                document.getElementById("companydetailsmobile").style.display = "block";
-                document.getElementById("companydetails").style.display = "none";
-                document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
+  function myFunction(x) {
+    if (x.matches) { // If media query matches
+      // document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
+      document.getElementById("companydetailsmobile").style.display = "block";
+      document.getElementById("companydetails").style.display = "none";
+      document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
 
 
-                document.getElementById("companyheadermobile").style.display = "block";
-                document.getElementById("companyheader").style.display = "none";
-                document.getElementById("companyheadermobile").innerHTML = document.getElementById("companyheader").innerHTML;
-                document.getElementById("companyname").style.display = "none";
-                document.getElementById("ondesktopname").style.display = "none";
-                document.getElementById("contactinfo").style.display = "none";
-                document.getElementById("shopdetailsmobile").style.display = "block";
-                document.getElementById("shopdetails").style.display = "none";
-                document.getElementById("shopdetailsmobile").innerHTML = document.getElementById("shopdetails").innerHTML;
-                document.getElementById("companynameonlymobile").style.display = "block";
-                document.getElementById("companynameonlymobile").innerHTML = document.getElementById("ondesktopname").innerHTML;
+      document.getElementById("companyheadermobile").style.display = "block";
+      document.getElementById("companyheader").style.display = "none";
+      document.getElementById("companyheadermobile").innerHTML = document.getElementById("companyheader").innerHTML;
+      document.getElementById("companyname").style.display = "none";
+      document.getElementById("ondesktopname").style.display = "none";
+      document.getElementById("contactinfo").style.display = "none";
+      document.getElementById("shopdetailsmobile").style.display = "block";
+      document.getElementById("shopdetails").style.display = "none";
+      document.getElementById("shopdetailsmobile").innerHTML = document.getElementById("shopdetails").innerHTML;
+      document.getElementById("companynameonlymobile").style.display = "block";
+      document.getElementById("companynameonlymobile").innerHTML = document.getElementById("ondesktopname").innerHTML;
 
 
 
 
-            } else {
-                document.getElementById("companydetailsmobile").style.display = "none";
-                document.getElementById("companydetails").style.display = "block";
-                document.getElementById("companyheadermobile").style.display = "none";
-                document.getElementById("companyheader").style.display = "block";
-                document.getElementById("contactinfo").style.display = "block";
+    } else {
+      document.getElementById("companydetailsmobile").style.display = "none";
+      document.getElementById("companydetails").style.display = "block";
+      document.getElementById("companyheadermobile").style.display = "none";
+      document.getElementById("companyheader").style.display = "block";
+      document.getElementById("contactinfo").style.display = "block";
 
-            }
-        }
+    }
+  }
 
-        var x = window.matchMedia("(max-width: 700px)")
-        myFunction(x) // Call listener function at run time
-        x.addListener(myFunction) // Attach listener function on state changes
+  var x = window.matchMedia("(max-width: 700px)")
+  myFunction(x) // Call listener function at run time
+  x.addListener(myFunction) // Attach listener function on state changes
 </script>
 
 <!-- Content section End -->
 <script type="text/javascript">
-        $('.Editor').jqte();
+  $('.Editor').jqte();
 
-        // settings of status
-        var jqteStatus = true;
-        $(".status").click(function () {
-            jqteStatus = jqteStatus ? false : true;
-            $('.Editor').jqte({ "status": jqteStatus })
-        });
+  // settings of status
+  var jqteStatus = true;
+  $(".status").click(function () {
+    jqteStatus = jqteStatus ? false : true;
+    $('.Editor').jqte({ "status": jqteStatus })
+  });
 </script>
 
 
+
+
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/bundles/jqueryval")
 }
 

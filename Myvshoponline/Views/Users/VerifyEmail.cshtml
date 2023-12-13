@@ -1,6 +1,6 @@
 @model Myvshoponline.Models.ForgotPasswordViewModel
 @{ 
-    ViewBag.Title = "Verification Link";
+    ViewBag.Title = "Verify Email";
 }
 
 <body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
@@ -13,8 +13,8 @@
 
                 <div class="page-login-form box">
                    
-                    <div class="alert alert-success" style="font-size:13px;background-color:white;border-color:#0d9bc8">
-                    Email Verification
+                    <div class="alert alert-success" style="font-size:15px;background-color:white;border-color:#0d9bc8">
+                      <span style="color: dodgerblue;font-size:20px">Email Verification</span>
                     <hr />
                     Verification code has been sent to @ViewBag.email <br /><br />
                    
@@ -68,7 +68,8 @@
                     $.each(data, function (key, item) {
                         if(item.OTPExist=='true')
                         {
-                            window.location = '../BusinessLanding/' + item.ID;
+                            //window.location = '../BusinessLanding';
+                          window.location = '../Users/Dashboard';
                             //var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
                             //$("#process").html(html).show();
                         }
@@ -94,21 +95,21 @@
     function Resend_VerifyOTP() {
         var _UserID = document.getElementById("userid").value;
         
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to resend verification code!",
-            icon: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!',
-            showDenyButton: true,
-            denyButtonText: 'No',
-        }).then((result) => {
-            if (result.isDenied) {
+        //Swal.fire({
+        //    title: 'Are you sure?',
+        //    text: "You want to resend verification code!",
+        //    icon: 'info',
+        //    showCancelButton: false,
+        //    confirmButtonColor: '#3085d6',
+        //    cancelButtonColor: '#d33',
+        //    confirmButtonText: 'Yes!',
+        //    showDenyButton: true,
+        //    denyButtonText: 'No',
+        //}).then((result) => {
+        //    if (result.isDenied) {
 
-            }
-            else if (result.isConfirmed) {
+        //    }
+            /*else if (result.isConfirmed) {*/
               $("#lnkDintgetcode").css("display", "none");
               $("#resendotp").css("display", "block");
             var url = "/Users/Resend_VerifyRegisterOTP/";
@@ -132,10 +133,13 @@
                 }
             });
 
-            }
-        })
+          /*  }*/
+      /*  })*/
 
     }
+</script>
+<script>
+  readLocalStorage("uuid", "UsersController", "VerifyEmail");
 </script>
 
 @section Scripts {

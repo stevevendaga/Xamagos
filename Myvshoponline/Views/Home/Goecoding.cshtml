@@ -1,74 +1,72 @@
-﻿<script defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
-</script>
- 
-    
-    <h3>My Google Maps Demo</h3>
-    <div id="floating-panel">
-        <input id="address" type="text" value="Sydney, NSW" />
-        <input id="submit" type="button" value="Geocode" />
-    </div>
-    <!--The div element for the map -->
-    <div id="map"></div>
-   
-    <style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Maps Demo</title>
+  <style>
     /* Set the size of the div element that contains the map */
     #map {
-        height: 400px; /* The height is 400 pixels */
-        width: 100%; /* The width is the width of the web page */
+      height: 400px; /* The height is 400 pixels */
+      width: 100%; /* The width is the width of the web page */
     }
-</style>
+  </style>
+</head>
+<body>
 
-<!--GEOCODING-->
-<script defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
-</script>
+  <h3>My Google Maps Demo</h3>
+  <div id="floating-panel">
+    @*<input id="address" type="text" value="Sydney, NSW" />*@
+    <input id="submit" type="button" value="Geocode" />
+  </div>
 
+  <!-- The div element for the map -->
+  <div id="map"></div>
 
-<script>
-      "use strict";
+  <script defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgozqaauyOduNZOhJnLIdEkN4flw4bHDk&callback=initMap">
+  </script>
 
-      function initMap() {
-          const map = new google.maps.Map(document.getElementById("map"), {
-          //zoom: 8,
-          zoom: 15,
-          center: {
-              lat: 9.0820,
-              lng: 8.6753
-          }
-        });
-          const geocoder = new google.maps.Geocoder();
-          const infowindow = new google.maps.InfoWindow();
-          document.getElementById("submit").addEventListener("click", () => {
-           geocodeAddress(geocoder, map, infowindow);
+  <script>
+    "use strict";
+
+    const locations = [
+      { address: "Biriniwa", coordinates: { lat: 10.0578443, lng: 10.9819667 } },
+      { address: "Gwaram", coordinates: { lat: -37.8136, lng: 144.9631 } },
+      // Add more locations as needed
+    ];
+
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: { lat: -33.8688, lng: 151.2093 }
+      });
+
+      const geocoder = new google.maps.Geocoder();
+      const infowindow = new google.maps.InfoWindow();
+
+      document.getElementById("submit").addEventListener("click", () => {
+        for (const location of locations) {
+          geocodeAddress(geocoder, map, infowindow, location);
+        }
+      });
+    }
+
+    function geocodeAddress(geocoder, map, infowindow, location) {
+      geocoder.geocode({ address: location.address }, (results, status) => {
+        if (status === "OK") {
+          const marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location,
           });
 
-      }
-
-
-      function geocodeAddress(geocoder, map, infowindow) {
-        const address = document.getElementById("address").value;
-        geocoder.geocode({ address: address }, (results, status) => {
-            var loc = [];
-            if (status === "OK") {
-                //Latitude and longitude
-                loc[0] = results[0].geometry.location.lat();
-                loc[1] = results[0].geometry.location.lng();
-                //=====               
-                map.setCenter(results[0].geometry.location);
-                const marker= new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location,
-                });
-               infowindow.setContent(results[0].formatted_address);
-               infowindow.open(map, marker);
-            } else {
-              alert(
-                "Geocode was not successful for the following reason: " + status
-              );
-            }
-          }
-        );
-      }
-</script>
-<!-- END GEOCODING-->
+          infowindow.setContent(results[0].formatted_address);
+          infowindow.open(map, marker);
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

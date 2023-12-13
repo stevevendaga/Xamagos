@@ -25,14 +25,14 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult MyOrders(int? id)
+        public ActionResult MyOrders()
         {
             if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null)
-            {
+            int id = Convert.ToInt32(Session["UserID"]);
+            
                 ViewBag.CompanyID = id;
                 ViewBag.Orders = db.Orders.Where(o => o.UserID == id && o.OnCart == "No").Count();
                 ViewBag.PendingPayment = db.Orders.Where(o => o.UserID == id && o.PaymentStatusID == 0 && o.OnCart == "No").Count();
@@ -43,8 +43,6 @@ namespace Myvshoponline.Controllers
                 ViewBag.Shops = db.CustomerShops.Where(s => s.UserID == id).Select(s => s.Shop).ToList();
                 var orders = db.Orders.Include(o => o.PaymentStatu).Include(o => o.Product).Include(o => o.ShopCustomer);
                 return View(orders.Where(o => o.UserID == id && o.OnCart == "No").OrderByDescending(o => o.DateOrdered).ToList());
-            }
-            return Redirect("~/Home/AccessDenied");
         }
 
 

@@ -45,44 +45,44 @@ namespace Myvshoponline.Controllers
             }
             return Redirect("~/Home/AccessDenied");
         }
-        public ActionResult BusinessLanding(int? id)
+        public ActionResult BusinessLanding()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
 
-
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+            int id =Convert.ToInt32(Session["UserID"]);
+            if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -104,44 +104,44 @@ namespace Myvshoponline.Controllers
 
         }
 
-        public ActionResult AdminLanding(int? id)
+        public ActionResult AdminLanding()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
+      int id = Convert.ToInt32(Session["UserID"]);
 
-
-            if (id != null)
+      if (Session["UserID"]!= null)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -301,26 +301,43 @@ namespace Myvshoponline.Controllers
       
             return View();
         }
-        public ActionResult VerificationLinkSent(int? id)
+        public ActionResult VerifyEmail()
         {
-            if (id != null)
-            {
-                ViewBag.email = db.Users.Find(id).Email;
-                ViewBag.vid = id;
-                return View();
-            }
-            return View();
+        //Send OTP
+        int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
+        Session["OTP_Register"] = RegisterOTP_Numeric;
+      //Remove this for deployment
+        int userid = Convert.ToInt32(Session["UserID"]);
+        var user = db.Set<User>().Find(userid);
+        user.HardToken =Convert.ToString(RegisterOTP_Numeric);
+        db.SaveChanges();
+      //==================//
+      //==================SEND MAIL============================//
+      var newname = db.Users.Find(userid).CompanyName.TrimEnd().TrimStart();
+      string title = "XAMAGOS - Email Verification!";
+      string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(newname.ToLower()) + "</strong>, <br><br>";
+      msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your account on XAMAGOS.";
+      msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+      msg += "<br><hr>";
+      msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+      //mydata.SendMail(email, title, msg);
+      
+        ViewBag.email = db.Users.Find(userid).Email;
+        ViewBag.vid = userid;
+        return View();
         }
 
-        public JsonResult Verify_RegisterOTP(string otp_register, int UserID)
+      public JsonResult Verify_RegisterOTP(string otp_register)
         {
-            
-
+      int UserID = Convert.ToInt32(Session["UserID"]);
       if (Convert.ToString(Session["OTP_Register"]) == otp_register)
             {
+                
                 var user = db.Set<User>().Find(UserID);
                 user.EmailVerify = 1;
                 db.SaveChanges();
+                //Expire OTP
+                Session["OTP_Register"] = null;
                 string UserLoggedIn = db.Users.Find(UserID).CompanyName;
                 string UserRole = db.Users.Find(UserID).UserRole.Role;
                 Session["UserRole"] = UserRole;
@@ -339,25 +356,14 @@ namespace Myvshoponline.Controllers
                 msg += "<br><hr>";
                 msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
 
-                mydata.SendMail(user.Email, title, msg);
+                //mydata.SendMail(user.Email, title, msg);
                 //==================SEND SMS=========================//
                 //string sms ="Market Square247 welcomes you.Hello " + user.CompanyName + ", your account has been created successfully.";
                 string sms = "Xamagos welcomes you. Your account has been created successfully. Enjoy the world of Xamagos. Website: www.xamagos.com";
                 //sms+= "Email:info@marketsqaure247.com";
-                mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+                //mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
                 //==================END SEND SMS=========================//
 
-                //string title = "marketsquare247.com welcomes you!";
-                //string msg = "<a href='https://marketsquare247.com' title='Market Square247'> <img src='https://marketsquare247.com/Images/logosquare.png' style='width: 100px; height: 100px' /></a>" + "<hr>" + " Hi " + user.CompanyName + "<br>" +
-                //"Congratulations!" + "<br/><br>" +
-                //"Your account has been created successfully. <hr>" +
-                //"Do you know that you can advertize your products on social media using MarketSquare247?" +
-                //HttpUtility.HtmlDecode(db.EmailMessages.Where(s => s.Subject == "Advertize your products/services on social media using MarketSquare247 social media API").Select(s => s.Message).FirstOrDefault()) +
-                //"<hr>Your Login Details <br> Your Email:" + user.Email + "<br/>" +
-                //"Your Password:" + user.Password + "<hr/>" +
-                //"Regards:  marketsquare247.com" + "<br>" +
-                //"Email: info@marketsqaure247.com";
-                // mydata.SendMail(user.Email, title, msg);
                 var result = from p in db.Users
                              where p.ID == UserID
                              select new { ID = p.ID, OTPExist = "true" };
@@ -373,7 +379,7 @@ namespace Myvshoponline.Controllers
 
         }
 
-        public JsonResult Resend_VerifyRegisterOTP(int UserID)
+        public JsonResult Resend_VerifyRegisterOTP(int? UserID)
         {
             int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
             Session["OTP_Register"] = RegisterOTP_Numeric;
@@ -557,7 +563,7 @@ namespace Myvshoponline.Controllers
             return View(user);
         }
 
-        public JsonResult SignUpAjax(string name, string phone,string email,string sex,string state, string address, string password,int countryid)
+        public JsonResult SignUpAjax(string name, string phone,string email,string sex,string state, string address, string password,int? countryid)
         {
               if (db.Users.Where(s => s.Email == email && s.EmailVerify==1).Count() ==1)
                 {
@@ -575,7 +581,7 @@ namespace Myvshoponline.Controllers
                 //return Redirect("~/Users/VerificationLinkSent/?id=" + UserID + "&ax=1");
                 var result = from p in db.Users
                              where p.Email == email
-                             select new { GotoVerification = "true", userid = p.ID };
+                             select new { GotoVerification = "true", userid = Crypto.HashPassword(Convert.ToString(p.ID)) };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else if (db.Users.Where(s => s.PhoneNumber == phone).Count() >0)
@@ -617,7 +623,9 @@ namespace Myvshoponline.Controllers
                 user.FixedDays = TotalNumberofdays;
                 //==End of expiry
                 user.resetkey = resetkey;
-                user.HardToken = Convert.ToString(mydata.Generate_OTP_Numeric());
+                //Open this one after testing offline
+                //user.HardToken = Convert.ToString(mydata.Generate_OTP_Numeric());
+                user.HardToken =Convert.ToString(RegisterOTP_Numeric);
                 // user.resetkey =Convert.ToString(RegisterOTP_Numeric);
                 user.Email = email;
                 user.Username = email;
@@ -632,9 +640,9 @@ namespace Myvshoponline.Controllers
                 user.UserRoleID = db.UserRoles.Where(u => u.Role == "Shop Admin").Select(u => u.ID).FirstOrDefault();
                 db.Users.Add(user);
                 db.SaveChanges();
-                string UserLoggedIn = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.CompanyName).FirstOrDefault();
-                string UserRole = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.UserRole.Role).FirstOrDefault();
-                int UserID = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.ID).FirstOrDefault();
+                //string UserLoggedIn = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.CompanyName).FirstOrDefault();
+                //string UserRole = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.UserRole.Role).FirstOrDefault();
+                //int UserID = db.Users.Where(s => s.Username == email && s.Password == password).Select(s => s.ID).FirstOrDefault();
               //Session["UserRole"] = UserRole;
               //Session["Name"] = UserLoggedIn;
               //Session["username"] = user.Username;
@@ -655,7 +663,7 @@ namespace Myvshoponline.Controllers
                 msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
                 msg += "<br><hr>";
                 msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
-                mydata.SendMail(email, title, msg);
+               //mydata.SendMail(email, title, msg);
               
                 //==================END SEND MAIL=========================//
 
@@ -665,12 +673,18 @@ namespace Myvshoponline.Controllers
                 {
                     Directory.CreateDirectory(Server.MapPath("~/BusinessImages/" + user.CompanyName + user.HardToken));
                 }
-                //return Redirect("~/Account/Login/?ax=1");
-                // return Redirect("~/Users/BusinessLanding/"+UserID+"?ax=1");
-                //return Redirect("~/Users/VerificationLinkSent/?id=" + user.ID + "&ax=1");
-                var result = from p in db.Users
+        //return Redirect("~/Account/Login/?ax=1");
+        // return Redirect("~/Users/BusinessLanding/"+UserID+"?ax=1");
+        //return Redirect("~/Users/VerificationLinkSent/?id=" + user.ID + "&ax=1");
+
+        //Set userid session
+
+        int UserID = db.Users.Where(s => (s.Email == email)).Select(s => s.ID).FirstOrDefault();
+        Session["UserID"] = UserID;
+
+        var result = from p in db.Users
                              where p.Email == email
-                             select new { GotoVerificationSent = "true", userid = p.ID };
+                             select new { GotoVerificationSent = "true", userid =p.ID };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }       
         }
@@ -1117,47 +1131,48 @@ namespace Myvshoponline.Controllers
 
 
 
-        public ActionResult Dashboard(int? id)
+        public ActionResult Dashboard()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
-            if (Session["UserID"] == null)
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
+              int id = Convert.ToInt32(Session["UserID"]);
+              if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
 
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+            if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1179,44 +1194,44 @@ namespace Myvshoponline.Controllers
 
         }
 
-        public ActionResult Manageshop(int? id)
+        public ActionResult Manageshop()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
 
-
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+      int id = Convert.ToInt32(Session["UserID"]);
+      if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1238,44 +1253,44 @@ namespace Myvshoponline.Controllers
 
         }
 
-        public ActionResult MyProfile(int? id)
+        public ActionResult MyProfile()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
+      int id = Convert.ToInt32(Session["UserID"]);
 
-
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+      if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1297,44 +1312,44 @@ namespace Myvshoponline.Controllers
 
         }
          
-        public ActionResult AccountUpgrade(int? id)
+        public ActionResult AccountUpgrade()
         {
-            //EXPIRY CHECK
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
 
-
-            if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+      int id = Convert.ToInt32(Session["UserID"]);
+      if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1380,14 +1395,15 @@ namespace Myvshoponline.Controllers
            
         }
 
-        public ActionResult AccountVerification(int? id)
+        public ActionResult AccountVerification()
         {
               if (Session["UserID"] == null)
               {
                 return Redirect("~/Home/AccessDenied");
               }
+      int id = Convert.ToInt32(Session["UserID"]);
 
-      if (id != null && db.Users.Where(s => s.ID == id).Count() == 1)
+      if (db.Users.Where(s => s.ID == id).Count() == 1)
             {
                 // int UserID = Convert.ToInt32(mydata.DecodeFrom64(""+id));
                 ViewBag.s = db.Shops.Where(s => s.UserID == id);
@@ -1434,6 +1450,7 @@ namespace Myvshoponline.Controllers
         if (mydata.Is_Password_Verified(db.Users.Where(s => (s.Email == Username || s.PhoneNumber == Username)).Select(s => s.Password).FirstOrDefault(), password))
         {
           int UserID = db.Users.Where(s => (s.Email == Username || s.PhoneNumber == Username)).Select(s => s.ID).FirstOrDefault();
+          Session["UserID"] = UserID;
           int emailverify = Convert.ToInt32(db.Users.Where(s => (s.Email == Username || s.PhoneNumber == Username)).Select(s => s.EmailVerify).FirstOrDefault());
           if (emailverify == 1)
           {
@@ -1444,7 +1461,7 @@ namespace Myvshoponline.Controllers
             Session["Name"] = UserLoggedIn;
             Session["username"] = Username;
             // Session["password"]=Password;
-            Session["UserID"] = UserID;
+            
             // return Redirect("~/Users/BusinessLanding/"+mydata.EncodePasswordToBase64(""+UserID));
             if (UserRole == "Super Admin" || UserRole == "Site Admin" || UserRole == "Marketer" || UserRole == "Delivery Agent")
             {

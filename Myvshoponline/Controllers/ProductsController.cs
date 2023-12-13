@@ -32,13 +32,15 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Home/AccessDenied");
         }
 
-        public ActionResult ProductCategoryDetails(int? id, int? sid,string search)
+        public ActionResult ProductCategoryDetails(string search)
         {
-            if(db.ProductCategories.Where(s=>s.ID==id).Count()==0 || db.Shops.Where(s=>s.ID == sid).Count() == 0 )
+              int id = Convert.ToInt32(Session["ProductCategoryID"]);
+              int sid = Convert.ToInt32(Session["ShopID"]);
+              if (db.ProductCategories.Where(s=>s.ID==id).Count()==0 || db.Shops.Where(s=>s.ID == sid).Count() == 0 )
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null && sid!=null)
+            if (Session["ProductCategoryID"] != null && Session["ShopID"] != null)
             {
                 ViewBag.Products = db.ShopProductCategories.Where(s => s.ShopID == sid).ToList();
                 ViewBag.RelatedProducts = db.Products.Where(s => s.ProductCategoryID == id && s.ShopID!=sid).ToList().Take(10);
@@ -87,15 +89,18 @@ namespace Myvshoponline.Controllers
             }
             return Redirect("~/Home/AccessDenied");
         }
-        public ActionResult ProductDetails(int? id, int? sid)
+      
+    public ActionResult ProductDetails()
         {
-           
+            int id =Convert.ToInt32(Session["ProductID"]);
+      //int sid= Convert.ToInt32(Session["ShopID"]);
+            int sid = db.Products.Where(s=>s.ID==id).Select(s=>s.ShopID).FirstOrDefault();
             if (db.Products.Where(s => s.ID == id).Count() == 0 || db.Shops.Where(s => s.ID == sid).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
             }
            // string ShopStatusCount = db.Shops.Where(s => s.ID == sid).Select(s=>s.ShopStatus).FirstOrDefault();
-            if (id != null)
+            if (Session["ProductID"] != null)
             {
                 ProductVisit prod = new ProductVisit();
                 prod.Date = DateTime.Now;
@@ -140,15 +145,16 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult ProductDetailsSubitems(int? id, int? sid)
+        public ActionResult ProductDetailsSubitems()
         {
-            if (db.ProductSubProducts.Where(s => s.ID == id).Count() == 0 || db.Shops.Where(s => s.ID == sid).Count() == 0)
+          int id = Convert.ToInt32(Session["ProductID"]);
+          int sid = Convert.ToInt32(Session["SessionID"]);
+          if (db.ProductSubProducts.Where(s => s.ID == id).Count() == 0 || db.Shops.Where(s => s.ID == sid).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null)
+            if (Session["ProductID"] != null)
             {
-
                 ProductVisit prod = new ProductVisit();
                 prod.Date = DateTime.Now;
                 prod.ProductSubItemID =id;
@@ -420,16 +426,14 @@ namespace Myvshoponline.Controllers
         }
 
         // GET: Products/Create
-        public ActionResult Create(int?id)
+        public ActionResult Create()
         {
+            int id = Convert.ToInt32(Session["ShopID"]);
             if (db.Shops.Where(s => s.ID == id).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if(id==null)
-            {
-                return Redirect("~/Home/AccessDenied");
-            }
+         
             int ShopID =(int) id;
             int UserID = db.Shops.Where(s => s.ID == ShopID).Select(s => s.User.ID).FirstOrDefault();
             if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == UserID)
@@ -450,16 +454,14 @@ namespace Myvshoponline.Controllers
 
 
 
-        public ActionResult MyProducts(int? id)
+        public ActionResult MyProducts()
         {
+            int id =Convert.ToInt32(Session["ShopID"]);
             if (db.Shops.Where(s => s.ID == id).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id == null)
-            {
-                return Redirect("~/Home/AccessDenied");
-            }
+           
             int ShopID = (int)id;
             int UserID = db.Shops.Where(s => s.ID == ShopID).Select(s => s.User.ID).FirstOrDefault();
             if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == UserID)
@@ -630,9 +632,10 @@ namespace Myvshoponline.Controllers
         }
 
         // GET: Products/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit()
         {
-            if (id == null)
+            int id = Convert.ToInt32(Session["ProductID"]);
+            if (Session["ProductID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
@@ -665,17 +668,21 @@ namespace Myvshoponline.Controllers
         [ValidateInput(false)]
         public ActionResult Edit([Bind(Include = "ID,ShopID,Name,Details,ProductCategoryID,ProductStatusID,Amount,QuantityinStock,DateCreated,PurchasePrice,Currency,Published,Ready_for_Publishing,Negotiable")] Product product)
         {
-            
+            if (Session["ProductID"] == null)
+            {
+              return Redirect("~/Home/AccessDenied");
+            }
+
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
-            string up =Request.Form["un_pub"];
-            if (up=="1")
+            //string up =Request.Form["un_pub"];
+            if (product.Published==1)
             {
-                return Redirect("~/Products/ViewProducts/?id=" + product.ShopID + "&un_pub=1");
+                return Redirect("~/Products/ViewProducts/?un_pub=1");
             }
             else
             {
-                return Redirect("~/Products/ViewProducts/?id=" + product.ShopID + "&un_pub=0");
+                return Redirect("~/Products/ViewProducts/?un_pub=0");
             }
 
             //return Redirect("~/Products/ProductCategoryDetails/?id=" + product.ProductCategoryID + "&sid=" + product.ShopID);
@@ -774,8 +781,9 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult Upload_Product_Picture_from_ViewProducts(HttpPostedFileBase[] files, int ShopID, int ProductID)
+        public ActionResult Upload_Product_Picture_from_ViewProducts(HttpPostedFileBase[] files, int ProductID)
         {
+            int ShopID = Convert.ToInt32(Session["ShopID"]);
             int un_pub = Convert.ToInt32(Request.Form["un_pub"]);
             Random random = new Random();
             //   Random generator = new Random();
@@ -830,10 +838,10 @@ namespace Myvshoponline.Controllers
 
 
         // GET: Products/Delete/5
-        public ActionResult Delete(int? sid,int?id,int?un_pub)
+        public ActionResult Delete(int?id,int?un_pub)
         {
-            
-           if (id != null)
+          int sid = Convert.ToInt32(Session["ShopID"]);
+          if (id != null)
             {
                 if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Products.Find(id).Shop.UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
                 {
@@ -866,8 +874,9 @@ namespace Myvshoponline.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ImportProducts(int?id)
+        public ActionResult ImportProducts()
         {
+            int id = Convert.ToInt32(Session["ShopID"]);
             if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(id).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
                 int UserID = (int)Session["UserID"];
@@ -882,11 +891,13 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult ViewProducts(int? id,int? un_pub)
+        public ActionResult ViewProducts(int? un_pub)
         {
-            if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(id).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
+          int id =Convert.ToInt32(Session["ShopID"]);
+
+        if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(id).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
-                int UserID =(int)Session["UserID"];
+              int UserID =(int)Session["UserID"];
                 ViewBag.ShopID = id;
                 ViewBag.ShopName = db.Shops.Find(id).Name;
                 ViewBag.UserID = UserID;
@@ -964,9 +975,10 @@ namespace Myvshoponline.Controllers
             return View();
         }
 
-        public ActionResult Upload_Products(HttpPostedFileBase filequestions,int MainShopID)
+        public ActionResult Upload_Products(HttpPostedFileBase filequestions)
         {
-            DataSet ds = new DataSet();
+           int MainShopID = Convert.ToInt32(Session["ShopID"]);
+           DataSet ds = new DataSet();
             //check file lenght 
             if (Request.Files["file"].ContentLength > 0)
             {
@@ -1078,7 +1090,7 @@ namespace Myvshoponline.Controllers
                     db.Products.Add(pro);
                     db.SaveChanges();
                 }
-                return Redirect("~/Products/ViewProducts?id="+MainShopID+"&un_pub=1");
+                return Redirect("~/Products/ViewProducts/?un_pub=1");
             }
             else
             {
@@ -1112,9 +1124,9 @@ namespace Myvshoponline.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Publish_Products(int ShopID)
+        public ActionResult Publish_Products()
         {
-            
+            int ShopID = Convert.ToInt32(Session["ShopID"]);
             var prod = db.Products.Where(s => s.ShopID == ShopID && s.Ready_for_Publishing==1 && s.Published==0 && s.ProductStatusID==2).ToList();
             foreach (var item in prod)
             {
@@ -1132,11 +1144,12 @@ namespace Myvshoponline.Controllers
                 }
             }
           
-            return Redirect("~/Products/ViewProducts?id=" + ShopID + "&un_pub=0");
+            return Redirect("~/Products/ViewProducts/?un_pub=0");
         }
 
-        public ActionResult Un_Publish_Product(int id,int ShopID)
+        public ActionResult Un_Publish_Product(int id)
         {
+            int ShopID = Convert.ToInt32(Session["ShopID"]);
             var unpub = db.Set<Product>().Find(id);
             unpub.Published = 0;
             unpub.ProductStatusID = 2;

@@ -3,12 +3,12 @@
 @{
     ViewBag.Title = "View Products";
     MyvshoponlineEntities db = new MyvshoponlineEntities();
-    int ShopID =Convert.ToInt32(Request.QueryString["id"]);
+    int ShopID =Convert.ToInt32(Session["ShopID"]);
 }
 
 
 <div id="content" style="margin-top:0px;">
-    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts/@ViewBag.ShopID"> Back to Products Menu </a> </h5>
+    <h5 style="font-size:12px" class="h5"> <a href="~/Users/Dashboard"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Products/MyProducts"> Back to Products Menu </a> </h5>
 
     @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (int)Session["UserID"] == (int)ViewBag.UserID)
     {
@@ -79,7 +79,7 @@
             <div class="col-6 col-md-3">
                 <h5 style="font-size:15px;">
                     <span class="badge badge-success"> Published</span> <span class="badge badge-info">@db.Products.Where(s => s.ShopID == ShopID && s.ProductStatusID == 1).Count()</span>
-                    <a href="~/Products/ViewProducts?id=@Request.QueryString["id"]&un_pub=0" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View published products">
+                    <a href="~/Products/ViewProducts/?un_pub=0" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View published products">
                         <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i></font>
                     </a>
                 </h5>
@@ -88,7 +88,7 @@
 
                 <h5 style="font-size:15px;">
                     <span class="badge badge-warning"> Unpublished</span> <span class="badge badge-info">@db.Products.Where(s => s.ShopID == ShopID && s.ProductStatusID == 2).Count()</span>
-                    <a href="~/Products/ViewProducts?id=@Request.QueryString["id"]&un_pub=1" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View unpublished products">
+                    <a href="~/Products/ViewProducts/?un_pub=1" class="btn btn-common" style="padding-top:0.5px;padding-bottom:0.5px;padding-left:8px;padding-right:8px;" title="View unpublished products">
                         <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i></font>
                     </a>
                 </h5>
@@ -120,7 +120,7 @@
         @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
         {
             <span style="margin-top:5px;">
-                <a href="~/Products/Publish_Products?ShopID=@Request.QueryString["id"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                <a href="~/Products/Publish_Products" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
                     <font style="color:white">  <i class="glyphicon glyphicon-cloud-upload"></i> Publish</font>
                 </a>
             </span>
@@ -129,7 +129,7 @@
             @{
                             int pcid =(db.ShopProductCategories.Where(s => s.ShopID == ShopID).Select(s => s.ProductCategoryID).FirstOrDefault()==null?0: (int)db.ShopProductCategories.Where(s => s.ShopID == ShopID).Select(s => s.ProductCategoryID).FirstOrDefault());
                         }
-                <a href = "../../Products/ProductCategoryDetails?sid=@Request.QueryString["id"]&id=@pcid" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
+                <a href = "../../Products/ProductCategoryDetails/?id=@pcid" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:2px;">
                     <font style = "color:white">  <i class="glyphicon glyphicon-eye-close"></i> Preview</font>
                 </a>
             </span>
@@ -257,13 +257,13 @@
                                 @if (Request.QueryString["un_pub"] != null && Request.QueryString["un_pub"] == "1")
                                 {
                                     // @Html.ActionLink("Edit", "Edit", new { id = item.ID })
-                                    <a href="~/Products/Edit/@item.ID?&un_pub=1">
+                                    <a href="~/Products/Edit" onclick="setObjectSession('ProductID',@item.ID);">
                                         <font style="color:#E25C09">  <i class="glyphicon glyphicon-edit"></i></font>
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="~/Products/Edit/@item.ID?&un_pub=0">
+                                    <a href="~/Products/Edit"  onclick="setObjectSession('ProductID',@item.ID);">
                                         <font style="color:#E25C09">  <i class="glyphicon glyphicon-edit"></i></font>
                                     </a>
                                     // @Html.ActionLink("Edit", "Edit", new { id = item.ID })
@@ -511,7 +511,7 @@
             }
             else if (result.isConfirmed)
             {
-                window.location='../Products/Un_Publish_Product/?id='+itemid +'&ShopID='+shopid+'&un_pub=0';
+                window.location='../../Products/Un_Publish_Product/?id='+itemid +'&ShopID='+shopid+'&un_pub=0';
             }
         });
     }
@@ -533,7 +533,7 @@
             }
             else if (result.isConfirmed)
             {
-                window.location = '../Products/delete/' + itemid + '?&sid=' + shopid + '&un_pub=' + option;
+                window.location = '../../Products/delete/' + itemid + '?&un_pub=' + option;
             }
         });
     }

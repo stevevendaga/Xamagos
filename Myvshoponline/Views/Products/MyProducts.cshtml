@@ -1,4 +1,4 @@
-﻿@model Myvshoponline.Product
+@model Myvshoponline.Product
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities(); }
 
@@ -11,7 +11,7 @@
 }
 
 <div id="content">
-    <h5 style="font-size:12px"  class="h5"> <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a></b></h5>
+    <h5 style="font-size:12px"  class="h5"> <a href="~/Users/Dashboard"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<b style="color:black"><a href="~/Shops/ShopDetails"> @ViewBag.ShopName </a></b></h5>
 
     <style>
         p {
@@ -31,7 +31,7 @@
                     <ul style="font-size:14px">
                         <li>
                             <span style="margin-top:0px;margin-bottom:3px;">
-                                <a href="~/Products/Create/?id=@ViewBag.ShopID" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <a href="~/Products/Create" class="btn btn-success" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
                                     <font style="color:white">  <i class="glyphicon glyphicon-plus-sign"></i> Add Products</font>
                                 </a>
 
@@ -51,7 +51,7 @@
                     <ul style="font-size:14px">
                         <li>
                             <span style="margin-top:0px;margin-bottom:3px;">
-                                <a href="~/Products/ImportProducts?id=@ViewBag.ShopID" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
+                                <a href="~/Products/ImportProducts" class="btn btn-primary" style="padding-top:3px;padding-bottom:3px;padding-left:2px;width:100%">
                                     <font style="color:white">  <i class="glyphicon glyphicon-upload"></i> Import Products</font>
                                 </a>
                             </span>
@@ -68,7 +68,7 @@
                     <ul style="font-size:14px">
                         <li>
                             <span style="margin-top:0px;margin-bottom:3px;">
-                                <a href="~/Products/ViewProducts?id=@ViewBag.ShopID&un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                                <a href="~/Products/ViewProducts/?un_pub=0" class="btn btn-info" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
                                     <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View Products</font>
                                 </a>
                             </span>
@@ -80,7 +80,7 @@
         <ul style="font-size:14px">
             <li>
                 <span style="margin-top:0px;margin-bottom:3px;">
-                    <a href="~/Products/MyProducts?id=@ViewBag.ShopID" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
+                    <a href="~/Products/MyProducts" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;padding-left:5px;width:100%">
                         <font style="color:white">  <i class="glyphicon glyphicon-eye-open"></i> View By Category</font>
                     </a>
                 </span>
@@ -111,7 +111,7 @@
                                   
                                     <ul class="cat-list" style="padding-top:0px">
                                         <li>
-                                            <a href="~/Products/ProductCategoryDetails/?id=@item.ProductCategoryID&sid=@item.Shop.ID" style="color:#0BACE1;">
+                                            <a href="~/Products/ProductCategoryDetails" style="color:#0BACE1;" onclick="setObjectSession('ProductCategoryID',@item.ProductCategoryID)">
                                                 @item.ProductCategory.Name
                                                 <span class="num-posts">(@total)</span>
                                             </a>

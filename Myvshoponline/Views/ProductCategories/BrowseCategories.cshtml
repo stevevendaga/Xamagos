@@ -1,4 +1,4 @@
-﻿
+
   @model IEnumerable<Myvshoponline.Product>
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
@@ -10,211 +10,214 @@
 
 
     <!-- Browse All Categories Section Start -->
-    <section class="all-categories section" style="padding:0px;padding-top:40px;background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
-        <div class="container">
-            <h5 class="categories-title" style="font-size:16px">
-                @{var image1 = @ViewBag.Icon + ".png";
-                    <img src="~/Images/Icons/@image1" style="width:5%;">
-                }
-                @ViewBag.ProductCategoryName<span>@*(@ViewBag.totalProducts Products)*@</span>
-            </h5>
-        </div>
-        <!--Section for SEO products-->
-        <div id="productsforSEO" style="margin:1px;padding:0px;">
-            <div class="panel panel-success">
-                @if (db.SearchOptimizations.Count() > 0)
-                {
-                <div class="panel-heading" style="background-color:#0BACE1;">
-                    <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px;text-align:left;">Sponsored</h3>
-                </div>
-                }
-                <div class="panel-body">
-                    <div class="row">
-                        @{ var i = 1;
-                            foreach (var item in Model)
-                            {
-                                if (db.SearchOptimizations.Where(s => s.ProductID == item.ID).Count() > 0)
-                                {
-                                    int Sid =Convert.ToInt32(item.Shop.StateID);
-                                    var state = db.States.Where(s => s.ID == Sid).Select(s => s.Name).FirstOrDefault();
-
-                                    int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == item.ID).Count();
-                                <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
-                                    @if (countproductinsubitems > 0)
-                                    {
-                                        <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
-
-                                                    @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
-                                                    <center>
-                                                        <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
-                                                        <br />
-                                                        <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
-
-                                                        <h3 style="margin:0px;padding:0px">
-
-                                                            <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
-
-                                                                @if (item.Currency == "NGN")
-                                                                {<del class="NairaSign">N</del>}
-                                                                else
-                                                                { <span>@item.Currency</span>}@{
-
-                                                                    @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
-                                                                decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
-                                                                decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
-                                                                var a = string.Format("{0:#,0}", Total);}@a
-                                                            </span>
-                                                        </h3>
-                                                        <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
-                                                        <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
-                                                        @*<br />
-                                                        <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-                                                    </center>
-                                                </div>
-                                            </div>
-                                        </a>
-    }
-    else
-{
-<a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;">
-<div class="row">
-<div class="col-lg-12 col-sm-12 col-md-12" style="padding-left:3px">
-
-@{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
-<center>
-    <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
-    <br />
-    <strong style="font-size:13px;color:black">@item.Name</strong>
-
-    <h3 style="margin:0px;padding:0px;">
-        <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
-
-            @if (item.Currency == "NGN")
-            {<del class="NairaSign">N</del>}
-            else
-            { <span>@item.Currency</span>}@{
-            @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
-            decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
-            decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
-            var a = string.Format("{0:#,0}", Total);}@a
-</span>
-                </h3>
-                <hr style="padding-bottom:1px;margin-bottom:0px;" />
-
-                <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
-                @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-                </center>
-                </div>
-                </div>
-                </a>
-    }
-
-                                </div>
-            }
-            i++;
+<section class="all-categories section" style="padding:0px;padding-top:40px;">
+  @*<section class="all-categories section" style="padding:0px;padding-top:40px;background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">*@
+    <div class="container">
+      <h5 class="categories-title" style="font-size:16px">
+        @{var image1 = @ViewBag.Icon + ".png";
+          <img src="~/Images/Icons/@image1" style="width:5%;">
         }
-    }
-
-                    </div> 
-                </div>
-            </div>
-        </div>
-        <!--Section for SEO products-->
-           
-        </section>
-
-<div class="row" style="padding:0px;margin:0px">
-@{ var j = 1;
-    foreach (var item in Model)
+        @ViewBag.ProductCategoryName<span>@*(@ViewBag.totalProducts Products)*@</span>
+      </h5>
+    </div>
+    <!--Section for SEO products-->
+    @if (db.SearchOptimizations.Count() > 0)
     {
+      <div id="productsforSEO" style="margin:1px;padding:0px;">
+        <div class="panel panel-success">
+
+          <div class="panel-heading" style="background-color:#0BACE1;">
+            <h3 class="panel-title" style="color:white;font-family:Arial;opacity:0.9;font-size:14px;text-align:left;">Sponsored</h3>
+          </div>
+
+          <div class="panel-body">
+            <div class="row">
+              @{ var i = 1;
+                foreach (var item in Model)
+                {
+                  if (db.SearchOptimizations.Where(s => s.ProductID == item.ID).Count() > 0)
+                  {
+                    int Sid = Convert.ToInt32(item.Shop.StateID);
+                    var state = db.States.Where(s => s.ID == Sid).Select(s => s.Name).FirstOrDefault();
+
+                    int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == item.ID).Count();
+                    <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
+                      @if (countproductinsubitems > 0)
+                      {
+                        <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                          <div class="row">
+                            <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
+
+                              @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                              <center>
+                                <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                                <br />
+                                <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+
+                                <h3 style="margin:0px;padding:0px">
+
+                                  <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+
+                                    @if (item.Currency == "NGN")
+                                    {<del class="NairaSign">N</del>}
+                                    else
+                                    { <span>@item.Currency</span>}@{
+
+                                      @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                                      decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                                      decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                                      var a = string.Format("{0:#,0}", Total);}@a
+                                    </span>
+                                  </h3>
+                                  <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
+                                  <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                  @*<br />
+                                    <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                </center>
+                              </div>
+                            </div>
+                          </a>
+                        }
+                        else
+                        {
+                          <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;">
+                            <div class="row">
+                              <div class="col-lg-12 col-sm-12 col-md-12" style="padding-left:3px">
+
+                                @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                                <center>
+                                  <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                                  <br />
+                                  <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                                  <h3 style="margin:0px;padding:0px;">
+                                    <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                                      @if (item.Currency == "NGN")
+                                      {<del class="NairaSign">N</del>}
+                                      else
+                                      { <span>@item.Currency</span>}@{
+                                        @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                                        decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                                        decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                                        var a = string.Format("{0:#,0}", Total);}@a
+                                      </span>
+                                    </h3>
+                                    <hr style="padding-bottom:1px;margin-bottom:0px;" />
+
+                                    <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                                    @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                                  </center>
+                                </div>
+                              </div>
+                            </a>
+                          }
+
+                    </div>
+                  }
+                  i++;
+                }
+              }
+
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    <!--Section for SEO products-->
+
+  </section>
+
+  <div class="row" style="padding:0px;margin:0px">
+    @{ var j = 1;
+      foreach (var item in Model)
+      {
         int Sid = Convert.ToInt32(item.Shop.StateID);
         var state = db.States.Where(s => s.ID == Sid).Select(s => s.Name).FirstOrDefault();
         if (db.SearchOptimizations.Where(s => s.ProductID == item.ID).Count() < 1)
         {
-            int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == item.ID).Count();
-<div class="col-lg-2 col-md-4 col-4" style="padding:0px;margin:0px">
-    @if (countproductinsubitems > 0)
-    {
-        <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
-            <div class="row">
-                <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
+          int countproductinsubitems = db.ProductSubProducts.Where(p => p.ProductID == item.ID).Count();
+          <div class="col-lg-2 col-md-4 col-4" style="padding:0px;margin:0px">
+            @if (countproductinsubitems > 0)
+            {
+              <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                <div class="row">
+                  <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
 
-                    @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                    @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
                     <center>
-                        <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
-                        <br />
-                        <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
+                      <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                      <br />
+                      <strong style="font-size:13px;color:black;font-weight:bold">@item.Name</strong>
 
-                        <h3 style="margin:0px;padding:0px">
+                      <h3 style="margin:0px;padding:0px">
 
-                            <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
+                        <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
 
-                                @if (item.Currency == "NGN")
-                                {<del class="NairaSign">N</del>}
-                                else
-                                { <span>@item.Currency</span>}@{
-                                  @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
-                                decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
-                                decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
-                                var a = string.Format("{0:#,0}", Total);}@a
+                          @if (item.Currency == "NGN")
+                          {<del class="NairaSign">N</del>}
+                          else
+                          { <span>@item.Currency</span>}@{
+                            @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                            decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                            decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                            var a = string.Format("{0:#,0}", Total);}@a
 
-                            </span>
+                          </span>
                         </h3>
                         <hr style="padding-bottom:1px;margin-bottom:0px;margin-top:0px;" />
                         <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
                         @*<br />
-                        <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-                    </center>
+                          <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                      </center>
 
-                </div>
-            </div>
-        </a>
+                    </div>
+                  </div>
+                </a>
+              }
+              else
+              {
+
+                <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                  <div class="row">
+                    <div class="col-lg-12 col-md-12 col-lg-12" style="padding-left:3px">
+
+                      @{ var image = item.Shop.User.CompanyName + item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
+                      <center>
+                        <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
+                        <br />
+                        <strong style="font-size:13px;color:black">@item.Name</strong>
+
+                        <h3 style="margin:0px;padding:0px;">
+                          <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
+
+                            @if (item.Currency == "NGN")
+                            {<del class="NairaSign">N</del>}
+                            else
+                            { <span>@item.Currency</span>}@{
+                              @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
+                              decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
+                              decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
+                              var a = string.Format("{0:#,0}", Total);}@a
+                            </span>
+                          </h3>
+                          <hr style="padding-bottom:1px;margin-bottom:0px;" />
+                          <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
+                          @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                        </center>
+                      </div>
+                    </div>
+                  </a>
+                }
+
+          </div>
+        }
+        j++;
+      }
     }
-    else
-    {
+  </div>
 
-<a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-lg-12" style="padding-left:3px">
+  <!-- Browse All Categories Section End -->
 
-            @{ var image = item.Shop.User.CompanyName+ item.Shop.User.HardToken + "/" + item.Shop.Name + "/" + item.ID + ".jpg";}
-            <center>
-                <img src="~/BusinessImages/@image" alt="@item.Name" style="width:146px;height:140px;">
-                <br />
-                <strong style="font-size:13px;color:black">@item.Name</strong>
-
-                <h3 style="margin:0px;padding:0px;">
-                    <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
-
-                        @if (item.Currency == "NGN")
-                        {<del class="NairaSign">N</del>}
-                        else
-                        { <span>@item.Currency</span>}@{
-                        @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
-                        decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
-                        decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
-                        var a = string.Format("{0:#,0}", Total);}@a
-                    </span>
-                </h3>
-                <hr style="padding-bottom:1px;margin-bottom:0px;" />
-                <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
-                @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
-            </center>
-        </div>
-    </div>
-</a>
-    }
-
-</div>
- }
- j++;
- }
-    }
-</div>
-                       
-    <!-- Browse All Categories Section End -->
-
-    <body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
-</body>
+  <body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
+  </body>

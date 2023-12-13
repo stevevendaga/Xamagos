@@ -27,6 +27,7 @@ namespace Myvshoponline.Controllers
       ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
       ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
       ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
+      ViewBag.LastProducts= db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderByDescending(p => p.ID).ToList().Take(3);
       return View();
     }
 
@@ -144,31 +145,53 @@ namespace Myvshoponline.Controllers
     //    }
 
     //}
-    public ActionResult Search(string search, int? ProductCategoryID)
+    //public ActionResult Search(string search, int? ProductCategoryID)
+    //{
+    //  ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
+    //  ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
+    //  ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+    //  if (ProductCategoryID != null)
+    //  {
+    //    ViewBag.CategoryName = db.ProductCategories.Find(ProductCategoryID).Name;
+    //    ViewBag.Searchitem = search;
+    //    string CategoryName = ViewBag.CategoryName;
+    //    string random = Guid.NewGuid().ToString();
+    //    ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
+    //    ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
+
+    //    if (CategoryName != "All Categories")
+    //    {
+    //      var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID);
+    //      return View(searchresult.ToList());
+    //    }
+    //    else
+    //    {
+    //      var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
+    //      return View(searchresult.ToList());
+    //    }
+    //  }
+    //  else
+    //  {
+    //    return View();
+    //  }
+
+    //}
+    public ActionResult Search(string search)
     {
       ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
       ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
       ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
-      if (ProductCategoryID != null)
+      if (search != null)
       {
-        ViewBag.CategoryName = db.ProductCategories.Find(ProductCategoryID).Name;
         ViewBag.Searchitem = search;
         string CategoryName = ViewBag.CategoryName;
         string random = Guid.NewGuid().ToString();
         ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
         ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
 
-        if (CategoryName != "All Categories")
-        {
-          var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID);
-          return View(searchresult.ToList());
-        }
-        else
-        {
           var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
           return View(searchresult.ToList());
         }
-      }
       else
       {
         return View();
@@ -195,7 +218,8 @@ namespace Myvshoponline.Controllers
 
         if (CategoryName != "All Categories")
         {
-          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID);
+          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID);
+          //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID);
           return View(searchresult.ToList());
         }
         else
@@ -780,6 +804,7 @@ namespace Myvshoponline.Controllers
           return Json(result, JsonRequestBehavior.AllowGet);
         }
       }
+
 
   }
 }

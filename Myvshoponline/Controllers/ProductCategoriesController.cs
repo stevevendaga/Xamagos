@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -24,9 +24,10 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Home/AccessDenied");
         }
 
-        public ActionResult BrowseCategories(int?id)
+        public ActionResult BrowseCategories()
         {
-            if(id!=null)
+            int id=Convert.ToInt32(Session["ProductCategoryID"]);
+            if(Session["ProductCategoryID"] != null)
             {
                 var products = db.Products.Where(p => p.ProductCategoryID == id && p.Shop.ShopStatus == "Active" &&  p.ProductStatu.Status == "Available");
                 

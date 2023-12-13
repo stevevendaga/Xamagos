@@ -132,9 +132,20 @@
   <link rel="stylesheet" href="~/templates/assets/css/colors/blue.css" type="text/css">
   <link rel="stylesheet" href="~/templates/assets/css/responsive.css">
   <link href="~/templates/assets/css/NairaSign.css" rel="stylesheet" />
+  <link href="~/templates/assets/css/productstyle.css" rel="stylesheet" />
   <link href="~/Content/Panel.css" rel="stylesheet" />
   <link href="~/Content/Modal.css" rel="stylesheet" />
   <script src="~/Scripts/bootstrap.min.js"></script>
+
+  <!--adsense-->
+  <!--ukor-->
+  @*<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9669074385116966"
+    crossorigin="anonymous"></script>*@
+  <!--tevinet-->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201891409068870"
+          crossorigin="anonymous"></script>
+
+  <!--adsense-->
   <!-- GOOGLE MAPS-->
   <!--Load the API from the specified URL
   * The async attribute allows the browser to render the page while the API loads
@@ -344,18 +355,55 @@
     </div>
 
   </div>
+  <style>
+    .flex-container {
+      display: flex;
+      flex-direction: row; /* Arrange items vertically */
+    }
+
+    .item {
+      flex: 1; /* Distribute available space equally among items */
+      padding: 0px;
+      /*border: 1px solid #ddd;*/
+      margin: 0px;
+    }
+  </style>
 
   <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top" style="background-color:#17A2B8;position:fixed;border:0px;">
-
-
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top flex-container" style="background-color:#17A2B8;position:fixed;border:0px;">
       <!-- Left navbar links -->
-      <ul class="navbar-nav">
+
+
+
+      <ul class="navbar-nav item" style="margin-top:-10px" id="menu-button">
         <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="color:white;font-size:16px;"><i class="fas fa-bars"></i></a>
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="color:white;font-size:12px;text-align:center"><i class="fas fa-bars"></i><br />Menu</a>
         </li>
 
+      </ul>
+      @*<ul class="navbar-nav ml-1 item" style="margin-top:-10px;" id="home-nav-button">
+          <li class="nav-item">
+            <a href="~/Home/Index" class="nav-link" style="color:white;font-size:12px;text-align:center">
+              <i class="nav-icon fas fa-home"></i>
+              <br />
+              <pp>
+                Home
+              </pp>
+            </a>
+          </li>
+        </ul>*@
+
+      <ul class="navbar-nav ml-1 item" style="margin-top:-10px" id="search-nav-button">
+        <li class="nav-item">
+          <a href="#" class="nav-link" style="color:white;font-size:12px;text-align:center" onclick="showSearchBox()">
+            <i class="fas fa-search"></i>
+            <br />
+            <pp>
+              Search
+            </pp>
+          </a>
+        </li>
       </ul>
       <!-- Brand Logo -->
       <div id="displayonmobile_logo" style="display:none">
@@ -376,160 +424,416 @@
       </div>
       <!--End Brand Logo-->
       <!-- SEARCH FORM -->
-      <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;">
-        <div class="input-group input-group-sm" style="margin:2px;">
-          @if (Request.QueryString["search"] != null)
-          {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:400px;">
-          }
-          else
-          {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width:400px;">
-          }
 
-        </div>
+      <form method="get" action="~/Home/Search" style="padding:10px;display:none;left:0;width:100%" id="search-mobile-view">
         <div class="input-group input-group-sm" style="margin:2px;">
-          @Html.DropDownList("ProductCategoryID", null, htmlAttributes: new { @class = "form-control form-control-navbar" })
+          <a href="#" style="color: white; margin-top: 10px">
+            <i class="lni lni-arrow-left-circle" style="color:white;font-size:20px;font-weight:400" onclick="hideSearchBox();"></i>
+          </a>
+          <input type="text" name="search" id="searchshop" required="required" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
           <div class="input-group-append">
-            <button class="btn btn-common" type="submit">
+            <button class="btn btn-common" type="submit" style="width:35px;">
               <i class="fas fa-search"></i>
             </button>
           </div>
         </div>
       </form>
-      <!-- Right navbar links -->
-      <ul class="navbar-nav ml-1">
-        <!-- Shopping Cart -->
-        @{
-          int CountCart = 0;
-          if (Session["UserID"] != null)
+
+
+      <div id="search-form" style="display:none;">
+        <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;width:100%">
+          @if (Request.QueryString["search"] != null)
           {
-            int UserID = (int)Session["UserID"];
-            CountCart = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
-          }
-          if (Session["UserID"] != null && CountCart > 0)
-          {
-            int UserID = (int)Session["UserID"];
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
-                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
-                <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCart</span>
-              </a>
-
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
-                <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
-                  <!-- Message Start -->
-                  <div class="media">
-
-                    <div class="media-body">
-                      <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
-                        <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
-                        <hr style="margin-top:8px;margin-bottom:5px;" />
-                        @*<span class="float-right text-sm text-danger">*@ @*<i class="fas fa-star"></i></span>*@
-                      </h3>
-                      <p class="text-sm">
-                        @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
-                        {
-                          <ul>
-                            <li style="font-size:12px;">
-                              &bull; @cart.Product.Name
-                            </li>
-                          </ul>
-
-                        }
-                      </p>
-                      <hr style="margin-top:3px;margin-bottom:3px;" />
-                      <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCart</p>
-                      <p class="badge badge-info">
-                        <i class="fa fas fa-eye"></i> View Cart
-                      </p>
-                    </div>
-                  </div>
-                  <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                </a>
-              </div>
-            </li>
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:800px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
+            <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
           }
           else
           {
-            <li class="nav-item dropdown">
-              <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
-                <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
-              </a>
-            </li>
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+            <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
           }
-        }
+        </form>
+      </div>
 
-        <li class="">
-          <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
-            <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#F8F9FA">
-            <!-- Message Start -->
-            <div class="media dropdown-item">
-              <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
-                <i class="fa fas fa-map-marker"></i>
-                Nearby Stores
+      <div>
+        <ul class="navbar-nav ml-1 item" style="margin-top:-10px" id="account-button">
+          <!-- Account Dropdown Menu -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="dropdown" href="#" style="color:white;font-size:12px;text-align:center">
+              <i class="glyphicon glyphicon-user"></i>
+              <br />
+              <span>Account</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#F8F9FA">
+
+              <div>
+
+                @if (String.IsNullOrEmpty((string)Session["Name"]))
+                {
+                  <nav>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                      <li class="nav-item has-treeview">
+                        <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
+
+                          <i class="nav-icon fas fa-sign-in-alt"></i>
+                          LOGIN
+                        </a>
+                        <div class="dropdown-divider"></div>
+                      </li>
+
+                      <li class="nav-item has-treeview">
+                        <a href="~/Users/Create" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
+                          <i class="nav-icon fas fa-pencil-alt"></i>
+                          SIGN UP
+                        </a>
+                      </li>
 
 
-              </h3>
+                    </ul>
+                  </nav>
+
+                }
+                else
+                {
+                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="color:dodgerblue;font-size:12px;padding-top:5px;">
+                    <li class="nav-item">
+
+                      @if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                      {
+
+                        <i class="nav-icon fas fa-user-circle" style="margin-left: 10px; color: dodgerblue"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"] })
+                      }
+                      else
+                      {
+                        int UserID = (int)Session["UserID"];
+                        if (db.Users.Find(UserID).EmailVerify == 1)
+                        {
+                          <i class="nav-icon fas fa-user-circle" style="margin-left: 10px; color: dodgerblue;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"] })
+                        }
+                      }
+                    </li>
+                    @if (Session["UserID"] != null)
+                    {
+                      int UserID1 = (int)Session["UserID"];
+
+                      if (db.Users.Find(UserID1).EmailVerify == 1)
+                      {
+
+                        if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
+                        {
+                          <li class="nav-item">
+                            <a href="~/Users/AdminLanding" class="nav-link" style="margin-left: 0px;">
+                              <i class="nav-icon fas fa-tachometer-alt"></i>
+                              <pp style="color: dodgerblue">
+                                Dashboard
+                              </pp>
+                            </a>
+                          </li>
+                        }
+                        else
+                        {
+                          <li class="nav-item">
+                            <a href="~/Users/Dashboard" class="nav-link" style="margin-left: 0px;">
+                              <i class="nav-icon fas fa-tachometer-alt"></i>
+                              <pp style="color: dodgerblue">
+                                Dashboard
+
+                              </pp>
+                            </a>
+                          </li>
+                        }
+                        <li class="nav-item">
+                          <center>
+                            <a class="nav-link" style="background-color:#128598;color:white;height:35px;width:50%;text-align:center" href="~/Home/LogOff" onclick="clearLocalStorage();">
+                              <i class="glyphicon glyphicon-log-out"></i> Log Out
+                            </a>
+                          </center>
+                        </li>
+                        <li><hr style="margin-top:2px;" /></li>
+
+
+
+
+                      }
+                    }
+                  </ul>
+                }
+
+              </div>
+
+
+
+
 
             </div>
-            <div class="dropdown-divider"></div>
-            <div class="media dropdown-item">
-              <div id="mapnearby"></div>
-              <div id="nearbystops" style="font-size:12px;"></div>
+          </li>
+        </ul>
+      </div>
+      <!-- Right navbar Web links -->
+      <div id="cart" style="margin-right:10px;display:none;">
+        <ul class="navbar-nav ml-1 item">
+          <!-- Shopping Cart -->
+          @{
+            int CountCartweb = 0;
+            if (Session["UserID"] != null)
+            {
+              int UserID = (int)Session["UserID"];
+              CountCartweb = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
+            }
+            if (Session["UserID"] != null && CountCartweb > 0)
+            {
+              int UserID = (int)Session["UserID"];
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                  <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                  <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCartweb</span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
+                  <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+
+                      <div class="media-body">
+                        <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
+                          <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
+                          <hr style="margin-top:8px;margin-bottom:5px;" />
+
+                        </h3>
+                        <p class="text-sm">
+                          @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
+                          {
+                            <ul>
+                              <li style="font-size:12px;">
+                                &bull; @cart.Product.Name
+                              </li>
+                            </ul>
+
+                          }
+                        </p>
+                        <hr style="margin-top:3px;margin-bottom:3px;" />
+                        <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCartweb</p>
+                        <p class="badge badge-info">
+                          <i class="fa fas fa-eye"></i> View Cart
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Message End -->
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="#" class="dropdown-item">
+                  </a>
+                </div>
+              </li>
+            }
+            else
+            {
+              <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                  <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                  <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
+                </a>
+              </li>
+            }
+          }
+
+          <li class="">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
+              <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right item" style="background-color:#F8F9FA">
+              <!-- Message Start -->
+              <div class="media dropdown-item">
+                <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
+                  <i class="fa fas fa-map-marker"></i>
+                  Nearby Stores
+
+
+                </h3>
+
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="media dropdown-item">
+                <div id="mapnearby"></div>
+                <div id="nearbystops" style="font-size:12px;"></div>
+
+              </div>
+              <!-- Message End -->
+
+              <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
+              <!-- Message Start -->
+              <div class="media dropdown-item">
+                <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
+              </div>
+              <!-- Message End -->
+            </div>
+          </li>
+
+
+        </ul>
+      </div>
+      <!--Web-->
+      <div>
+
+        <ul class="navbar-nav ml-1 item" style="margin-top: -10px; " id="more-button-mobile">
+          <!-- Account Dropdown Menu -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="dropdown" id="elipsis" href="#" style="color:white;font-size:12px;text-align:center;margin-top:20px;margin-right:10px;">
+              <i class="fa fas fa-ellipsis-v"></i>
+              <br />
+              @*<span>More</span>*@
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color: #40578D;">
+              <div>
+
+                <!-- Right navbar Mobile links -->
+                <div id="cart">
+                  <ul class="navbar-nav ml-1 item">
+                    <!-- Shopping Cart -->
+                    @{
+                      int CountCart = 0;
+                      if (Session["UserID"] != null)
+                      {
+                        int UserID = (int)Session["UserID"];
+                        CountCart = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Count();
+                      }
+                      if (Session["UserID"] != null && CountCart > 0)
+                      {
+                        int UserID = (int)Session["UserID"];
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                            <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                            <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCart</span>
+                          </a>
+
+                          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
+                            <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                              <!-- Message Start -->
+                              <div class="media">
+
+                                <div class="media-body">
+                                  <h3 class="dropdown-item-title" style="font-size:12px;color:#F68B51">
+                                    <i class="fa fas fa-shopping-cart"></i> &nbsp;  Shopping Cart
+                                    <hr style="margin-top:8px;margin-bottom:5px;" />
+
+                                  </h3>
+                                  <p class="text-sm">
+                                    @foreach (var cart in db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").ToList())
+                                    {
+                                      <ul>
+                                        <li style="font-size:12px;">
+                                          &bull; @cart.Product.Name
+                                        </li>
+                                      </ul>
+
+                                    }
+                                  </p>
+                                  <hr style="margin-top:3px;margin-bottom:3px;" />
+                                  <p class="text-sm text-muted"><i class="far fa-layers-counter"></i>Total items: @CountCart</p>
+                                  <p class="badge badge-info">
+                                    <i class="fa fas fa-eye"></i> View Cart
+                                  </p>
+                                </div>
+                              </div>
+                              <!-- Message End -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                            </a>
+                          </div>
+                        </li>
+                      }
+                      else
+                      {
+                        <li class="nav-item dropdown">
+                          <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
+                            <span class="badge badge-danger navbar-badge" style="font-size:8px;">0</span>
+                          </a>
+                        </li>
+                      }
+                    }
+
+                    <li class="">
+                      <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fas fa-map-marked-alt" style="font-size:20px;color:#8e2525"></i>
+                        <span class="badge badge-warning navbar-badge" style="font-size:8px;" id="nearbystorecount">0</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right item" style="background-color:#F8F9FA">
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                          <h3 class="dropdown-item-title" style="width:100%;color:#F68B51;font-size:12px">
+                            <i class="fa fas fa-map-marker"></i>
+                            Nearby Stores
+
+
+                          </h3>
+
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="media dropdown-item">
+                          <div id="mapnearby"></div>
+                          <div id="nearbystops" style="font-size:12px;"></div>
+
+                        </div>
+                        <!-- Message End -->
+
+                        <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
+                        <!-- Message Start -->
+                        <div class="media dropdown-item">
+                          <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
+                        </div>
+                        <!-- Message End -->
+                      </div>
+                    </li>
+
+                    <!-- Notifications Dropdown Menu -->
+                    <!--<li class="nav-item">
+                      <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-envelope mr-2"></i> 4 new messages
+                          <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-users mr-2"></i> 8 friend requests
+                          <span class="float-right text-muted text-sm">12 hours</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                          <i class="fas fa-file mr-2"></i> 3 new reports
+                          <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                      </div>
+                    </li>-->
+
+                  </ul>
+                </div>
+
+              </div>
 
             </div>
-            <!-- Message End -->
+          </li>
+        </ul>
+      </div>
 
-            <a href="#" class="dropdown-item dropdown-footer"><i class="fa fas fa-eye"></i> View All</a>
-            <!-- Message Start -->
-            <div class="media dropdown-item">
-              <a href="~/Home/StoreLocator" class="dropdown-item dropdown-footer"><i class="fa fas fa-map-marker"></i> Store Locator</a>
-            </div>
-            <!-- Message End -->
-          </div>
-        </li>
-
-        <!-- Notifications Dropdown Menu -->
-        <li class="nav-item">
-          @*<a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <span class="badge badge-warning navbar-badge">15</span>
-            </a>*@
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-item dropdown-header">15 Notifications</span>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-envelope mr-2"></i> 4 new messages
-              <span class="float-right text-muted text-sm">3 mins</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-users mr-2"></i> 8 friend requests
-              <span class="float-right text-muted text-sm">12 hours</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-file mr-2"></i> 3 new reports
-              <span class="float-right text-muted text-sm">2 days</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-          </div>
-        </li>
-        @*<li class="nav-item">
-              <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                  <i class="fas fa-th-large"></i>
-              </a>
-          </li>*@
-      </ul>
 
     </nav>
 
@@ -680,8 +984,9 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#138699;color:white;">
       <!-- Brand Logo --><center>
-        <a href="~/Home/Index" class="brand-link">
-          <img src="~/Images/logosquare.png" alt="XAMAGOS" style="height:50px;width:160px;">
+        @*<a href="~/Home/Index" class="brand-link">*@
+        <a href="~/Home/Index">
+          <img src="~/Images/logosquare.png" alt="XAMAGOS" style="height: 40px; width: 120px; margin-top: 20px;">
           @*<img src="~/Images/logosquare.png" alt="XAMAGOS" style="height:60px;width:120px;border-radius:8px;">*@
           @*<img src="~/Images/logosquare.png" alt="Market Square247" style="opacity: .8;height:70px;width:70px;" class="img-circle elevation-5">*@
           @*<br style="margin-top:0px;" />
@@ -706,53 +1011,30 @@
             {
               //if (String.IsNullOrEmpty((string)Session["CustomerName"]))
               //{
-              <nav>
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                  <li class="nav-item has-treeview">
-                    @*<a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" data-toggle="modal" data-target="#myModalBackdrop" onclick="clearTextBox();">*@
-                    <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
+              @*<nav>
+                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item has-treeview">
+                      <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
 
-                      <i class="nav-icon fas fa-lock-open"></i>
-                      <pp>
-                        Login
-                      </pp>
-                    </a>
-                  </li>
-                  @*<li class="nav-item has-treeview">
-                        <a href="~/OnlineTrainings/application" class="nav-link" style="" title="Online Training">
-                            <i class="nav-icon fas fa-tram"></i>
-                            <pp>
-                                Online Training
-                            </pp>
-                        </a>
-                    </li>*@
-                  <li class="nav-item has-treeview">
-                    <a href="~/Users/Create?id=16797&v=1" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
-                      <i class="nav-icon fas fa-pencil-alt"></i>
-                      <pp>
-                        Sign Up
-                      </pp>
-                    </a>
-                  </li>
-                  @*<li class="nav-item has-treeview">
-                        <a href="~/Home/CustomerLogin" class="nav-link" style="opacity:.8">
-                            <i class="nav-icon fas fa-lock-open"></i>
-                            <pp>
-                                Buyer Login
-                            </pp>
-                        </a>
-                    </li>*@
-                  @*<li class="nav-item has-treeview">
-                        <a href="~/ShopCustomers/Create/?id=&v=1" class="nav-link" style="opacity:.8" title="Create Account">
-                            <i class="nav-icon fas fa-pencil-alt"></i>
-                            <pp>
-                                Create Account (Buyer)
-                            </pp>
-                        </a>
-                    </li>*@
+                        <i class="nav-icon fas fa-lock-open"></i>
+                        <pp>
+                          Login
+                        </pp>
+                      </a>
+                    </li>
 
-                </ul>
-              </nav>
+                    <li class="nav-item has-treeview">
+                      <a href="~/Users/Create?id=16797&v=1" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
+                        <i class="nav-icon fas fa-pencil-alt"></i>
+                        <pp>
+                          Sign Up
+                        </pp>
+                      </a>
+                    </li>
+
+
+                  </ul>
+                </nav>*@
 
               //}
 
@@ -768,14 +1050,14 @@
                   @if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
                   {
 
-                    <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                    <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding/", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;text-shadow: 3px 2px 5px red, 0 0 5px green" })
                   }
                   else
                   {
                     int UserID = (int)Session["UserID"];
                     if (db.Users.Find(UserID).EmailVerify == 1)
                     {
-                      <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                      <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
                     }
                   }
                   @*}*@
@@ -790,7 +1072,7 @@
                     if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
                     {
                       <li class="nav-item">
-                        <a href="~/Users/AdminLanding/@Session["UserID"]" class="nav-link">
+                        <a href="~/Users/AdminLanding" class="nav-link">
                           <i class="nav-icon fas fa-tachometer-alt"></i>
                           <pp>
                             Dashboard
@@ -801,7 +1083,7 @@
                     else
                     {
                       <li class="nav-item">
-                        <a href="~/Users/Dashboard/@Session["UserID"]" class="nav-link">
+                        <a href="~/Users/Dashboard" class="nav-link">
                           <i class="nav-icon fas fa-tachometer-alt"></i>
                           <pp>
                             Dashboard
@@ -832,7 +1114,7 @@
                           {
                             <li style="margin-bottom:1px;padding-bottom:0px" class="nav-item">
 
-                              <a class="nav-link" style="font-size:10px" href="~/Shops/ShopDetails/@shop.ID" title="Click here to go to @shop.Name shop">
+                              <a class="nav-link" style="font-size:10px" href="~/Shops/ShopDetails" title="Click here to go to @shop.Name shop" onclick="setObjectSession('ShopID',@shop.ID)">
 
                                 <b> @shop.Name </b>
                                 @if (shop.ShopStatus == "Active")
@@ -895,16 +1177,7 @@
               </a>
 
             </li>
-            <li class="nav-item has-treeview">
-              <a href="~/Home/Contact" class="nav-link" id="about">
-                <i class="nav-icon fas fa-info-circle"></i>
-                <pp>
-                  About
 
-                </pp>
-              </a>
-
-            </li>
 
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link" style="cursor:pointer;">
@@ -924,7 +1197,7 @@
                   {
                     var image = @item1.Icon + ".png";
                     <li class="nav-item">
-                      <a class="nav-link" href="~/ProductCategories/BrowseCategories/@item1.ID">
+                      <a class="nav-link" href="" onclick="setObjectSessionRedirect('ProductCategoryID',@item1.ID, 'ProductCategories/BrowseCategories');">
                         @*<i class="@item1.Icon"></i>*@
                         <img src="~/Images/Icons/@image" style="width:5%;"> @item1.Name
                       </a>
@@ -972,7 +1245,16 @@
                 <pp>Help</pp>
               </a>
             </li>
+            <li class="nav-item has-treeview">
+              <a href="~/Home/Contact" class="nav-link" id="about">
+                <i class="nav-icon fas fa-info-circle"></i>
+                <pp>
+                  About
 
+                </pp>
+              </a>
+
+            </li>
             @*<li class="nav-item has-treeview">
                   <a href="~/TrainingModules/Index?px=1" class="nav-link">
                       <i class="nav-icon fas fa-info-circle"></i>
@@ -1162,6 +1444,25 @@
 
 
     </div>
+
+
+
+    <!--<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201891409068870"
+            crossorigin="anonymous"></script>-->
+    <!-- footerad -->
+    <!--<ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2201891409068870"
+         data-ad-slot="2020807183"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>-->
+
+
+
+
     <footer class="main-footer" style="padding-top:0px!important;padding:0px;">
 
       @*<div class="container" style="margin-top:5px;">
@@ -1253,10 +1554,10 @@
                     Headquarter - <span class="block-title" style="font-size:15px">&nbsp; Nigeria@*#9, Suite 32, Divine Plaza, Opposite Oracle Driving School, Old Otukpo Road, Makurdi, Benue State -</span>*@
 
                   <h3 class="block-title" style="font-size:12px"> Connect With Us</h3>
-                  <ul class="mt-3 footer-social"> 
+                  <ul class="mt-3 footer-social">
                     @{ var xamagos = "@xamagos";}
-                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;"/></a></li>
-                    
+                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;" /></a></li>
+
                   </ul>
                 </div>
               </div>
@@ -1267,7 +1568,7 @@
                   <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
                   <li><a class="linkedin" target="_blank" href="https://www.instagram.com/xamagosmain"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
                   <li><a class="twitter" href="https://twitter.com/xamagos"><i class="lni-twitter-filled"></i></a></li>
-                  </ul>
+                </ul>
 
               </div>
             </div>
@@ -1289,7 +1590,7 @@
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                     string referallink1 = "https://xamagos.com";
+                    string referallink1 = "https://xamagos.com";
                   }
                   <div class="fb-share-button"
                        data-href="@referallink1"
@@ -1298,7 +1599,7 @@
                 </li>
                 <li><a class="twitter" href="http://twitter.com/share?url=https://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-      <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                  <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
                   <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
@@ -1307,7 +1608,7 @@
 
               </ul>
 
-              
+
 
               @*<p>Subscribe to our Newsletter.</p>*@
 
@@ -1369,31 +1670,31 @@
 
 
                 @*<li class="nav-item has-treeview">
-      <a href="~/users/create" target="_blank" class="nav-link">
-              Sell on MarketSquare247
-      </a>
-      </li>*@
+                  <a href="~/users/create" target="_blank" class="nav-link">
+                          Sell on MarketSquare247
+                  </a>
+                  </li>*@
 
                 @*<li class="nav-item has-treeview">
-          <a href="~/Home/StoreLocator" target="_blank" class="nav-link">
-                  Store Locator
-          </a>
+                      <a href="~/Home/StoreLocator" target="_blank" class="nav-link">
+                              Store Locator
+                      </a>
 
-      </li>
-      <li class="nav-item has-treeview">
-          <a href="~/TrainingModules/Index?px=1" class="nav-link">
-                  Support
-          </a>
+                  </li>
+                  <li class="nav-item has-treeview">
+                      <a href="~/TrainingModules/Index?px=1" class="nav-link">
+                              Support
+                      </a>
 
-      </li>*@
+                  </li>*@
               </ul>
 
 
               @*<br />
-    <h5 class="block-title" style="font-size:14px;"> Sell on MarketSquare247 Sell on MarketSquare247Sell on MarketSquare247</h5>
-    <span class="full-time" style="color:white;padding:3px;margin-top:10px;vertical-align:top;background-color:#138496">
-        &nbsp;&nbsp; <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Support Market Square247" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();"> <i class="lni-gift"></i>Donate/Support</a>
-    </span>*@
+                <h5 class="block-title" style="font-size:14px;"> Sell on MarketSquare247 Sell on MarketSquare247Sell on MarketSquare247</h5>
+                <span class="full-time" style="color:white;padding:3px;margin-top:10px;vertical-align:top;background-color:#138496">
+                    &nbsp;&nbsp; <a href="#" class="btn btn-info" style="height:25px;padding:5px;background-color:#138496;font-size:11px" title="Support Market Square247" data-toggle="modal" data-target="#myModaldonate" onclick="clearTextBox();"> <i class="lni-gift"></i>Donate/Support</a>
+                </span>*@
             </div>
           </div>
         </div>
@@ -1536,17 +1837,25 @@
 
         document.getElementById("displayonmobile_logo").style.display = "block";
         document.getElementById("search").style.width = "100%";
-
-
+        document.getElementById("search-form").style.display = "none";
+        document.getElementById("search-nav-button").style.display = "block";
+        document.getElementById("cart").style.display = "none";
+        document.getElementById("more-button-mobile").style.display = "block";
       } else {
         document.getElementById("job-listings").style.margin = "0";
         document.getElementById("colunmleft").style.display = "block";
 
         document.getElementById("displayonmobile_logo").style.display = "none";
+        document.getElementById("search-form").style.display = "block";
+        document.getElementById("search-nav-button").style.display = "none";
+        //document.getElementById("home-nav-button").style.display = "none";
+        document.getElementById("search-mobile-view").style.display = "none";
+        document.getElementById("cart").style.display = "block";
+        document.getElementById("more-button-mobile").style.display = "none";
       }
     }
 
-    var xy = window.matchMedia("(max-width: 600px)")
+    var xy = window.matchMedia("(max-width: 780px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
@@ -1570,7 +1879,7 @@
       }
     }
 
-    var xy = window.matchMedia("(max-width: 600px)")
+    var xy = window.matchMedia("(max-width: 780px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
@@ -1632,7 +1941,7 @@
       $("a").click(function (e) {
         e.preventDefault();
         var href = $(this).attr("href");
-        if (href != "#") {
+        if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null) {
           window.location = href;
           let timerInterval
           Swal.fire({
@@ -1669,15 +1978,75 @@
 
       });
     });
+
+
   </script>
 
-  
+  <!--Show search box on click of Search button on the menu bar-->
+  <script>
+    function showSearchBox() {
+
+      //document.getElementById("home-nav-button").style.display = "none";
+      document.getElementById("search-nav-button").style.display = "none";
+      document.getElementById("account-button").style.display = "none";
+      document.getElementById("search-mobile-view").style.display = "block";
+      document.getElementById("menu-button").style.display = "none";
+      document.getElementById("elipsis").style.display = "none";
 
 
 
+    }
+    function hideSearchBox() {
+      document.getElementById("search-mobile-view").style.display = "none";
 
+      //document.getElementById("home-nav-button").style.display = "block";
+      document.getElementById("search-nav-button").style.display = "block";
 
- 
+      document.getElementById("account-button").style.display = "block";
+      document.getElementById("menu-button").style.display = "block";
+      document.getElementById("elipsis").style.display = "block";
+
+    }
+  </script>
+  <!--Set Session function-->
+  <script type="text/javascript">
+    function setObjectSession(_key, _value) {
+      var url = "/SetSession/SetObjectSession/";
+      $.ajax({
+        url: url,
+        data: { key: _key, value: _value },
+        cache: true,
+        type: "POST",
+        success: function (data) {
+          //alert('Success');
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  </script>
+
+  <!--Set Session redirect-->
+  <script type="text/javascript">
+    function setObjectSessionRedirect(_key, _value,_href) {
+      var url = "/SetSession/SetObjectSession/";
+      $.ajax({
+        url: url,
+        data: { key: _key, value: _value },
+        cache: true,
+        type: "POST",
+        success: function (data) {
+          //alert('Success');
+          window.location.href = '../../' + _href;
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  </script>
+
 </body>
 </html>
 

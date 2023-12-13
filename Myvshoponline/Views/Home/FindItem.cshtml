@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Product>
+@model IEnumerable<Myvshoponline.Product>
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
@@ -22,6 +22,7 @@
   <!-- SEARCH FORM -->
 <div class="col-lg-12 pt-4 pt-lg-0" data-aos="fade-left" style="background-color:white;border-radius:10px;box-shadow:#06867e 10px 10px inset;padding:30px;opacity:0.9">
                     <form class="form-inline m-lg-0" method="get" action="~/Home/FindItem" style="padding:10px;">
+                      <input type="text" id="selectedCountry" />
                          @if (Request.QueryString["item"] != null)
                          {
                             <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="item" type="text" value="@Request.QueryString["item"]" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
@@ -345,7 +346,9 @@ else
 
  <script type="text/javascript">
         $(function () {
-            $("#loadcountries")
+          var loadcountriesInput = $("#loadcountries");
+          var selectedCountryInput = $("#selectedCountry");
+
                 .bind("keydown", function (event) {
                     if (event.keyCode === $.ui.keyCode.TAB &&
                     $(this).data("ui-autocomplete").menu.active) {
@@ -358,13 +361,42 @@ else
                         $.getJSON("/Home/AutoLoadCountries", {
                             term: extractLast(request.term)
                         }, response);
-                    },
+                  },
+                  select: function (event, ui) {
+                    var terms = split(this.value);
+                    // Remove the current input
+                    terms.pop();
+                    // Add the selected item
+                    terms.push(ui.item.value);
+                    // Join the terms back together
+                    this.value = terms.join(", ");
+
+                    // Assuming you have an input with id 'selectedCountry'
+                    $("#selectedCountry").val(ui.item.Id);
+
+                    return false;
+                  },
+                })
+              .on("change", function () {
+                // Check if the current value is a valid selection from the autocomplete
+                var terms = split(loadcountriesInput.val());
+                var lastTerm = terms.pop();
+                var validSelection = loadcountriesInput
+                  .data("ui-autocomplete")
+                  .widget()
+                  .find("li:contains(" + lastTerm + ")")
+                  .length > 0;
+
+                if (!validSelection) {
+                  loadcountriesInput.val("");
+                  selectedCountryInput.val("");
+                }
                 });
         });
         function split(val) {
             return val.split(/,\s*/);
         }
-        function extractLast(term) {
+   function extractLast(term) {
             return split(term).pop();
         }
 </script>

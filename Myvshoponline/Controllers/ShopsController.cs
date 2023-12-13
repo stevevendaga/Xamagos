@@ -64,14 +64,14 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Home/AccessDenied");
         }
 
-        public ActionResult ShopDetails(int? id,string search)
+        public ActionResult ShopDetails(string search)
         {
-        
             ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
             ViewBag.ProductStatusID = new SelectList(db.ProductStatus, "ID", "Status");
             ViewBag.SocialMediaChannel = new SelectList(db.SocialMediaChannels, "ID", "Channel");
             ViewBag.BankID = new SelectList(db.Banks, "ID", "Name");
-            if (id == null)
+            int id = Convert.ToInt32(Session["ShopID"]);
+            if (Session["ShopID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
@@ -80,7 +80,7 @@ namespace Myvshoponline.Controllers
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (search != null && id != null)
+            if (search != null && Session["ShopID"] != null)
             {
                 ViewBag.Products = db.ShopProductCategories.Where(s => s.ShopID == id).ToList().Take(10);
                 ViewBag.search = search;
@@ -224,7 +224,7 @@ namespace Myvshoponline.Controllers
         public JsonResult CreateAjax(string name, string description, string phone, string email, int countryid, string state, string city, string street, string shortname)
         {
             
-              int UserID = (int)Session["UserID"];
+                int UserID = (int)Session["UserID"];
                 string PricingPlan = db.Users.Find(UserID).PricingPlan.PlanName;
                 int NumberofShops = (int)db.PricingPlans.Where(p => p.PlanName == PricingPlan).Select(p => p.NumberofShops).FirstOrDefault();
                 int TotalNumberofShops = db.Shops.Where(s => s.UserID == UserID).Count();
@@ -273,16 +273,17 @@ namespace Myvshoponline.Controllers
                         shop.DateCreated = DateTime.Now;
                         db.Shops.Add(shop);
                         db.SaveChanges();
-                    //=================ADD DELIVERY LOCATIONS =====================//
-                    //foreach (var item in db.DeliveryCities.Where(s => s.FromStateID == StateID).ToList())
+          //=================ADD DELIVERY LOCATIONS =====================//
+          //foreach (var item in db.DeliveryCities.Where(s => s.FromStateID == StateID).ToList())
+          //{
+          //    mydata.Insert_Delevery_Cities((int)item.StateID, shop.ID, DateTime.Now);
+          //}
+                    //Set session
+                    Session["ShopID"] = shop.ID;
+                    //foreach (var item in db.States.Where(s=>s.Name!= "All Locations within Nigeria").ToList())
                     //{
-                    //    mydata.Insert_Delevery_Cities((int)item.StateID, shop.ID, DateTime.Now);
+                    //    mydata.Insert_Delevery_Cities((int)item.ID, shop.ID, DateTime.Now);
                     //}
-
-                    foreach (var item in db.States.Where(s=>s.Name!= "All Locations within Nigeria").ToList())
-                    {
-                        mydata.Insert_Delevery_Cities((int)item.ID, shop.ID, DateTime.Now);
-                    }
 
                     //Create Shop Folder in the business's directory
                     string businessname = db.Users.Where(s => s.ID == UserID).Select(s => s.CompanyName).FirstOrDefault();
