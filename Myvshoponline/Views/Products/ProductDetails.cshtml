@@ -1,3 +1,4 @@
+
 <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=yMub9&webforms_id=S7vtD" data-webform-id="S7vtD"></script>
 
 <style>
@@ -344,8 +345,18 @@
                 <li>Share This Product</li>
                 <li>
                   @{
-                    string referallink1 = "https://xamagos.com/" + item.Shop.ShopURL + "/?q=" + item.ID;
+                      string referallink1 = "https://xamagos.com/" + item.Shop.ShopURL + "/?q=" + item.ID;
+                      var passports = item.ID + ".jpg";
                   }
+                  <!-- Facebook share Open Graph Meta Tags with data- attributes -->
+                  <meta property="og:url" content=@referallink1>
+                  <meta property="og:type" content="website">
+                  <meta property="og:title" content="Xamagos">
+                  <meta property="og:description" content="Hey, check out my product at Xamagos
+                                          #Xamagos #XamagosRadio #ShopSmart">
+                  <meta property="og:image" content="https://xamagos.com/BusinessImages/@item.Shop.User.CompanyName@item.Shop.User.HardToken/@item.Shop.Name/@passports">
+                  <!--End facebook share-->
+
                   <div class="fb-share-button"
                        data-href="@referallink1"
                        data-layout="button_count">
