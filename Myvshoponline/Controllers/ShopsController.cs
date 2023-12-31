@@ -469,8 +469,10 @@ namespace Myvshoponline.Controllers
         public JsonResult GetStates(int CountryID)
         {
 
-            var result = (from r in db.States
-                          select new { ID = r.ID, StateName = r.Name}).Distinct();
+     
+      var result = (from r in db.States
+                    where r.Name != "All Locations within Nigeria"
+                    select new { ID = r.ID, StateName = r.Name}).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -597,7 +599,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //==================SEND MAIL============================//
             string title = "Xamagos - Store Email Verification";
             string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
-            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
+            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email address (" + shop.Name + "). ";
             msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
             msg += "<br><hr>";
             msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
@@ -644,7 +646,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
                 //==================SEND MAIL============================//
               string title = "Email Verified";
               string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
-              msg += "Your " + shop.Name + " store email has been verified.";
+              msg += "Your " + shop.Name + " store email address has been verified.";
               msg += "<br><hr>";
               msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
               mydata.SendMail(shop.Email, title, msg);
@@ -674,7 +676,7 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
             //==================SEND MAIL============================//
             string title = "Xamagos - New Store Email Verification Code";
             string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(shop.User.CompanyName.ToLower()) + "</strong>, <br><br>";
-            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email (" + shop.Name + "). ";
+            msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your XAMAGOS store email address (" + shop.Name + "). ";
             msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
             msg += "<br><hr>";
             msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
@@ -804,9 +806,10 @@ public void Update_Payment_Promote_Social_Media(string refno, decimal amount, in
         }
     //====================
 
-    public ActionResult BusinessCard(int? id)
+    public ActionResult BusinessCard()
     {
-      if (id == null)
+      int id = Convert.ToInt32(Session["ShopID"]);
+      if (Session["ShopID"] == null)
       {
         return Redirect("~/Home/AccessDenied");
       }

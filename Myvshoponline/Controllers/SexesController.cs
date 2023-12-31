@@ -25,12 +25,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             Sex sex = db.Sexes.Find(id);
             if (sex == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(sex);
         }
@@ -63,12 +63,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             Sex sex = db.Sexes.Find(id);
             if (sex == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(sex);
         }
@@ -94,12 +94,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             Sex sex = db.Sexes.Find(id);
             if (sex == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(sex);
         }

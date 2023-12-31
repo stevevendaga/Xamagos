@@ -27,7 +27,7 @@ namespace Myvshoponline.Controllers
       ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
       ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
       ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
-      ViewBag.LastProducts= db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderByDescending(p => p.ID).ToList().Take(3);
+      ViewBag.LastProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderByDescending(p => p.ID).ToList().Take(3);
       return View();
     }
 
@@ -189,9 +189,9 @@ namespace Myvshoponline.Controllers
         ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
         ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
 
-          var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
-          return View(searchresult.ToList());
-        }
+        var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
+        return View(searchresult.ToList());
+      }
       else
       {
         return View();
@@ -199,40 +199,52 @@ namespace Myvshoponline.Controllers
 
     }
 
-
-    public ActionResult FindItem(string item, string CountryID, string StateID, int? ProductCategoryID)
+    public ActionResult FindItem(int? id)
     {
       ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
       ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
       ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
-      if (ProductCategoryID != null)
-      {
-        ViewBag.CategoryName = db.ProductCategories.Find(ProductCategoryID).Name;
-        ViewBag.Searchitem = item;
-        string CategoryName = ViewBag.CategoryName;
-        string random = Guid.NewGuid().ToString();
-        ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
-        ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
-        int NewCountryID = db.CountryRegions.Where(s => s.Country == CountryID).Select(s => s.ID).FirstOrDefault();
-        string NewStateID = Convert.ToString(db.States.Where(s => s.Name == StateID).Select(s => s.ID).FirstOrDefault());
+      return View();
+    }
 
-        if (CategoryName != "All Categories")
-        {
-          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID);
-          //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID);
-          return View(searchresult.ToList());
-        }
-        else
-        {
-          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.Shop.CountryID == NewCountryID);
-          return View(searchresult.ToList());
-        }
+    [HttpPost]
+    public ActionResult FindItem()
+    {
+      string item = Request.Form["item"];
+      string CountryID = Request.Form["CountryID"];
+      string StateID = Request.Form["StateID"];
+      int ProductCategoryID = Convert.ToInt32(Request.Form["ProductCategoryID"]);
+
+      ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
+      ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
+      ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+
+      string CatName = db.ProductCategories.Find(ProductCategoryID).Name;
+      ViewBag.CategoryName = CatName;
+      ViewBag.Searchitem = item;
+      string CategoryName = ViewBag.CategoryName;
+      string random = Guid.NewGuid().ToString();
+      ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
+      ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
+      int NewCountryID = db.CountryRegions.Where(s => s.Country == CountryID).Select(s => s.ID).FirstOrDefault();
+      string NewStateID = Convert.ToString(db.States.Where(s => s.Name == StateID).Select(s => s.ID).FirstOrDefault());
+      var searchresultNoState = db.Products
+                            .Where(s => (s.Name.Contains(item) || s.Name.StartsWith(item) || s.Name.EndsWith(item) || s.Name == item) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID))
+                            .ToList();
+      var searchresulWithState = db.Products
+                                .Where(s => (s.Name.Contains(item) || s.Name.StartsWith(item) || s.Name.EndsWith(item) || s.Name == item) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID))
+                                .ToList();
+      //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatusID == 1 && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID);
+      //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop .CountryID == NewCountryID && s.Shop.StateID == NewStateID);
+      if (StateID != "" || StateID!=null)
+      {
+        return View(searchresulWithState.ToList());
       }
       else
       {
-        return View();
+        return View(searchresultNoState.ToList());
       }
-
+      
     }
 
     public ActionResult BargainMarket(string item, string CountryID, string StateID, int? ProductCategoryID)

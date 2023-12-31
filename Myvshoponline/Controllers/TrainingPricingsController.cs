@@ -25,12 +25,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingPricing trainingPricing = db.TrainingPricings.Find(id);
             if (trainingPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(trainingPricing);
         }
@@ -63,12 +63,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingPricing trainingPricing = db.TrainingPricings.Find(id);
             if (trainingPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(trainingPricing);
         }
@@ -94,12 +94,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingPricing trainingPricing = db.TrainingPricings.Find(id);
             if (trainingPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(trainingPricing);
         }

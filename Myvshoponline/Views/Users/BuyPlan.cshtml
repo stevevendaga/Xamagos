@@ -9,11 +9,11 @@
 
 
 @{
-  ViewBag.Title = "Buy Plan";
-  decimal DiscountPercentage = (decimal)db.Settings.Select(s => s.DiscountPercentage).FirstOrDefault();
-  decimal BonusPercentage = (decimal)db.Settings.Select(s => s.BonusPercentage).FirstOrDefault();
-  ViewBag.D = DiscountPercentage;
-  ViewBag.B = BonusPercentage;
+    ViewBag.Title = "Buy Plan";
+    decimal DiscountPercentage = (decimal)db.Settings.Select(s => s.DiscountPercentage).FirstOrDefault();
+    decimal BonusPercentage = (decimal)db.Settings.Select(s => s.BonusPercentage).FirstOrDefault();
+    ViewBag.D = DiscountPercentage;
+    ViewBag.B = BonusPercentage;
 
 }
 
@@ -53,6 +53,7 @@
 <link href="~/Content/Panel.css" rel="stylesheet" />
 
 <div id="content">
+  
   <center>
     <table class="divcover">
       <tr>
@@ -73,7 +74,7 @@
     <div class="row">
 
       <div id="companydetailsmobile" style="display:none"></div>
-      <div class="col-lg-8 col-md-6 col-xs-12" id="shopdetails">
+      <div class="col-lg-8 col-md-7 col-xs-12" id="shopdetails">
         <div class="right-sideabr">
 
 

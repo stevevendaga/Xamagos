@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             DeliveryCity_Only deliveryCity_Only = db.DeliveryCity_Only.Find(id);
             if (deliveryCity_Only == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(deliveryCity_Only);
         }
@@ -66,12 +66,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             DeliveryCity_Only deliveryCity_Only = db.DeliveryCity_Only.Find(id);
             if (deliveryCity_Only == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.StateID = new SelectList(db.States, "ID", "Name", deliveryCity_Only.StateID);
             return View(deliveryCity_Only);
@@ -99,12 +99,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             DeliveryCity_Only deliveryCity_Only = db.DeliveryCity_Only.Find(id);
             if (deliveryCity_Only == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(deliveryCity_Only);
         }

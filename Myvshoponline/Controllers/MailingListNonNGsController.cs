@@ -38,12 +38,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             MailingListNonNG mailingListNonNG = db.MailingListNonNGs.Find(id);
             if (mailingListNonNG == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(mailingListNonNG);
         }
@@ -76,12 +76,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             MailingListNonNG mailingListNonNG = db.MailingListNonNGs.Find(id);
             if (mailingListNonNG == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(mailingListNonNG);
         }
@@ -107,12 +107,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             MailingListNonNG mailingListNonNG = db.MailingListNonNGs.Find(id);
             if (mailingListNonNG == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(mailingListNonNG);
         }

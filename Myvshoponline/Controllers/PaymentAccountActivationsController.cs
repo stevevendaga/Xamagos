@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PaymentAccountActivation paymentAccountActivation = db.PaymentAccountActivations.Find(id);
             if (paymentAccountActivation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(paymentAccountActivation);
         }
@@ -66,12 +66,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PaymentAccountActivation paymentAccountActivation = db.PaymentAccountActivations.Find(id);
             if (paymentAccountActivation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.StateID = new SelectList(db.States, "ID", "Name", paymentAccountActivation.StateID);
             return View(paymentAccountActivation);
@@ -99,12 +99,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PaymentAccountActivation paymentAccountActivation = db.PaymentAccountActivations.Find(id);
             if (paymentAccountActivation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(paymentAccountActivation);
         }

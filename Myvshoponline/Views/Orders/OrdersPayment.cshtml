@@ -1,4 +1,4 @@
-﻿@model List<Myvshoponline.Order>
+@model List<Myvshoponline.Order>
 
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
@@ -6,10 +6,10 @@
 
 @{
     ViewBag.Title = "Orders Payment";
-    int CID = Convert.ToInt32(Request.QueryString["id"]);
+    int groupid =Convert.ToInt32(Session["OrderGroupID"]);
     int UserID = Convert.ToInt32(Session["UserID"]);
-    string currency = db.Orders.Where(o => o.ShopCustomerID == CID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
-    ViewBag.OrdersTotalAmount = db.TempPendingPayments.Where(s => s.OrderGroupID == CID).Select(s => s.Amount).FirstOrDefault();
+    string currency = db.Orders.Where(o => o.UserID == UserID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
+    ViewBag.OrdersTotalAmount = db.TempPendingPayments.Where(s => s.OrderGroupID == groupid).Select(s => s.Amount).FirstOrDefault();
 }
 
 <link href="~/Content/Panel.css" rel="stylesheet" />
@@ -23,7 +23,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading" style="background-color:#0BACE1">
                     <h3 class="panel-title" style="color:white;font-family:Arial;font-size:12px;">ORDER DETAILS
-                        <a href="~/Orders/PendingPayment/@UserID" style="color:#0636d0;background-color:white;padding:10px;">
+                        <a href="~/Orders/PendingPayment" style="color:#0636d0;background-color:white;padding:10px;">
                          
                             << Back to Pending Payments 
                         </a>
@@ -37,13 +37,13 @@
                             <th style="font-size:12px;">Quantity</th>
                             <th style="font-size:12px;text-align:center">
                                 Unit Price  (@if (currency == "NGN")
-                                {<span>₦</span>}
+                                {<span>&#x20A6;</span>}
                                 else
                                 {<span>@currency</span> })
                             </th>
                             <th style="font-weight:bold;font-size:12px;text-align:center">
                                 Amount (@if (currency == "NGN")
-                                {<span>₦</span>}
+                                {<span>&#x20A6;</span>}
                                 else
                                 {<span>@currency</span> })
                             </th>
@@ -110,9 +110,9 @@
                                 <br />
                                 <h4 style="font-size:16px;">
                                     
-                                    Total Amount + Delivery Cost = @{var total = string.Format("{0:#,0}", ViewBag.OrdersTotalAmount);}
+                                    Total Amount = @{var total = string.Format("{0:#,0}", ViewBag.OrdersTotalAmount);}
                                     @if (currency == "NGN")
-                                    {<span>₦</span>}
+                                    {<span>&#x20A6;</span>}
                                     else
                                     {<span>@currency</span> }@total
                                 </h4>
@@ -126,7 +126,7 @@
                     var phone = db.Users.Where(s => s.ID == UserID).Select(s => s.PhoneNumber).FirstOrDefault();
                     var customername = db.Users.Where(s => s.ID == UserID).Select(s => s.CompanyName).FirstOrDefault();
                 }
-                <input type="hidden"  id="ordergroupid" value="@CID" />
+                <input type="hidden"  id="ordergroupid" value="@groupid" />
                 <input type="hidden" name="customerid" id="customerid" value="@UserID" />
                 <input type="hidden" name="customeremail" id="customeremail" value="@email" />
                 <input type="hidden" name="customerphone" id="customerphone" value="@phone" />
@@ -137,7 +137,7 @@
                     <form>
                         <script src="https://js.paystack.co/v1/inline.js"></script>
                         <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
-                            Pay <span>₦</span>@string.Format("{0:#,0}", total)
+                            Pay <span>&#x20A6;</span>@string.Format("{0:#,0}", total)
                         </button>
                     </form>
                 </center>

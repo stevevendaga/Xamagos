@@ -64,12 +64,12 @@
                     </div>
                   </div>
 
-                  <div class="form-group">
+                  @*<div class="form-group">
                     <div class="input-icon">
                       <i class="lni-world-alt"></i>
                       @Html.DropDownList("SexID", null, "-- Select Gender --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "sex" })
                     </div>
-                  </div>
+                  </div>*@
 
                   <div class="form-group">
                     <div id="msgcountry" class="badge badge-danger" style="display:none;"></div>
@@ -81,20 +81,19 @@
 
                   <div class="form-group">
                     <div class="input-icon">
-                      <i class="lni-map-marker"></i>
+                      
                       <div id="displaystate">
 
                       </div>
-                      @*@Html.DropDownList("StateID", null, "-- Select State --", htmlAttributes: new { @class = "form-control", @required = "required", @id = "state" })*@
                     </div>
                   </div>
 
-                  <div class="form-group">
+                  @*<div class="form-group">
                     <div class="input-icon">
                       <i class="lni-map-marker"></i>
                       @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Your Address", @required = "required", @id = "address" } })
                     </div>
-                  </div>
+                  </div>*@
 
                   @*<div class="form-group">
         <div class="input-icon">
@@ -319,9 +318,9 @@
     var isValidNumber = iti.isValidNumber();
 
     var _email = document.getElementById("email").value;
-    var _sex = document.getElementById("sex").value;
+    //var _sex = document.getElementById("sex").value;
     var _state = document.getElementById("state").value;
-    var _address = document.getElementById("address").value;
+    //var _address = document.getElementById("address").value;
     var _pw = document.getElementById("password").value;
     var _confirmpw = document.getElementById("confirmpassword").value;
     var _countryid = document.getElementById("country").value;
@@ -351,11 +350,11 @@
       $("#phone").css("borderColor", "green");
       return false;
     }
-    else if (_sex == '') {
-      $("#sex").css("borderColor", "red");
-      $("#sex").focus();
-      return false;
-    }
+    //else if (_sex == '') {
+    //  $("#sex").css("borderColor", "red");
+    //  $("#sex").focus();
+    //  return false;
+    //}
     else if (_countryid == '') {
       $("#country").css("borderColor", "red");
       $("#country").focus();
@@ -366,18 +365,18 @@
       $("#state").focus();
       return false;
     }
-    else if (_address == '') {
-      $("#address").css("borderColor", "red");
-      $("#address").focus();
+    //else if (_address == '') {
+    //  $("#address").css("borderColor", "red");
+    //  $("#address").focus();
 
-      $("#email").css("borderColor", "green");
-      return false;
-    }
+    //  $("#email").css("borderColor", "green");
+    //  return false;
+    //}
     else if (_pw == '') {
       $("#password").css("borderColor", "red");
       $("#password").focus();
 
-      $("#address").css("borderColor", "green");
+      //$("#address").css("borderColor", "green");
       return false;
     }
     else if (_confirmpw == '') {
@@ -411,9 +410,9 @@
         $("#name").css("borderColor", "green");
         $("#phone").css("borderColor", "green");
         $("#email").css("borderColor", "green");
-        $("#sex").css("borderColor", "green");
+        //$("#sex").css("borderColor", "green");
         $("#state").css("borderColor", "green");
-        $("#address").css("borderColor", "green");
+       // $("#address").css("borderColor", "green");
         $("#password").css("borderColor", "green");
         $("#confirmpassword").css("borderColor", "green");
 
@@ -444,7 +443,7 @@
         var url = "/Users/SignUpAjax/";
         $.ajax({
           url: url,
-          data: { name: _name, phone: number, email: _email, sex: _sex, state: _state, address: _address, password: _pw, countryid: _countryid },
+          data: { name: _name, phone: number, email: _email, state: _state, password: _pw, countryid: _countryid },
           cache: false,
           type: "POST",
           success: function (data) {
@@ -570,7 +569,7 @@
       type: "GET",
       success: function (data) {
         var html = '';
-        html += '<span><select name="StateID" class="form-control" id="state">';
+        html += '<i class="lni-map-marker"></i><span><select name="StateID" class="form-control" id="state">';
         html += '<option selected disabled>-- Select State --</option>';
         $.each(data, function (key, item) {
 
@@ -603,7 +602,7 @@
             GetStates(CountryID);
           }
           else {
-            html += '<input type="text" id="state" name="StateID" class="form-control" placeholder="State" required="required" onchange="this.value = this.value.toUpperCase();"/>';
+            html += '<i class="lni-map-marker"></i><input type="text" id="state" name="StateID" class="form-control" placeholder="State" required="required" onchange="this.value = this.value.toUpperCase();"/>';
           }
         });
         $("#displaystate").html(html).show();

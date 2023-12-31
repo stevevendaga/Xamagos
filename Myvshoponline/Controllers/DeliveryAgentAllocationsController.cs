@@ -62,12 +62,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 DeliveryAgentAllocation deliveryAgentAllocation = db.DeliveryAgentAllocations.Find(id);
                 if (deliveryAgentAllocation == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 return View(deliveryAgentAllocation);
             }
@@ -125,12 +125,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             DeliveryAgentAllocation deliveryAgentAllocation = db.DeliveryAgentAllocations.Find(id);
             if (deliveryAgentAllocation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.StateID = new SelectList(db.States, "ID", "Name", deliveryAgentAllocation.StateID);
                 var details = from p in db.Users
@@ -171,12 +171,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             DeliveryAgentAllocation deliveryAgentAllocation = db.DeliveryAgentAllocations.Find(id);
             if (deliveryAgentAllocation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(deliveryAgentAllocation);
             }

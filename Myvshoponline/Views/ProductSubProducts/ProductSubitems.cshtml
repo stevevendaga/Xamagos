@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-lg-7 col-md-12 col-xs-12">
             <h6 style="font-size:14px">
-                &raquo;<b style="color:black"><a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName &raquo;</a>  </b> <a href="~/Products/ProductCategoryDetails/?id=@ViewBag.CategoryID&sid=@ViewBag.ShopID">@ViewBag.CategoryName</a>
+                &raquo;<b style="color:black"><a href="~/Shops/ShopDetails" onclick="setObjectSession('ShopID',@ViewBag.ShopID)"> @ViewBag.ShopName &raquo;</a>  </b> <a href="~/Products/ProductCategoryDetails" onclick="setObjectSession('ProductCategoryID',@ViewBag.CategoryID)">@ViewBag.CategoryName</a>
             </h6>
         </div>
         <div class="col-lg-5 col-md-12 col-xs-12">
@@ -153,7 +153,7 @@ else
                      <div class="col-lg-3 col-md-6 col-xs-12" style="padding:0px;margin:0px;border-top:1px solid #00B7F4">
                             <div class="right-sideabr" style="padding:5px;">
 
-                                    <a href="~/Products/ProductDetailsSubitems/@item.ID?sid=@ViewBag.ShopID" title="@item.Name">
+                                    <a href="~/Products/ProductDetailsSubitems" title="@item.Name" onclick="setSubProductDetailsSession(@item.ID,@ViewBag.ShopID)">
 
                                         <div class="icon bg-color-1" style="width:200px; height:120px">
                                             @{var passports =item.ProductID+"-"+item.ID + ".jpg";

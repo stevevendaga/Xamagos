@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductVisit productVisit = db.ProductVisits.Find(id);
             if (productVisit == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(productVisit);
         }
@@ -68,12 +68,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductVisit productVisit = db.ProductVisits.Find(id);
             if (productVisit == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.ProductID = new SelectList(db.Products, "ID", "Name", productVisit.ProductID);
             ViewBag.ProductSubItemID = new SelectList(db.ProductSubProducts, "ID", "Name", productVisit.ProductSubItemID);
@@ -103,12 +103,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductVisit productVisit = db.ProductVisits.Find(id);
             if (productVisit == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(productVisit);
         }

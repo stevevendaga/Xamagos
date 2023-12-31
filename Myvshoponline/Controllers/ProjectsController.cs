@@ -53,14 +53,14 @@ namespace SysmaxTrainingCenter.Controllers
             if (String.IsNullOrEmpty((string)Session["Name"])) return Redirect("/Account/Login");
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
                         
             Project project = db.Projects.Find(id);
           
             if (project == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             } 
                        
             return View(project);
@@ -109,14 +109,14 @@ namespace SysmaxTrainingCenter.Controllers
             if (String.IsNullOrEmpty((string)Session["Name"])) return Redirect("/Account/Login");
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
                 
             }
 
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
                 
             }
             return View(project);
@@ -154,12 +154,12 @@ namespace SysmaxTrainingCenter.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(project);
         }

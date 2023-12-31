@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             BankInformation bankInformation = db.BankInformations.Find(id);
             if (bankInformation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(bankInformation);
         }
@@ -66,12 +66,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             BankInformation bankInformation = db.BankInformations.Find(id);
             if (bankInformation == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.BankID = new SelectList(db.Banks, "ID", "Name", bankInformation.BankID);
             return View(bankInformation);

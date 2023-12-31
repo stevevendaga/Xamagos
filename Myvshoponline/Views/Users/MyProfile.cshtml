@@ -147,6 +147,7 @@
 
 
     string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+    int PlanID = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.ID).FirstOrDefault();
     int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
     int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
     double TotalDaysRemaining = Fixeddays - DaysUsed;
@@ -176,274 +177,285 @@
                         }
 
 
+                <div class="row">
+                  @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
+                  {
+                      string baseDirectory = Server.MapPath("~/BusinessImages/");
+                      string filePath = Path.Combine(baseDirectory, item1.CompanyName + item1.HardToken, passports);
+
+                    <div class="col-lg-4 col-md-4 col-5" style="background-color:white">
+                      <div id="companyheader">
+                        <span class="alerts-title" id="companyname" style="margin:0px;padding:2px;font-size:16px;display:none;"><i class=" lni lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</span>
+                        @*<p style="color:red;font-size:18px;text-align:left;font-weight:bold;margin-left:25px;">FREE MODE<span> </span> </p>*@
+                        <br />
+                        <center>
+                          @if (File.Exists(filePath))
+                          {
+                            <img class="alerts-title" src="~/BusinessImages/@item1.CompanyName@item1.HardToken/@passports" style="width:100px;vertical-align:top;height:100px;" />
+                          }
+                          else
+                          {
+                            <img class="alerts-title" src="~/Images/user.png" style="width:100px;vertical-align:top;height:100px;" />
+                          }
+                          <br style="margin-top:10px;" />
+                          <br />
+                          <span style="color:white;padding:0px;margin-top:10px;vertical-align:top">
+                            &nbsp;&nbsp; <a href="#" class="btn btn-primary" style="height:25px;padding:5px;font-size:11px" title="Update Business Logo" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();"> <i class="lni-camera"></i> Upload  Photo</a>
+                          </span>
+                        </center>
+                        <br />
                         <div class="row">
-                            @if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
-                            {
-                                <div class="col-lg-4 col-md-4 col-5" style="background-color:white">
-                                    <div id="companyheader">
-                                        <span class="alerts-title" id="companyname" style="margin:0px;padding:2px;font-size:16px;display:none;"><i class=" lni lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</span>
-                                        @*<p style="color:red;font-size:18px;text-align:left;font-weight:bold;margin-left:25px;">FREE MODE<span> </span> </p>*@
-                                        <br />
-                                        <center>
-                                            <img class="alerts-title" src="~/BusinessImages/@item1.CompanyName@item1.HardToken/@passports" style="width:100px;vertical-align:top;height:100px;" />
-                                            <br style="margin-top:10px;" />
-                                            <br />
-                                            <span style="color:white;padding:0px;margin-top:10px;vertical-align:top">
-                                                &nbsp;&nbsp; <a href="#" class="btn btn-primary" style="height:25px;padding:2px;font-size:11px" title="Update Business Logo" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();"> <i class="lni-camera"></i> Upload  Photo</a>
-                                            </span>
-                                        </center>
-                                        <br />
-                                        <div class="row">
 
-                                            <div class="btn btn-common" style="padding-top:1px;padding-bottom:1px;padding-left:9px;padding-right:9px;border-bottom-left-radius:25px;border-top-right-radius:25px;" data-toggle="modal" data-target="#myModalChangePw" onclick="clearTextBox();">
-                                                Change Password
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                   
-
-                                </div>
-                                    <div class="col-lg-4 col-md-5 col-7" style="background-color:white;border-radius:5px;border:1px solid #BDE1AE ">
-
-                                        <p style="margin-top:5px;font-weight:bold">
-                                            ACCOUNT TYPE <br />
-                                        <span style="text-align:match-parent">
-                                             <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></span>
-                                            <br />
-                                            <a class="btn btn-success" href="~/Users/BuyPlan?id=1" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px">
-                                                <i class="lni lni-licencse"></i> Upgrade Now
-                                            </a>
-                                            <h6 style="color:brown;font-size:14px;">
-                                                Upgrade your <b> Account </b>
-                                                to enjoy more benefits
-                                                of XAMAGOS.
-                                            
-                                            </h6>
-                                            <h6 style="color:black;font-size:14px;">Your Referal Code: <b> @UserID </b></h6>
-                                            
-                                            @*<h4 style="font-size:12px;">Share Your Referal Link</h4>
-                        <script>
-                        (function (d, s, id) {
-                            var js, fjs = d.getElementsByTagName(s)[0];
-                            if (d.getElementById(id)) return;
-                            js = d.createElement(s); js.id = id;
-                            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
-                            fjs.parentNode.insertBefore(js, fjs);
-                        }(document, 'script', 'facebook-jssdk'));</script>
-
-
-                        <ul class="mt-4 footer-social">
-                            <li>
-
-                                @{
-                                    string referallink = "http://marketsquare247.com/Users/Create?rx=" + UserID;
-                                }
-                                @{
-                                    string referallink1 = "http://marketsquare247.com/Users/Create?rx=" + UserID;
-                                }
-                                <div class="fb-share-button"
-                                        data-href="@referallink1"
-                                        data-layout="button_count">
-                                </div>
-                            </li>
-                            <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/Users/Create?rx=@referallink" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
-                           
-                            <li>
-                                <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
-                                    <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
-                                </a>
-                            </li>
-
-                        </ul>*@
-
-                                        </p>
-                                       
-                              
-                          
-
-                                        @{
-//if (ViewBag.diff > ViewBag.FixedDays)
-//{
-//    ViewBag.Expired = "Your plan has expired!";
-//}
-//else
-//{
-//    var r = db.Set<User>().Find(UserID);
-//    r.NDays = ViewBag.diff;
-//    r.LaunchDate = DateTime.Now;
-//    r.LaunchYear = DateTime.Now.Year;
-//    r.LaunchMonth = DateTime.Now.Month;
-//    r.LaunchDay = DateTime.Now.Day;
-//    db.SaveChanges();
-//}
-                                        }
-                                        @*@if (paymentstatus == 1)
-                                            {
-
-
-                                                <p style="text-align:match-parent"> <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></p>
-                                                if (ViewBag.Expired != null)
-                                                {
-                                                    <span class="badge badge-info" style="font-size:15px;color:red;border:1px solid red;background-color:white">@ViewBag.Expired </span><hr style="margin:0px;padding:0px;" />
-                                                }
-                                                else
-                                                {*@
-                                        @*<span class="badge badge-info" style="font-size:18px;text-align:center;background-color:white">
-                                                       <p>
-                                                           @if (totalYears > 0)
-                                                       {
-                                                           <span>@totalYears</span>
-                                                           if (totalYears > 1)
-                                                           {
-                                                               <span>years</span>
-                                                           }
-                                                           else
-                                                           {
-                                                               <span>year</span>
-                                                           }
-                                                       }
-
-                                                       @if (totalMonths > 0)
-                                                       {
-                                                           <span>@totalMonths</span>
-                                                           if (totalMonths > 1)
-                                                           {
-                                                               <span>months</span>
-                                                           }
-                                                           else
-                                                           {
-                                                               <span>month</span>
-                                                           }
-
-
-                                                       }
-                                                       @if (remainingDays > 0)
-                                                       {
-                                                           <span>and</span>
-
-                                                           <span>@remainingDays</span>
-                                                           if (remainingDays > 1)
-                                                           {
-                                                               <span>days</span>
-                                                           }
-                                                           else
-                                                           {
-                                                               <span>
-                                                                   day
-                                                               </span>
-                                                           }
-                                                       }
-                                                   </p>
-
-                                            </span>*@
-
-                                        
-                                        @*}
-                                                <hr style="padding:0px;margin:2px" />
-
-                                            }
-                                            else
-                                            {
-                                                //string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
-                                                //int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
-                                                //int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
-                                                //int TotalDaysRemaining = Fixeddays - DaysUsed;
-                                                <br />*@
-
-                                        @*<hr style="margin-top:3px;"/>*@
-                                        @*<h5 style="font-size:15px;">Referals: @db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() </h5>
-
-                                        <h5 style="font-size:15px;color:green">
-                                            Amount Earned<br />
-                                            <span class="NairaSign">N</span> @{ var amt = db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() * 5;
-                                            }@amt.00
-                                        </h5>
-                                        <hr />
-                                        <span style="font-size:12px;color:black;">Minimum withdrawable amount:<span class="NairaSign">N</span>1,000.00</span>
-                                        @if (amt >= 1000)
-                                        {
-                                            <button type="button" id="withdraw" class="btn btn-success" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
-                                                            <br /><br />
-                                        }
-                                        else
-                                        {
-                                            <button type="submit" id="withdraw" class="btn btn-warning" disabled="disabled" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
-                                                            <br /><br />
-                                        }*@
-                                        @*if (TotalDaysRemaining == 0)
-                                                {
-                                                    <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">Your trial period has expired! </span><hr style="margin:2px;padding:0px;" />
-                                                    <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">
-
-                                                        <p>
-                                                            @if (totalYears > 0)
-                                                        {
-                                                            <span>@totalYears</span>
-                                                            if (totalYears > 1)
-                                                            {
-                                                                <span>years</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>year</span>
-                                                            }
-                                                        }
-
-                                                        @if (totalMonths > 0)
-                                                        {
-                                                            <span>@totalMonths</span>
-                                                            if (totalMonths > 1)
-                                                            {
-                                                                <span>months</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>month</span>
-                                                            }
-
-
-
-                                                        }
-                                                        @if (remainingDays > 0)
-                                                        {
-                                                            <span>and</span>
-                                                            <span>@remainingDays</span>
-                                                            if (remainingDays > 1)
-                                                            {
-                                                                <span>days</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>
-                                                                    day
-                                                                </span>
-                                                            }
-                                                        }
-                                                        <span>remaining</span>
-                                                    </p>
-
-
-                                            </span><hr style="margin:2px;padding:0px;" />
-                                                    <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
-
-                                                }*@
-
-
-                                        @*}*@
-                                    </div>
-                                        @*<h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
-                                                }
-                                                else
-                                                {
-                                                    @*<img class="alerts-title" src="~/BusinessImages/@item1.CompanyName/@passports" style="width:30%;vertical-align:top;height:70px" />
-                                                        <h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><br /><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
-                                                }
+                          <div class="btn btn-common" style="padding-top:1px;padding-bottom:1px;padding-left:9px;padding-right:9px;border-bottom-left-radius:25px;border-top-right-radius:25px;" data-toggle="modal" data-target="#myModalChangePw" onclick="clearTextBox();">
+                            Change Password
+                          </div>
                         </div>
+
+                      </div>
+
+
+                    </div>
+                    <div class="col-lg-4 col-md-5 col-7" style="background-color:white;border-radius:5px;border:1px solid #BDE1AE ">
+
+                      <p style="margin-top:5px;font-weight:bold">
+                        ACCOUNT TYPE <br />
+                        <span style="text-align:match-parent">
+                          <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span>
+                        </span>
+                        <br />
+                        <a class="btn btn-success" href="~/Users/BuyPlan" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px" onclick="setObjectSession('PlanID',@PlanID)">
+                          <i class="lni lni-licencse"></i> Upgrade Now
+                        </a>
+                        <h6 style="color:brown;font-size:14px;">
+                          Upgrade your <b> Account </b>
+                          to enjoy more benefits
+                          of XAMAGOS.
+
+                        </h6>
+                        <h6 style="color:black;font-size:14px;">Your Referal Code: <b> @UserID </b></h6>
+
+                        @*<h4 style="font-size:12px;">Share Your Referal Link</h4>
+          <script>
+          (function (d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+              fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
+
+
+          <ul class="mt-4 footer-social">
+              <li>
+
+                  @{
+                      string referallink = "http://marketsquare247.com/Users/Create?rx=" + UserID;
+                  }
+                  @{
+                      string referallink1 = "http://marketsquare247.com/Users/Create?rx=" + UserID;
+                  }
+                  <div class="fb-share-button"
+                          data-href="@referallink1"
+                          data-layout="button_count">
+                  </div>
+              </li>
+              <li><a class="twitter" href="http://twitter.com/share?url=http://marketsquare247.com/Users/Create?rx=@referallink" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+
+              <li>
+                  <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                      <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
+                  </a>
+              </li>
+
+          </ul>*@
+
+                      </p>
+
+
+
+
+                      @{
+                        //if (ViewBag.diff > ViewBag.FixedDays)
+                        //{
+                        //    ViewBag.Expired = "Your plan has expired!";
+                        //}
+                        //else
+                        //{
+                        //    var r = db.Set<User>().Find(UserID);
+                        //    r.NDays = ViewBag.diff;
+                        //    r.LaunchDate = DateTime.Now;
+                        //    r.LaunchYear = DateTime.Now.Year;
+                        //    r.LaunchMonth = DateTime.Now.Month;
+                        //    r.LaunchDay = DateTime.Now.Day;
+                        //    db.SaveChanges();
+                        //}
+                      }
+                      @*@if (paymentstatus == 1)
+        {
+
+
+            <p style="text-align:match-parent"> <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></p>
+            if (ViewBag.Expired != null)
+            {
+                <span class="badge badge-info" style="font-size:15px;color:red;border:1px solid red;background-color:white">@ViewBag.Expired </span><hr style="margin:0px;padding:0px;" />
+            }
+            else
+            {*@
+                      @*<span class="badge badge-info" style="font-size:18px;text-align:center;background-color:white">
+                   <p>
+                       @if (totalYears > 0)
+                   {
+                       <span>@totalYears</span>
+                       if (totalYears > 1)
+                       {
+                           <span>years</span>
+                       }
+                       else
+                       {
+                           <span>year</span>
+                       }
+                   }
+
+                   @if (totalMonths > 0)
+                   {
+                       <span>@totalMonths</span>
+                       if (totalMonths > 1)
+                       {
+                           <span>months</span>
+                       }
+                       else
+                       {
+                           <span>month</span>
+                       }
+
+
+                   }
+                   @if (remainingDays > 0)
+                   {
+                       <span>and</span>
+
+                       <span>@remainingDays</span>
+                       if (remainingDays > 1)
+                       {
+                           <span>days</span>
+                       }
+                       else
+                       {
+                           <span>
+                               day
+                           </span>
+                       }
+                   }
+               </p>
+
+        </span>*@
+
+
+                      @*}
+            <hr style="padding:0px;margin:2px" />
+
+        }
+        else
+        {
+            //string Plan = db.Users.Where(p => p.ID == UserID).Select(p => p.PricingPlan.PlanName).FirstOrDefault();
+            //int DaysUsed = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.NDays).FirstOrDefault();
+            //int Fixeddays = (int)db.Users.Where(p => p.ID == UserID).Select(p => p.FixedDays).FirstOrDefault();
+            //int TotalDaysRemaining = Fixeddays - DaysUsed;
+            <br />*@
+
+                      @*<hr style="margin-top:3px;"/>*@
+                      @*<h5 style="font-size:15px;">Referals: @db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() </h5>
+
+        <h5 style="font-size:15px;color:green">
+            Amount Earned<br />
+            <span class="NairaSign">N</span> @{ var amt = db.Users.Where(r => r.ReferalID == UserID && r.EmailVerify == 1).Count() * 5;
+            }@amt.00
+        </h5>
+        <hr />
+        <span style="font-size:12px;color:black;">Minimum withdrawable amount:<span class="NairaSign">N</span>1,000.00</span>
+        @if (amt >= 1000)
+        {
+            <button type="button" id="withdraw" class="btn btn-success" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
+                            <br /><br />
+        }
+        else
+        {
+            <button type="submit" id="withdraw" class="btn btn-warning" disabled="disabled" style="padding-left:5px;padding-right:5px;padding-bottom:3px;padding-top:3px">Make Withdrawal</button>
+                            <br /><br />
+        }*@
+                      @*if (TotalDaysRemaining == 0)
+            {
+                <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">Your trial period has expired! </span><hr style="margin:2px;padding:0px;" />
+                <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
+            }
+            else
+            {
+                <span class="badge badge-info" style="font-size:18px;color:red;border:1px solid red;text-align:center;background-color:white">
+
+                    <p>
+                        @if (totalYears > 0)
+                    {
+                        <span>@totalYears</span>
+                        if (totalYears > 1)
+                        {
+                            <span>years</span>
+                        }
+                        else
+                        {
+                            <span>year</span>
+                        }
+                    }
+
+                    @if (totalMonths > 0)
+                    {
+                        <span>@totalMonths</span>
+                        if (totalMonths > 1)
+                        {
+                            <span>months</span>
+                        }
+                        else
+                        {
+                            <span>month</span>
+                        }
+
+
+
+                    }
+                    @if (remainingDays > 0)
+                    {
+                        <span>and</span>
+                        <span>@remainingDays</span>
+                        if (remainingDays > 1)
+                        {
+                            <span>days</span>
+                        }
+                        else
+                        {
+                            <span>
+                                day
+                            </span>
+                        }
+                    }
+                    <span>remaining</span>
+                </p>
+
+
+        </span><hr style="margin:2px;padding:0px;" />
+                <a class="btn btn-success" href="~/Home/Index#pricing" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px">Buy Plan Now</a>
+
+            }*@
+
+
+                      @*}*@
+                    </div>
+                    @*<h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
+                  }
+                  else
+                  {
+                    @*<img class="alerts-title" src="~/BusinessImages/@item1.CompanyName/@passports" style="width:30%;vertical-align:top;height:70px" />
+      <h6 class="alerts-title" style="margin:0px;padding:2px;font-size:16px"><br /><i class="lni-user" style="fill:Background"></i> @item1.CompanyName.ToUpper()</h6>*@
+                  }
+                </div>
                             @*if (!string.IsNullOrEmpty((string)Session["username"]) && ((string)Session["UserRole"] == "Shop Admin" || (string)Session["UserRole"] == "Super Admin") && (string)Session["Name"] == (string)ViewBag.CompanyName)
                                        {
                                                                    <div class="panel panel-success">

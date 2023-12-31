@@ -1,7 +1,7 @@
 @model Myvshoponline.SearchOptimization
 @using Myvshoponline.Controllers;
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
-    int ShopID = Convert.ToInt32(Request.QueryString["sid"]);
+    int ShopID =Convert.ToInt32(Session["ShopID"]);
     //GET price for popular product a day
     decimal SEOPricingperday = Convert.ToDecimal(db.SearchOptimizationPricings.Select(s => s.Amount).First());
 }
@@ -12,7 +12,7 @@
 }
 <br /><br /><br />
 <body onload="LoadProductSelections();"></body>
-<h2 style="font-size: 10px; background-color: #A4C9CF" class="alert alert-info" >Promote Products for Search Optimization for <a href="~/Shops/ShopDetails/@ShopID"> @db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault()</a></h2>
+<h2 style="font-size: 10px; background-color: #A4C9CF" class="alert alert-info" >Promote Products for Search Optimization for <a href="~/Shops/ShopDetails"> @db.Shops.Where(s => s.ID == ShopID).Select(s => s.Name).FirstOrDefault()</a></h2>
  <!-- Start Content -->
 <div id="content" style="padding-top:0px">
     <div class="container">

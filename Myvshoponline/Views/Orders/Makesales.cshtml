@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Order>
+@model IEnumerable<Myvshoponline.Order>
 
 @{
     ViewBag.Title = "Make Sales";
@@ -22,7 +22,7 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <a href="~/Shops/ShopDetails">@ViewBag.Shopname DASHBOARD</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 <li>
@@ -32,7 +32,7 @@
                                         var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
                                     }
                                 <li>
-                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                    <a href="~/Orders/Accounts">
                                         <i class="lni lni-stats-down"></i> Sales
                                     </a>
                                     <hr style="padding:1px;margin:5px" />

@@ -41,7 +41,18 @@ namespace Myvshoponline.Controllers
       Session[key] = value;
     }
 
-
+    public JsonResult SetCartSession(string shopid, string productid,string dcity,string qty, string negotiate)
+    {
+      // Store the product details in TempData
+      Session["CartProductID"] = productid;
+      Session["CartShopID"] = shopid;
+      Session["dcity"] = dcity;
+      Session["qty"] = qty;
+      Session["Cart"] = "cart";
+      Session["Negotiate"] = negotiate;
+      var result = new { session = "true" };
+      return Json(result, JsonRequestBehavior.AllowGet);
+    }
     //public void SetObjectSession(string key, string value)
     //{
     //  // Ensure that the HttpContext is available

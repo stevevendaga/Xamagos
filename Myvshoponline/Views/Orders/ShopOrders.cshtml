@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Order>
+@model IEnumerable<Myvshoponline.Order>
 
 @{
     ViewBag.Title = "Customer Orders";
@@ -27,7 +27,7 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASBOARD</a>
+                                    <a href="~/Shops/ShopDetails">@ViewBag.Shopname DASBOARD</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 @*<li>
@@ -201,11 +201,11 @@
                                     </th>
                                     <th>
 
-                                        @Html.DisplayNameFor(model => model.Rate) (₦)
+                                        @Html.DisplayNameFor(model => model.Rate) (<span>&#x20A6;</span>)
                                     </th>
                                     <th>
 
-                                        @Html.DisplayNameFor(model => model.Amount) (₦)
+                                        @Html.DisplayNameFor(model => model.Amount) (<span>&#x20A6;</span>)
                                     </th>
                                     <th>
                                         @Html.DisplayName("Date Ordered")
@@ -237,7 +237,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            <a href="~/Orders/OrderDetails/@item.ID">
+                                            <a href="~/Orders/OrderDetails" onclick="setObjectSession('OrderID',@item.ID)">
                                                 @if (item.SubProductID != 0)
                                                 {
                                                     @Html.DisplayFor(modelItem => item.ProductSubProduct.Name)
@@ -319,11 +319,11 @@
                                     </th>
                                     <th>
 
-                                        @Html.DisplayNameFor(model => model.Rate) (₦)
+                                        @Html.DisplayNameFor(model => model.Rate) (<span>&#x20A6;</span>)
                                     </th>
                                     <th>
 
-                                        @Html.DisplayNameFor(model => model.Amount) (₦)
+                                        @Html.DisplayNameFor(model => model.Amount) (<span>&#x20A6;</span>)
                                     </th>
                                     <th>
                                         @Html.DisplayName("Date Ordered")
@@ -354,26 +354,26 @@
             type: "GET",
             success: function (data) {
                
-                var html = '<table id="zero_config1" class="table table-responsive table-hover table-striped" style="font-size:12px;color:black"><thead><tr><th>Product Name</th><th>Quantity</th><th>Rate (₦)</th><th>Amount (₦)</th><th>Date Ordered</th></tr></thead><tbody>';
+              var html = '<table id="zero_config1" class="table table-responsive table-hover table-striped" style="font-size:12px;color:black"><thead><tr><th>Product Name</th><th>Quantity</th><th>Rate (&#x20A6;)</th><th>Amount (&#x20A6;)</th><th>Date Ordered</th></tr></thead><tbody>';
                 
                 $.each(data, function (key, item) {
                     html += '<tr>';
                     if (item.SubProductID != 0) {
                         if (item.op == "negotiation") {
-                            html += '<td><a href="/OrderNegotiations/OrderNegos/' + item.ID + '?sellid=true">' + item.SubProductName;
+                          html += '<td><a href="/OrderNegotiations/OrderNegos/' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.SubProductName;
                         }
                         else
                         {
-                            html += '<td><a href="/Orders/OrderDetails/' + item.ID + '">' + item.SubProductName;
+                          html += '<td><a href="/Orders/OrderDetails/' + '"  onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.SubProductName;
                         }
                     } else {
                             if(item.op=="negotiation")
                             {
-                                html += '<td><a href="/OrderNegotiations/OrderNegos/' + item.ID + '?sellid=true">' + item.ProductName;
+                              html += '<td><a href="/OrderNegotiations/OrderNegos/' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.ProductName;
                             }
                             else
                             {
-                                html += '<td><a href="/Orders/OrderDetails/' + item.ID + '">' + item.ProductName;
+                              html += '<td><a href="/Orders/OrderDetails/' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.ProductName;
                             }
                     }
                     html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate - item.c_percent * item.originalAmount) + '</td><td>' + formatNumber(item.Amount - item.Commission) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';

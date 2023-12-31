@@ -34,12 +34,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaAdsStatistic socialMediaAdsStatistic = db.SocialMediaAdsStatistics.Find(id);
             if (socialMediaAdsStatistic == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(socialMediaAdsStatistic);
         }
@@ -84,12 +84,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaAdsStatistic socialMediaAdsStatistic = db.SocialMediaAdsStatistics.Find(id);
             if (socialMediaAdsStatistic == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.SocialMediaAdsID = new SelectList(db.SocialMediaAds, "ID", "Country", socialMediaAdsStatistic.SocialMediaAdsID);
             return View(socialMediaAdsStatistic);
@@ -121,12 +121,12 @@ return Redirect("~/Home/AccessDenied");
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaAdsStatistic socialMediaAdsStatistic = db.SocialMediaAdsStatistics.Find(id);
             if (socialMediaAdsStatistic == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(socialMediaAdsStatistic);
         }

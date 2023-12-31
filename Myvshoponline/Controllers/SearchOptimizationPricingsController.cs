@@ -32,12 +32,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SearchOptimizationPricing searchOptimizationPricing = db.SearchOptimizationPricings.Find(id);
             if (searchOptimizationPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(searchOptimizationPricing);
         }
@@ -80,12 +80,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SearchOptimizationPricing searchOptimizationPricing = db.SearchOptimizationPricings.Find(id);
             if (searchOptimizationPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(searchOptimizationPricing);
         }
@@ -116,12 +116,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SearchOptimizationPricing searchOptimizationPricing = db.SearchOptimizationPricings.Find(id);
             if (searchOptimizationPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(searchOptimizationPricing);
         }

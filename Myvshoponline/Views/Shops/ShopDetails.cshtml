@@ -1229,16 +1229,16 @@
                                                             {
                                                               if (paymentstatus == 1)
                                                               {
-                                                                <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                <a href="~/Orders/ShopOrders" onclick="getcontent(this.id)">
                                                                   <i class="lni lni-cart"></i>
-                                                                  Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                  Orders @*(@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)*@
                                                                 </a>
                                                               }
                                                               else
                                                               {
                                                                 <a href="#" id="orders">
                                                                   <i class="lni lni-cart"></i>
-                                                                  Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                  Orders @*(@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)*@
                                                                 </a>
                                                               }
                                                             }
@@ -1249,21 +1249,21 @@
                                                                 <div id="ordersLinkNotVerified">
                                                                   <a href="#" id="orders">
                                                                     <i class="lni lni-cart"></i>
-                                                                    Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                    Orders @*(@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)*@
                                                                   </a>
                                                                 </div>
                                                                 <div id="ordersLinkVerified" style="display:none">
-                                                                  <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                  <a href="~/Orders/ShopOrders" onclick="getcontent(this.id)">
                                                                     <i class="lni lni-cart"></i>
-                                                                    Orders (@{var od = Convert.ToInt32(ViewBag.Orders);}@od)
+                                                                    Orders @*(@{var od = Convert.ToInt32(ViewBag.Orders);}@od)*@
                                                                   </a>
                                                                 </div>
                                                               }
                                                               else
                                                               {
-                                                                <a href="~/Orders/ShopOrders/@ViewBag.CompanyID?sid=@Model.ID" onclick="getcontent(this.id)">
+                                                                <a href="~/Orders/ShopOrders" onclick="getcontent(this.id)">
                                                                   <i class="lni lni-cart"></i>
-                                                                  Orders (@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)
+                                                                  Orders @*(@{var ss = Convert.ToInt32(ViewBag.Orders);}@ss)*@
                                                                 </a>
                                                               }
                                                             }
@@ -1279,7 +1279,7 @@
                                                             {
                                                               if (paymentstatus == 1)
                                                               {
-                                                                <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                <a href="~/Orders/Accounts">
                                                                   <i class="lni lni-stats-down"></i> Sales
                                                                 </a>
                                                               }
@@ -1301,14 +1301,14 @@
                                                                   </a>
                                                                 </div>
                                                                 <div id="salesLinkVerified" style="display:none">
-                                                                  <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                  <a href="~/Orders/Accounts">
                                                                     <i class="lni lni-stats-down"></i> Sales
                                                                   </a>
                                                                 </div>
                                                               }
                                                               else
                                                               {
-                                                                <a href="~/Orders/Accounts/?sid=@Model.ID">
+                                                                <a href="~/Orders/Accounts">
                                                                   <i class="lni lni-stats-down"></i> Sales
                                                                 </a>
                                                               }
@@ -1326,7 +1326,7 @@
                                                             {
                                                               if (paymentstatus == 1)
                                                               {
-                                                                <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                <a href="~/ShopCustomers/Index">
                                                                   <i class="lni lni-users"></i>
                                                                   My Customers (@totalCust)
                                                                 </a>
@@ -1351,7 +1351,7 @@
                                                                   </a>
                                                                 </div>
                                                                 <div id="customersLinkVerified" style="display:none">
-                                                                  <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                  <a href="~/ShopCustomers/Index">
                                                                     <i class="lni lni-users"></i>
                                                                     My Customers (@totalCust)
                                                                   </a>
@@ -1359,7 +1359,7 @@
                                                               }
                                                               else
                                                               {
-                                                                <a href="~/ShopCustomers/Index/?id=@Model.ID">
+                                                                <a href="~/ShopCustomers/Index">
                                                                   <i class="lni lni-users"></i>
                                                                   My Customers (@totalCust)
                                                                 </a>
@@ -1378,7 +1378,7 @@
                                                             {
                                                               if (paymentstatus == 1)
                                                               {
-                                                            <a href="~/Shops/BusinessCard/?id=@Model.ID">
+                                                            <a href="~/Shops/BusinessCard">
                                                               <i class="lni lni-book"></i>
                                                               Business Card
                                                             </a>
@@ -1403,7 +1403,7 @@
                                                                   </a>
                                                                 </div>
                                                                 <div id="customersLinkVerified" style="display:none">
-                                                                  <a href="~/Shops/BusinessCard/?id=@Model.ID">
+                                                                  <a href="~/Shops/BusinessCard">
                                                                     <i class="lni lni-book"></i>
                                                                     Business Card
                                                                   </a>
@@ -1411,7 +1411,7 @@
                                                               }
                                                               else
                                                               {
-                                                                <a href="~/Shops/BusinessCard/?id=@Model.ID">
+                                                                <a href="~/Shops/BusinessCard">
                                                                   <i class="lni lni-book"></i>
                                                                   Business Card
                                                                 </a>
@@ -1578,7 +1578,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-6 col-lg-6" style="text-align:right">
                                                                 <span style="color:white;padding:3px;margin-top:0px;vertical-align:top">
-                                                                    <a href="~/SearchOptimizations/SEO?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products for search optimization"> <i class="lni lni-search"></i> Search Optimization</a>
+                                                                    <a href="~/SearchOptimizations/SEO" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products for search optimization"> <i class="lni lni-search"></i> Search Optimization</a>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -1586,13 +1586,13 @@
                                                         <div class="row" style="margin-top:5px;">
                                                             <div class="col-12 col-md-6 col-lg-6" style="margin-bottom:10px">
                                                                 <span style="color:white;padding:3px;margin-top:10px;vertical-align:top;">
-                                                                    <a href="~/PopularProducts/PopularProducts?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products"> <i class="lni lni-more"></i> Promote Products</a>
+                                                                    <a href="~/PopularProducts/PopularProducts" class="btn btn-info" style="height:25px;width:100%;padding:5px;font-size:10px" title="Promote my products"> <i class="lni lni-more"></i> Promote Products</a>
                                                                 </span>
                                                             </div>
                                                             <div class="col-12 col-md-6 col-lg-6" style="text-align:right">
 
                                                                 <span style="color:white;padding:3px;margin-top:10px;vertical-align:top">
-                                                                    <a href="~/PopularStores/Index/?sid=@Model.ID" class="btn btn-info" style="height:25px;width:100%; padding:5px;font-size:10px" title="View my promoted items" onclick="clearTextBox();"> <i class="lni lni-stats-up"></i> Promotions</a>
+                                                                    <a href="~/PopularStores/Index" class="btn btn-info" style="height:25px;width:100%; padding:5px;font-size:10px" title="View my promoted items" onclick="clearTextBox();"> <i class="lni lni-stats-up"></i> Promotions</a>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -1685,7 +1685,7 @@
                                                 </div>
                                                 <div class="contact-icon">
                                                     <i class="lni-link"></i>
-                                                    <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@Model.ShopURL</span></aa>
+                                                    <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  www.xamagos.com/@Model.ShopURL</span></aa>
                                                 </div>
 
                                                 <div class="contact-icon">

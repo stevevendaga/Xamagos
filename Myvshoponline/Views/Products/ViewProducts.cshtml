@@ -367,21 +367,26 @@
 </script>
  
 <script>
-    function CheckFileName() {
-        var fileName = document.getElementById("uploadFile").value
-        //debugger;
-        if (fileName == "") {
-            alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
-            return false;
-        }
-        else if (fileName.split(".")[1].toUpperCase() == "JPG" || fileName.split(".")[1].toUpperCase() == "JPEG" || fileName.split(".")[1].toUpperCase() == "GIF" || fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "ICO")
-            return true;
-        else {
-            alert("File with " + fileName.split(".")[1] + " is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
-            return false;
-        }
-        return true;
+  function CheckFileName() {
+    var fileName = document.getElementById("uploadFile").value;
+
+    // Check if the file name is empty
+    if (fileName == "") {
+      alert("Browse to upload a valid File with jpg/jpeg/gif/png/ico");
+      return false;
     }
+
+    // Extract the file extension using a more robust method
+    var fileExtension = fileName.split('.').pop().toUpperCase();
+
+    // Check if the file extension is valid
+    if (["JPG", "JPEG", "GIF", "PNG", "ICO"].includes(fileExtension)) {
+      return true;
+    } else {
+      alert("File with " + fileExtension + " extension is invalid. Upload a valid file with jpg/jpeg/gif/png/ico");
+      return false;
+    }
+  }
 </script>
 
         <script>

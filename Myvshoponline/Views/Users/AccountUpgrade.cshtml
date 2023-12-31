@@ -116,7 +116,7 @@
                                         <span style="text-align:match-parent">
                                              <span style="color:#002D95;font-weight:bold;font-size:16px">@Plan</span></span>
                                             <br />
-                                            <a class="btn btn-success" href="~/Users/BuyPlan?id=1" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px">
+                                            <a class="btn btn-success" href="~/Users/BuyPlan" style="margin-bottom:3px;padding-top:3px;padding-bottom:2px;padding-left:7px" onclick="setObjectSession('PlanID',@PlanID)">
                                                 <i class="lni lni-licencse"></i> Upgrade Now
                                             </a>
                                             @if (Request.QueryString["ug"] != null)

@@ -34,19 +34,20 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SearchOptimization searchOptimization = db.SearchOptimizations.Find(id);
             if (searchOptimization == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(searchOptimization);
         }
 
-        public ActionResult SEO(int?sid)
+        public ActionResult SEO()
         {
-            if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(sid).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
+      int sid = Convert.ToInt32(Session["ShopID"]);
+      if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(sid).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
                 ViewBag.ProductCategories = db.ShopProductCategories.Where(s => s.ShopID == sid).ToList();
                 return View();
@@ -101,12 +102,12 @@ namespace Myvshoponline.Controllers
 
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 SearchOptimization searchOptimization = db.SearchOptimizations.Find(id);
                 if (searchOptimization == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 ViewBag.PopularProductStatusID = new SelectList(db.PopularStoreStatus, "ID", "Status", searchOptimization.PopularProductStatusID);
                 ViewBag.ProductID = new SelectList(db.Products, "ID", "Name", searchOptimization.ProductID);
@@ -143,12 +144,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SearchOptimization searchOptimization = db.SearchOptimizations.Find(id);
             if (searchOptimization == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(searchOptimization);
         }

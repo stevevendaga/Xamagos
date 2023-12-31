@@ -46,11 +46,12 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult ShopOrders(int? id, int? sid)
+        public ActionResult ShopOrders()
         {
-            if (id != null && Session["UserID"] != null && sid != null)
+          int sid = Convert.ToInt32(Session["ShopID"]);
+            if (Session["UserID"] != null && Session["ShopID"] != null)
             {
-                int? UserID = (int)Session["UserID"];
+                int UserID = (int)Session["UserID"];
                 ViewBag.ShopID = sid;
                 ViewBag.Shopname = db.Shops.Find(sid).Name;
                 ViewBag.CompanyID = sid;
@@ -67,13 +68,14 @@ namespace Myvshoponline.Controllers
         }
 
         // GET: Orders/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (Session["UserID"] == null)
+        int id = Convert.ToInt32(Session["OrderID"]);
+        if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id == null)
+            if (Session["OrderID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
@@ -92,13 +94,14 @@ namespace Myvshoponline.Controllers
             return View(order);
         }
 
-        public ActionResult OrderDetails(int? id)
+        public ActionResult OrderDetails()
         {
-            if (id == null && Session["UserID"] == null)
+            int id = Convert.ToInt32(Session["OrderID"]);
+            if (Session["OrderID"] == null && Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null && Session["UserID"] == null)
+            if (Session["OrderID"] != null && Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
@@ -189,7 +192,7 @@ namespace Myvshoponline.Controllers
         }
 
         // GET: Orders/Delete/5
-        public ActionResult Delete(int? id, int? CustomerID)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -202,7 +205,7 @@ namespace Myvshoponline.Controllers
             }
             db.Orders.Remove(order);
             db.SaveChanges();
-            return Redirect("~/Products/OrderDetailsCheckOut/?id=" + CustomerID);
+            return Redirect("~/Products/OrderDetailsCheckOut");
         }
 
         // POST: Orders/Delete/5
@@ -305,18 +308,24 @@ namespace Myvshoponline.Controllers
             }
         }
 
-        public ActionResult OrderCheckOut(int? id, string src, int? sid)
+        public ActionResult OrderCheckOut( string src)
         {
-            if (Session["UserID"] == null)
+          int id = Convert.ToInt32(Session["UserID"]);
+          int sid= Convert.ToInt32(Session["ShopID"]);
+          if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            // return Content("" + id);
-            if (src != null)
+            if (Session["ShopID"] == null)
+            {
+              return Redirect("~/Home/AccessDenied");
+            }
+      // return Content("" + id);
+      if (src != null)
             {
                 ViewBag.src = src;
             }
-            if (id != null)
+            if (Session["UserID"] != null)
             {
                 ViewBag.ShopID = sid;
                 ViewBag.OrdersTotalAmount = db.Orders.Where(s => s.UserID == id && (s.Product.ShopID == sid || s.ProductSubProduct.Product.ShopID == sid) && s.PaymentStatusID == 0 && s.OnCart == "Yes").Select(s => s.Amount).Sum();
@@ -357,6 +366,7 @@ namespace Myvshoponline.Controllers
             orda.PaymentChannel = "Online Channel";
             orda.PaymentStatusID = 1;
             orda.DatePaid = DateTime.Now;
+            orda.TimePaid = DateTime.Now.TimeOfDay;
             orda.OnCart = "No";
             db.SaveChanges();
         }
@@ -415,7 +425,8 @@ namespace Myvshoponline.Controllers
                 db.SaveChanges();
          
             Session["OrderGroupID"] = null;
-            return Redirect("~/Orders/OrderPayment");
+            Session["ShopID"] = null;
+      return Redirect("~/Orders/OrderPayment");
         }
 
         //public void insert_shipping_info(int orderid, string address, string notes)
@@ -429,7 +440,9 @@ namespace Myvshoponline.Controllers
             ord.OrderGroupID =(string)Session["OrderGroupID"];
             ord.OnCart = "No";
             db.SaveChanges();
-        }
+          //update closed in negotiation table
+           mydata.Update_Negotiation_Closed(orderid);
+    }
         public void SendCustomerOrderEmail(int orderid)
         {
             string productname = "";
@@ -558,7 +571,7 @@ namespace Myvshoponline.Controllers
                 product.QuantityinStock = FinalQty;
                 db.SaveChanges();
             }
-            return Redirect("~/Orders/OrderDetails/" + id);
+            return Redirect("~/Orders/OrderDetails");
         }
 
 
@@ -614,10 +627,11 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Orders/UpdateOrder/" + id);
         }
 
-        public ActionResult Accounts(int? id, int? sid)
+        public ActionResult Accounts()
         {
-            if (Session["UserID"] != null && sid != null)
-            {
+          int sid = Convert.ToInt32(Session["ShopID"]);
+          if (Session["UserID"] != null && Session["ShopID"] != null)
+                {
                 int? UserID = (int)Session["UserID"];
                 ViewBag.ShopID = sid;
                 ViewBag.Shopname = db.Shops.Find(sid).Name;
@@ -635,33 +649,10 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult Makesales(int? id, int? sid)
+        public ActionResult Makesales()
         {
-            if (Session["UserID"] != null && sid != null)
-            {
-                int? UserID = (int)Session["UserID"];
-                ViewBag.ShopID = sid;
-                ViewBag.Shopname = db.Shops.Find(sid).Name;
-                ViewBag.CompanyID = sid;
-                ViewBag.Orders = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.OnCart == "No").Count();
-                ViewBag.PendingPayment = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 0).Count();
-                ViewBag.PendingDelivery = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 1 && o.DeliveryStatus == null).Count();
-                ViewBag.Delivered = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 1 && o.DeliveryStatus == "Delivered").Count();
-
-                ViewBag.CompanyName = db.Users.Where(u => u.ID == UserID).Select(u => u.CompanyName).FirstOrDefault();
-                var orders = db.Orders.Include(o => o.PaymentStatu).Include(o => o.Product).Include(o => o.ShopCustomer);
-                ViewBag.ShopProduct = (from p in db.Products.Where(s => s.ShopID == sid)
-                                       select new { item = p.Name + " - N" + p.Amount, ID = p.ID });
-
-                ViewBag.Products = new SelectList(ViewBag.ShopProduct, "ID", "item");
-                return View(orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid).OrderByDescending(o => o.DateOrdered).ToList());
-            }
-            return Redirect("~/Home/AccessDenied");
-        }
-
-        public ActionResult MakesalesNewCustomer(int? id, int? sid)
-        {
-            if (Session["UserID"] != null && sid != null)
+            int sid = Convert.ToInt32(Session["ShopID"]);
+            if (Session["UserID"] != null && Session["ShopID"] != null)
             {
                 int? UserID = (int)Session["UserID"];
                 ViewBag.ShopID = sid;
@@ -683,10 +674,36 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Home/AccessDenied");
         }
 
-
-        public ActionResult DailySalesReport(int? id, int? sid)
+        public ActionResult MakesalesNewCustomer()
         {
-            if (Session["UserID"] != null && sid != null)
+            int sid = Convert.ToInt32(Session["ShopID"]);
+            if (Session["UserID"] != null && Session["ShopID"] != null)
+            {
+                int? UserID = (int)Session["UserID"];
+                ViewBag.ShopID = sid;
+                ViewBag.Shopname = db.Shops.Find(sid).Name;
+                ViewBag.CompanyID = sid;
+                ViewBag.Orders = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.OnCart == "No").Count();
+                ViewBag.PendingPayment = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 0).Count();
+                ViewBag.PendingDelivery = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 1 && o.DeliveryStatus == null).Count();
+                ViewBag.Delivered = db.Orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid && o.PaymentStatusID == 1 && o.DeliveryStatus == "Delivered").Count();
+
+                ViewBag.CompanyName = db.Users.Where(u => u.ID == UserID).Select(u => u.CompanyName).FirstOrDefault();
+                var orders = db.Orders.Include(o => o.PaymentStatu).Include(o => o.Product).Include(o => o.ShopCustomer);
+                ViewBag.ShopProduct = (from p in db.Products.Where(s => s.ShopID == sid)
+                                       select new { item = p.Name + " - N" + p.Amount, ID = p.ID });
+
+                ViewBag.Products = new SelectList(ViewBag.ShopProduct, "ID", "item");
+                return View(orders.Where(o => o.Product.Shop.UserID == UserID && o.Product.ShopID == sid).OrderByDescending(o => o.DateOrdered).ToList());
+            }
+            return Redirect("~/Home/AccessDenied");
+        }
+
+
+        public ActionResult DailySalesReport()
+        {
+            int sid=Convert.ToInt32(Session["ShopID"]);
+            if (Session["UserID"] != null && Session["ShopID"] != null)
             {
                 int? UserID = (int)Session["UserID"];
                 ViewBag.ShopID = sid;
@@ -820,13 +837,14 @@ namespace Myvshoponline.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewMyNegotiations(int? id)
+        public ActionResult ViewMyNegotiations()
         {
-            if (Session["UserID"] == null)
+          int id = Convert.ToInt32(Session["UserID"]);
+          if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null)
+            if (Session["UserID"] != null)
             {
                 ViewBag.CompanyID = id;
                 ViewBag.Orders = db.Orders.Where(o => o.UserID == id && o.OnCart == "No").Count();
@@ -1034,13 +1052,14 @@ namespace Myvshoponline.Controllers
             return View();
         }
 
-        public ActionResult PendingPayment(int? id)
+        public ActionResult PendingPayment()
         {
+          int id = Convert.ToInt32(Session["UserID"]);
             if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null)
+            if (Session["UserID"] != null)
             {
                 ViewBag.CompanyID = id;
                 ViewBag.Orders = db.Orders.Where(o => o.UserID == id && o.OnCart == "No").Count();
@@ -1051,8 +1070,9 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Home/AccessDenied");
         }
 
-        public ActionResult OrdersPayment(string id)
+        public ActionResult OrdersPayment()
         {
+            string id =(string)Session["OrderGroupID"];
             if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");

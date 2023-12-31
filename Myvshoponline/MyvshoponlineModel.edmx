@@ -327,7 +327,7 @@
           <Property Name="PaymentStatusID" Type="int" />
           <Property Name="PaymentRef" Type="nvarchar" MaxLength="50" />
           <Property Name="PaymentChannel" Type="nvarchar" MaxLength="50" />
-          <Property Name="DatePaid" Type="date" />
+          <Property Name="DatePaid" Type="datetime" />
           <Property Name="DeliveryStatus" Type="nvarchar" MaxLength="50" />
           <Property Name="DateDelivered" Type="datetime" />
           <Property Name="OnCart" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -3131,7 +3131,7 @@
           <Property Name="PaymentStatusID" Type="Int32" />
           <Property Name="PaymentRef" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PaymentChannel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DatePaid" Type="DateTime" Precision="0" />
+          <Property Name="DatePaid" Type="DateTime" Precision="3" />
           <Property Name="DeliveryStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DateDelivered" Type="DateTime" Precision="3" />
           <Property Name="OnCart" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />

@@ -1,12 +1,12 @@
-﻿@model Myvshoponline.ShippingInformation
+@model Myvshoponline.ShippingInformation
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
 }
 
 @{
     ViewBag.Title = "Order Checkout";
-    int CID = Convert.ToInt32(Request.QueryString["id"]);
-    string currency = db.Orders.Where(o => o.UserID == CID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
+    int UserID = Convert.ToInt32(Session["UserID"]);
+    string currency = db.Orders.Where(o => o.UserID == UserID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
 }
 
 
@@ -31,20 +31,19 @@
                                     <th>Qty</th>
                                     <th style="text-align:center">
                                         Unit Price <br />(@if (currency == "NGN")
-                                        {<span>₦</span>}
+                                        {<span>&#x20A6;</span>}
                                         else
                                         {<span>@currency</span> })
                                     </th>
                                     <th style="font-weight:bold;text-align:center">
                                         Amount <br />(@if (currency == "NGN")
-                                        {<span>₦</span>}
+                                        {<span>&#x20A6;</span>}
                                         else
                                         {<span>@currency</span> })
                                     </th>
                                     <th></th>
                                 </tr>@{
                                     int i = 1;
-                                    int UserID = ViewBag.customerID;
                                     decimal sum_shippingcost = (db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Sum(s => s.DeliveryCost) == null ? 0 : (decimal)db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").Sum(s => s.DeliveryCost));
                                     var shops = db.Orders.Where(s => s.UserID == UserID && s.OnCart == "Yes").OrderByDescending(s => s.DateOrdered).OrderBy(s => s.ProductSubProduct.Product.ShopID).OrderBy(s => s.Product.ShopID).ToList();
                                     // var products = db.Orders.Where(s => s.ShopCustomerID == CustomerID).OrderBy(s=>s.Product.ShopID).ToList();
@@ -86,10 +85,10 @@
                                             </td>
                                             <td style="color:red">
                                                 <span style="background-color:#FF4747;border-radius:20px;color:white;border:0px;padding-left:4px;padding-right:4px;padding-top:2px;padding-bottom:2px;width:30px;height:10px;font-size:15px">
-                                                    <a href="~/Orders/Delete/@item.ID?CustomerID=@UserID" onclick="return confirm('Are you sure you want to remove @itemname from cart?')" style="color:white;font-size:15px;">
-                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    <a href="" onclick="deleteOrder(@item.ID)" style="color:white;font-size:15px;">
+                                                      <i class="glyphicon glyphicon-remove"></i>
                                                     </a>
-                                                </span>
+                                                  </span>
                                             </td>
 
                                         </tr>
@@ -105,7 +104,7 @@
                                                                         Shipping Cost:
                                                                         (@if (currency == "NGN")
 
-                                                                        {<span>₦</span>}
+                                                                        {<span>&#x20A6;</span>}
                                                                         else
                                                                         {<span>@currency</span>
                                                                             //Use sum_shippingcost to add different items delivery cost
@@ -123,7 +122,7 @@
                                                                     </span>
                                                                     <span>
                                                                         <img src="~/Images/checkouticon.png" style="width:35px;height:30px;" />
-                                                                        <a href="~/Orders/OrderCheckOut/?id=@UserID&sid=@ShopID" class="btn btn-success" style="width:auto;padding:3px">
+                                                                        <a href="~/Orders/OrderCheckOut" class="btn btn-success" style="width:auto;padding:3px" onclick="setObjectSession('ShopID',@ShopID)">
                                                                             Proceed to Checkout
                                                                         </a>
 
@@ -237,11 +236,6 @@
 </div>
 <!-- End Content -->
 
-<script type="text/javascript">
-    function alert() {
-        alert("Clicked");
-    }
-</script>
 @*<script>
         function payWithPaystack() {
             var productid = document.getElementById("productid").value;
@@ -305,3 +299,26 @@
     </script>*@
 
 
+<script type="text/javascript">
+ 
+  function deleteOrder(itemid) {
+    Swal.fire({
+      title: 'Delete',
+      text: "Are you sure you want to remove this product from cart?",
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+      showDenyButton: true,
+      denyButtonText: 'No',
+    }).then((result) => {
+      if (result.isDenied) {
+
+      }
+      else if (result.isConfirmed) {
+        window.location = '../../Orders/Delete/' + itemid;
+      }
+    });
+  }
+</script>

@@ -119,12 +119,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 UserRole userRole = db.UserRoles.Find(id);
                 if (userRole == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 return View(userRole);
             }

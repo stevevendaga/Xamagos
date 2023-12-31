@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Order>
+@model IEnumerable<Myvshoponline.Order>
 
 @{
     ViewBag.Title = "My Negotiations";
@@ -23,7 +23,7 @@
                                     <ul style="font-size:13px">
                         <li>
                         <i class="lni lni-dashboard"></i>
-                        <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                        <a href="~/Users/Dashboard">Dashboard</a>
                         <hr style="padding:1px;margin:5px" />
                         </li>
                         </ul>
@@ -171,7 +171,7 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="~/OrderNegotiations/OrderNegos/@item.ID?custid=@item.UserID">
+                                        <a href="~/OrderNegotiations/OrderNegos" onclick="setObjectSession('OrderID',@item.ID) ">
                                             @if (item.SubProductID != 0)
                                             {
                                                 @*@Html.DisplayFor(modelItem => item.ProductSubProduct.Name)*@

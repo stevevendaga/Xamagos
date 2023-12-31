@@ -7,6 +7,7 @@
     ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
     ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
     int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
+    Getdata mydata = new Getdata();
 }
 
 
@@ -53,6 +54,8 @@
 
 
 
+  <!-- Include the Facebook SDK -->
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 
   @*<link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
@@ -136,6 +139,8 @@
   <link href="~/Content/Panel.css" rel="stylesheet" />
   <link href="~/Content/Modal.css" rel="stylesheet" />
   <script src="~/Scripts/bootstrap.min.js"></script>
+  <!--Open link in webview externally-->
+  <script src="~/Scripts/openexternallinkwebview.js"></script>
 
   <!--adsense-->
   <!--ukor-->
@@ -334,8 +339,41 @@
       /*linear-gradient( 85deg, rgba(0,0,0,0) 60%, #9f8fa4 60%), */
       linear-gradient(175deg, rgba(0,0,0,0) 70%, #74a6ae 70%);
     }
-  </style>
 
+    /* Styles for the popup container */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Styles for the popup content */
+    .popup-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fefefe;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    /* Styles for the close button */
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
 
 </head>
 
@@ -345,6 +383,37 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
+  <!--Container for external popup- for share-->
+  <!-- Modal -->
+  @*<div class="modal fade" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="externalLinkModalLabel">External Link Content</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>*@
+  <!--End Container for external popup- for share-->
+  <div class="modal" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true" style="width:50%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-size:14px">Share</h5>
+        <button type="button" class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
+      </div>
+    </div>
+
+    @*</div>*@
+  </div>
   <!-- The Modal -->
   <div id="myModalBackdrop" class="modal-backdrop">
 
@@ -430,9 +499,9 @@
           <a href="#" style="color: white; margin-top: 10px">
             <i class="lni lni-arrow-left-circle" style="color:white;font-size:20px;font-weight:400" onclick="hideSearchBox();"></i>
           </a>
-          <input type="text" name="search" id="searchshop" required="required" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
+          <input type="text" name="search" id="search" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
           <div class="input-group-append">
-            <button class="btn btn-common" type="submit" style="width:35px;">
+            <button class="btn btn-common" type="submit" style="width:35px;" onclick="return validateSearchSubmit();">
               <i class="fas fa-search"></i>
             </button>
           </div>
@@ -444,18 +513,18 @@
         <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;width:100%">
           @if (Request.QueryString["search"] != null)
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:800px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" name="search" type="text" value="@Request.QueryString["search"]" style="width:600px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
             <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
-              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;" onclick="return validateSearchSubmit();">
                 <i class="fas fa-search"></i>
               </button>
             </div>
           }
           else
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
             <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
-              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;" onclick="return validateSearchSubmit();">
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -592,13 +661,13 @@
             {
               int UserID = (int)Session["UserID"];
               <li class="nav-item">
-                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
+                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut">
                   <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
                   <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCartweb</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
-                  <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
+                  <a href="~/Products/OrderDetailsCheckOut" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
 
@@ -1197,7 +1266,7 @@
                   {
                     var image = @item1.Icon + ".png";
                     <li class="nav-item">
-                      <a class="nav-link" href="" onclick="setObjectSessionRedirect('ProductCategoryID',@item1.ID, 'ProductCategories/BrowseCategories');">
+                      <a class="nav-link" href="" onclick="setObjectSessionRedirect('ProductCategoryID',@item1.ID, 'ProductCategories/BrowseCategories/')">
                         @*<i class="@item1.Icon"></i>*@
                         <img src="~/Images/Icons/@image" style="width:5%;"> @item1.Name
                       </a>
@@ -1213,12 +1282,12 @@
                 <pp>Product Finder</pp>
               </a>
             </li>
-            <li class="nav-item has-treeview">
-              <a href="~/Home/BargainMarket" class="nav-link" id="bargainmarket">
-                <i class="nav-icon fas fa-adjust"></i>
-                <pp>Bargain Market</pp>
-              </a>
-            </li>
+            @*<li class="nav-item has-treeview">
+                <a href="~/Home/BargainMarket" class="nav-link" id="bargainmarket">
+                  <i class="nav-icon fas fa-adjust"></i>
+                  <pp>Bargain Market</pp>
+                </a>
+              </li>*@
             <li class="nav-item has-treeview">
               <a href="~/Home/StoreLocator" class="nav-link" id="shoplocator">
                 <i class="nav-icon fas fa-map-marked-alt"></i>
@@ -1576,14 +1645,14 @@
               <h3 class="block-title" style="font-size:12px">Share This Platform</h3>
 
 
-              <script>
-                (function (d, s, id) {
-                  var js, fjs = d.getElementsByTagName(s)[0];
-                  if (d.getElementById(id)) return;
-                  js = d.createElement(s); js.id = id;
-                  js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
-                  fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));</script>
+              @*<script>
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>*@
 
               <!-- Your share button code -->
 
@@ -1591,23 +1660,110 @@
                 <li>
                   @{
                     string referallink1 = "https://xamagos.com";
+                    string quoteText = "Dive into a world of unique discoveries on Xamagos! Sellers, seize your " +
+                                      "spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers, " +
+                                      "explore the best platform for a diverse array of products, all in one place." +
+                                      " #Xamagos #XamagosRadio #ShopSmart";
                   }
-                  <div class="fb-share-button"
-                       data-href="@referallink1"
-                       data-layout="button_count">
-                  </div>
+                  @*<div class="fb-share-button external-link"
+             data-href="https://xamagos.com"
+             data-layout="button_count"
+             data-quote="Dive into a world of unique discoveries on Xamagos! Sellers, seize your
+                              spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers,
+                              explore the best platform for a diverse array of products, all in one place.
+                              #Xamagos #XamagosRadio #ShopSmart">
+        </div>*@
+                  <button onclick="shareOnFacebook()">Share on Facebook</button>
+
                 </li>
-                <li><a class="twitter" href="http://twitter.com/share?url=https://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
-                @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-                  <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
-                  <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
+                  <a href="https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText"
+                     class="external-link" title="Share on Twitter">
+                    <i class="lni-twitter-filled"></i>
+                  </a>
+
+                </li>
+                @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+      <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                <li>
+                  @*<a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share"
+           class="external-link">
+          <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
+        </a>*@
+                  <a href="#" class="external-link" onclick="shareOnWhatsApp()">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
                   </a>
                 </li>
 
               </ul>
 
+              <script>
+      //WhatsApp share
+    function shareOnWhatsApp() {
+      var message = 'Dive into a world of unique discoveries on Xamagos! Sellers, seize your' +
+        'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers,' +
+        'explore the best platform for a diverse array of products, all in one place.' +
+        '#Xamagos #XamagosRadio #ShopSmart';
+    var url = 'https://xamagos.com';
+
+        // Construct the WhatsApp URL
+        var whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent(message + ' ' + url);
+        // Open WhatsApp in a new window
+        window.open(whatsappUrl);
+      }
+              </script>
+
+              <script>
+                // Ensure that the Facebook SDK is initialized
+                window.fbAsyncInit = function () {
+                  FB.init({
+                    appId: '952206692989397', // Replace with your Facebook App ID
+                    autoLogAppEvents: true,
+                    xfbml: true,
+                    version: 'v10.0'
+                  });
+                };
+
+                function shareOnFacebook() {
+                  // Define the content to be shared
+                  var shareContent = {
+                    method: 'share',
+                    href: 'https://xamagos.com',
+                    quote: 'Dive into a world of unique discoveries on Xamagos! Sellers, seize your' +
+                            'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers,'+
+                            'explore the best platform for a diverse array of products, all in one place.'+
+                             '#Xamagos #XamagosRadio #ShopSmart'
+                  };
+
+                  // Use the Facebook SDK to open the Share Dialog
+                  FB.ui(shareContent, function (response) {
+                    // Handle the response if needed
+                    console.log(response);
+                  });
+                }
+              </script>
+
+
+              @*<script>
+      // WhatsApp share
+      function shareOnWhatsApp() {
+        var message = 'Hey, I am using Xamagos.';
+        var url = 'https://xamagos.com';
+
+        // Construct the WhatsApp URL
+        var whatsappUrl = 'https://api.whatsapp.com/?text=' + encodeURIComponent(message + ' ' + url);
+
+        // Check if the user is on a mobile device
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Open WhatsApp in the system browser on mobile, or in a new window on other devices
+        if (isMobile) {
+          window.location.href = whatsappUrl; // Open in the system browser on mobile
+        } else {
+          window.open(whatsappUrl, '_blank'); // Open in a new window on other devices
+        }
+      }
+    </script>*@
 
 
               @*<p>Subscribe to our Newsletter.</p>*@
@@ -1836,7 +1992,7 @@
         document.getElementById("bodyholder").style.padding = "2px";
 
         document.getElementById("displayonmobile_logo").style.display = "block";
-        document.getElementById("search").style.width = "100%";
+        document.getElementById("search").style.width = "60%";
         document.getElementById("search-form").style.display = "none";
         document.getElementById("search-nav-button").style.display = "block";
         document.getElementById("cart").style.display = "none";
@@ -1868,7 +2024,7 @@
         document.getElementById("bodyholder").style.padding = "2px";
         document.getElementById("welcomesidebar").style.padding = "0px";
         document.getElementById("displayonmobile_logo").style.display = "block";
-        document.getElementById("search").style.width = "100%";
+        document.getElementById("search").style.width = "80%";
 
 
       } else {
@@ -1935,26 +2091,71 @@
     });
   </script>
 
+  @*<script>
+      //HANDLE LINK CLICK
+      $(document).ready(function () {
+        $("a").click(function (e) {
+          e.preventDefault();
+          var href = $(this).attr("href");
+          if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null) {
+            window.location = href;
+            let timerInterval
+            Swal.fire({
+              title: '',
+              html: 'Loading... <b></b>',
+              timer: 10000,
+              ////timerProgressBar: true,
+              showConfirmButton: false,
+              showLoaderOnConfirm: true,
+              padding: '1em',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+              },
+              didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                  //b.textContent = Swal.getTimerLeft()
+                }, 100)
+              },
+              willClose: () => {
+                clearInterval(timerInterval)
+              }
+            }).then((result) => {
+              /* Read more about handling dismissals below */
+              if (result.dismiss === Swal.DismissReason.timer) {
+                //$('#displaycshtml').load('/Account/Login');
+                console.log('I was closed by the timer')
+              }
+            })
+            return false;
+          }
+
+
+        });
+      });
+
+
+    </script>*@
+
   <script>
     //HANDLE LINK CLICK
     $(document).ready(function () {
       $("a").click(function (e) {
         e.preventDefault();
         var href = $(this).attr("href");
-        if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null) {
-          window.location = href;
-          let timerInterval
+
+        if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null && href != 'none') {
+          let timerInterval;
+
+          // Display loading dialog
           Swal.fire({
             title: '',
-            html: 'Loading... <b></b>',
-            timer: 10000,
-            ////timerProgressBar: true,
+            html: 'Processing... <b></b>',
+            timerProgressBar: true,
             showConfirmButton: false,
             showLoaderOnConfirm: true,
             padding: '1em',
-            showClass: {
-              popup: 'animate__animated animate__fadeInDown'
-            },
             didOpen: () => {
               Swal.showLoading()
               const b = Swal.getHtmlContainer().querySelector('b')
@@ -1965,20 +2166,56 @@
             willClose: () => {
               clearInterval(timerInterval)
             }
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              //$('#displaycshtml').load('/Account/Login');
-              console.log('I was closed by the timer')
-            }
-          })
+          });
+
+          // Load the new page
+          window.location = href;
+
+          // Stop loading once the new page has completely loaded
+          window.onload = function () {
+            Swal.close(); // Close the loading dialog
+          };
+
           return false;
         }
 
-
       });
     });
+  </script>
 
+  <script>
+    // Define the function to handle the click event
+    function handleButtonClick() {
+      let timerInterval;
+
+      // Display loading dialog
+      Swal.fire({
+        title: '',
+        html: 'Processing... <b></b>',
+        timerProgressBar: true,
+        showConfirmButton: false,
+        showLoaderOnConfirm: true,
+        padding: '1em',
+        didOpen: () => {
+          Swal.showLoading()
+          const b = Swal.getHtmlContainer().querySelector('b')
+          timerInterval = setInterval(() => {
+            //b.textContent = Swal.getTimerLeft()
+          }, 100)
+        },
+        willClose: () => {
+          clearInterval(timerInterval)
+        }
+      });
+
+      // Load the new page
+      // (don't open)
+
+      // Stop loading once the new page has completely loaded
+      window.onload = function () {
+        Swal.close(); // Close the loading dialog
+      };
+    }
 
   </script>
 
@@ -2029,7 +2266,7 @@
 
   <!--Set Session redirect-->
   <script type="text/javascript">
-    function setObjectSessionRedirect(_key, _value,_href) {
+    function setObjectSessionRedirect(_key, _value, _href) {
       var url = "/SetSession/SetObjectSession/";
       $.ajax({
         url: url,
@@ -2046,6 +2283,89 @@
       });
     }
   </script>
+  <script type="text/javascript">
+    function setProductSession(_productid, _shopid) {
+      //alert(_productid +"s"+ _shopid)
+      var url = "/SetSession/SetProductSession/";
+      $.ajax({
+        url: url,
+        data: { shopid: _shopid, productid: _productid },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          window.location.href = "../../Products/ProductDetails";
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+    function setSubProductSession(_productid, _shopid) {
+      //alert(_productid +"s"+ _shopid)
+      var url = "/SetSession/SetProductSession/";
+      $.ajax({
+        url: url,
+        data: { shopid: _shopid, productid: _productid },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          window.location.href = "../../ProductSubProducts/ProductSubitems";
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+
+    function setSubProductDetailsSession(_productid, _shopid) {
+      //alert(_productid +"s"+ _shopid)
+      var url = "/SetSession/SetProductSession/";
+      $.ajax({
+        url: url,
+        data: { shopid: _shopid, productid: _productid },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          window.location.href = "../../Products/ProductDetailsSubitems";
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+    function setCartSession(_productid, _shopid, _dcity, _qty,_negotiate) {
+      //alert(_productid +"s"+ _shopid)
+      var url = "/SetSession/SetCartSession/";
+      $.ajax({
+        url: url,
+        data: { shopid: _shopid, productid: _productid, dcity: _dcity, qty: _qty, negotiate: _negotiate },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          //window.location.href = "../../Products/ProductDetails";
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function validateSearchSubmit() {
+      var search = document.getElementById("search").value;
+      if (search == '') {
+        $("#search").css("borderColor", "red");
+        $("#search").focus();
+        return false;
+      }
+      else {
+        handleButtonClick();
+      }
+    }
+  </script>
+
+
 
 </body>
 </html>

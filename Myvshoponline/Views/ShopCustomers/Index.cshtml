@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.CustomerShop>
+@model IEnumerable<Myvshoponline.CustomerShop>
 
 @{
     ViewBag.Title = "Customers";
@@ -6,10 +6,10 @@
  
 <div id="content">
     <h6 style="font-size:14px">
-        <a href="~/Users/Dashboard/@ViewBag.UserID"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<a href="~/Shops/ShopDetails/@ViewBag.ShopID"> @ViewBag.ShopName </a>
+        <a href="~/Users/Dashboard"><i class="lni-user"></i> @ViewBag.CompanyName </a> &raquo;<a href="~/Shops/ShopDetails"> @ViewBag.ShopName </a>
     </h6>
     <p>
-        <a href="~/ShopCustomers/CreateAdmin/?id=@ViewBag.SID" class="btn btn-common" style="padding:5px">Add New Customer</a> <br /> <b> Customers List [@Model.Count()]</b>
+        <a href="~/ShopCustomers/CreateAdmin" class="btn btn-common" style="padding:5px">Add New Customer</a> <br /> <b> Customers List [@Model.Count()]</b>
     </p><br />
     <style>
         .table {

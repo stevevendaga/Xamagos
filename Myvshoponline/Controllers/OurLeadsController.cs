@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OurLead ourLead = db.OurLeads.Find(id);
             if (ourLead == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(ourLead);
         }
@@ -70,12 +70,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OurLead ourLead = db.OurLeads.Find(id);
             if (ourLead == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.state = db.States.Where(s => s.Name != "All Locations");
             ViewBag.StateID = new SelectList(ViewBag.state, "ID", "Name", ourLead.StateID);
@@ -106,7 +106,7 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OurLead ourLead = db.OurLeads.Find(id);
             db.OurLeads.Remove(ourLead);

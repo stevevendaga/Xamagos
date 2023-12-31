@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -15,8 +15,9 @@ namespace Myvshoponline.Controllers
         private MyvshoponlineEntities db = new MyvshoponlineEntities();
         Getdata mydata = new Getdata();
         // GET: ShopCustomers
-        public ActionResult Index(int?id,string search)
+        public ActionResult Index(string search)
         {
+            int id = Convert.ToInt32(Session["ShopID"]);
             ViewBag.SID = id;
             ViewBag.ShopID = id;
             ViewBag.UserID = db.Shops.Where(s => s.ID == id).Select(s => s.User.ID).FirstOrDefault();
@@ -24,7 +25,7 @@ namespace Myvshoponline.Controllers
             ViewBag.CompanyName=db.Shops.Where(s => s.ID == id).Select(s => s.User.CompanyName).FirstOrDefault();
             if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(id).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
-                if (id != null && search==null)
+                if (Session["ShopID"] != null && search==null)
                 {
                     return View(db.CustomerShops.Where(s => s.ShopID == id).OrderByDescending(s=>s.Datecreated).ToList());
                 }
@@ -41,21 +42,22 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ShopCustomer shopCustomer = db.ShopCustomers.Find(id);
             if (shopCustomer == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.ShopID = Request.QueryString["sid"];
             return View(shopCustomer);
         }
 
         // GET: ShopCustomers/Create
-        public ActionResult Create(int?id,int?v,int?pid,int?quantity,int?cid,string src,string negotiate,int? dcity)
+        public ActionResult Create(int?v,int?pid,int?quantity,int?cid,string src,string negotiate,int? dcity)
         {
-            if(cid!=null && id!=null)
+          int id = Convert.ToInt32(Session["ShopID"]);
+            if (cid!=null && Session["ShopID"] != null)
             {
                
                 if (db.CustomerShops.Where(s => s.ShopID == id && s.ShopCustomerID == cid).Count() < 1)

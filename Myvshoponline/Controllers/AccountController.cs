@@ -60,14 +60,14 @@ namespace Myvshoponline.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl,int? ax)
+        public ActionResult Login(string users, string login)
         {
-            if(ax!=null)
-            {
-                ViewBag.ax = ax;
-                ViewBag.AccountCreated = "Your account has been created successfully. Enter your login detail below to proceed.";
-            }
-            ViewBag.ReturnUrl = returnUrl;
+            //if(ax!=null)
+            //{
+            //    ViewBag.ax = ax;
+            //    ViewBag.AccountCreated = "Your account has been created successfully. Enter your login detail below to proceed.";
+            //}
+            //ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
@@ -422,7 +422,7 @@ namespace Myvshoponline.Controllers
         //    else
         //    {
                
-        //        return HttpNotFound();               
+        //        return Redirect("~/Home/AccessDenied");               
         //    }            
         //}
 

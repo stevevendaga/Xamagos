@@ -82,12 +82,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             RequestOnlineOrder requestOnlineOrder = db.RequestOnlineOrders.Find(id);
             if (requestOnlineOrder == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             if (mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.TempPendingPayment>
+@model IEnumerable<Myvshoponline.TempPendingPayment>
 
 @{
     ViewBag.Title = "Pending Payments";
@@ -23,7 +23,7 @@
                                     <ul style="font-size:13px">
                         <li>
                         <i class="lni lni-dashboard"></i>
-                        <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                        <a href="~/Users/Dashboard">Dashboard</a>
                         <hr style="padding:1px;margin:5px" />
                         </li>
                         </ul>
@@ -31,7 +31,7 @@
                         <div class="col-6 col-md-4 col-lg-4" style="text-align:right">
                         <ul style="font-size:13px">
                         <li>
-                        <a href="~/Orders/MyOrders/@ViewBag.CompanyID" id="orders">
+                        <a href="~/Orders/MyOrders" id="orders">
                         <i class="lni lni-cart"></i>
                         Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
                         </a>
@@ -104,7 +104,7 @@
                                     {
                                     <tr>
                                         <td>
-                                            <a href="~/Orders/OrdersPayment/?id=@item.OrderGroupID">
+                                            <a href="~/Orders/OrdersPayment" onclick="setObjectSession('OrderGroupID',@item.OrderGroupID)">
                                                @item.OrderGroupID
                                             </a>
                                         </td>
@@ -162,10 +162,10 @@
                 $.each(data, function (key, item) {
                     html += '<tr>';
                     if (item.SubProductID != 0) {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+                      html += '<td><a href="/Orders/Details' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.SubProductName;
 
                     } else {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                      html += '<td><a href="/Orders/Details' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.ProductName;
                     }
                     html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
                     if(item.op=="orders")

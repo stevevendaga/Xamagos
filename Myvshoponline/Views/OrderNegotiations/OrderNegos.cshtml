@@ -1,8 +1,8 @@
-﻿@model Myvshoponline.Order
+@model Myvshoponline.Order
 
 @{
-    ViewBag.Title = "Order Negotiation";
-    MyvshoponlineEntities db = new MyvshoponlineEntities();
+  ViewBag.Title = "Order Negotiation";
+  MyvshoponlineEntities db = new MyvshoponlineEntities();
 
 }
 
@@ -10,776 +10,667 @@
 </body>
 <!-- Comment Section-->
 <style>
-   .box {
-  /*width: 180px;*/
-  height: auto;
-  background-color: #ffffff;
-  /*color: #fff;*/
-  border: 1px solid grey;
-  padding: 10px;
-  position: relative;
-  margin: 0px;
-  border-radius:5px;
+  .box {
+    /*width: 180px;*/
+    height: auto;
+    background-color: #ffffff;
+    /*color: #fff;*/
+    border: 1px solid grey;
+    padding: 10px;
+    position: relative;
+    margin: 0px;
+    border-radius: 5px;
+  }
 
-}
-   .box.arrow-top {
-  margin-top: 40px;
+    .box.arrow-top {
+      margin-top: 40px;
+    }
 
-}
- 
-.box.arrow-top:after {
-  content: " ";
-  position: absolute;
-  right: 30px;
-  top: -10px;
-  border-top: none;
-  border-right: 15px solid transparent;
-  border-left: 15px solid transparent;
-  border-bottom: 15px solid black;
-}
-.box.arrow-right:after {
-  content: " ";
-  position: absolute;
-  right: -15px;
-  top: 2px;
-  border-top: 15px solid transparent;
-  border-right: none;
-  border-left: 15px solid black;
-  border-bottom: 15px solid transparent;
-}
-.box.arrow-bottom:after {
-  content: " ";
-  position: absolute;
-  right: 30px;
-  bottom: -15px;
-  border-top: 15px solid black;
-  border-right: 15px solid transparent;
-  border-left: 15px solid transparent;
-  border-bottom: none;
-}
-.box.arrow-left:after {
-  content: " ";
-  position: absolute;
-  left: -15px;
-  top: 2px;
-  border-top: 15px solid transparent;
-  border-right: 15px solid blue;
-  border-left: none;
-  border-bottom: 15px solid transparent;
-}
+      .box.arrow-top:after {
+        content: " ";
+        position: absolute;
+        right: 30px;
+        top: -10px;
+        border-top: none;
+        border-right: 15px solid transparent;
+        border-left: 15px solid transparent;
+        border-bottom: 15px solid black;
+      }
 
+    .box.arrow-right:after {
+      content: " ";
+      position: absolute;
+      right: -15px;
+      top: 2px;
+      border-top: 15px solid transparent;
+      border-right: none;
+      border-left: 15px solid black;
+      border-bottom: 15px solid transparent;
+      opacity: 0.9;
+    }
+
+    .box.arrow-bottom:after {
+      content: " ";
+      position: absolute;
+      right: 30px;
+      bottom: -15px;
+      border-top: 15px solid black;
+      border-right: 15px solid transparent;
+      border-left: 15px solid transparent;
+      border-bottom: none;
+    }
+
+    .box.arrow-left:after {
+      content: " ";
+      position: absolute;
+      left: -15px;
+      top: 2px;
+      border-top: 15px solid transparent;
+      border-right: 15px solid blue;
+      border-left: none;
+      border-bottom: 15px solid transparent;
+      opacity: 0.9;
+    }
 </style>
 <div class="modal" id="myModalEnterPrice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:100%">
-    @*<div class="modal-dialog modal-dialog-centered">*@
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" style="font-size:14px">ENTER THE AGREED PRICE BELOW</h5>
-            <button type="button" class="close" data-dismiss="modal">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="alert alert-success alert-dismissable" id="successmsg" style="display:none">
-                @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
-                <h3 style="font-size:14px">Success</h3>
-                Price updated successfully
-            </div>
-
-
-            <label>Quantity</label>
-            <span id="qty_zero" style="color:red"></span>
-            <div class="input-group input-group-sm">
-                <input type="number" id="qty" class="form-control" name="quantity" required min="1" value="1">
-
-                <div class="input-group-append">
-                    @*<button class="btn btn-common" type="button" onclick="viewOldPw()">
-                            <i class="fas fa-eye" id="eyeoldpw"></i>
-                        </button>*@
-                </div>
-            </div>
-            <br />
-
-            <label>Price</label>
-
-            <span id="offer_zero" style="color:red"></span>
-            <div class="input-group input-group-sm">
-                <input type="number" id="offer" style="width:100%;" class="form-control" min="1">
-                <div class="input-group-append">
-                    @*<button class="btn btn-common" type="button" onclick="viewNewPw()">
-                            <i class="fas fa-eye" id="eyenewpw"></i>
-                        </button>*@
-                </div>
-            </div>
-            
-            <br />
-            <button type="button" tabindex="4" class="btn btn-common" onclick="return savePrice();">Save Now <i class="fas fa-save"></i> </button>
-
-        </div>
+  @*<div class="modal-dialog modal-dialog-centered">*@
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" style="font-size:14px">ENTER THE AGREED PRICE BELOW</h5>
+      <button type="button" class="close" data-dismiss="modal">X</button>
     </div>
+    <div class="modal-body">
+      <div class="alert alert-success alert-dismissable" id="successmsg" style="display:none">
+        @*<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>*@
+        <h3 style="font-size:14px">Success</h3>
+        Price updated successfully
+      </div>
 
-    @*</div>*@
+
+      <label>Quantity</label>
+      <span id="qty_zero" style="color:red"></span>
+      <div class="input-group input-group-sm">
+        <input type="number" id="qty" class="form-control" name="quantity" required min="1" value="1">
+
+        <div class="input-group-append">
+          @*<button class="btn btn-common" type="button" onclick="viewOldPw()">
+                <i class="fas fa-eye" id="eyeoldpw"></i>
+            </button>*@
+        </div>
+      </div>
+      <br />
+
+      <label>Price</label>
+
+      <span id="offer_zero" style="color:red"></span>
+      <div class="input-group input-group-sm">
+        <input type="number" id="offer" style="width:100%;" class="form-control" min="1">
+        <div class="input-group-append">
+          @*<button class="btn btn-common" type="button" onclick="viewNewPw()">
+                <i class="fas fa-eye" id="eyenewpw"></i>
+            </button>*@
+        </div>
+      </div>
+
+      <br />
+      <button type="button" tabindex="4" class="btn btn-common" onclick="return savePrice();">Save Now <i class="fas fa-save"></i> </button>
+
+    </div>
+  </div>
+
+  @*</div>*@
 </div>
 
 
-    <div id="content">
-        <div class="">
-            @*<p style="font-size:14px;" class="badge badge-info"></p>*@
-            <div class="row justify-content-between">
-                <div class="col-lg-10 col-md-10 col-12">
-                    <div class="content-area">
-                        @*<center>*@
-                        <div class="panel">
-                            <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
-                                <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Order Negotiation </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row">
-                        @{
-                            if (Model.SubProductID != 0)
-                            {
-                                var passports =Model.ProductID +"-"+ Model.SubProductID + ".jpg";
-                                    <div class="col-lg-6 col-6 col-md-6">
-                                        <img src="~/BusinessImages/@Model.Product.Shop.User.CompanyName@Model.Product.Shop.User.HardToken/@Model.Product.Shop.Name/@passports" style="width:96px; height:90px;" />
-                                    </div>
-                                    <div class="col-lg-6 col-6 col-md-6" style="background-color:#17A2B8;">
-                                        <div style="font-weight:bold;color:white;margin-left:10px;">
-                                            @Model.SubProductName
-                                            <hr style="border-color:white" />
-                                        </div>
-                                        <div style="font-weight:bold;color:white;font-size:14px;padding-bottom:5px;">
-                                            <div style="background-color:white;color:black;padding:10px;border-radius:5px;">
-                                                Original Price:
-                                                @if (Model.Product.Currency == "NGN")
-                                                {<del class="NairaSign">N</del>}
-                                                else
-                                                { <span>@Model.Product.Currency</span>}
-                                                @string.Format("{0:#,0}", Model.Amount)
-                                                
-                                            </div>
-                                    </div>
-                                    </div>
-                            }
-                            else
-                            {
-                                var passports = Model.ProductID + ".jpg";
-                                <div class="col-lg-6 col-6 col-md-6">
-                                    <img src="~/BusinessImages/@Model.Product.Shop.User.CompanyName@Model.Product.Shop.User.HardToken/@Model.Product.Shop.Name/@passports" style="width:96px; height:90px;" />
-                                </div>
-                                    <div class="col-lg-6 col-6 col-md-6" style="background-color:#17A2B8;">
-                                        <div style="font-weight:bold;color:white;margin-left:10px;">
-                                            @Model.Product.Name
-                                            <hr style="border-color:white" />
-                                        </div>
-                                        <div style="font-weight:bold;color:white;font-size:14px;padding-bottom:5px;">
-                                            <div style="background-color:white;color:black;padding:10px;border-radius:5px;">
-                                                Original Price:
-                                                @if (Model.Product.Currency == "NGN")
-                                                {<del class="NairaSign">N</del>}
-                                                else
-                                                { <span>@Model.Product.Currency</span>}
-                                                @string.Format("{0:#,0}", Model.Amount)
-                                            </div>
-                                        </div>
-                                    </div>
-                            }
-                        }
-                            &raquo;
-                                    <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails/@Model.Product.ShopID" title="Click here to go to @Model.Product.Shop.Name">
-                                      @Model.Product.Shop.Name</a>
+<div id="content">
+  <div class="">
+    @*<p style="font-size:14px;" class="badge badge-info"></p>*@
+    <div class="row justify-content-between">
+      <div class="col-lg-10 col-md-10 col-12">
+        <div class="content-area">
+          @*<center>*@
+          <div class="panel">
+            <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
+              <h3 class="panel-title" style="color:white;font-family:Arial;font-size:14px">Order Negotiation </h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                @{
+                  if (Model.SubProductID != 0)
+                  {
+                    var passports = Model.ProductID + "-" + Model.SubProductID + ".jpg";
+                    <div class="col-lg-6 col-6 col-md-6">
+                      <img src="~/BusinessImages/@Model.Product.Shop.User.CompanyName@Model.Product.Shop.User.HardToken/@Model.Product.Shop.Name/@passports" style="width:96px; height:90px;" />
+                    </div>
+                    <div class="col-lg-6 col-6 col-md-6" style="background-color:#17A2B8;">
+                      <div style="font-weight:bold;color:white;margin-left:10px;">
+                        @Model.SubProductName
+                        <hr style="border-color:white" />
+                      </div>
+                      <div style="font-weight:bold;color:white;font-size:14px;padding-bottom:5px;">
+                        <div style="background-color:white;color:black;padding:10px;border-radius:5px;">
+                          Original Price:
+                          @if (Model.Product.Currency == "NGN")
+                          {<del class="NairaSign">N</del>}
+                          else
+                          { <span>@Model.Product.Currency</span>}
+                          @string.Format("{0:#,0}", Model.Amount)
+
                         </div>
-                            </div>
+                      </div>
+                    </div>
+                  }
+                  else
+                  {
+                    var passports = Model.ProductID + ".jpg";
+                    <div class="col-lg-6 col-6 col-md-6">
+                      <img src="~/BusinessImages/@Model.Product.Shop.User.CompanyName@Model.Product.Shop.User.HardToken/@Model.Product.Shop.Name/@passports" style="width:96px; height:90px;" />
+                    </div>
+                    <div class="col-lg-6 col-6 col-md-6" style="background-color:#17A2B8;">
+                      <div style="font-weight:bold;color:white;margin-left:10px;">
+                        @Model.Product.Name
+                        <hr style="border-color:white" />
+                      </div>
+                      <div style="font-weight:bold;color:white;font-size:14px;padding-bottom:5px;">
+                        <div style="background-color:white;color:black;padding:10px;border-radius:5px;">
+                          Original Price:
+                          @if (Model.Product.Currency == "NGN")
+                          {<del class="NairaSign">N</del>}
+                          else
+                          { <span>@Model.Product.Currency</span>}
+                          @string.Format("{0:#,0}", Model.Amount)
                         </div>
+                      </div>
+                    </div>
+                  }
+                }
+                &raquo;
+                <a style="color:#00B7F4;font-size:14px" href="~/Shops/ShopDetails" title="Click here to go to @Model.Product.Shop.Name">
+                  @Model.Product.Shop.Name
+                </a>
+              </div>
+            </div>
+          </div>
 
-                                <div id="comments" style="margin-top:0px;">
-                                    <div class="col-md-12">
-                                        <div id="comments">
-                                            <center>
-                                                <div>
-                                                    <center> <span style="color:#2193f3;"></span></center>
-                                                    @*<p style="font-size:12px; color:green;background:#edf6f6; opacity:0.5; color:#000; width:auto; border-radius:5px;" class="col-md-6">
-                                            Communication between <b>me</b>  and <b>you</b>
-                                        </p>*@
-                                                   
-                                                </div>
-                                            </center>
-                                            @*<hr style="border-color:brown;height:10px;" />*@
-                                            <!-- Start Respond Form -->
-                                            <a id="administrative" style="background-color:#1698C4;color:white;font-size:14px; padding:5px; text-align:center;" href="#start">
-                                                <i class="glyphicon glyphicon-circle-arrow-down"></i> Start Negotiation <i class="glyphicon glyphicon-circle-arrow-down"></i>
-                                            </a>
-
-                                            @*<center>*@
-
-                                           
-
-                                                <hr style="border-color:white;" />
-                                            <div id="displaynegotiation">
-                                                <ol class="comments-list" style="padding:0px;">
-                                                    <li>
-                                                        @foreach (var item in db.OrderNegotiations.Where(s => s.UserID == Model.UserID && s.OrderID == Model.ID && s.ShopID == Model.Product.ShopID).OrderBy(s => s.DateCreated).ToList())
-                                                        {
-                                                            if (item.Creator == "buyer")
-                                                            {
-                                                                <div class="media" style="padding:3px;margin:0px;">
-                                                                    <div class="thumb-left" style="padding:3px; margin:6px 9px 3px 4px;text-align:center">
-                                                                        <a href="#">
-                                                                            <center>
-                                                                                <img src="~/Images/user.png" style="width:25px; height:25px; border-radius:50px; " alt=""><br />
-                                                                                <span class="badge badge-default" style="font-size:9px;">@item.User.CompanyName</span>
-                                                                            </center>
-                                                                        </a>
-                                                                    </div>
-                                                                    <div  style="padding:3px; margin:2px;color:black">
-                                                                        <div class="col-lg-12 col-md-12 col-12">
-                                                                            <div class="box arrow-left">
-
-                                                                                @item.Comment
-                                                                                <hr style="margin-bottom:1px;margin-top:2px;" />
-                                                                                <span class="badge badge-info">
-                                                                                    Quantity
-                                                                                </span>   @item.Quantity
-                                                                                <span class="badge badge-info">
-                                                                                    Offer
-                                                                                </span>
-                                                                                @item.CustomerOffer
-
-
-                                                                                <span style="font-size:10px;color:red">
-                                                                                    @{string date = string.Format("{0:ddd MMM yyyy hh:mm tt}", @item.DateCreated);}@date
-                                                                                </span>
-                                                                                <br />
-                                                                                @if (!string.IsNullOrEmpty((string)Session["username"]) && item.SellerAccept==null && item.Closed==null && item.Creator!="buyer")
-                                                                                {
-                                                                                    <button type="button" id="@item.ID" value="@item.Creator" name="name_for_seller_accept" onclick="AcceptNegotiation(this.id)" class="btn btn-success" style="padding-top:2px;padding-bottom:2px;padding-left:3px;padding-right:3px;">
-                                                                                        <i class="glyphicon glyphicon-ok-sign"></i>  Ok, I Accept
-                                                                                    </button>
-                                                                                }
-                                                                            @if (!string.IsNullOrEmpty((string)Session["username"]) && item.SellerAccept == "Yes" && item.Closed=="Yes" && Request.QueryString["sellid"]!=null)
-                                                                            {
-                                                                                <span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">YOU ACCEPTED</span>
-                                                                            }
-                                                                                @if (!string.IsNullOrEmpty((string)Session["Name"]) && item.SellerAccept == "Yes" && item.Closed == "Yes" && Request.QueryString["custid"] != null)
-                                                                                {
-                                                                                    <span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">SELLER ACCEPTED</span>
-                                                                                    <h3 style="margin-top:3px;">
-                                                                                        <a href="~/Products/OrderDetailsCheckOut/?id=@Model.UserID" class="btn btn-common" style="padding-top:2px;padding-bottom:2px;">Proceed to Checkout &raquo; </a>
-                                                                                
-                                                                                    </h3>
-                                                                                }
-                                                                            </div>
-
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        <ul style="margin: 0px; padding:0px;">
-                                                                                            <li style="padding:0px;  align-content:flex-end;">
-                                                                                                <div class="media" style="padding:0px;margin-left:0px; ">
-
-                                                                                                    <div style="padding:3px; margin:2px;float:right;">
-                                                                                                        <div class="col-lg-12 col-md-12 col-12">
-                                                                                                            <div class="box arrow-right">
-                                                                                                                @item.Comment
-                                                                                                                <hr style="margin-bottom:1px;margin-top:2px;" />
-                                                                                                                <span class="badge badge-dark">
-                                                                                                                    Quantity
-                                                                                                                </span>   @item.Quantity
-                                                                                                                <span class="badge badge-dark">
-                                                                                                                    Offer
-                                                                                                                </span>
-                                                                                                                @item.SellerOffer
-                                                                                                                <span style="font-size:9px;">
-                                                                                                                    @{string date = string.Format("{0:ddd MMM yyyy hh:mm tt}", @item.DateCreated);}@date
-                                                                                                                </span>
-                                                                                                                <br />
-                                                                                                                @if (!string.IsNullOrEmpty((string)Session["Name"]) && item.CustomerAccept==null && item.Closed==null)
-                                                                                                                {
-                                                                                                                    <button type="button" id="@item.ID" onclick="AcceptNegotiation(this.id)" value="@item.Creator" name="name_for_buyer_accept" class="btn btn-success" style="padding-top:2px;padding-bottom:2px;padding-left:3px;padding-right:3px;">
-                                                                                                                        <i class="glyphicon glyphicon-ok-sign"></i>  Ok, I Accept
-                                                                                                                    </button>
-                                                                                                                }
-                                                                                                                @if (!string.IsNullOrEmpty((string)Session["Name"]) && item.CustomerAccept == "Yes" && item.Closed=="Yes" && Request.QueryString["custid"] != null)
-                                                                                                                {
-                                                                                                                    <span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">YOU ACCEPTED</span>
-                                                                                                                    <br />
-                                                                                                                    <h3>
-                                                                                                                   <a href="~/Products/OrderDetailsCheckOut/?id=@Model.UserID"  class="btn btn-common" style="padding-top:2px;padding-bottom:2px;">Proceed to Checkout  &raquo;</a>
-                                                                                                                    </h3>
-                                                                                                                }
-                                                                                                                @if (!string.IsNullOrEmpty((string)Session["username"]) && item.CustomerAccept == "Yes" && item.Closed == "Yes" && Request.QueryString["custid"]==null)
-                                                                                                                {
-                                                                                                                    <span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">BUYER ACCEPTED</span>
-                                                                                                                }
-                                                                                                                    </div>
-                                                                                                            </div>
-                                                                                                    </div>
-                                                                                                    <div class="thumb-left" style="padding:2px; margin:2px 3px 3px 5px; float:right;">
-                                                                                                        <a href="#">
-                                                                                                            <center>
-                                                                                                                <img src="~/Images/user.png" style="width: 25px;height:25px; border-radius:50px;text-align:center" alt="">
-                                                                                                            </center>
-                                                                                                            <span class="badge badge-default" style="font-size:9px;">@item.Shop.Name</span>
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                                                        }
-                                                                                                                    }
-                                                    </li>
-                                                </ol>
-                                                <div id="displayaccept"></div>
-                                            </div>
-                                            
-
-                                            @*</center>*@
-                                            
-@if (Model.Negotiated == "Yes")
-{
-
-
-}
-else
-{
-<div id="start" style="background-color:#17A2B8;padding-bottom:10px;padding-top:10px;opacity:0.9;border-bottom-left-radius:10px;border-bottom-right-radius:10px">
-    <div id="respond" >
-
+          <div id="comments" style="margin-top:0px;">
+            <div class="col-md-12">
+              <div id="comments">
                 <center>
-                    <div class="col-lg-12 col-md-12 col-xs-12" style="color:black;">
-                        <div class="form-group">
+                  <div>
+                    <center> <span style="color:#2193f3;"></span></center>
+                    @*<p style="font-size:12px; color:green;background:#edf6f6; opacity:0.5; color:#000; width:auto; border-radius:5px;" class="col-md-6">
+                          Communication between <b>me</b>  and <b>you</b>
+                      </p>*@
+
+                  </div>
+                </center>
+                @*<hr style="border-color:brown;height:10px;" />*@
+                <!-- Start Respond Form -->
+                @*<a id="administrative" style="background-color:#1698C4;color:white;font-size:14px; padding:5px; text-align:center;" href="#start">
+                      <i class="glyphicon glyphicon-circle-arrow-down"></i> Start Negotiation <i class="glyphicon glyphicon-circle-arrow-down"></i>
+                  </a>*@
+
+                @*<center>*@
+
+
+
+                <hr style="border-color:white;" />
+                <div id="displaynegotiation">
+
+                  <div id="displayaccept"></div>
+                </div>
+
+
+                @*</center>*@
+
+                @*@if (Model.Negotiated == "Yes")
+                {
+
+
+                }
+                else
+                {*@
+                  <div id="start" style="background-color:#17A2B8;padding-bottom:10px;padding-top:10px;opacity:0.9;border-bottom-left-radius:10px;border-bottom-right-radius:10px;">
+                    <div id="respond">
+
+                      <center>
+                        <div class="col-lg-12 col-md-12 col-xs-12" style="color:black;">
+                          <div class="form-group">
                             <div class="col-md-12">
-                                <span style="background-color:#F0F0F0;padding-left:10px;padding-right:10px;border-radius:20px;"> <span id="display_count">0</span> characters.  <span id="word_left">160</span> characters left</span>
-                                <textarea id="comment" style="width:100%;" class="form-control" name="comment" cols="20" rows="2" required placeholder="Type your message here" ></textarea>
+                              <span style="background-color:#F0F0F0;padding-left:10px;padding-right:10px;border-radius:20px;"> <span id="display_count">0</span> characters.  <span id="word_left">160</span> characters left</span>
+                              <textarea id="comment" style="width:100%;" class="form-control" name="comment" cols="20" rows="2" required placeholder="Type your message here"></textarea>
                             </div>
-                        </div>
-                        <div class="form-group">
+                          </div>
+                          <div class="form-group">
                             <div class="col-md-12">
-                                <div class="row">
-                                    @if (Model.Product.Shop.User.ID == (int)Session["UserID"])
-                                    {
-                                    <center>
-                                        <a id="administrative" style="background-color:#097909;cursor:pointer;color:white;font-size:14px; padding:5px; text-align:center;" data-toggle="modal" data-target="#myModalEnterPrice" onclick="clearTextBox();">
-                                            <i class="glyphicon glyphicon-circle-arrow-up"></i> Enter Agreed Price <i class="glyphicon glyphicon-circle-arrow-up"></i>
-                                        </a>
-                                    </center>
-                                    }
-
-                                    <table style="width:100%">
-
-
-                                        <tr>
-                                            @*@if (Model.Product.Shop.User.ID == (int)Session["UserID"])
-                                            {
-                                            <td style="width:20%;color:white">
-                                                Qty <input type="number" id="qty"  class="form-control" name="quantity" required min="1" value="1" onchange="return reject_zero();">
-                                            </td>
-                                            <td style="width:40%;color:white;font-weight:bold">
-                                                Final Price  <input type="number" onchange="return reject_zero_buyeroffer();" id="offer" style="width:100%;" class="form-control" name="buyeroffer" min="1">
-                                            </td>
-                                                }*@
-                                            <td style="width:40%;">
-                                                <button style="margin-top:18px;width:100%" id="submit" type="submit" class="btn btn-common" onclick="return SaveNegotiation()">
-                                                    <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
-                                                    Send <i class="glyphicon glyphicon-send" style="font-size:12px;"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <input type="hidden" id="orderid" value="@Model.ID" />
-                                    <input type="hidden" id="customerid" value="@Model.UserID" />
-                                    <input type="hidden" id="sellerid" value="@Model.Product.Shop.UserID" />
-                                    <input type="hidden" id="shopid" value="@Model.Product.ShopID" />
-
-                                    @*<div class="col-md-4 col-4">
-                                        Quantity <input type="number" id="qty" style="width:100%;" class="form-control" name="quantity" required min="1" value="1" onchange="return reject_zero();">
-                                    </div>
-                                    <div class="col-md-4 col-4">
-                                        Your Offer  <input type="number" onchange="return reject_zero_buyeroffer();" id="offer" style="width:100%;" class="form-control" name="buyeroffer" required min="1">
-                                    </div>
-                                   
-                                    <div class="col-md-4 col-4">
-                                        <button style="margin-top:18px;width:100%" id="submit" type="submit" class="btn btn-common" onclick="return SaveNegotiation()" >
-                                            <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
-                                         Send <i class="glyphicon glyphicon-send" style="font-size:12px;"></i> </button>
-                                    </div>*@
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                                                        </center>
-                                                                <style>
-                                                                    #panel, #flip {
-                                                                        padding: 2px;
-                                                                        font-size: 16px;
-                                                                        text-align: center;
-                                                                        /*background-color: #e5eecc;*/
-                                                                        background-color: #e5eecc;
-                                                                        color: black;
-                                                                        border-radius: 3px;
-                                                                    }
-
-                                                                    #panel {
-                                                                        padding: 20px;
-                                                                    }
-                                                                </style>
-                                                </div>
-                                            </div>
-}
-                                            </div>
-
-                                        <!-- End Respond Form -->
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Comment Area -->
-                            @*</center>*@
-                        </div>
-                    </div>
-        </div>
-    </div>
-@if (!string.IsNullOrEmpty((string)Session["Name"]) && Request.QueryString["custid"]!=null)
-{
-    <input type="hidden" value="@Session["Name"]" id="buyersession" />
-}
-else
-{
-    <input type="hidden" value="NIL" id="buyersession" />
-}
-@if (!string.IsNullOrEmpty((string)Session["username"]) && Request.QueryString["sellid"] != null)
-{
-    <input type="hidden" value="@Session["username"]" id="sellersession" />
-}
-else
-{
-    <input type="hidden" value="NIL" id="sellersession" />
-}
-
-
-
-
-<script type="text/javascript">
-    function reject_zero()
-    {
-        if(document.getElementById("qty").value==0)
-        {
-            alert('Quantity cannot be zero!');
-            document.getElementById("qty").focus();
-            document.getElementById("qty").style.backgroundColor="red";
-            return false;
-        }
-        else {
-            document.getElementById("qty").style.backgroundColor = "";
-        }
-
-    }
-
-    function reject_zero_buyeroffer() {
-        if (document.getElementById("offer").value == 0) {
-            alert('Offer cannot be zero!');
-           
-            document.getElementById("offer").style.backgroundColor = "red";
-            document.getElementById("offer").focus();
-            return false;
-        }
-        else {
-            document.getElementById("offer").style.backgroundColor = "";
-        }
-
-    }
-</script>
-
-<script type="text/javascript">
-    function SaveNegotiation() {
-             var _comment = document.getElementById("comment").value;
-             //var _qty = document.getElementById("qty").value;
-             //var _offer = document.getElementById("offer").value;
-             var _orderid = document.getElementById("orderid").value;
-             var _customerid = document.getElementById("customerid").value;
-             var _shopid = document.getElementById("shopid").value;
-             var sellersession=document.getElementById("sellersession").value;
-             var buyersession = document.getElementById("buyersession").value;
-             
-
-                
-                 if (_comment=='')
-                 {
-                     //alert('Message cannot be empty');
-                     document.getElementById("comment").style.borderColor = "red";
-                     return false;
-                 }
-                 //else if (_qty == '')
-                 //{
-                 //    //alert('Enter quantity');
-                 //    document.getElementById("qty").style.borderColor = "red";
-                 //    document.getElementById("comment").style.borderColor = "green";
-                 //    return false;
-                 //}
-                 //else if (_offer == '') {
-                 //    //alert('Enter your offer');
-                 //    document.getElementById("offer").style.borderColor = "red";
-                 //    document.getElementById("qty").style.borderColor = "green";
-                 //    return false;
-                 //}
-                 else {
-                     document.getElementById("comment").style.borderColor = "green";
-                     //document.getElementById("qty").style.borderColor = "green";
-                     //document.getElementById("offer").style.borderColor = "green";
-                     $("#wait").css("display", "block");
-                     document.getElementById("submit").disabled = true;
-
-                     var url = "/OrderNegotiations/SaveNegotiations/";
-                     $.ajax({
-                         url: url,
-                         //data: { comment: _comment, qty: _qty, offer: _offer, orderid: _orderid, customerid: _customerid, shopid: _shopid, buyersession: buyersession },
-                         data: { comment: _comment, orderid: _orderid, customerid: _customerid, shopid: _shopid,buyersession:buyersession },
-                         cache: false,
-                         type: "POST",
-                         success: function (data) {
-                             $("#wait").css("display", "none");
-                             $("#comment").val('');
-                             //$("#qty").val(1);
-                             //$("#offer").val('');
-                             document.getElementById("submit").disabled = false;
-                         },
-                         error: function (reponse) {
-                             alert("error : " + reponse);
-                         }
-                     }); 
-                    
-                 }
-             }
-
-</script>
-
-<script type="text/javascript">
-    function AcceptNegotiation(_id) {
-             var _creator = document.getElementById(_id).value;
-                     var url = "/OrderNegotiations/AcceptNegotiation/";
-                     $.ajax({
-                         url: url,
-                         data: { Creator: _creator, NegoID: _id},
-                         cache: false,
-                         type: "POST",
-                         success: function (data) {
-                             //var html = '';
-                             //$.each(data, function (key, item) {
-                             //    GetNegotiation();
-                             //});
-                             //$("#displayaccept["+_id+"]").html(html).show();
-                             $("#start").css("display", "none");
-                             //$("#" + _id).css("display", "none");
-                             
-                         },
-                         error: function (reponse) {
-                             alert("error : " + reponse);
-                         }
-                     });
-                 }
-</script>
-
-<script type="text/javascript">
-    function GetNegotiation() {
-             var _orderid = document.getElementById("orderid").value;
-             var _customerid = document.getElementById("customerid").value;
-             var _shopid = document.getElementById("shopid").value;
-             var sellersession = document.getElementById("sellersession").value;
-             var buyersession = document.getElementById("buyersession").value;
-             
-             var url = "/OrderNegotiations/get_negotiations/";
-                     $.ajax({
-                         url: url,
-                         data: { orderid: _orderid, customerid: _customerid, shopid: _shopid },
-                         cache: false,
-                         type: "POST",
-                         success: function (data) {
-                             var html = '';
-                             html+='<ol class="comments-list" style="padding:0px;"><li>';
-
-                             $.each(data, function (key, item) {
-                                 if (item.Creator == "buyer")
-                                 {
-                                     html+='<div class="media" style="padding:3px;margin:0px;">';
-                                     html+='<div class="thumb-left" style="padding:3px; margin:6px 9px 3px 4px;">';
-                                     html += '<a href="#">';
-                                     html += '<center><img src="../../Images/user.png" style="width:25px; height:25px; border-radius:50px;" alt="">';
-                                     html += '<br /><span class="badge badge-default" style="font-size:9px;">' + item.CustomerName + '</span>'
-                                     html += '</center></a>';
-                                     html+='</div>';
-                                     html+='<div style="padding:3px; margin:2px;color:black">';
-                                     html += '<div class="col-lg-12 col-md-12 col-12"> <div class="box arrow-left">';
-                                     html+=  item.Comment;
-                                     html+='<hr style="margin-bottom:1px;margin-top:2px;" />';
-                                     //html+='<span class="badge badge-info">Quantity</span>'+ item.Quantity;
-                                     //html+='<span class="badge badge-info">Offer</span>'+item.CustomerOffer;
-                                     html += '<span style="font-size:10px;color:red"> ' + dateFormat(new Date(parseInt((item.DateCreated).match(/\d+/)[0])));
-                                     html += ' </span>';
-                                     //if (sellersession != "NIL" && item.Closed == null) {
-                                     //    html += '<br><button onclick="AcceptNegotiation(this.id)" type="button" id="' + item.ID + '" value="' + item.Creator + '" name="name_for_seller_accept" class="btn btn-success" style="padding-top:2px;padding-bottom:2px;padding-left:3px;padding-right:3px;">';
-                                     //    html += '<i class="glyphicon glyphicon-ok-sign"></i>  Ok, I Accept</button>';
-                                     //}
-                                     //if (sellersession != "NIL" && item.SellerAccept == "Yes" && item.Closed == "Yes" ) {
-                                     //    html += '<span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">YOU ACCEPTED</span>';
-                                     //}
-                                     if (buyersession != "NIL" && item.SellerAccept == "Yes" && item.Closed == "Yes") {
-                                         html += '<span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">SELLER ACCEPTED</span>';
-                                         html += '<h3 style="margin-top:3px;">';
-                                         html += '<a href="../../Products/OrderDetailsCheckOut/?id="' + item.ShopCustomerID + '" class="btn btn-common" style="padding-top:2px;padding-bottom:2px;">Proceed to Checkout &raquo; </a>';
-                                         html += '</h3>';
-                                     }
-                                html+='</div>';
-                                html+='</div></div></div>';
-                            }
-                            else
-                            {
-                                html+='<ul style="margin: 0px; padding:0px;>';
-                                html+='<li style="padding:0px;  align-content:flex-end;">';
-                                html+='<div class="media" style="padding:0px;margin-left:0px;">';
-                                html += '<div  style="padding:3px; margin:2px;float:right;">';
-                                html += '<div class="col-lg-12 col-md-12 col-12"> <div class="box arrow-right">' + item.Comment;
-                                html += '<hr style="margin-bottom:1px;margin-top:2px;" />';
-                                if (item.Quantity != null) {
-                                    html += '<span style="colro:black";>Quantity</span>' + '<span class="badge badge-info" style="padding:5px;margin:3px;">'+item.Quantity+'</span>';
-                                    html += '<span style="colro:black";>Final Price</span>' + '<span class="badge badge-info" style="padding:10px;margin:3px;font-size:14px">' + item.SellerOffer + '</span>';
-                                }
-                                html += '<span style="font-size:9px;"> ' + dateFormat(new Date(parseInt((item.DateCreated).match(/\d+/)[0])));
-
-                                if (buyersession != "NIL" && item.Closed == null) {
-                                    if (item.Quantity != null) {
-                                        html += '<br><button onclick="AcceptNegotiation(this.id)" type="button" id="' + item.ID + '" value="' + item.Creator + '" name="name_for_buyer_accept" class="btn btn-success" style="padding-top:2px;padding-bottom:2px;padding-left:3px;padding-right:3px;">';
-                                        html += '<i class="glyphicon glyphicon-ok-sign"></i>  Ok, I Accept</button>';
-                                    }
-                                }
-                                if (buyersession != "NIL" && item.BuyerAccept == "Yes" && item.Closed == "Yes")
+                              <div class="row">
+                                @if (Model.Product.Shop.User.ID == (int)Session["UserID"])
                                 {
-                                    html += '<span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">YOU ACCEPTED</span>';
-                                    html +='<br />';
-                                    html +='<h3>';
-                                    html += '<a href="../../Products/OrderDetailsCheckOut/?id=' + item.ShopCustomerID + '"  class="btn btn-common" style="padding-top:2px;padding-bottom:2px;">Proceed to Checkout  &raquo;</a>';
-                                    html +='</h3>';
-                                    }
-                                if (sellersession != "NIL" && item.BuyerAccept == "Yes" && item.Closed == "Yes")
-                                    {
-                                    html += '<span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green">BUYER ACCEPTED</span>';
-                                    }
-                            
-                                 html+='</div>';
-                                    html += '</div></div>';
-                                     html+='<div class="thumb-left" style="padding:2px; margin:2px 3px 3px 5px; float:right;">';
-                                     html+='<a href="#">';
-                                     html += '<center><img src="../../Images/user.png" style="width: 25px;height:25px; border-radius:50px;" alt=""></center>';
-                                     html += '<span class="badge badge-default" style="font-size:9px;">' + item.SellerShop + '</span>';
-                                     html+='</a></div></div></li></ul>';
-                                 }
-                             });
-                             html+='</li>';
-                             html+='</ol>';
-                             $("#displaynegotiation").html(html).show();
-                         },
-                         error: function (reponse) {
-                             alert("error : " + reponse);
-                         }
-                     });
-                 }
+                                  <center>
+                                    <a id="administrative" class="btn btn-common" style="background-color:#097909;cursor:pointer;color:white;font-size:14px; padding:5px; text-align:center;" data-toggle="modal" data-target="#myModalEnterPrice" onclick="clearTextBox();">
+                                      <i class="glyphicon glyphicon-adjust"></i> Enter Agreed Price <i class="glyphicon glyphicon-adjust"></i>
+                                    </a>
+                                  </center>
+                                }
+
+                                <table style="width:100%">
+
+
+                                  <tr>
+                                    @*@if (Model.Product.Shop.User.ID == (int)Session["UserID"])
+                                      {
+                                      <td style="width:20%;color:white">
+                                          Qty <input type="number" id="qty"  class="form-control" name="quantity" required min="1" value="1" onchange="return reject_zero();">
+                                      </td>
+                                      <td style="width:40%;color:white;font-weight:bold">
+                                          Final Price  <input type="number" onchange="return reject_zero_buyeroffer();" id="offer" style="width:100%;" class="form-control" name="buyeroffer" min="1">
+                                      </td>
+                                          }*@
+                                    <td style="width:40%;">
+                                      <button style="margin-top:18px;width:100%" id="submit" type="submit" class="btn btn-common" onclick="return SaveNegotiation()">
+                                        <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
+                                        Send <i class="glyphicon glyphicon-send" style="font-size:12px;"></i>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </table>
+                                <input type="hidden" id="orderid" value="@Model.ID" />
+                                <input type="hidden" id="customerid" value="@Model.UserID" />
+                                <input type="hidden" id="sellerid" value="@Model.Product.Shop.UserID" />
+                                <input type="hidden" id="shopid" value="@Model.Product.ShopID" />
+
+                                @*<div class="col-md-4 col-4">
+                                      Quantity <input type="number" id="qty" style="width:100%;" class="form-control" name="quantity" required min="1" value="1" onchange="return reject_zero();">
+                                  </div>
+                                  <div class="col-md-4 col-4">
+                                      Your Offer  <input type="number" onchange="return reject_zero_buyeroffer();" id="offer" style="width:100%;" class="form-control" name="buyeroffer" required min="1">
+                                  </div>
+
+                                  <div class="col-md-4 col-4">
+                                      <button style="margin-top:18px;width:100%" id="submit" type="submit" class="btn btn-common" onclick="return SaveNegotiation()" >
+                                          <div id="wait" style="display:none;"><img src="~/Images/loaders/ajax-loadergg.gif" /></div>
+                                       Send <i class="glyphicon glyphicon-send" style="font-size:12px;"></i> </button>
+                                  </div>*@
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </center>
+                      <style>
+                        #panel, #flip {
+                          padding: 2px;
+                          font-size: 16px;
+                          text-align: center;
+                          /*background-color: #e5eecc;*/
+                          background-color: #e5eecc;
+                          color: black;
+                          border-radius: 3px;
+                        }
+
+                        #panel {
+                          padding: 20px;
+                        }
+                      </style>
+                    </div>
+                  </div>
+                @*}*@
+              </div>
+
+              <!-- End Respond Form -->
+
+            </div>
+          </div>
+        </div>
+        <!-- End Comment Area -->
+        @*</center>*@
+      </div>
+    </div>
+  </div>
+</div>
+@if (Model.Product.Shop.User.ID != (int)Session["UserID"])
+{
+  @*<label> Buyer</label>*@
+  <input type="hidden" value="@Session["Name"]" id="buyersession" />
+}
+else
+{
+  @*<label> Buyer</label>*@
+  <input type="hidden" value="NIL" id="buyersession" />
+}
+@if (Model.Product.Shop.User.ID == (int)Session["UserID"])
+{
+  @*<label> seller</label>*@
+  <input type="hidden" value="@Session["username"]" id="sellersession" />
+}
+else
+{
+  @*<label> seller</label>*@
+  <input type="hidden" value="NIL" id="sellersession" />
+}
+
+
+
+
+<script type="text/javascript">
+  function reject_zero() {
+    if (document.getElementById("qty").value == 0) {
+      alert('Quantity cannot be zero!');
+      document.getElementById("qty").focus();
+      document.getElementById("qty").style.backgroundColor = "red";
+      return false;
+    }
+    else {
+      document.getElementById("qty").style.backgroundColor = "";
+    }
+
+  }
+
+  function reject_zero_buyeroffer() {
+    if (document.getElementById("offer").value == 0) {
+      alert('Offer cannot be zero!');
+
+      document.getElementById("offer").style.backgroundColor = "red";
+      document.getElementById("offer").focus();
+      return false;
+    }
+    else {
+      document.getElementById("offer").style.backgroundColor = "";
+    }
+
+  }
+</script>
+
+<script type="text/javascript">
+  function SaveNegotiation() {
+    var _comment = document.getElementById("comment").value;
+    //var _qty = document.getElementById("qty").value;
+    //var _offer = document.getElementById("offer").value;
+    var _orderid = document.getElementById("orderid").value;
+    var _customerid = document.getElementById("customerid").value;
+    var _shopid = document.getElementById("shopid").value;
+    var sellersession = document.getElementById("sellersession").value;
+    var buyersession = document.getElementById("buyersession").value;
+
+
+
+    if (_comment == '') {
+      //alert('Message cannot be empty');
+      document.getElementById("comment").style.borderColor = "red";
+      return false;
+    }
+    //else if (_qty == '')
+    //{
+    //    //alert('Enter quantity');
+    //    document.getElementById("qty").style.borderColor = "red";
+    //    document.getElementById("comment").style.borderColor = "green";
+    //    return false;
+    //}
+    //else if (_offer == '') {
+    //    //alert('Enter your offer');
+    //    document.getElementById("offer").style.borderColor = "red";
+    //    document.getElementById("qty").style.borderColor = "green";
+    //    return false;
+    //}
+    else {
+      document.getElementById("comment").style.borderColor = "green";
+      //document.getElementById("qty").style.borderColor = "green";
+      //document.getElementById("offer").style.borderColor = "green";
+      $("#wait").css("display", "block");
+      document.getElementById("submit").disabled = true;
+
+      var url = "/OrderNegotiations/SaveNegotiations/";
+      $.ajax({
+        url: url,
+        //data: { comment: _comment, qty: _qty, offer: _offer, orderid: _orderid, customerid: _customerid, shopid: _shopid, buyersession: buyersession },
+        data: { comment: _comment, orderid: _orderid, customerid: _customerid, shopid: _shopid, buyersession: buyersession },
+        cache: false,
+        type: "POST",
+        success: function (data) {
+          $("#wait").css("display", "none");
+          $("#comment").val('');
+          //$("#qty").val(1);
+          //$("#offer").val('');
+          document.getElementById("submit").disabled = false;
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+
+    }
+  }
+
+</script>
+
+<script type="text/javascript">
+  function AcceptNegotiation(_id) {
+    var _creator = document.getElementById(_id).value;
+    var url = "/OrderNegotiations/AcceptNegotiation/";
+    $.ajax({
+      url: url,
+      data: { Creator: _creator, NegoID: _id },
+      cache: false,
+      type: "POST",
+      success: function (data) {
+        //var html = '';
+        //$.each(data, function (key, item) {
+        //    GetNegotiation();
+        //});
+        //$("#displayaccept["+_id+"]").html(html).show();
+        $("#start").css("display", "none");
+        //$("#" + _id).css("display", "none");
+
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
+</script>
+
+<script type="text/javascript">
+  function GetNegotiation() {
+    var _orderid = document.getElementById("orderid").value;
+    var _customerid = document.getElementById("customerid").value;
+    var _shopid = document.getElementById("shopid").value;
+    var sellersession = document.getElementById("sellersession").value;
+    var buyersession = document.getElementById("buyersession").value;
+
+    var url = "/OrderNegotiations/get_negotiations/";
+    $.ajax({
+      url: url,
+      data: { orderid: _orderid, customerid: _customerid, shopid: _shopid },
+      cache: false,
+      type: "POST",
+      success: function (data) {
+        var html = '';
+        html += '<ol class="comments-list" style="padding:0px;"><li>';
+
+        $.each(data, function (key, item) {
+
+          if (item.BuyerAccept == "Yes") {
+            $("#start").css("display", "none");
+          }
+          else {
+            $("#start").css("display", "block");
+          }
+          if (item.Creator == "buyer") {
+            html += '<div class="media" style="padding:3px;margin:0px;">';
+            html += '<div class="thumb-left" style="padding:3px; margin:6px 9px 3px 4px;">';
+            html += '<a href="#">';
+            html += '<center><img src="../../Images/postimage.jpg" style="width:25px; height:25px;" alt="">';
+            html += '<br /><span class="badge badge-default" style="font-size:9px;">' + item.CustomerName + '</span>'
+            html += '</center></a>';
+            html += '</div>';
+            html += '<div style="padding:3px; margin:2px;color:black;width:500px;">';
+            html += '<div class="col-lg-12 col-md-12 col-12"> <div class="box" style="border:0px;">';
+            html += item.Comment;
+            html += '<hr style="margin-bottom:1px;margin-top:2px;" />';
+            html += '<span style="font-size:10px;color:red"> ' + dateFormat(new Date(parseInt((item.DateCreated).match(/\d+/)[0])));
+            html += ' </span>';
+            html += '</div>';
+            html += '</div></div></div>';
+          }
+          else {
+            html += '<ul style="margin: 0px; padding:0px;>';
+            html += '<li style="padding:0px;  align-content:flex-end;">';
+            html += '<div class="media" style="padding:0px;margin-left:0px;">';
+            html += '<div  style="padding:3px; margin:2px;float:right;color:black;width:500px;">';
+            html += '<div class="col-lg-12 col-md-12 col-12"> <div class="box"  style="border:0px;">' + item.Comment;
+            html += '<hr style="margin-bottom:1px;margin-top:2px;" />';
+            if (item.Quantity != null) {
+              html += '<span style="colro:black";>Quantity</span>' + '<span class="badge badge-info" style="padding:5px;margin:3px;">' + item.Quantity + '</span>';
+              html += '<span style="colro:black";>Final Price</span>' + '<span class="badge badge-info" style="padding:10px;margin:3px;font-size:14px">' + formatNumber(item.SellerOffer) + '</span>';
+            }
+            html += '<span style="font-size:9px;"> ' + dateFormat(new Date(parseInt((item.DateCreated).match(/\d+/)[0])));
+
+            if (buyersession != "NIL") {
+              if (item.Quantity != null && item.BuyerAccept == null) {
+                html += '<br><button onclick="AcceptNegotiation(this.id)" type="button" id="' + item.ID + '" value="' + item.Creator + '" name="name_for_buyer_accept" class="btn btn-success" style="padding-top:2px;padding-bottom:2px;padding-left:3px;padding-right:3px;">';
+                html += '<i class="glyphicon glyphicon-ok-sign"></i>  Okay, I Accept</button>';
+              }
+            }
+
+            if (buyersession != "NIL" && item.BuyerAccept == "Yes") {
+              //Display accepted message
+              html += '<br><span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green;font-size:12px;">You have agreed with the final price</span>';
+            }
+
+            if (buyersession != "NIL" && item.BuyerAccept == "Yes" && item.Closed == null) {
+
+             /* html += '<br><span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green;font-size:12px;">You have agreed with the final price</span>';*/
+              html += '<br />';
+              html += '<h3>';
+              html += '<br><a href="../../Products/OrderDetailsCheckOut/'+'"  class="btn btn-common" style="padding-top:2px;padding-bottom:2px;">Proceed to Checkout  &raquo;</a>';
+              html += '</h3>';
+            }
+            if (item.BuyerAccept == "Yes" && sellersession != 'NIL') {
+              html += '<br><span class="badge badge-success" style="background-color:white;border-color:green;border:1px solid green;color:green;font-size:12px;">' + item.CustomerName + ' have agreed with the final price</span>';
+            }
+
+            html += '</div>';
+            html += '</div></div>';
+            html += '<div class="thumb-left" style="padding:2px; margin:2px 3px 3px 5px; float:right;">';
+            html += '<a href="#">';
+            html += '<center><img src="../../Images/user.png" style="width: 25px;height:25px; border-radius:50px;" alt=""></center>';
+            html += '<span class="badge badge-default" style="font-size:9px;">' + item.SellerShop + '</span>';
+            html += '</a></div></div></li></ul>';
+          }
+        });
+        html += '</li>';
+        html += '</ol>';
+        $("#displaynegotiation").html(html).show();
+      },
+      error: function (reponse) {
+        alert("error : " + reponse);
+      }
+    });
+  }
 </script>
 <script>
 
-    function dateFormat(d) {
-        console.log(d);
-        return d.toLocaleString();
-    }
+  function dateFormat(d) {
+    console.log(d);
+    return d.toLocaleString();
+  }
 
 
-    //function dateFormat(d) {
-    //    console.log(d);
-    //    return d.getFullYear()
-    //        + "/" + ((d.getMonth() + 1) + "").padStart(2, "0")
-    //        + "/" + (d.getDate() + "").padStart(2, "0") + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() +;
-    //}
+  //function dateFormat(d) {
+  //    console.log(d);
+  //    return d.getFullYear()
+  //        + "/" + ((d.getMonth() + 1) + "").padStart(2, "0")
+  //        + "/" + (d.getDate() + "").padStart(2, "0") + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() +;
+  //}
 </script>
 
 <script type="text/javascript">
-$(document).ready(function() {
-    $("#comment").on('keydown', function(e) {
-        var words = $(this).val().length;
-        if (words <= 160) {
-            $('#display_count').text(words);
-            $('#word_left').text(160-words)
-        }else{
-            if (e.which !== 8) e.preventDefault();
-        }
+  $(document).ready(function () {
+    $("#comment").on('keydown', function (e) {
+      var words = $(this).val().length;
+      if (words <= 160) {
+        $('#display_count').text(words);
+        $('#word_left').text(160 - words)
+      } else {
+        if (e.which !== 8) e.preventDefault();
+      }
     });
- });
+  });
 </script>
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        setInterval(function () {
-            GetNegotiation();
-        },1000);
-    });
-    </script>
+  $(document).ready(function () {
+    setInterval(function () {
+      GetNegotiation();
+    }, 1000);
+  });
+</script>
 
 <script type="text/javascript">
-    function savePrice() {
-        var _qty = document.getElementById("qty").value;
-        var _offer = document.getElementById("offer").value;
-        var _orderid = document.getElementById("orderid").value;
-        var _sellerid= document.getElementById("customerid").value;
-        var _shopid = document.getElementById("shopid").value;
-        if (_qty == '') {
-            $("#qty").css("borderColor", "red");
-            $("#qty").focus();
-            return false;
-        }
-        else if (_offer == '') {
-            $("#offer").css("borderColor", "red");
-            $("#offer").focus();
-            return false;
-        }
-        else if (_qty == 0) {
-            $("#qty_zero").html("Quantity cannot be zero");
-            $("#qty").focus();
-            $("#qty").val('');
-            $("#qty").css("borderColor", "red");
-            return false;
-        }
-        else if (_offer == 0) {
-            $("#offer_zero").html("Price cannot be zero");
-            $("#offer").focus();
-            $("#offer").val('');
-            $("#offer").css("borderColor", "red");
-            return false;
-        }
-        else {
-            var url = "/OrderNegotiations/SaveAgreedPrice/";
-            $.ajax({
-                url: url,
-                data: { qty: _qty, price: _offer,orderid: _orderid, shopid: _shopid, sellerid: _sellerid },
-                cache: false,
-                type: "GET",
-                success: function (data) {
-                    $.each(data, function (key, item) {
-                        if (item.PriceSaved == 'true') {
-                            $("#successmsg").css("display", "block");
-                            document.getElementById("offer").value = "";
-                            document.getElementById("qty").value =1;
-
-                            $("#qty").css("borderColor", "");
-                            $("#offer").css("borderColor", "");
-                        }
-                    });
-                },
-                error: function (reponse) {
-                    alert("error : " + reponse);
-                }
-            });
-        }
+  function savePrice() {
+    var _qty = document.getElementById("qty").value;
+    var _offer = document.getElementById("offer").value;
+    var _orderid = document.getElementById("orderid").value;
+    var _sellerid = document.getElementById("customerid").value;
+    var _shopid = document.getElementById("shopid").value;
+    if (_qty == '') {
+      $("#qty").css("borderColor", "red");
+      $("#qty").focus();
+      return false;
     }
-    </script>
-
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
+    else if (_offer == '') {
+      $("#offer").css("borderColor", "red");
+      $("#offer").focus();
+      return false;
     }
+    else if (_qty == 0) {
+      $("#qty_zero").html("Quantity cannot be zero");
+      $("#qty").focus();
+      $("#qty").val('');
+      $("#qty").css("borderColor", "red");
+      return false;
+    }
+    else if (_offer == 0) {
+      $("#offer_zero").html("Price cannot be zero");
+      $("#offer").focus();
+      $("#offer").val('');
+      $("#offer").css("borderColor", "red");
+      return false;
+    }
+    else {
+      var url = "/OrderNegotiations/SaveAgreedPrice/";
+      $.ajax({
+        url: url,
+        data: { qty: _qty, price: _offer, orderid: _orderid, shopid: _shopid, sellerid: _sellerid },
+        cache: false,
+        type: "GET",
+        success: function (data) {
+          $.each(data, function (key, item) {
+            if (item.PriceSaved == 'true') {
+              $("#successmsg").css("display", "block");
+              document.getElementById("offer").value = "";
+              document.getElementById("qty").value = 1;
+
+              $("#qty").css("borderColor", "");
+              $("#offer").css("borderColor", "");
+            }
+          });
+        },
+        error: function (reponse) {
+          alert("error : " + reponse);
+        }
+      });
+    }
+  }
+</script>
+
+
+<script type="text/javascript">
+  function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
+</script>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}

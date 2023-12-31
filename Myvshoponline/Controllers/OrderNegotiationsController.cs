@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -27,12 +27,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OrderNegotiation orderNegotiation = db.OrderNegotiations.Find(id);
             if (orderNegotiation == null)
             {
-                return HttpNotFound();
+                 return Redirect("~/Home/AccessDenied");
             }
             return View(orderNegotiation);
         }
@@ -73,12 +73,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OrderNegotiation orderNegotiation = db.OrderNegotiations.Find(id);
             if (orderNegotiation == null)
             {
-                return HttpNotFound();
+                 return Redirect("~/Home/AccessDenied");
             }
             ViewBag.OrderID = new SelectList(db.Orders, "ID", "PaymentRef", orderNegotiation.OrderID);
             ViewBag.ShopID = new SelectList(db.Shops, "ID", "Name", orderNegotiation.ShopID);
@@ -110,12 +110,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OrderNegotiation orderNegotiation = db.OrderNegotiations.Find(id);
             if (orderNegotiation == null)
             {
-                return HttpNotFound();
+                 return Redirect("~/Home/AccessDenied");
             }
             return View(orderNegotiation);
         }
@@ -132,20 +132,22 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult OrderNegos(int? id)
+        public ActionResult OrderNegos()
         {
+            int id = Convert.ToInt32(Session["OrderID"]);
             if (string.IsNullOrEmpty((string)Session["Name"]) && string.IsNullOrEmpty((string)Session["username"]))
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id == null)
+            if (Session["UserID"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
+
             }
             Order order = db.Orders.Find(id);
             if (order == null)
             {
-                return HttpNotFound();
+                 return Redirect("~/Home/AccessDenied");
             }
             return View(order);
         }
@@ -223,7 +225,7 @@ namespace Myvshoponline.Controllers
             int OrderID =(int) db.Set<OrderNegotiation>().Find(NegoID).OrderID;
             var update = db.Set<OrderNegotiation>().Find(NegoID);
             //SET ALL TO NO
-            mydata.Update_Negotiation_to_No_On_Accept_Negotiation((int)OrderID);
+            //mydata.Update_Negotiation_to_No_On_Accept_Negotiation((int)OrderID);
             if (Creator=="buyer")
                 {
                 update.SellerAccept = "Yes";
@@ -232,7 +234,7 @@ namespace Myvshoponline.Controllers
             {
                 update.CustomerAccept = "Yes";
             }
-            update.Closed = "Yes";
+            //update.Closed = "Yes";
             db.SaveChanges();
             //GET ORDER ID
             decimal SellerOffer =(db.Set<OrderNegotiation>().Find(NegoID).SellerOffer==null? 0:(decimal)db.Set<OrderNegotiation>().Find(NegoID).SellerOffer);
@@ -241,16 +243,17 @@ namespace Myvshoponline.Controllers
 
             var updateorder = db.Set<Order>().Find(OrderID);
             updateorder.Negotiated = "Yes";
-            //Update final negotiated price in order
-            if (Creator == "seller")
+            updateorder.Rate = SellerOffer;
+      //Update final negotiated price in order
+      if (Creator == "seller")
             {
-                updateorder.Amount =SellerOffer;
+                updateorder.Amount =SellerOffer * Quantity;
                 var result = (from p in db.OrderNegotiations
                          select new {Acceptor="buyer" }).Distinct();
             }
             else
             {
-                updateorder.Amount = BuyerOffer;
+                updateorder.Amount = BuyerOffer * Quantity;
                 var result = (from p in db.OrderNegotiations
                               select new { Acceptor = "seller" }).Distinct();
             }
@@ -258,7 +261,6 @@ namespace Myvshoponline.Controllers
             db.SaveChanges();
             if (Creator == "seller")
             {
-                
                 var result = (from p in db.OrderNegotiations
                               select new { Acceptor = "buyer" }).Distinct();
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -319,3 +321,4 @@ namespace Myvshoponline.Controllers
         }
     }
 }
+

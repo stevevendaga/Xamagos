@@ -44,7 +44,7 @@
                     <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
                       @if (countproductinsubitems > 0)
                       {
-                        <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                        <a href="~/ProductSubProducts/ProductSubitems" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white" onclick="setSubProductSession(@item.ID,@item.ShopID)">
                           <div class="row">
                             <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 
@@ -80,7 +80,7 @@
                         }
                         else
                         {
-                          <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;">
+                          <a class="job-listings-featured" href="" style="height:285px;" onclick="setProductSession(@item.ID,@item.ShopID)">
                             <div class="row">
                               <div class="col-lg-12 col-sm-12 col-md-12" style="padding-left:3px">
 
@@ -140,7 +140,7 @@
           <div class="col-lg-2 col-md-4 col-4" style="padding:0px;margin:0px">
             @if (countproductinsubitems > 0)
             {
-              <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+              <a href="~/ProductSubProducts/ProductSubitems" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white"  onclick="setSubProductSession(@item.ID,@item.ShopID)">
                 <div class="row">
                   <div class="col-lg-12 col-md-6 col-xs-12" style="padding-left:3px">
 
@@ -178,7 +178,7 @@
               else
               {
 
-                <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                <a class="job-listings-featured" href="~/Products/ProductDetails" style="height:285px;background-color:white" onclick="setProductSession(@item.ID,@item.ShopID)">
                   <div class="row">
                     <div class="col-lg-12 col-md-12 col-lg-12" style="padding-left:3px">
 
@@ -219,5 +219,5 @@
 
   <!-- Browse All Categories Section End -->
 
-  <body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
-  </body>
+  @*<body style="background-image:url(../images/bg1.jpg);background-size:cover;background-attachment:fixed">
+  </body>*@

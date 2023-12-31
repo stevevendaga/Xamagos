@@ -1,4 +1,4 @@
-﻿@model Myvshoponline.Order
+@model Myvshoponline.Order
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
 }
@@ -30,12 +30,12 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                                    <a href="~/Users/Dashboard">Dashboard</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 <li>
                                     @*<a href="#" id="orders" onclick="getcontent(this.id)">*@
-                                        <a href="~/Orders/MyOrders/@ViewBag.CompanyID" id="orders" onclick="getcontent(this.id)">
+                                        <a href="~/Orders/MyOrders" id="orders" onclick="getcontent(this.id)">
                                             <i class="lni lni-cart"></i>
                                             Orders (@{var s = Convert.ToInt32(ViewBag.Orders);}@s)
                                         </a>
@@ -107,11 +107,11 @@
                         <div id="printdiv">
                             <div id="header" style="display:none">
                                 <center>
-                                    <img src="~/Images/logosquare.png" style="width:100px;height:100px" />
+                                  <img src="~/Images/xamagos.png" style="width:120px;height:60px;"  />
 
-                                    <h2 style="font-size:30px">
-                                        XAMAGOS
-                                    </h2>
+                                  <h2 style="font-size: 14px; margin-top: 5px;">
+                                    Ordered from www.xamagos.com/@Model.Product.Shop.ShopURL
+                                  </h2>
                                     <h3 style="font-size:12px">
                                         @Model.Product.Shop.Name
                                         <br />
@@ -122,8 +122,8 @@
                                 </center>
                             </div>
                             <h4 style="font-size:15px;color:#413fdc">
-                                Order Details for @Model.Product.Name &raquo;
-                                <font color="green"> Order ID <i class="lni lni-arrow-right"></i> #@Model.ID </font>
+                                Order Details for @Model.Product.Name @*&raquo;
+                                <font color="green"> Order ID <i class="lni lni-arrow-right"></i> #@Model.ID </font>*@
                             </h4>
                             <hr />
 
@@ -149,7 +149,7 @@
                                             var r = string.Format("{0:#,0}", Model.Rate);
                                         }
                                         @if (Model.Product.Currency == "NGN")
-                                        {<del class="NairaSign">N</del>}
+                                        {<span>&#x20A6;</span>}
                                         else
                                         {<span>@Model.Product.Currency</span> }@r
                                     </td>
@@ -166,7 +166,7 @@
                                             var am = string.Format("{0:#,0}", Model.Amount);
                                         }
                                        @if (Model.Product.Currency == "NGN")
-                                       {<del class="NairaSign">N</del>}
+                                       {<span>&#x20A6;</span>}
                                        else
                                        {<span>@Model.Product.Currency</span> }@am
                                     </td>
@@ -178,7 +178,7 @@
 
                                     <td>
                                         @{
-                                            var date = string.Format("{0:MMM dd, yyyy}", Model.DateOrdered);
+                                            var date = string.Format("{0:MMM dd, yyyy hh:mm tt}", Model.DateOrdered);
                                         }
                                         @date
                                     </td>
@@ -235,7 +235,10 @@
                                     </th>
 
                                     <td>
-                                        @Html.DisplayFor(model => model.DatePaid)
+                                      @{
+                                        var date2 = string.Format("{0:MMM dd, yyyy hh:mm tt}", Model.DatePaid);
+                                      }
+                                      @date2
                                     </td>
                                 </tr>
                                 <tr>
@@ -278,7 +281,7 @@
                                     </th>
 
                                     <td>
-                                        @Html.DisplayFor(model => model.DeliveryStatus)
+                                      @Html.DisplayFor(model => model.DeliveryStatus) <span style="color:brown;">on @string.Format("{0:MMM dd, yyyy hh:mm tt}", Model.DateSentforDelivery)</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -346,10 +349,10 @@
                 $.each(data, function (key, item) {
                     html += '<tr>';
                     if (item.SubProductID != 0) {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+                      html += '<td><a href="/Orders/Details' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.SubProductName;
 
                     } else {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                      html += '<td><a href="/Orders/Details' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.ProductName;
                     }
                     html+='</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
                 });

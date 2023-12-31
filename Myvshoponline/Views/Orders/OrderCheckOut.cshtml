@@ -6,7 +6,7 @@
 
 @{
     ViewBag.Title = "Order Checkout";
-    int CID = Convert.ToInt32(Request.QueryString["id"]);
+    int CID = Convert.ToInt32(Session["UserID"]);
     string currency = db.Orders.Where(o => o.UserID == CID && o.OnCart == "Yes").Select(o => o.Product.Currency).FirstOrDefault();
 }
 
@@ -31,13 +31,13 @@
                             <th style="font-size:12px;">Quantity</th>
                             <th style="font-size:12px;text-align:center">
                                 Unit Price  (@if (currency == "NGN")
-                                {<del class="NairaSign">N</del>}
+                                {<span>&#x20A6;</span>}
                                 else
                                 {<span>@currency</span> })
                             </th>
                             <th style="font-weight:bold;font-size:12px;text-align:center">
                                 Amount (@if (currency == "NGN")
-                                {<del class="NairaSign">N</del>}
+                                {<span>&#x20A6;</span>}
                                 else
                                 {<span>@currency</span> })
                             </th>
@@ -85,10 +85,10 @@
                                     }
                                     <td>@eachQuantity[i]</td>
                                     <td style="font-weight:bold">
-                                        @{
-                                            var rate = string.Format("{0:#,0}", eachRate[i]);
-                                        }
-                                        @rate
+                                      @{
+                                        var rate = string.Format("{0:#,0}", eachRate[i]);
+                                      }
+                                      @rate
                                     </td>
                                     <td style="font-weight:bold">
                                         @{
@@ -100,7 +100,7 @@
                                             }                                                   }
                         <tr>
                             <td colspan="8">
-                                <h5 style="font-size:12px;">
+                                <!--<h5 style="font-size:12px;">-->
                                     @*<span style="float:right;font-weight:bold;color:red">
                                         Shipping Cost:
                                         (@if (ViewBag.currency == "NGN")
@@ -114,13 +114,11 @@
                                         @string.Format("{0:#,0}", ViewBag.SumTotalDeliveryCost)
                                     </span>*@
 
-                                </h5>
-                                <br />
+                                <!--</h5>-->
                                 <h4 style="font-size:16px;">
-                                    
                                     Total Amount = @{var total = string.Format("{0:#,0}", ViewBag.OrdersTotalAmount);}
                                     @if (currency == "NGN")
-                                    {<del class="NairaSign">N</del>}
+                                    {<span>&#x20A6;</span>}
                                     else
                                     {<span>@currency</span> }@total
                                 </h4>
@@ -248,7 +246,7 @@
                           <form>
                             <script src="https://js.paystack.co/v1/inline.js"></script>
                             <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
-                              Pay <span>₦</span>@string.Format("{0:#,0}", (ViewBag.OrdersTotalAmount))
+                              Pay <span>&#x20A6;</span>@string.Format("{0:#,0}", (ViewBag.OrdersTotalAmount))
                             </button>
                           </form>
                         </center>

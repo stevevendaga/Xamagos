@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -186,13 +186,15 @@ namespace Myvshoponline.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ProductSubitems(int? id, int? sid, string search)
+        public ActionResult ProductSubitems(string search)
         {
+      int id=Convert.ToInt32(Session["ProductID"]);
+      int sid = Convert.ToInt32(Session["ShopID"]);
             if (db.ProductSubProducts.Where(s => s.ProductID == id).Count() == 0 || db.Shops.Where(s => s.ID == sid).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null && sid != null)
+            if (Session["ProductID"] != null && Session["ShopID"] != null)
             {
                 ViewBag.Products = db.ProductSubProducts.Where(s => s.ProductID == id).ToList();
                 var products = db.ProductSubProducts.Include(p => p.Product).Include(p => p.ProductStatu);
@@ -205,7 +207,7 @@ namespace Myvshoponline.Controllers
                 ViewBag.Shop = db.Shops.Where(s => s.ID == sid).ToList();
                 ViewBag.CompanyName = db.Shops.Where(s => s.ID == sid).Select(s => s.User.CompanyName).FirstOrDefault().ToUpper();
                 ViewBag.ShopName = db.Shops.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault().ToUpper();
-                if (search != null && id != null && sid != null)
+                if (search != null && Session["ProductID"] != null && Session["ShopID"] != null)
                 {
                     ViewBag.search = search;
                     return View(products.Where(p => p.ProductID == id && p.ProductStatu.Status == "Available" && p.Product.Shop.ShopStatus == "Active" && p.Name.Contains(search)).OrderByDescending(p => p.DateCreated).ToList());

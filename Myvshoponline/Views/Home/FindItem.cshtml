@@ -21,34 +21,34 @@
 
   <!-- SEARCH FORM -->
 <div class="col-lg-12 pt-4 pt-lg-0" data-aos="fade-left" style="background-color:white;border-radius:10px;box-shadow:#06867e 10px 10px inset;padding:30px;opacity:0.9">
-                    <form class="form-inline m-lg-0" method="get" action="~/Home/FindItem" style="padding:10px;">
-                      <input type="text" id="selectedCountry" />
-                         @if (Request.QueryString["item"] != null)
+                    <form class="form-inline m-lg-0" method="post" action="~/Home/FindItem" style="padding:10px;">
+                      @*<input type="text" id="selectedCountry" />*@
+                         @if (Request.Form["item"] != null)
                          {
-                            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="item" type="text" value="@Request.QueryString["item"]" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
+                            <input class="form-control form-control-navbar" id="search-item" aria-label="Search" required="required" name="item" type="text" value="@Request.Form["item"]" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
                          }
                          else
                          {
-                            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="item" type="text" placeholder="Search products, brands and categories" style="width:100%;margin:2px;margin-top:5px;border-bottom-color:#16d2ed">
+                            <input class="form-control form-control-navbar" id="search-item" aria-label="Search" name="item" type="text" placeholder="Search products, brands and categories" style="width: 100%; margin: 2px; margin-top: 5px; border-bottom-color: #16d2ed">
                          }
                            
                      
 
                         <div class="input-group input-group-sm" style="margin:2px;">
-                          @if (Request.QueryString["item"] != null)
+                          @if (Request.Form["item"] != null)
                           {
-                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" value="@Request.QueryString["CountryID"]">
+                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" name="CountryID" type="text" value="@Request.Form["CountryID"]">
                           }
                           else
                           {
-                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" required="required" name="CountryID" type="text" placeholder="Country/Region">
+                            <input class="form-control form-control-navbar" id="loadcountries" aria-label="Search" name="CountryID" type="text" placeholder="Country/Region">
                           }
                         @*@Html.DropDownList("CountryID", null, "Country/Region", htmlAttributes: new { @class = "form-control form-control-navbar", @required = "required", @onchange = "displaystateInputbar(this.value)", @style = "margin:2px;" })*@
                     </div>
                     <div class="input-group input-group-sm" style="margin:2px;" id="displaystatebar">
-@if (Request.QueryString["item"] != null)
+@if (Request.Form["item"] != null && @Request.Form["StateID"]!="")
 {
-<input type="text" id="loadStates" name="StateID" class="form-control form-control-navbar" value="@Request.QueryString["StateID"]" />
+<input type="text" id="loadStates" name="StateID" class="form-control form-control-navbar" value="@Request.Form["StateID"]" />
 }
 else
 {
@@ -58,7 +58,7 @@ else
                         <div class="input-group input-group-sm" style="margin:2px;">
                             @Html.DropDownList("ProductCategoryID", null, htmlAttributes: new { @class = "form-control form-control-navbar" })
                             <div class="input-group-append">
-                                <button class="btn btn-common" type="submit">
+                                <button class="btn btn-common" type="submit" onclick="return validateSubmit();">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
@@ -67,13 +67,11 @@ else
                     <!-- Right navb-->
                         </div>
 
-@if (Request.QueryString["item"] != null)
+@if (Request.Form["item"] != null)
 {
-        <!-- Listings Section Start -->
 <h3 class="section-title" style="font-size:14px;padding:5px;color:white">Search Results for @ViewBag.searchitem - found @Model.Count() results  </h3>
-                    <!--Section for SEO products-->
 
-<div id="popularproductsforSEO" style="margin:1px;padding:0px;">
+@*<div id="popularproductsforSEO" style="margin:1px;padding:0px;">
 <div class="panel panel-success">
     @if (db.SearchOptimizations.Count() > 0)
     {
@@ -89,7 +87,6 @@ else
     int ShopID = item.ShopID;
 
     int ProductID = item.ID;
-    <!--CHECK IF THIS PRODUCT IS SPONSORED IN SEARCH OPTIMIZATION-->
     if (db.SearchOptimizations.Where(s => s.ProductID == ProductID && s.PopularStoreStatu.Status == "Active").Count() > 0)
     {
 
@@ -115,7 +112,6 @@ else
                                     {<del class="NairaSign">N</del>}
                                     else
                                     { <span>@item.Currency</span>}@{
-                                        @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
                                     decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
                                     decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
                                     var a = string.Format("{0:#,0}", Total);}@a
@@ -127,8 +123,7 @@ else
                                 var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
                             }
                             <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
-                            @*<br />
-                            <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
+                          
                         </center>
 
                     </div>
@@ -155,7 +150,6 @@ else
                             {<del class="NairaSign">N</del>}
                             else
                             { <span>@item.Currency</span>}@{
-                                @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
                             decimal totalCommission = Convert.ToDecimal(item.Amount * c_percent);
                             decimal Total = Convert.ToDecimal(item.Amount + totalCommission);
                             var a = string.Format("{0:#,0}", Total);}@a
@@ -167,7 +161,6 @@ else
                         var state = db.States.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault();
                     }
                     <span style="font-size:11px;color:#007ACC"><i class="lni-map-marker"></i>@item.Shop.CountryRegion.Country - @state</span>
-                    @*<br /> <span style="font-size:11px;padding-top:1px"><i class="lni-user"></i> @item.Shop.Name.ToUpper()</span>*@
                 </center>
             </div>
         </div>
@@ -183,7 +176,7 @@ else
                             </div>
                         </div>
 
-                    </div>
+                    </div>*@
                     <!--END Section for SEO-->
 <!--START OF OTHER PRODUCTS-->
                     <div class="row" style="padding:0px">
@@ -196,7 +189,7 @@ else
                             <div class="col-4 col-sm-4 col-md-2" style="padding:0px;margin:0px">
                                 @if (countproductinsubitems > 0)
                                 {
-                                    <a href="~/ProductSubProducts/ProductSubitems/@item.ID?sid=@item.ShopID" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white">
+                                    <a href="" title="@item.Name" class="job-listings-featured" style="height:285px;background-color:white" onclick="setSubProductSession(@item.ID, @item.ShopID)">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 
@@ -234,7 +227,7 @@ else
     else
     {
 
-                                                                    <a class="job-listings-featured" href="~/Products/ProductDetails/@item.ID?sid=@item.ShopID" style="height:285px;background-color:white">
+                                                                    <a class="job-listings-featured" href="" style="height:285px;background-color:white" onclick="setProductSession(@item.ID, @item.ShopID)">
                                                                         <div class="row">
                                                                             <div class="col-lg-12 col-md-12 col-xs-12" style="padding-left:3px">
 
@@ -345,60 +338,64 @@ else
 </script>
 
  <script type="text/javascript">
-        $(function () {
-          var loadcountriesInput = $("#loadcountries");
-          var selectedCountryInput = $("#selectedCountry");
+   $(function () {
+     var loadcountriesInput = $("#loadcountries");
+     //var selectedCountryInput = $("#selectedCountry");
 
-                .bind("keydown", function (event) {
-                    if (event.keyCode === $.ui.keyCode.TAB &&
-                    $(this).data("ui-autocomplete").menu.active) {
-                        event.preventDefault();
-                    }
-                })
-                .autocomplete({
-                    minLength: 2,
-                    source: function (request, response) {
-                        $.getJSON("/Home/AutoLoadCountries", {
-                            term: extractLast(request.term)
-                        }, response);
-                  },
-                  select: function (event, ui) {
-                    var terms = split(this.value);
-                    // Remove the current input
-                    terms.pop();
-                    // Add the selected item
-                    terms.push(ui.item.value);
-                    // Join the terms back together
-                    this.value = terms.join(", ");
+     loadcountriesInput
+       .bind("keydown", function (event) {
+         if (event.keyCode === $.ui.keyCode.TAB &&
+           $(this).data("ui-autocomplete").menu.element.is(":visible")) {
+           event.preventDefault();
+         }
+       })
+       .autocomplete({
+         minLength: 2,
+         source: function (request, response) {
+           $.getJSON("/Home/AutoLoadCountries", {
+             term: extractLast(request.term)
+           }, response);
+         },
+         select: function (event, ui) {
+           var terms = this.value.split(", ");
+           terms.pop();
+           terms.push(ui.item.value);
+           this.value = terms.join(", ");
+           //selectedCountryInput.val(ui.item.Id);
 
-                    // Assuming you have an input with id 'selectedCountry'
-                    $("#selectedCountry").val(ui.item.Id);
+           // Trigger the change event manually
+           loadcountriesInput.trigger("change");
 
-                    return false;
-                  },
-                })
-              .on("change", function () {
-                // Check if the current value is a valid selection from the autocomplete
-                var terms = split(loadcountriesInput.val());
-                var lastTerm = terms.pop();
-                var validSelection = loadcountriesInput
-                  .data("ui-autocomplete")
-                  .widget()
-                  .find("li:contains(" + lastTerm + ")")
-                  .length > 0;
+           return false;
+         },
+       })
+       .on("change", function () {
+         // Check if the current value is a valid selection from the autocomplete
+         var terms = split(loadcountriesInput.val());
+         var lastTerm = terms.pop();
+         var validSelection = loadcountriesInput
+           .data("ui-autocomplete")
+           .widget()
+           .find("li:contains(" + lastTerm + ")")
+           .length > 0;
 
-                if (!validSelection) {
-                  loadcountriesInput.val("");
-                  selectedCountryInput.val("");
-                }
-                });
-        });
-        function split(val) {
-            return val.split(/,\s*/);
-        }
+         if (!validSelection) {
+           loadcountriesInput.val("");
+           selectedCountryInput.val("");
+
+           // Trigger the change event manually if needed
+           loadcountriesInput.trigger("change");
+         }
+       });
+   });
+
+   function split(val) {
+     return val.split(/,\s*/);
+   }
+
    function extractLast(term) {
-            return split(term).pop();
-        }
+     return split(term).pop();
+   }
 </script>
 
 
@@ -426,4 +423,20 @@ else
         function extractLast(term) {
             return split(term).pop();
         }
+</script>
+<script>
+  function validateSubmit() {
+    var search = document.getElementById("search-item").value;
+    var country = document.getElementById("loadcountries").value;
+    if (search == '') {
+      document.getElementById("search-item").style.borderColor = "red";
+      $("#search-item").focus();
+      return false;
+    }
+    else if (country == '') {
+      document.getElementById("loadcountries").style.borderColor = "red";
+      $("#loadcountries").focus();
+      return false;
+    }
+  }
 </script>

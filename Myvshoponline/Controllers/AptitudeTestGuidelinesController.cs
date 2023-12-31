@@ -30,12 +30,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             AptitudeTestGuideline aptitudeTestGuideline = db.AptitudeTestGuidelines.Find(id);
             if (aptitudeTestGuideline == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(aptitudeTestGuideline);
         }
@@ -69,12 +69,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             AptitudeTestGuideline aptitudeTestGuideline = db.AptitudeTestGuidelines.Find(id);
             if (aptitudeTestGuideline == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(aptitudeTestGuideline);
         }
@@ -101,12 +101,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             AptitudeTestGuideline aptitudeTestGuideline = db.AptitudeTestGuidelines.Find(id);
             if (aptitudeTestGuideline == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(aptitudeTestGuideline);
         }

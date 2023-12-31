@@ -1,4 +1,4 @@
-﻿@model List<Myvshoponline.Order>
+@model List<Myvshoponline.Order>
 
 @{ MyvshoponlineEntities db = new MyvshoponlineEntities();
     Getdata mydata = new Getdata();
@@ -38,12 +38,12 @@
                                 <input type="hidden" name="totalamount" id="totalamount" value="@totalamount" />
                                 <input type="hidden" name="shopname" id="shopname" value="@customername" />
                                 <center id="pay">
-                                      Total Amount
+                                  <span style="color:black;">Make payment now or pay later.</span>
                                     <hr />
                                     <form>
                                         <script src="https://js.paystack.co/v1/inline.js"></script>
                                         <img src="~/Images/paymenticon.png" style="width:10%" /> <button type="button" class="btn btn-success" style="width:auto;" onclick="payWithPaystack()">
-                                            Pay <span>₦</span>@string.Format("{0:#,0}", totalamount)
+                                            Pay <span>&#x20A6;</span>@string.Format("{0:#,0}", totalamount)
                                         </button>
                                     </form>
                                 </center>

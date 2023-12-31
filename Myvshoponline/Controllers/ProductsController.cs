@@ -116,8 +116,12 @@ namespace Myvshoponline.Controllers
                 //var state1 = from p in db.States
                 //                where p.ID != 38 && p.ID == db.DeliveryLocations.Where(s => s.ShopID == sid).Select(s => s.LocationID).FirstOrDefault()
                 //                select new { ID = p.ID, item = p.Name };
-                ViewBag.StateID = new SelectList(state, "ID", "item");
-                  
+                //ViewBag.StateID = new SelectList(state, "ID", "item");
+                var state1 = from p in db.States
+                                       where p.Name != "All Locations within Nigeria"
+                                       select new { ID = p.ID, item = p.Name };
+                ViewBag.StateID = new SelectList(state1, "ID", "item");
+
                 ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
                 ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
                 ViewBag.Comments = db.ProductComments.Where(s => s.ProductID == id).OrderByDescending(s=>s.Date).ToList();
@@ -148,7 +152,7 @@ namespace Myvshoponline.Controllers
         public ActionResult ProductDetailsSubitems()
         {
           int id = Convert.ToInt32(Session["ProductID"]);
-          int sid = Convert.ToInt32(Session["SessionID"]);
+          int sid = Convert.ToInt32(Session["ShopID"]);
           if (db.ProductSubProducts.Where(s => s.ID == id).Count() == 0 || db.Shops.Where(s => s.ID == sid).Count() == 0)
             {
                 return Redirect("~/Home/AccessDenied");
@@ -191,13 +195,22 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult AddtoCart(int? pid, int? sid, int? qty, string src,string negotiate,int?dcity)
+        public ActionResult AddtoCart()
         {
+        
             int CommissionPercent = Convert.ToInt32(db.Settings.Select(s => s.CommissionPercent).FirstOrDefault());
             decimal c_percent = (decimal)(CommissionPercent / 100.00);
 
-            var products = db.Products.Include(p => p.ProductCategory).Include(p => p.ProductStatu).Include(p => p.Shop);
-            if (pid != null && sid != null && qty != null)
+            int pid = Convert.ToInt32(Session["CartProductID"]);
+            int sid = Convert.ToInt32(Session["CartShopID"]);
+            int dcity = Convert.ToInt32(Session["dcity"]);
+            int qty=Convert.ToInt32(Session["qty"]);
+
+            string src= (string)Session["src"];
+            string negotiate = (string)Session["Negotiate"];
+          
+          var products = db.Products.Include(p => p.ProductCategory).Include(p => p.ProductStatu).Include(p => p.Shop);
+            if (Session["CartProductID"] != null && Session["CartShopID"] !=null)
             {
                 decimal rate;
                 string Item;
@@ -269,7 +282,7 @@ namespace Myvshoponline.Controllers
                     orda.Negotiated = "No";
 
                    //orda.OrderGroupID =Convert.ToString(mydata.Generate_OTP_Numeric());
-                    if (dcity != null)
+                    if (Session["dcity"] != null)
                     {
                         decimal DeliveryCost = (db.DeliveryCities.Where(s=>s.ID==dcity).Count()!=0?(decimal)db.DeliveryCities.Find(dcity).Cost:0);
                         orda.DeliveryCost = DeliveryCost;
@@ -277,7 +290,7 @@ namespace Myvshoponline.Controllers
                     db.Orders.Add(orda);
                     db.SaveChanges();
                     //INSERT INTO SHIPPING INFORMATION
-                    if (dcity != null)
+                    if (Session["dcity"] != null)
                     {
                         ShippingInformation ship = new ShippingInformation();
                         int CountryID = (int)db.DeliveryCity_Only.Find(dcity).State.CountryID;
@@ -290,14 +303,16 @@ namespace Myvshoponline.Controllers
                         db.ShippingInformations.Add(ship);
                         db.SaveChanges();
                     }
-                    if (!string.IsNullOrEmpty(negotiate))
+                     Session["Cart"] = null;
+               if (negotiate=="Yes")
                     {
-                        return Redirect("~/OrderNegotiations/OrderNegos/" +orda.ID +"?custid="+UserID);
+                        Session["OrderID"] = orda.ID;
+                        return Redirect("~/OrderNegotiations/OrderNegos/");
                     }
                     else
                     {
                         //return Redirect("~/Users/CustomerDashboard/" + UserID);
-                        return Redirect("~/Products/OrderDetailsCheckOut/?id=" + UserID);
+                        return Redirect("~/Products/OrderDetailsCheckOut");
                     }
                 }
                 else
@@ -328,7 +343,7 @@ namespace Myvshoponline.Controllers
                     orda.Negotiated = "No";
               
                     // orda.OrderGroupID = Convert.ToString(mydata.Generate_OTP_Numeric());
-                    if (dcity != null)
+                    if (Session["dcity"] != null)
                     {
                         decimal DeliveryCost = (db.DeliveryCities.Where(s => s.ID == dcity).Count() != 0 ? (decimal)db.DeliveryCities.Find(dcity).Cost : 0);
                         orda.DeliveryCost = DeliveryCost;
@@ -336,7 +351,7 @@ namespace Myvshoponline.Controllers
                     db.Orders.Add(orda);
                     db.SaveChanges();
                     //INSERT INTO SHIPPING INFORMATION
-                    if (dcity != null)
+                    if (Session["dcity"] != null)
                     {
                         ShippingInformation ship = new ShippingInformation();
                         int CountryID = (int)db.DeliveryCity_Only.Find(dcity).State.CountryID;
@@ -349,15 +364,17 @@ namespace Myvshoponline.Controllers
                         db.ShippingInformations.Add(ship);
                         db.SaveChanges();
                     }
+                      Session["Cart"] = null;
 
-                    if (!string.IsNullOrEmpty(negotiate))
-                    {
-                     return Redirect("~/OrderNegotiations/OrderNegos/" + orda.ID + "?custid=" + UserID);
+                      if (negotiate == "Yes")
+                      {
+                        Session["OrderID"] = orda.ID;
+                        return Redirect("~/OrderNegotiations/OrderNegos/");
                     }
                     else
                     {
                      //return Redirect("~/Users/CustomerDashboard/" + UserID);
-                     return Redirect("~/Products/OrderDetailsCheckOut/?id=" + UserID);
+                     return Redirect("~/Products/OrderDetailsCheckOut");
                         
                     }
                 }
@@ -371,14 +388,14 @@ namespace Myvshoponline.Controllers
         }
 
 
-        public ActionResult OrderDetailsCheckOut(int? id)
+        public ActionResult OrderDetailsCheckOut()
         {
             if (Session["UserID"] == null)
             {
                 return Redirect("~/Home/AccessDenied");
             }
             var products = db.Orders.Include(p => p.Product).Include(p => p.ProductSubProduct);
-            if (id != null)
+            if (Session["UserID"] != null)
             {
                 //decimal rate;
                 //string Item;
@@ -399,7 +416,7 @@ namespace Myvshoponline.Controllers
                 //ViewBag.Amount = rate * qty;
                 //ViewBag.pid = pid;
                 //ViewBag.src = src;
-                ViewBag.customerID = id;
+                //ViewBag.customerID = id;
                 return View();
             }
             return Redirect("~/Home/AccessDenied"); ;

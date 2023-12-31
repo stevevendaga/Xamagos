@@ -31,12 +31,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OnlineTraining onlineTraining = db.OnlineTrainings.Find(id);
             if (onlineTraining == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(onlineTraining);
         }
@@ -89,12 +89,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OnlineTraining onlineTraining = db.OnlineTrainings.Find(id);
             if (onlineTraining == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.SexID = new SelectList(db.Sexes, "ID", "Sex1", onlineTraining.SexID);
             ViewBag.StateOriginID = new SelectList(db.States, "ID", "Name", onlineTraining.StateOriginID);
@@ -128,12 +128,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             OnlineTraining onlineTraining = db.OnlineTrainings.Find(id);
             if (onlineTraining == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(onlineTraining);
         }

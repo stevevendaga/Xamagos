@@ -56,13 +56,13 @@ namespace SysmaxTrainingCenter.Controllers
 
         //    if (projectid == null)
         //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //        return Redirect("~/Home/AccessDenied");
         //    }
         //    TrainingModule trainingModule = db.TrainingModules.Where(s=>s.ProjectID==projectid && s.Serial==serial).FirstOrDefault();
 
         //    if (trainingModule == null)
         //    {
-        //        return HttpNotFound();
+        //        return Redirect("~/Home/AccessDenied");
         //    }
         //    ViewBag.PreviousTopic=db.TrainingModules.Where(p=>p.ProjectID==projectid && p.Serial==serial-1).Select(p=>p.ProjectTitle).FirstOrDefault();
         //    ViewBag.NextTopic = db.TrainingModules.Where(p => p.ProjectID == projectid && p.Serial == serial + 1).Select(p => p.ProjectTitle).FirstOrDefault();
@@ -80,12 +80,12 @@ namespace SysmaxTrainingCenter.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingModule trainingModule = db.TrainingModules.Find(id);
             if (trainingModule == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(trainingModule);
         }
@@ -150,12 +150,12 @@ namespace SysmaxTrainingCenter.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingModule trainingModule = db.TrainingModules.Find(id);
             if (trainingModule == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.Serial = db.TrainingModules.Where(p => p.ProjectID == id).Select(p => p.Serial).Max();
             ViewBag.Random = Guid.NewGuid().ToString();
@@ -186,12 +186,12 @@ namespace SysmaxTrainingCenter.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TrainingModule trainingModule = db.TrainingModules.Find(id);
             if (trainingModule == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(trainingModule);
         }

@@ -26,12 +26,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PlanFeature planFeature = db.PlanFeatures.Find(id);
             if (planFeature == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(planFeature);
         }
@@ -66,12 +66,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PlanFeature planFeature = db.PlanFeatures.Find(id);
             if (planFeature == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             ViewBag.PricingPlanID = new SelectList(db.PricingPlans, "ID", "PlanName", planFeature.PricingPlanID);
             return View(planFeature);
@@ -99,12 +99,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PlanFeature planFeature = db.PlanFeatures.Find(id);
             if (planFeature == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(planFeature);
         }

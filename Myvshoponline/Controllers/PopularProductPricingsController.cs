@@ -32,12 +32,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PopularProductPricing popularProductPricing = db.PopularProductPricings.Find(id);
             if (popularProductPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(popularProductPricing);
         }
@@ -80,12 +80,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 PopularProductPricing popularProductPricing = db.PopularProductPricings.Find(id);
                 if (popularProductPricing == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 return View(popularProductPricing);
             }
@@ -117,12 +117,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PopularProductPricing popularProductPricing = db.PopularProductPricings.Find(id);
             if (popularProductPricing == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(popularProductPricing);
         }

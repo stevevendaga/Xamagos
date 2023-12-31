@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,29 +7,42 @@ using System.Web.Routing;
 
 namespace Myvshoponline
 {
-    public class RouteConfig
+  public class RouteConfig
+  {
+    public static void RegisterRoutes(RouteCollection routes)
     {
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.MapRoute(
+      routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+      routes.MapRoute(
                name: "Id",
                url: "{id}",
                defaults: new { controller = "Home", action = "ShopDetails", q = UrlParameter.Optional }
            );
-          //  routes.MapRoute(
-          //    name: "Product",
-          //    url: "{id}/{pid}",
-          //    defaults: new { controller = "Home", action = "ProductDetails" }
-          //);
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapRoute(
+
+      // Default MVC route
+
+      //// Default MVC route with LowerCaseRouteHandler
+      //routes.Add(new Route("{controller}/{action}/{id}",
+      //    new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
+      //    new LowerCaseRouteHandler()));
+
+      routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-
-
-           
-        }
     }
-}
+  }
+
+    public class LowerCaseRouteHandler : MvcRouteHandler
+    {
+      protected override IHttpHandler GetHttpHandler(RequestContext requestContext)
+      {
+        requestContext.RouteData.Values["controller"] = requestContext.RouteData.Values["controller"]?.ToString().ToLower();
+        requestContext.RouteData.Values["action"] = requestContext.RouteData.Values["action"]?.ToString().ToLower();
+
+        return base.GetHttpHandler(requestContext);
+      }
+    }
+
+  }

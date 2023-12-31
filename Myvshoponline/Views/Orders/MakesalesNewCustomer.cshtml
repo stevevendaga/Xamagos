@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Order>
+@model IEnumerable<Myvshoponline.Order>
 
 @{
     ViewBag.Title = "Make Sales";
@@ -22,7 +22,7 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <a href="~/Shops/ShopDetails">@ViewBag.Shopname DASHBOARD</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 <li>
@@ -32,7 +32,7 @@
                                         var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
                                     }
                                 <li>
-                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                    <a href="~/Orders/Accounts">
                                         <i class="lni lni-stats-down"></i> Sales
                                     </a>
                                     <hr style="padding:1px;margin:5px" />
@@ -88,7 +88,7 @@
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <span style="margin-top:0px;margin-bottom:3px;color:white;">
-                                <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                <a href="~/Orders/Makesales" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
                                     <font style="color:white">
                                         <i class="fas fa-money-bill"></i>
                                         Sell to an existing customer <i class="fas fa-money-bill"></i>
@@ -99,7 +99,7 @@
 
                         <div class="col-md-6 col-12">
                             <span style="margin-top:0px;margin-bottom:3px;color:white;">
-                                <a href="~/Orders/MakesalesNewCustomer/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                <a href="~/Orders/MakesalesNewCustomer" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
                                     <font style="color:white">
                                         <i class="fas fa-money-bill"></i>
                                         Sell to a new customer

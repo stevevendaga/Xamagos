@@ -25,7 +25,7 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <a href="~/Shops/ShopDetails">@ViewBag.Shopname DASHBOARD</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 <li>
@@ -35,7 +35,7 @@
                                         var totalCust = db.CustomerShops.Where(c => c.ShopID == ShopID).Count();
                                     }
                                 <li>
-                                    <a href="~/Orders/Accounts/?sid=@ViewBag.ShopID">
+                                    <a href="~/Orders/Accounts">
                                         <i class="lni lni-stats-down"></i> Sales
                                     </a>
                                     <hr style="padding:1px;margin:5px" />
@@ -90,11 +90,11 @@
                 <div>
                     @if (Request.QueryString["Submit"] == null)
                     {
-                   <a href="~/Orders/Accounts/?sid=@Request.QueryString["sid"]"><< Back to sales summary</a>
+                   <a href="~/Orders/Accounts"><< Back to sales summary</a>
                     }
                     else
                     {
-                        <a href="~/Orders/Accounts/?sid=@Request.QueryString["sid"]&fromdate=@Request.QueryString["fromdate"]&todate=@Request.QueryString["todate"]"><< Back to sales report as at <b> @string.Format("{0: MMM dd, yyyy}", Request.QueryString["fromdate"]).ToUpper()</b> to <b>@string.Format("{0: MMM dd, yyyy}", Request.QueryString["todate"]).ToUpper()</b></a>
+                        <a href="~/Orders/Accounts/?fromdate=@Request.QueryString["fromdate"]&todate=@Request.QueryString["todate"]"><< Back to sales report as at <b> @string.Format("{0: MMM dd, yyyy}", Request.QueryString["fromdate"]).ToUpper()</b> to <b>@string.Format("{0: MMM dd, yyyy}", Request.QueryString["todate"]).ToUpper()</b></a>
                     }
                     <div class="panel panel-primary">
                        

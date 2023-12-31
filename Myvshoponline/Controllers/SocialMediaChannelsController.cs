@@ -34,12 +34,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaChannel socialMediaChannel = db.SocialMediaChannels.Find(id);
             if (socialMediaChannel == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(socialMediaChannel);
         }
@@ -81,12 +81,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaChannel socialMediaChannel = db.SocialMediaChannels.Find(id);
             if (socialMediaChannel == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(socialMediaChannel);
             }
@@ -117,12 +117,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             SocialMediaChannel socialMediaChannel = db.SocialMediaChannels.Find(id);
             if (socialMediaChannel == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(socialMediaChannel);
         }

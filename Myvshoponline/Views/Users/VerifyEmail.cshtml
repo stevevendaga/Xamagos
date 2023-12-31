@@ -16,7 +16,7 @@
                     <div class="alert alert-success" style="font-size:15px;background-color:white;border-color:#0d9bc8">
                       <span style="color: dodgerblue;font-size:20px">Email Verification</span>
                     <hr />
-                    Verification code has been sent to @ViewBag.email <br /><br />
+                    Verification code has been sent to your email address @ViewBag.email <br /><br />
                    
                     <p style="color:black;font-weight:bold">Enter Verification Code</p>
                         <div id="msg"></div>
@@ -68,10 +68,15 @@
                     $.each(data, function (key, item) {
                         if(item.OTPExist=='true')
                         {
-                            //window.location = '../BusinessLanding';
-                          window.location = '../Users/Dashboard';
-                            //var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
-                            //$("#process").html(html).show();
+                              //Redirect to cart and users dashboard respectively
+                          if (item.CartSession == 'cart') {
+                                window.location = '../../Products/AddtoCart';
+                              }
+                              else {
+                                window.location = '../Users/Dashboard';
+                              }
+                                  //var html = '<img src="../../Images/loaders/ajax-loadergg.gif" />';
+                                  //$("#process").html(html).show();
                         }
                         else {
                             $("#msg").html("<div class='alert alert-danger'>Invalid Code, please try again</div>").show();
@@ -121,7 +126,7 @@
                 success: function (data) {
                     var html = '';
                     $.each(data, function (key, item) {
-                        $("#msg").html("<div class='alert alert-success'> A new verification code has been sent to your email.</div>").show();
+                        $("#msg").html("<div class='alert alert-success'> A new verification code has been sent to your email address.</div>").show();
                        
                     });
                   $("#resendotp").css("display", "none");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -15,9 +15,10 @@ namespace Myvshoponline.Controllers
         private MyvshoponlineEntities db = new MyvshoponlineEntities();
         Getdata mydata = new Getdata();
         // GET: PopularStores
-        public ActionResult Index(int?sid)
+        public ActionResult Index()
         {
-            if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(sid).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
+      int sid = Convert.ToInt32(Session["ShopID"]);
+      if (mydata.Is_ShopAdmin((string)Session["username"], (string)Session["UserRole"]) && db.Shops.Find(sid).UserID == (int)Session["UserID"] || mydata.Is_SupperAdmin((string)Session["username"], (string)Session["UserRole"]))
             {
                 var popularStores = db.PopularStores.Include(p => p.PopularStoreStatu).Include(p => p.Shop);
                 return View(popularStores.Where(s => s.ShopID == sid).ToList().OrderByDescending(s => s.DatePaid).OrderByDescending(s => s.PopularStoreStatu.Status == "Active"));
@@ -46,12 +47,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PopularStore popularStore = db.PopularStores.Find(id);
             if (popularStore == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(popularStore);
         }
@@ -97,12 +98,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 PopularStore popularStore = db.PopularStores.Find(id);
                 if (popularStore == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 ViewBag.PopularStoreStatusID = new SelectList(db.PopularStoreStatus, "ID", "Status", popularStore.PopularStoreStatusID);
                 ViewBag.ShopID = new SelectList(db.Shops, "ID", "Name", popularStore.ShopID);
@@ -137,12 +138,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             PopularStore popularStore = db.PopularStores.Find(id);
             if (popularStore == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(popularStore);
         }

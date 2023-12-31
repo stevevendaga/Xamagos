@@ -20,7 +20,8 @@ using System.Globalization;
 
 namespace Myvshoponline.Controllers
 {
-    public class UsersController : Controller
+ 
+  public class UsersController : Controller
     {
         private MyvshoponlineEntities db = new MyvshoponlineEntities();
         Getdata mydata = new Getdata();
@@ -165,56 +166,57 @@ namespace Myvshoponline.Controllers
             }
 
         }
-        public ActionResult BuyPlan(int? id)
+    public ActionResult BuyPlan()
         {
-            //EXPIRY CHECK
-            //int count = (int)db.Registrations.Where(c => c.ID == id).Select(c => c.PaymentStatus).FirstOrDefault();
-            //if (count == 1)
-            //{
-            //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
-            //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
-            //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
+      //EXPIRY CHECK
+      //int count = (int)db.Registrations.Where(c => c.ID == id).Select(c => c.PaymentStatus).FirstOrDefault();
+      //if (count == 1)
+      //{
+      //    int lYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchYear).FirstOrDefault();
+      //    int lmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchMonth).FirstOrDefault();
+      //    int lday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.LaunchDay).FirstOrDefault();
 
-            //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
-            //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
-            //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
+      //    int pYear = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousYear).FirstOrDefault();
+      //    int pmonth = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousMonth).FirstOrDefault();
+      //    int pday = (int)db.Registrations.Where(k => k.ID == id).Select(k => k.PreviousDay).FirstOrDefault();
 
-            //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
-            //    DateTime prevd = new DateTime(pYear, pmonth, pday);
-            //    TimeSpan diff = lauchd.Subtract(prevd);
-            //    ViewBag.diff = diff.Days;
-            //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
-            //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
+      //    DateTime lauchd = new DateTime(lYear, lmonth, lday);
+      //    DateTime prevd = new DateTime(pYear, pmonth, pday);
+      //    TimeSpan diff = lauchd.Subtract(prevd);
+      //    ViewBag.diff = diff.Days;
+      //    ViewBag.FixedDays = db.Registrations.Find(id).FixedDays;
+      //    ViewBag.Ndays = db.Registrations.Find(id).NDays;
 
-            //    if (ViewBag.diff > ViewBag.FixedDays)
-            //    {
+      //    if (ViewBag.diff > ViewBag.FixedDays)
+      //    {
 
-            //    }
-            //    else
-            //    {
-            //        var r = db.Set<Registration>().Find(id);
-            //        r.NDays = ViewBag.diff;
-            //        r.LaunchDate = DateTime.Now;
-            //        r.LaunchYear = DateTime.Now.Year;
-            //        r.LaunchMonth = DateTime.Now.Month;
-            //        r.LaunchDay = DateTime.Now.Day;
-            //        db.SaveChanges();
-            //    }
-            //}
+      //    }
+      //    else
+      //    {
+      //        var r = db.Set<Registration>().Find(id);
+      //        r.NDays = ViewBag.diff;
+      //        r.LaunchDate = DateTime.Now;
+      //        r.LaunchYear = DateTime.Now.Year;
+      //        r.LaunchMonth = DateTime.Now.Month;
+      //        r.LaunchDay = DateTime.Now.Day;
+      //        db.SaveChanges();
+      //    }
+      //}
 
-            //ViewBag.Regid = id;
-            //var registrations = db.Registrations.Where(c => c.ID == id);
-            //ViewBag.TotalCandidates = db.Registrations.Count();
-            //ViewBag.PaymentStatus = db.Registrations.Where(c => c.ID == id).Select(c => c.PaymentStatus).FirstOrDefault();
-            //ViewBag.RegSubjects = db.RegisteredSubjects.Where(c => c.RegistrationID == id).ToList();
-            //ViewBag.RegSubjectsCount = db.RegisteredSubjects.Where(c => c.RegistrationID == id).Count();
-            //ViewBag.SubjectExistCount = db.RegisteredSubjects.Where(c => c.RegistrationID == id).Select(c => c.SubjectID).Count();
-            //return View(registrations.ToList());
+      //ViewBag.Regid = id;
+      //var registrations = db.Registrations.Where(c => c.ID == id);
+      //ViewBag.TotalCandidates = db.Registrations.Count();
+      //ViewBag.PaymentStatus = db.Registrations.Where(c => c.ID == id).Select(c => c.PaymentStatus).FirstOrDefault();
+      //ViewBag.RegSubjects = db.RegisteredSubjects.Where(c => c.RegistrationID == id).ToList();
+      //ViewBag.RegSubjectsCount = db.RegisteredSubjects.Where(c => c.RegistrationID == id).Count();
+      //ViewBag.SubjectExistCount = db.RegisteredSubjects.Where(c => c.RegistrationID == id).Select(c => c.SubjectID).Count();
+      //return View(registrations.ToList());
+      int id = Convert.ToInt32(Session["PlanID"]);
             if (string.IsNullOrEmpty((string)Session["username"]))
             {
                 return Redirect("~/Home/AccessDenied");
             }
-            if (id != null)
+            if (Session["PlanID"] != null)
             {
                 ViewBag.p = db.PricingPlans.Where(p => p.PlanName != "FREE PLAN");
                 ViewBag.PlanID = new SelectList(ViewBag.p, "ID", "PlanName", id);
@@ -296,40 +298,42 @@ namespace Myvshoponline.Controllers
         {
             ViewBag.UserRoleID = new SelectList(db.UserRoles, "ID", "Role");
             ViewBag.SexID = new SelectList(db.Sexes, "Sex1", "Sex1");
-            ViewBag.StateID = new SelectList(db.States, "Name", "Name");
-            ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+      var state1 = from p in db.States
+                   where p.Name != "All Locations within Nigeria"
+                   select new { ID = p.ID, item = p.Name };
+      ViewBag.StateID = new SelectList(state1, "ID", "item");
+      ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
       
             return View();
         }
         public ActionResult VerifyEmail()
         {
         //Send OTP
-        int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
-        Session["OTP_Register"] = RegisterOTP_Numeric;
-      //Remove this for deployment
-        int userid = Convert.ToInt32(Session["UserID"]);
-        var user = db.Set<User>().Find(userid);
-        user.HardToken =Convert.ToString(RegisterOTP_Numeric);
-        db.SaveChanges();
-      //==================//
-      //==================SEND MAIL============================//
-      var newname = db.Users.Find(userid).CompanyName.TrimEnd().TrimStart();
-      string title = "XAMAGOS - Email Verification!";
-      string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(newname.ToLower()) + "</strong>, <br><br>";
-      msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your account on XAMAGOS.";
-      msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
-      msg += "<br><hr>";
-      msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
-      //mydata.SendMail(email, title, msg);
-      
-        ViewBag.email = db.Users.Find(userid).Email;
+      //  int RegisterOTP_Numeric = mydata.Generate_OTP_Numeric();
+      //  Session["OTP_Register"] = RegisterOTP_Numeric;
+      ////Remove this for deployment
+       int userid = Convert.ToInt32(Session["RegUserID"]);
+      //  var user = db.Set<User>().Find(userid);
+      //  user.HardToken =Convert.ToString(RegisterOTP_Numeric);
+      //  db.SaveChanges();
+      ////==================//
+      ////==================SEND MAIL============================//
+      //var newname = db.Users.Find(userid).CompanyName.TrimEnd().TrimStart();
+      //string title = "XAMAGOS - Email Verification!";
+      //string msg = "<center><a href='https://xamagos.com' title='Xamagos'> <img src='https://xamagos.com/Images/logosquare.png' style='width: 70px; height: 30px;background-color:#17A2B8' /></a></center><br>" + "<strong>" + " Hello " + textInfo.ToTitleCase(newname.ToLower()) + "</strong>, <br><br>";
+      //msg += "Your verification code is: <b>" + RegisterOTP_Numeric + "</b> <br>Please enter this code to verify your account on XAMAGOS.";
+      //msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
+      //msg += "<br><hr>";
+      //msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
+      ////mydata.SendMail(email, title, msg);
+        ViewBag.email =mydata.MaskEmail(db.Users.Find(userid).Email);
         ViewBag.vid = userid;
         return View();
         }
 
       public JsonResult Verify_RegisterOTP(string otp_register)
         {
-      int UserID = Convert.ToInt32(Session["UserID"]);
+      int UserID = Convert.ToInt32(Session["RegUserID"]);
       if (Convert.ToString(Session["OTP_Register"]) == otp_register)
             {
                 
@@ -356,18 +360,20 @@ namespace Myvshoponline.Controllers
                 msg += "<br><hr>";
                 msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
 
-                //mydata.SendMail(user.Email, title, msg);
+                mydata.SendMail(user.Email, title, msg);
                 //==================SEND SMS=========================//
                 //string sms ="Market Square247 welcomes you.Hello " + user.CompanyName + ", your account has been created successfully.";
                 string sms = "Xamagos welcomes you. Your account has been created successfully. Enjoy the world of Xamagos. Website: www.xamagos.com";
-                //sms+= "Email:info@marketsqaure247.com";
-                //mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
-                //==================END SEND SMS=========================//
+        //sms+= "Email:info@marketsqaure247.com";
+        //mydata.Send_SMS_KudiSMS(user.PhoneNumber, sms, "XAMAGOS", DateTime.Now);
+        //==================END SEND SMS=========================//
 
-                var result = from p in db.Users
-                             where p.ID == UserID
-                             select new { ID = p.ID, OTPExist = "true" };
-                return Json(result, JsonRequestBehavior.AllowGet);
+        //Check if the user is is adding product to cart
+                  string CartSession = (string)Session["Cart"];
+                  var result = from p in db.Users
+                               where p.ID == UserID
+                               select new { ID = p.ID, OTPExist = "true", CartSession= CartSession };
+                  return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -563,7 +569,7 @@ namespace Myvshoponline.Controllers
             return View(user);
         }
 
-        public JsonResult SignUpAjax(string name, string phone,string email,string sex,string state, string address, string password,int? countryid)
+        public JsonResult SignUpAjax(string name, string phone,string email,string state, string password,int? countryid)
         {
               if (db.Users.Where(s => s.Email == email && s.EmailVerify==1).Count() ==1)
                 {
@@ -632,8 +638,8 @@ namespace Myvshoponline.Controllers
                 user.Password = Crypto.HashPassword(password);
                 //user.Password = password;
                 user.State = state;
-                user.Gender = sex;
-                user.Address = address;
+               // user.Gender = sex;
+                //user.Address = address;
                 user.PhoneNumber = phone;
                 user.CountryID = countryid;
                 user.CompanyName = newname.ToUpper();
@@ -663,7 +669,7 @@ namespace Myvshoponline.Controllers
                 msg += "<br>This code expires in 10 minutes. <br> Do not share this code with anyone. Thank you!.";
                 msg += "<br><hr>";
                 msg += "<a href='https://xamagos.com'>www.xamagos.com</a> &nbsp;&nbsp;<a href='https://tinyurl.com/23a8r43k'>Get support</a>";
-               //mydata.SendMail(email, title, msg);
+                mydata.SendMail(email, title, msg);
               
                 //==================END SEND MAIL=========================//
 
@@ -680,8 +686,8 @@ namespace Myvshoponline.Controllers
         //Set userid session
 
         int UserID = db.Users.Where(s => (s.Email == email)).Select(s => s.ID).FirstOrDefault();
-        Session["UserID"] = UserID;
-
+        Session["RegUserID"] = UserID;
+     
         var result = from p in db.Users
                              where p.Email == email
                              select new { GotoVerificationSent = "true", userid =p.ID };
@@ -737,12 +743,12 @@ namespace Myvshoponline.Controllers
             {
                 if (id == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return Redirect("~/Home/AccessDenied");
                 }
                 User user = db.Users.Find(id);
                 if (user == null)
                 {
-                    return HttpNotFound();
+                    return Redirect("~/Home/AccessDenied");
                 }
                 ViewBag.UserRoleID = new SelectList(db.UserRoles, "ID", "Role", user.UserRoleID);
                 return View(user);
@@ -854,7 +860,7 @@ namespace Myvshoponline.Controllers
                 }
 
             }
-            return Redirect("~/Users/MyProfile/" + UserID + "?pp=" + ViewBag.Random + "&ckp=" + ViewBag.Random);
+            return Redirect("~/Users/MyProfile/?pp=" + ViewBag.Random + "&ckp=" + ViewBag.Random);
         }
 
         public ActionResult Get_Billing(int PlanID, int BillingID)
@@ -970,7 +976,7 @@ namespace Myvshoponline.Controllers
                 "From Market Square";
             mydata.SendMail(email, "Xamagos - Payment Made Successfully", msg);
 
-            return Redirect("/Users/AccountUpgrade/?id=" + UserID);
+            return Redirect("/Users/AccountUpgrade");
         }
 
         public ActionResult AssignUserRole(int? u)
@@ -1472,9 +1478,11 @@ namespace Myvshoponline.Controllers
               return Json(result, JsonRequestBehavior.AllowGet);
             }
             //return Redirect("~/Users/Dashboard/" + UserID);
+            string CartSession = (string)Session["Cart"];
+           
             var result2 = from p in db.Users
                           where p.Email == email
-                          select new { gotoUserDashboard = "true", userid = p.ID };
+                          select new { gotoUserDashboard = "true", userid = p.ID, CartSession=CartSession };
             return Json(result2, JsonRequestBehavior.AllowGet);
           }
           else

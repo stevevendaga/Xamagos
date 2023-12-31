@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.PopularStore>
+@model IEnumerable<Myvshoponline.PopularStore>
 
 @{
     ViewBag.Title = "Index";
@@ -9,29 +9,29 @@
 </p>
 <p>
     @{
-        int ShopID = Convert.ToInt32(Request.QueryString["sid"]);
+        int ShopID =Convert.ToInt32(Session["ShopID"]);
     }
     <div class="container">
-        <h4 style="font-size:13px;padding:6px;">All Promotions for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></h4>
+        <h4 style="font-size:13px;padding:6px;">All Promotions for <a href="~/Shops/ShopDetails">@db.Shops.Find(ShopID).Name </a></h4>
         <ul class="nav nav-tabs" role="tablist">
 
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#popularstore">Popular Store</a>
+                <aa class="nav-link active" data-toggle="tab" href="#popularstore" style="cursor:pointer;">Popular Store</aa>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#popularproducts">Popular Products</a>
+                <aa class="nav-link" data-toggle="tab" href="#popularproducts" style="cursor:pointer;">Popular Products</aa>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#seo">Search Optimization</a>
+                <aa class="nav-link" data-toggle="tab" href="#seo" style="cursor:pointer;">Search Optimization</aa>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#socialmedia">Social Media</a>
+                <aa class="nav-link" data-toggle="tab" href="#socialmedia" style="cursor:pointer;">Social Media</aa>
             </li>
         </ul>
         <div class="tab-content">
             <div id="popularstore" class="container tab-pane active">
                 <br>
-                <span style="color:black;">  List of promotions made for <a href="~/Shops/ShopDetails/@ShopID">@db.Shops.Find(ShopID).Name </a></span>
+                <span style="color:black;">  List of promotions made for <a href="~/Shops/ShopDetails">@db.Shops.Find(ShopID).Name </a></span>
             <br />
     <table class="table table-hover table-responsive" style="color:black;">
         <tr class="badge-info" style="opacity:0.5">

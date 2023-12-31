@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -25,12 +25,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductComment productComment = db.ProductComments.Find(id);
             if (productComment == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(productComment);
         }
@@ -46,9 +46,11 @@ namespace Myvshoponline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,ProductID,Comment,Name,Date,Email,Subject")] ProductComment productComment,int?id,int?sid)
+        public ActionResult Create([Bind(Include = "ID,ProductID,Comment,Name,Date,Email,Subject")] ProductComment productComment)
         {
-            if (ModelState.IsValid)
+          int id=Convert.ToInt32(Request.Form["id"]);
+          int sid =Convert.ToInt32(Request.Form["shopid"]);
+         if (ModelState.IsValid)
             {
                 int UserID =(int) db.Shops.Find(sid).UserID;
                 if (Session["UserID"]!=null)
@@ -68,7 +70,7 @@ namespace Myvshoponline.Controllers
                 productComment.Date = DateTime.Now;
                 db.ProductComments.Add(productComment);
                 db.SaveChanges();
-                return Redirect("~/Products/ProductDetails/"+id+"?sid="+sid);
+                return Redirect("~/Products/ProductDetails");
             }
 
             return View(productComment);
@@ -79,12 +81,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductComment productComment = db.ProductComments.Find(id);
             if (productComment == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(productComment);
         }
@@ -110,12 +112,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             ProductComment productComment = db.ProductComments.Find(id);
             if (productComment == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(productComment);
         }

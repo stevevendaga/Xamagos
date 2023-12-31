@@ -386,6 +386,7 @@
     <Compile Include="IdentityVerification.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="LowerCaseRouteHandler.cs" />
     <Compile Include="MailingListNG.cs">
       <DependentUpon>MyvshoponlineModel.tt</DependentUpon>
     </Compile>
@@ -3038,6 +3039,7 @@
     <Content Include="Scripts\jscam.swf" />
     <Content Include="Scripts\jscam_canvas_only.swf" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\openexternallinkwebview.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />

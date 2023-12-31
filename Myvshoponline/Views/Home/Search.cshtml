@@ -74,7 +74,7 @@
                                                     <h3 style="margin:0px;padding:0px">
                                                         <span style="background-color:white;color:black;font-weight:bold;font-size:15px;">
                                                             @if (item.Currency == "NGN")
-                                                            {<del class="NairaSign">N</del>}
+                                                            {<span>&#x20A6;</span>}
                                                             else
                                                             { <span>@item.Currency</span>}@{
                                                                 @*var a = string.Format("{0:#,0}", item.Amount);}@a*@
@@ -116,7 +116,7 @@
                                                                                         <span style="background-color:white;color:black;font-weight:bold;font-weight:bold;margin:1px;font-size:15px;">
 
                                                                                             @if (item.Currency == "NGN")
-                                                                                            {<del class="NairaSign">N</del>}
+                                                                                            {<span>&#x20A6;</span>}
                                                                                             else
                                                                                             { <span>@item.Currency</span>}@{
                                                                                                 @*var a = string.Format("{0:#,0}", item.Amount);}@a*@

@@ -13,7 +13,7 @@
     <div class="">
         <div class="row">
             <div id="companydetailsmobile" style="display:none"></div>
-            <div class="col-lg-4 col-md-6 col-xs-12" id="shopdetails">
+            <div class="col-lg-4 col-md-4 col-xs-12" id="shopdetails">
                 <div class="right-sideabr">
                     <div class="panel panel-success">
                         <div class="panel-heading" style="background-color:#0BACE1;">
@@ -30,7 +30,7 @@
                             <ul style="font-size:13px">
                                 <li>
                                     <i class="lni lni-dashboard"></i>
-                                    <a href="~/Shops/ShopDetails/@ViewBag.ShopID">@ViewBag.Shopname DASHBOARD</a>
+                                    <a href="~/Shops/ShopDetails">@ViewBag.Shopname DASHBOARD</a>
                                     <hr style="padding:1px;margin:5px" />
                                 </li>
                                 @*<li>
@@ -129,7 +129,7 @@
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <span style="margin-top:0px;margin-bottom:3px;color:white;">
-                                <a href="~/Orders/Makesales/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                <a href="~/Orders/Makesales" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
                                     <font style="color:white">
                                         <i class="fas fa-money-bill"></i>
                                         Sell to an existing customer <i class="fas fa-money-bill"></i>
@@ -140,7 +140,7 @@
 
                         <div class="col-md-6 col-12">
                             <span style="margin-top:0px;margin-bottom:3px;color:white;">
-                                <a href="~/Orders/MakesalesNewCustomer/?sid=@Request.QueryString["sid"]" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
+                                <a href="~/Orders/MakesalesNewCustomer" class="btn btn-common" style="padding-top:3px;padding-bottom:3px;border-radius:5px;font-size:10px;width:100%">
                                     <font style="color:white">
                                         <i class="fas fa-money-bill"></i>
                                         Sell to a new customer
@@ -269,7 +269,7 @@
                                             //var totalamount = db.Orders.Where(k => k.Product.ShopID == ShopID && k.DatePaid.ToString() == nowdate).Sum(k => k.Amount-k.Commission);
                                             var totalamount = db.Orders.Where(k => k.Product.ShopID == ShopID && k.DatePaid.ToString() == nowdate).Sum(k => k.Amount);
                                             var amountformated = string.Format("{0:#,0}", totalamount);
-                                        }<font style="color:yellow"><a href="~/Orders/DailySalesReport/?sid=@Request.QueryString["sid"]&date=@nowdate&dtop=@dat" title="Click to view detailed report">@dat</a></font>
+                                        }<font style="color:yellow"><a href="~/Orders/DailySalesReport/?date=@nowdate&dtop=@dat" title="Click to view detailed report">@dat</a></font>
 
                                     </p>
                                     <br /><br />

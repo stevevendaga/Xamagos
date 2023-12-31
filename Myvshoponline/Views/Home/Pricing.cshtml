@@ -120,7 +120,7 @@
           <div class="plan-button">
             @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
             {
-              <a href="~/Users/BuyPlan/@plan21.PricingPlanID" class="btn btn-border">Choose Plan</a>
+              <a href="~/Users/BuyPlan" class="btn btn-border" onclick="setObjectSession('PlanID',@plan21.PricingPlanID)">Choose Plan</a>
             }
             else
             {
@@ -176,7 +176,7 @@
           <div class="plan-button">
             @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
             {
-              <a href="~/Users/BuyPlan/@plan1.PricingPlanID" class="btn btn-border">Choose @plan3</a>
+              <a href="~/Users/BuyPlan" class="btn btn-border" onclick="setObjectSession('PlanID',@plan1.PricingPlanID)">Choose @plan3</a>
             }
             else
             {
@@ -232,7 +232,7 @@
           <div class="plan-button">
             @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
             {
-              <a href="~/Users/BuyPlan/@plan10.PricingPlanID" class="btn btn-border">Choose @plan8</a>
+              <a href="~/Users/BuyPlan" class="btn btn-border" onclick="setObjectSession('PlanID',@plan10.PricingPlanID)">Choose @plan8</a>
             }
             else
             {
@@ -290,7 +290,7 @@
           <div class="plan-button">
             @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
             {
-              <a href="~/Users/BuyPlan/@plan16P.PricingPlanID" class="btn btn-border">Choose @plan14P</a>
+              <a href="~/Users/BuyPlan" class="btn btn-border" onclick="setObjectSession('PlanID',@plan16P.PricingPlanID)">Choose @plan14P</a>
             }
             else
             {
@@ -349,7 +349,7 @@
           <div class="plan-button">
             @if (!string.IsNullOrEmpty((string)Session["username"]) && Session["UserID"] != null)
             {
-              <a href="~/Users/BuyPlan/@plan16.PricingPlanID" class="btn btn-border">Choose @plan14</a>
+              <a href="~/Users/BuyPlan" class="btn btn-border" onclick="setObjectSession('PlanID',@plan16.PricingPlanID)">Choose @plan14</a>
             }
             else
             {

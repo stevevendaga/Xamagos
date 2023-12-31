@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Myvshoponline.Order>
+@model IEnumerable<Myvshoponline.Order>
 
 @{
     ViewBag.Title = "My Orders";
@@ -23,7 +23,7 @@
                                     <ul style="font-size:13px">
                         <li>
                         <i class="lni lni-dashboard"></i>
-                        <a href="~/Users/Dashboard/@ViewBag.CompanyID">Dashboard</a>
+                        <a href="~/Users/Dashboard">Dashboard</a>
                         <hr style="padding:1px;margin:5px" />
                         </li>
                         </ul>
@@ -57,7 +57,7 @@
                                     <ul style="font-size:13px">
 
                                         <li>
-                                            <a href="~/Orders/PendingPayment/@ViewBag.CompanyID" id="ppayment">
+                                            <a href="~/Orders/PendingPayment" id="ppayment">
                                                 <i class="lni lni-hourglass"></i>
                                                 Pending Payments (@{var p = Convert.ToInt32(ViewBag.PendingPayment);}@p)
                                             </a>
@@ -86,7 +86,7 @@
 
                                         <li>
 
-                                            <a href="~/Orders/ViewMyNegotiations/@ViewBag.CompanyID" id="orders" onclick="getcontent(this.id)">
+                                            <a href="~/Orders/ViewMyNegotiations" id="orders" onclick="getcontent(this.id)">
                                                 <i class="glyphicon glyphicon-eye-open"></i>
                                                 Open Negotiations (@{
                                                     int CID = Convert.ToInt32(ViewBag.CompanyID);
@@ -190,7 +190,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            <a href="~/Orders/Details/@item.ID">
+                                            <a href="~/Orders/Details" onclick="setObjectSession('OrderID',@item.ID)">
                                                 @if (item.SubProductID != 0)
                                                 {
                                                     @*@Html.DisplayFor(modelItem => item.ProductSubProduct.Name)*@
@@ -281,15 +281,15 @@
             type: "GET",
             success: function (data) {
 
-                var html = '<table class="table table-responsive table-hover table-stripped" style="font-size:12px;color:black"><tr><th>Product Name</th><th>Quantity</th><th>Rate(₦)</th><th>Amount(₦)</th><th>Date Ordered</th>';
+              var html = '<table class="table table-responsive table-hover table-stripped" style="font-size:12px;color:black"><tr><th>Product Name</th><th>Quantity</th><th>Rate(&#x20A6;)</th><th>Amount(&#x20A6;)</th><th>Date Ordered</th>';
                 var opp = '';
                 $.each(data, function (key, item) {
                     html += '<tr>';
                     if (item.SubProductID != 0) {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.SubProductName;
+                      html += '<td><a href="/Orders/Details/' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.SubProductName;
 
                     } else {
-                        html += '<td><a href="/Orders/Details/' + item.ID + '">' + item.ProductName;
+                      html += '<td><a href="/Orders/Details/' + '" onclick="setObjectSession(\'OrderID\', ' + item.ID + ')">' + item.ProductName;
                     }
                     html += '</a></td><td>' + item.Quantity + '</td><td>' + formatNumber(item.Rate) + '</td><td>' + formatNumber(item.Amount) + '</td><td>' + dateFormat(new Date(parseInt((item.DateOrdered).match(/\d+/)[0]))) + '</td></tr>';
                     if(item.op=="orders")

@@ -25,12 +25,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TermsandPrivacy termsandPrivacy = db.TermsandPrivacies.Find(id);
             if (termsandPrivacy == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(termsandPrivacy);
         }
@@ -66,12 +66,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TermsandPrivacy termsandPrivacy = db.TermsandPrivacies.Find(id);
             if (termsandPrivacy == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(termsandPrivacy);
         }
@@ -81,12 +81,12 @@ namespace Myvshoponline.Controllers
           {
             if (id == null)
             {
-              return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+              return Redirect("~/Home/AccessDenied");
             }
             TermsandPrivacy termsandPrivacy = db.TermsandPrivacies.Find(id);
             if (termsandPrivacy == null)
             {
-              return HttpNotFound();
+              return Redirect("~/Home/AccessDenied");
             }
             return View(termsandPrivacy);
           }
@@ -128,12 +128,12 @@ namespace Myvshoponline.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Redirect("~/Home/AccessDenied");
             }
             TermsandPrivacy termsandPrivacy = db.TermsandPrivacies.Find(id);
             if (termsandPrivacy == null)
             {
-                return HttpNotFound();
+                return Redirect("~/Home/AccessDenied");
             }
             return View(termsandPrivacy);
         }

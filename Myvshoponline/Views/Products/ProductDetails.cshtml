@@ -413,34 +413,36 @@
             <h2 class="respond-title">Add a review</h2>
             @foreach (var item in ViewBag.ProductsDetail)
             {
-              <form action="~/ProductComments/Create/@item.ID?&sid=@item.ShopID" method="post">
-                @Html.AntiForgeryToken()
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input id="author" class="form-control" name="Name" required="required" type="text" value="" size="30" placeholder="Enter your name">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input id="email" class="form-control" name="Email" type="text" value="" size="30" placeholder="Enter your email">
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input id="subject" class="form-control" name="Subject" type="text" value="" size="30" placeholder="Subject (optional)">
-                    </div>
-                  </div>
+          <form action="~/ProductComments/Create" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@item.ID" />
+            <input type="hidden" name="shopid" value="@item.ShopID" />
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input id="author" class="form-control" name="Name" required="required" type="text" value="" size="30" placeholder="Enter your name">
                 </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <textarea id="comment" class="form-control" required="required" name="comment" cols="45" rows="8" placeholder="Here goes your comment"></textarea>
-                    </div>
-                    <button type="submit" id="submit" class="btn btn-common">Submit</button>
-                  </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input id="email" class="form-control" name="Email" type="text" value="" size="30" placeholder="Enter your email">
                 </div>
-              </form>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <input id="subject" class="form-control" name="Subject" type="text" value="" size="30" placeholder="Subject (optional)">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <textarea id="comment" class="form-control" required="required" name="comment" cols="45" rows="8" placeholder="Here goes your comment"></textarea>
+                </div>
+                <button type="submit" id="submit" class="btn btn-common">Submit</button>
+              </div>
+            </div>
+          </form>
             }
           </div>
           <!-- End Respond Form -->
@@ -463,7 +465,7 @@
                 <span class="meta-part" style="padding-left:10px;margin-bottom:0px">
                   <a href="#" style="color:black;font-weight:bold;font-size:24px;font-family:Arial">
                     @if (item.Currency == "NGN")
-                    {<del class="NairaSign">N</del>}
+                    {<span>&#x20A6;</span>}
                     else
                     {
 
@@ -484,14 +486,18 @@
                   @*<div id="shipping" style="color:black;background-color:#ffffff">+ shipping</div>*@
                   <div>
 
-                              @if (item.Negotiable == "Yes")
-                              {
-                                                    <script>
+                    @if (item.Negotiable == "Yes")
+                    {
+                      <span class="badge badge-info">Negotiable</span>
+                      <script>
                                                         function quantity_negotiate_Loggedin()
                                                         {
-                                                            var q = document.getElementById("quantity").value;
-                                                            var dcity = document.getElementById("city").value;
-                                                            var stateid = document.getElementById("StateID").value;
+                                                          var qty = document.getElementById("quantity") ? document.getElementById("quantity").value : null;
+                                                          var ammt = document.getElementById("amount") ? document.getElementById("amount").value : null;
+                                                          var dcity = document.getElementById("city") ? document.getElementById("city").value : null;
+                                                          var stateid = document.getElementById("StateID") ? document.getElementById("StateID").value : null;
+                                                          var shopid = document.getElementById("shopid").value;
+                                                          var productid = document.getElementById("productid").value;
                                                             if (stateid == null || stateid == '') {
                                                                 //alert('Please choose delivery location');
                                                                 document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
@@ -507,31 +513,41 @@
                                                                 return false;
                                                             }
                                                             else {
-                                                                window.location = "../AddtoCart?pid=" + @item.ID +"&sid=" +@item.ShopID +"&qty=" + q + "&dcity=" + dcity + "&negotiate=true";
+                                                              var negotiate = "Yes";
+                                                              setCartSession(productid, shopid, dcity, qty, negotiate);
+                                                              handleButtonClick();
+                                                              window.location = "../../Products/AddtoCart";                                                              return true;
                                                             }
                                                         }
                                                             function quantity_negotiate_NotLoggedin()
                                                             {
-                                                                var q = document.getElementById("quantity").value;
-                                                                var ammt = document.getElementById("Amount").value;
-                                                                var dcity = document.getElementById("city").value;
-                                                                var stateid = document.getElementById("StateID").value;
-                                                                if (stateid == null || stateid == '') {
-                                                                    //alert('Please choose delivery location');
-                                                                    document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
-                                                                    document.getElementById("StateID").style.borderColor = "red";
-                                                                    document.getElementById("StateID").focus();
-                                                                    return false;
-                                                                }
-                                                                else if (dcity == null || dcity == '') {
-                                                                    // alert('Please choose city');
+                                                              var qty = document.getElementById("quantity") ? document.getElementById("quantity").value : null;
+                                                              var ammt = document.getElementById("amount") ? document.getElementById("amount").value : null;
+                                                              var dcity = document.getElementById("city") ? document.getElementById("city").value : null;
+                                                              var stateid = document.getElementById("StateID") ? document.getElementById("StateID").value : null;
+                                                              var shopid = document.getElementById("shopid").value;
+                                                              var productid = document.getElementById("productid").value;
+                                                              if (stateid == '' || stateid == null) {
+                                                                //alert('Please choose delivery location');
+                                                                document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
+                                                                document.getElementById("StateID").style.borderColor = "red";
+                                                                document.getElementById("StateID").focus();
+                                                                return false;
+                                                              }
+                                                               else if (dcity == null || dcity == '') {
                                                                     document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose city</div>";
                                                                     document.getElementById("city").style.borderColor = "red";
                                                                     document.getElementById("city").focus();
                                                                     return false;
                                                                 }
-                                                                else {
-                                                                    window.location = "../../ShopCustomers/Create?pid=" + @item.ID +"&id=" +@item.ShopID +"&quantity=" + q + "&dcity=" + dcity + "&amount=" + ammt + "&negotiate=true" + "&v=1";
+                                                              else {
+                                                                
+                                                                var negotiate = "Yes";
+                                                                
+                                                                setCartSession(productid, shopid, dcity, qty, negotiate);
+                                                                handleButtonClick();
+                                                                window.location = "../../Account/Login";
+                                                                return true;
                                                                 }
                                                             }
 
@@ -539,17 +555,21 @@
 
                       if (Session["UserID"] != null)
                       {
-                        <button class="btn btn-danger" onclick="return quantity_negotiate_Loggedin()" style="background-color:#3CCBF4; padding-bottom:2px;padding-top:2px;margin:0px;height:25px;"><i class="fa fas fa-adjust"></i> Click here to Negotiate</button>
+                        <button class="btn btn-danger" onclick="return quantity_negotiate_Loggedin()" style="background-color:#3CCBF4; 
+                            padding-bottom:2px;padding-top:2px;margin:0px;height:25px;font-size:11px;margin-bottom:2px;">
+                            <i class="fa fas fa-adjust"></i> Click here to Negotiate</button>
 
                       }
                       else
                       {
-                        <button class="btn btn-danger" onclick="return quantity_negotiate_NotLoggedin()" style="background-color:#3CCBF4;padding-bottom:2px;padding-top:2px;margin:0px;height:25px"><i class="fa fas fa-adjust"></i>Click here to Negotiate</button>
+                        <button class="btn btn-danger" onclick="return quantity_negotiate_NotLoggedin()" style="background-color: #3CCBF4; 
+                          padding-bottom: 2px; padding-top: 2px; margin: 0px; height: 25px; font-size: 11px; margin-bottom: 2px;">
+                          <i class="fa fas fa-adjust"></i>Click here to Negotiate</button>
                       }
                     }
                     else
                     {
-                      <span class="badge badge-danger">Non-negotiable</span>
+                      @*<span class="badge badge-danger">Non-negotiable</span>*@
                     }
                   </div>
                   <div id="totalprice" style="font-weight:bold"></div>
@@ -567,14 +587,14 @@
                                   }
                       </h5>*@
                     @*<div id="deliverynote" style="color:black;"></div>*@
-                    <form method="get" action="~/ShopCustomers/Create">
+                    @*<form method="get" action="~/ShopCustomers/Create">*@
                       <input type="hidden" id="FromStateID" value="@item.Shop.StateID" />
                       <input type="hidden" id="dcity" name="dcity" />
                       <div class="form-group">
                         <div class="col-md-10">
                           <h5 style="font-size:15px;">YOUR LOCATION</h5>
                           <p style="margin:0px;color:black;" id="chooselocation">  Choose your location</p>
-                          @Html.DropDownList("StateID", null, "-- Please Select --", htmlAttributes: new { @class = "form-control", onchange = "GetCities(this.value)", @id = "StateID", @required = "required" })
+                          @Html.DropDownList("StateID", null, "-- Please Select --", htmlAttributes: new { @class = "form-control", onchange = "GetCities(this.value)", @id = "StateID", @required="required" })
                           <div id="displaycities"></div>
                         </div>
                       </div>
@@ -586,14 +606,19 @@
                         @*<input type="hidden" value="@item.Amount" name="amount" id="Amount" />*@
                         <input type="hidden" value="@Total" name="amount" id="Amount" />
                         <input type="hidden" id="quantityinstock" value="@item.QuantityinStock" />
-                        <input type="hidden" value="@item.ShopID" name="id" />
-                        <input type="hidden" value="@item.ID" name="pid" />
+                        <input type="hidden" value="@item.ShopID" name="id" id="shopid" />
+                        <input type="hidden" value="@item.ID" name="pid" id="productid" />
                         <input type="hidden" value="1" name="v" />
                         <script>
+
                           function check_location() {
-                            //var dcity = document.getElementById("DeliveryCity_ID").value;
-                            var dcity = document.getElementById("city").value;
-                            var stateid = document.getElementById("StateID").value;
+                            var qty = document.getElementById("quantity") ? document.getElementById("quantity").value : null;
+                            var ammt = document.getElementById("amount") ? document.getElementById("amount").value : null;
+                            var dcity = document.getElementById("city") ? document.getElementById("city").value : null;
+                            var stateid = document.getElementById("StateID") ? document.getElementById("StateID").value : null;
+
+                            var shopid = document.getElementById("shopid").value;
+                            var productid = document.getElementById("productid").value;
                             if (stateid == null || stateid == '') {
                               document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
                               document.getElementById("StateID").style.borderColor = "red";
@@ -607,16 +632,27 @@
                               return false;
                             }
                             else {
-                              return true;
+                              var negotiate = "No";
+                              //Set paramete sessions, redirect to users/create
+                              setCartSession(productid, shopid, dcity, qty, negotiate);
+                              //show procession dialog
+                              handleButtonClick();
+                              window.location.href = '../../Account/Login';
+                              return false;
                             }
                           }
                         </script>
                         <script>
                                                        function quantity()
                                                         {
-                                                            var q = document.getElementById("quantity").value;
-                                                            var dcity = document.getElementById("city").value;
-                                                            var stateid = document.getElementById("StateID").value;
+                                                         var qty = document.getElementById("quantity") ? document.getElementById("quantity").value : null;
+                                                         var ammt = document.getElementById("amount") ? document.getElementById("amount").value : null;
+                                                         var dcity = document.getElementById("city") ? document.getElementById("city").value : null;
+                                                         var stateid = document.getElementById("StateID") ? document.getElementById("StateID").value : null;
+
+                                                         var shopid = document.getElementById("shopid").value;
+                                                         var productid = document.getElementById("productid").value;
+                                                         
                                                             if (stateid == null || stateid=='') {
                                                                 //alert('Please choose delivery location');
                                                                 document.getElementById("chooselocation").innerHTML = "<div class='alert alert-danger' style='padding-top:2px;padding-bottom:2px;'>Please choose location</div>";
@@ -633,7 +669,13 @@
                                                                 return false;
                                                             }
                                                             else {
-                                                                window.location = "../AddtoCart?pid=" + @item.ID +"&sid=" +@item.ShopID +"&qty=" + q + "&dcity=" + dcity;
+                                                              var negotiate = "No";
+                                                              @*alert('qty=' + q + 'dcity' + dcity + 'sid=' + @item.ShopID+ 'pid' + @item.ID);*@
+                                                              setCartSession(productid, shopid, dcity, qty, negotiate);
+                                                              //show procession dialog
+                                                              handleButtonClick();
+                                                              window.location.href = '../../Products/AddtoCart';
+                                                             // window.location = "../AddtoCart?pid=" + @item.ID +"&sid=" +@item.ShopID +"&qty=" + q + "&dcity=" + dcity;
                                                             }
                                                         }
 
@@ -641,23 +683,30 @@
 
                         <input type="hidden" id="quantityinstock" value="@item.QuantityinStock" />
 
-                        <button type="button" style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament()">+</button>
+                        <button type="button" style="width:20px;padding-left:8px;width:40px; border:solid 1px grey;height:35px;
+                          vertical-align:central;background-color:white;color:black;cursor:pointer;font-size:20px;" name="increment" onclick="increament()">
+                          +
+                        </button>
                         &nbsp;&nbsp;&nbsp;
                         @if (Session["UserID"] != null)
                         {
 
-                          <a class="btn btn-success" onclick=" return quantity()" style="background-color:#33B27B;padding-bottom:2px;padding-top:5px;margin:0px;height:35px;vertical-align:central"><i class="fa fas fa-cart-plus"></i> Add To Cart</a>
+                          <a   href="" id="btnCart" class="btn btn-success" onclick="return quantity()" style="background-color:#33B27B;padding-bottom:2px;padding-top:5px;
+                              margin:0px;height:35px;margin-left:30px;vertical-align:central"><i class="fa fas fa-cart-plus"></i> Add To Cart</a>
                           @*<a class="btn btn-success" onclick='javascript:window.location="../OrderDetailsCheckOut?pid=@item.ID&sid=@item.ShopID&qty="' style="background-color:#33B27B;padding-bottom:2px;padding-top:5px;margin:0px;height:35px;vertical-align:central">Checkout</a>*@
 
                         }
                         else
                         {
 
-                          <button class="btn btn-success" onclick="return check_location()" style="background-color:#33B27B;padding-bottom:2px;padding-top:5px;margin:0px;vertical-align:central;height:35px"><i class="fa fas fa-cart-plus"></i> Add To Cart</button>
+                          <a href="" id="btnCart" class="btn btn-success" onclick="return check_location()" style="background-color:#33B27B;padding-bottom:2px;padding-top:5px;
+                            margin:0px;vertical-align:central;height:35px; margin-left:30px;">
+                            <i class="fa fas fa-cart-plus"></i> Add To Cart
+                          </a>
 
                         }
                       </div>
-                    </form>
+                    @*</form>*@
                     <hr style="padding:2px" />
                   }
 
@@ -701,7 +750,7 @@
 
                       <div class="contact-icon">
                         <i class="lni-link"></i>
-                        <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  https://xamagos.com/@item.ShopURL</span></aa>
+                        <aa> Store URL:&nbsp;&nbsp;<span style="color:#0a92d7">  www.xamagos.com/@item.ShopURL</span></aa>
                       </div>
 
                     </li>
@@ -1062,7 +1111,7 @@
       type: "GET",
       success: function (data) {
         var html = '';
-        html += '<span style="font-weight:bold;margin-top:3px">Please Select<select id="city" name="cityid" class="form-control" style ="height:36px;padding-top:3px;margin-bottom:2px;" onchange="GetDelivieryInfo()" required="required" placeholder="-- Please select --">';
+        html += '<span style="font-weight:bold;margin-top:5px;color:black">Please Select<select id="city" name="cityid" class="form-control" style ="height:36px;padding-top:3px;margin-bottom:2px;" onchange="GetDelivieryInfo()" required="required" placeholder="-- Please select --">';
         html += '<option selected></option>';
         $.each(data, function (key, item) {
 
@@ -1109,8 +1158,8 @@
 
 <script type="text/javascript">
   function GetDelivieryInfo() {
-    document.getElementById("dcity").value= document.getElementById("city").value;
-    }
+    document.getElementById("dcity").value = document.getElementById("city").value;
+  }
 </script>
 
 
