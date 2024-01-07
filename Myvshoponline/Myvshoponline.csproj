@@ -3608,6 +3608,8 @@
     <Content Include="Views\Home\Index - backup2.cshtml" />
     <Content Include="Views\Home\SEOsectionforsearch.cshtml" />
     <Content Include="Views\Home\Goecoding - Copy.cshtml" />
+    <Content Include="Views\Shared\_Layoutproduct_details.cshtml" />
+    <Content Include="Views\Shared\_Layoutproduct - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />

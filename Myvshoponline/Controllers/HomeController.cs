@@ -31,7 +31,7 @@ namespace Myvshoponline.Controllers
       return View();
     }
 
-    public ActionResult ShopDetails(string id, string search, int? q)
+    public ActionResult ShopDetails(string id, string search, string q)
     {
       if (!string.IsNullOrEmpty(id) && q == null)
       {
@@ -83,16 +83,18 @@ namespace Myvshoponline.Controllers
       }
       else if (q != null)
       {
-        int? pid = (int)q;
+        string return_q = mydata.DecodeFrom64(q);
+        int pid = Convert.ToInt32(return_q);
         //FETCH PRODUCT DETAILS HERE
-        if (id != null && pid != null && db.Shops.Where(s => s.ShopURL == id).Count() > 0)
+        if (db.Shops.Where(s => s.ShopURL == id).Count() > 0)
         {
           if (db.Products.Where(s => s.ID == pid).Count() == 0)
           {
             return Redirect("~/Home/ProductNotFound");
           }
-          int sid = db.Shops.Where(s => s.ShopURL == id).Select(s => s.ID).FirstOrDefault();
-          return Redirect("~/Products/ProductDetails/" + pid + "?sid=" + sid);
+          // int sid = db.Shops.Where(s => s.ShopURL == id).Select(s => s.ID).FirstOrDefault();
+          Session["ProductID"] = pid;
+          return Redirect("~/Products/ProductDetails");
         }
         return Redirect("~/Home/AccessDenied");
 

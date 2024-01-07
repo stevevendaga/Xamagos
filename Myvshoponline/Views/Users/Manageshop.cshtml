@@ -258,22 +258,74 @@
                         <li>
                           @{
                             string referallink1 = "https://xamagos.com/" + item.ShopURL;
+                            string message = "Exciting news! Discover a world of amazing products at our online store, " + @referallink1 +
+                                               " Your go-to destination for happy shopping! Explore now and find your favourites. Happy shopping! " +
+                                                "#Xamagos #XamagosRadio #ShopSmart";
                           }
-                          <div class="fb-share-button"
-                               data-href="@referallink1"
-                               data-layout="button_count">
-                          </div>
-                        </li>
-                        <li><a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
-                        @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-                          <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
-                        <li>
-                          <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
-                            <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
+                          <!-- Facebook share Open Graph Meta Tags with data- attributes -->
+                          <meta property="og:url" content="@referallink1/?v=@DateTime.UtcNow.Ticks">
+                          <meta property="og:type" content="website">
+                          <meta property="og:title" content="Xamagos">
+                          <meta property="og:description" content="@message">
+                          <meta property="og:image" content="https://xamagos.com/Images/logoshare.png">
+                          <!--End facebook share-->
+                          @*<div class="fb-share-button"
+             data-href="@referallink1"
+             data-layout="button_count">
+        </div>*@
+                         
+                          <a class="fb-share-button facebook external-link"
+                             data-layout="button_count"
+                             target="_blank"
+                             href="https://web.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=https%3A%2F%2Fxamagos.com%2F&display=popup&ref=plugin&src=share_button">
+                            <i class="lni-facebook-filled"></i>
                           </a>
                         </li>
+                        <li>
+                         
+                          <a href="https://twitter.com/intent/tweet?text=@Url.Encode(message)"
+                             title="share on twitter" class="external-link">
+                            <i class="lni-twitter-filled"></i>
+                          </a>
+
+                        </li>
+                        @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
+                       <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+                      <li>
+                       
+                        <a href="https://api.whatsapp.com/send?text=@Url.Encode(message)" data-action="share/whatsapp/share" target="_blank">
+                          <img src="~/Images/whatsapp.jfif" style="width:40px;height:40px;">
+                        </a>
+                      </li>
 
                       </ul>
+
+                      <script>
+                        function openTwitterPopupShop(url) {
+                          // Specify the width and height for the popup window
+                          var width = 600;
+                          var height = 400;
+
+                          // Calculate the position of the popup to center it on the screen
+                          var left = (window.innerWidth - width) / 2;
+                          var top = (window.innerHeight - height) / 2;
+
+                          // Open the popup window
+                          window.open(url, 'twitterPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+                        }
+                      </script>
+                      <script>
+                      //WhatsApp share
+                      function shareOnWhatsAppShop(url) {
+                        @*var url = @referallink1;
+                        var message=@message;*@
+
+                        // Construct the WhatsApp URL
+                        var whatsappUrl = url;
+                        // Open WhatsApp in a new window
+                        window.open(whatsappUrl);
+                      }
+                      </script>
 
                     </div>
 
@@ -434,39 +486,46 @@
 
 <script type="text/javascript">
   function myFunction(x) {
+    
     if (x.matches) { // If media query matches
-      // document.getElementById("shopdetails").innerHTML = document.getElementById("companydetails").innerHTML;
       document.getElementById("companydetailsmobile").style.display = "block";
-      document.getElementById("companydetails").style.display = "none";
-      document.getElementById("companydetailsmobile").innerHTML = document.getElementById("companydetails").innerHTML;
-
-
+      
       document.getElementById("companyheadermobile").style.display = "block";
-      document.getElementById("companyheader").style.display = "none";
       document.getElementById("companyheadermobile").innerHTML = document.getElementById("companyheader").innerHTML;
-      document.getElementById("companyname").style.display = "none";
-      document.getElementById("ondesktopname").style.display = "none";
-      document.getElementById("contactinfo").style.display = "none";
+     
       document.getElementById("shopdetailsmobile").style.display = "block";
       document.getElementById("shopdetails").style.display = "none";
       document.getElementById("shopdetailsmobile").innerHTML = document.getElementById("shopdetails").innerHTML;
-      document.getElementById("companynameonlymobile").style.display = "block";
-      document.getElementById("companynameonlymobile").innerHTML = document.getElementById("ondesktopname").innerHTML;
 
+      //document.getElementById("facebook-mobile").style.display = "block";
+      //document.getElementById("facebook-desktop").style.display = "none";
+
+      //document.getElementById("twitter-mobile").style.display = "block";
+      //document.getElementById("twitter-desktop").style.display = "none";
+
+      //document.getElementById("whatsapp-mobile").style.display = "block";
+      //document.getElementById("whatsapp-desktop").style.display = "none";
 
 
 
     } else {
       document.getElementById("companydetailsmobile").style.display = "none";
-      document.getElementById("companydetails").style.display = "block";
       document.getElementById("companyheadermobile").style.display = "none";
-      document.getElementById("companyheader").style.display = "block";
-      document.getElementById("contactinfo").style.display = "block";
+
+      //document.getElementById("facebook-mobile").style.display = "none";
+      //document.getElementById("facebook-desktop").style.display = "block";
+
+
+      //document.getElementById("twitter-mobile").style.display = "none";
+      //document.getElementById("twitter-desktop").style.display = "block";
+
+      //document.getElementById("whatsapp-desktop").style.display = "block";
+      //document.getElementById("whatsapp-mobile").style.display = "none";
 
     }
   }
 
-  var x = window.matchMedia("(max-width: 700px)")
+  var x = window.matchMedia("(max-width: 768px)")
   myFunction(x) // Call listener function at run time
   x.addListener(myFunction) // Attach listener function on state changes
 </script>

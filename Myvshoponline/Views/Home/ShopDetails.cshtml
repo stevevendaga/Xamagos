@@ -404,8 +404,8 @@
 
         <div class="panel">
             <div class="panel-heading" style="background-color:#17A2B8;border-top-right-radius:20px;border-top-left-radius:20px; ">
-                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:25px">@Model.Name </h1>
-                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:14px;"><i class="lni-map-marker"></i> @Model.Address</h1>
+                <h1 class="panel-title" style="color:white;font-family:'Gill Sans MT';text-align:center;font-size:14px">@Model.Name </h1>
+                <h1 class="panel-title" style="color:white;font-family:'Times New Roman';text-align:center;font-size:8px;"><i class="lni-map-marker"></i> @Model.Address</h1>
             </div>
             @*<div class="panel-body">
                 </div>*@
@@ -1685,22 +1685,88 @@
                                         <ul class="mt-4 footer-social">
                                             <li>Share This Store</li>
                                             <li>
-                                                @{
-                                                    string referallink1 = "https://xamagos.com/Shops/?shopURL=" + Model.ShopURL;
-                                                }
-                                                <div class="fb-share-button"
-                                                     data-href="@referallink1"
-                                                     data-layout="button_count">
-                                                </div>
+                                              @{
+                                                string referallink1 = "https://xamagos.com/" + Model.ShopURL;
+                                                string message = "Exciting news! Discover a world of amazing products at our online store, " + @referallink1 +
+                                                 " Your go-to destination for happy shopping! Explore now and find your favourites. Happy shopping! " +
+                                                  "#Xamagos #XamagosRadio #ShopSmart";
+                                              }
+                                              <!-- Facebook share Open Graph Meta Tags with data- attributes -->
+                                              <meta property="og:url" content="@referallink1/?v=@DateTime.UtcNow.Ticks">
+                                              <meta property="og:type" content="website">
+                                              <meta property="og:title" content="Xamagos">
+                                              <meta property="og:description" content="@message">
+                                              <meta property="og:image" content="https://xamagos.com/Images/logoshare.png">
+                                              <!--End facebook share-->
+                                           @*<div class="fb-share-button"
+                                               data-href="@referallink1"
+                                               data-layout="button_count">
+                                          </div>*@
+                                              <a class="fb-share-button facebook" id="facebook-desktop"
+                                                 data-layout="button_count"
+                                                 onclick="openTwitterPopupShop('https://web.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=https%3A%2F%2Fxamagos.com%2F&display=popup&ref=plugin&src=share_button')"
+                                                 href="#">
+                                                <i class="lni-facebook-filled"></i>
+                                              </a>
+
+                                              <a class="fb-share-button facebook" id="facebook-mobile"
+                                                 data-layout="button_count"
+                                                 href="https://web.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=https%3A%2F%2Fxamagos.com%2F&display=popup&ref=plugin&src=share_button">
+                                                <i class="lni-facebook-filled"></i>
+                                              </a>
                                             </li>
-                                            <li><a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
+                                            <li>
+                                              @*<a class="twitter" href="http://twitter.com/share?url=@referallink1" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a>*@
+                                              <a href="#" id="twitter-desktop" onclick="openTwitterPopupShop('https://twitter.com/intent/tweet?text=@message')"
+                                                 title="Share on Twitter">
+                                                <i class="lni-twitter-filled"></i>
+                                              </a>
+
+                                              <a href="https://twitter.com/intent/tweet?text=@Url.Encode(message)" target="_blank"
+                                                 id="twitter-mobile"
+                                                 title="share on twitter" class="external-link">
+                                                <i class="lni-twitter-filled"></i>
+                                              </a>
+                                              <script>
+                                                function openTwitterPopupShop(url) {
+                                                  // Specify the width and height for the popup window
+                                                  var width = 600;
+                                                  var height = 400;
+
+                                                  // Calculate the position of the popup to center it on the screen
+                                                  var left = (window.innerWidth - width) / 2;
+                                                  var top = (window.innerHeight - height) / 2;
+
+                                                  // Open the popup window
+                                                  window.open(url, 'twitterPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+                                                }
+                                              </script>
+                                            </li>
                                             @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
                                                 <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
-                                            <li>
-                                                <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
-                                                    <img src="~/Images/whatsapp.jfif" style="width:50px;height:50px;">
-                                                </a>
-                                            </li>
+                                        <li>
+                                          <a href="#" id="whatsapp-desktop" data-action="share/whatsapp/share" target="_blank"
+                                             onclick="shareOnWhatsAppShop('https://api.whatsapp.com/send?text=@Url.Encode(message)')">
+                                            <img src="~/Images/whatsapp.jfif" style="width:40px;height:40px;">
+                                          </a>
+
+                                          <a href="https://api.whatsapp.com/send?text=@Url.Encode(message)" id="whatsapp-mobile" 
+                                             data-action="share/whatsapp/share" target="_blank">
+                                            <img src="~/Images/whatsapp.jfif" style="width:40px;height:40px;">
+                                          </a>
+                                          <script>
+                                            //WhatsApp share
+                                            function shareOnWhatsAppShop(url) {
+                                              @*var url = @referallink1;
+                                              var message=@message;*@
+
+                                              // Construct the WhatsApp URL
+                                              var whatsappUrl = url;
+                                              // Open WhatsApp in a new window
+                                              window.open(whatsappUrl);
+                                            }
+                                          </script>
+                                        </li>
 
                                         </ul>
 
@@ -2049,24 +2115,42 @@
 
 
     <script type="text/javascript">
-            function myFunction(x) {
+            function myFunctionS(x) {
                 if (x.matches) { // If media query matches
                     document.getElementById("getcategorycontent").style.display = "block";
-                    document.getElementById("getcategorycontent").innerHTML = document.getElementById("originalcategory").innerHTML;
-                    document.getElementById("originalcategory").style.display = "none";
+                    document.getElementById("getcategorycontent").innerHTML = document.getElementById("originalcategory1").innerHTML;
+                  document.getElementById("originalcategory1").style.display = "none";
+
+                  document.getElementById("facebook-desktop").style.display = "none";
+
+                  document.getElementById("twitter-mobile").style.display = "block";
+                  document.getElementById("twitter-desktop").style.display = "none";
+
+                  document.getElementById("whatsapp-mobile").style.display = "block";
+                  document.getElementById("whatsapp-desktop").style.display = "none";
 
                 } else {
 
-                    document.getElementById("originalcategory").style.display = "block";
-                    document.getElementById("getcategorycontent").style.display = "none";
+                    document.getElementById("originalcategory1").style.display = "block";
+                  document.getElementById("getcategorycontent").style.display = "none";
+
+                  document.getElementById("facebook-mobile").style.display = "none";
+                  document.getElementById("facebook-desktop").style.display = "block";
+
+
+                  document.getElementById("twitter-mobile").style.display = "none";
+                  document.getElementById("twitter-desktop").style.display = "block";
+
+                  document.getElementById("whatsapp-desktop").style.display = "block";
+                  document.getElementById("whatsapp-mobile").style.display = "none";
 
 
                 }
             }
 
-            var x = window.matchMedia("(max-width: 600px)")
-            myFunction(x) // Call listener function at run time
-            x.addListener(myFunction) // Attach listener function on state changes
+            var x = window.matchMedia("(max-width: 768px)")
+            myFunctionS(x) // Call listener function at run time
+            x.addListener(myFunctionS) // Attach listener function on state changes
     </script>
 
     <script type="text/javascript">

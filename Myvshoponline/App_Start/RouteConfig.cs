@@ -16,7 +16,7 @@ namespace Myvshoponline
       routes.MapRoute(
                name: "Id",
                url: "{id}",
-               defaults: new { controller = "Home", action = "ShopDetails", q = UrlParameter.Optional }
+               defaults: new { controller = "Home", action = "ShopDetails", id = UrlParameter.Optional }
            );
 
       // Default MVC route

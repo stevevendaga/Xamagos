@@ -1,13 +1,13 @@
 
 @{
-  MyvshoponlineEntities db = new MyvshoponlineEntities();
-  ViewBag.ProductCategories = db.ProductCategories.Where(c => c.Name != "All Categories").ToList();
-  ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
-  ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
-  ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
-  ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
-  int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
-  Getdata mydata = new Getdata();
+    MyvshoponlineEntities db = new MyvshoponlineEntities();
+    ViewBag.ProductCategories = db.ProductCategories.Where(c => c.Name != "All Categories").ToList();
+    ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name", selectedValue: 4);
+    ViewBag.LocationID = new SelectList(db.States, "ID", "Name", selectedValue: 38);
+    ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
+    ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
+    int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
+    Getdata mydata = new Getdata();
 }
 
 
@@ -25,16 +25,14 @@
 
 
   <!-- Facebook share Open Graph Meta Tags with data- attributes -->
-  <meta property="og:url" content="https://xamagos.com">
+  @*<meta property="og:url" content="https://xamagos.com">*@
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Xamagos">
-  <meta property="og:description" content="Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link,
-                                          and have your products not only showcased but also advertised on Xamagos Radio. Buyers,
-                                          explore a wide variety of products all in one place,
-                                          ensuring that shopping is not only easy but also enjoyable and filled with exciting discoveries.
+  <meta property="og:title" content="Xamago"
                                           #Xamagos #XamagosRadio #ShopSmart">
   <meta property="og:image" content="https://xamagos.com/Images/logoshare.png">
   <!--End facebook share-->
+
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11212682445"></script>
   <script>
@@ -396,20 +394,20 @@
   <!--Container for external popup- for share-->
   <!-- Modal -->
   @*<div class="modal fade" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="externalLinkModalLabel">External Link Content</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
-          </div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="externalLinkModalLabel">External Link Content</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
         </div>
       </div>
-    </div>*@
+    </div>
+  </div>*@
   <!--End Container for external popup- for share-->
   <div class="modal" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true" style="width:50%;">
     <div class="modal-content">
@@ -1655,7 +1653,7 @@
               <h3 class="block-title" style="font-size:12px">Share This Platform</h3>
 
 
-              <script>
+                <script>
                 (function (d, s, id) {
                   var js, fjs = d.getElementsByTagName(s)[0];
                   if (d.getElementById(id)) return;
@@ -1664,31 +1662,31 @@
                   fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
 
-              </script>
+                </script>
 
               <!-- Your share button code -->
 
               <ul class="mt-4 footer-social">
                 <li>
                   @{
-                    string referallink1 = "https://xamagos.com";
-                    string quoteText = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
-                        "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products." +
-                        " #Xamagos #XamagosRadio #ShopSmart";
+                      string referallink1 = "https://xamagos.com";
+                      string quoteText = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
+                          "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products." +
+                          " #Xamagos #XamagosRadio #ShopSmart";
                   }
-                  <div class="fb-share-button"
-                       data-href="https://xamagos.com"
-                       data-layout="button_count">
-                  </div>
+            <div class="fb-share-button"
+             data-href="https://xamagos.com"
+             data-layout="button_count">
+            </div>
                   @*<button onclick="shareOnFacebook()">Share on Facebook</button>*@
 
                 </li>
                 <li>
                   @*<a href="https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText"
-                       title="Share on Twitter" class="external-link">
-                      <i class="lni-twitter-filled"></i>
-                    </a>*@
-                  <a href="#" onclick="openTwitterPopup('https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText')"
+                   title="Share on Twitter" class="external-link">
+                  <i class="lni-twitter-filled"></i>
+                </a>*@
+                   <a href="#" onclick="openTwitterPopup('https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText')"
                      title="Share on Twitter" class="external-link">
                     <i class="lni-twitter-filled"></i>
                   </a>
@@ -1711,12 +1709,12 @@
 
                 </li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
-                  <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
+      <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
                   @*<a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share"
-                       class="external-link">
-                      <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
-                    </a>*@
+           class="external-link">
+          <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
+        </a>*@
                   <a href="#" class="external-link" onclick="shareOnWhatsApp()">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
                   </a>
@@ -1725,19 +1723,19 @@
               </ul>
 
               <script>
-                //WhatsApp share
-                function shareOnWhatsApp() {
-                  var message = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
-                    "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products all in one place, ensuring " +
-                    "that shopping is not only easy but also enjoyable and filled with exciting discoveries." +
-                    " #Xamagos #XamagosRadio #ShopSmart";;
-                  var url = 'https://xamagos.com';
+      //WhatsApp share
+    function shareOnWhatsApp() {
+      var message ="Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
+          "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products all in one place, ensuring " +
+          "that shopping is not only easy but also enjoyable and filled with exciting discoveries." +
+        " #Xamagos #XamagosRadio #ShopSmart";;
+    var url = 'https://xamagos.com';
 
-                  // Construct the WhatsApp URL
-                  var whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent(message + ' ' + url);
-                  // Open WhatsApp in a new window
-                  window.open(whatsappUrl);
-                }
+        // Construct the WhatsApp URL
+        var whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent(message + ' ' + url);
+        // Open WhatsApp in a new window
+        window.open(whatsappUrl);
+      }
               </script>
 
               <script>
@@ -1757,9 +1755,9 @@
                     method: 'share',
                     href: 'https://xamagos.com',
                     quote: 'Dive into a world of unique discoveries on Xamagos! Sellers, seize your ' +
-                      'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers, ' +
-                      'explore the best platform for a diverse array of products, all in one place.' +
-                      '#Xamagos #XamagosRadio #ShopSmart'
+                            'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers, '+
+                            'explore the best platform for a diverse array of products, all in one place.'+
+                             '#Xamagos #XamagosRadio #ShopSmart'
                   };
 
                   // Use the Facebook SDK to open the Share Dialog
@@ -1772,25 +1770,25 @@
 
 
               @*<script>
-                  // WhatsApp share
-                  function shareOnWhatsApp() {
-                    var message = 'Hey, I am using Xamagos.';
-                    var url = 'https://xamagos.com';
+      // WhatsApp share
+      function shareOnWhatsApp() {
+        var message = 'Hey, I am using Xamagos.';
+        var url = 'https://xamagos.com';
 
-                    // Construct the WhatsApp URL
-                    var whatsappUrl = 'https://api.whatsapp.com/?text=' + encodeURIComponent(message + ' ' + url);
+        // Construct the WhatsApp URL
+        var whatsappUrl = 'https://api.whatsapp.com/?text=' + encodeURIComponent(message + ' ' + url);
 
-                    // Check if the user is on a mobile device
-                    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Check if the user is on a mobile device
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-                    // Open WhatsApp in the system browser on mobile, or in a new window on other devices
-                    if (isMobile) {
-                      window.location.href = whatsappUrl; // Open in the system browser on mobile
-                    } else {
-                      window.open(whatsappUrl, '_blank'); // Open in a new window on other devices
-                    }
-                  }
-                </script>*@
+        // Open WhatsApp in the system browser on mobile, or in a new window on other devices
+        if (isMobile) {
+          window.location.href = whatsappUrl; // Open in the system browser on mobile
+        } else {
+          window.open(whatsappUrl, '_blank'); // Open in a new window on other devices
+        }
+      }
+    </script>*@
 
 
               @*<p>Subscribe to our Newsletter.</p>*@
@@ -2360,7 +2358,7 @@
         }
       });
     }
-    function setCartSession(_productid, _shopid, _dcity, _qty, _negotiate) {
+    function setCartSession(_productid, _shopid, _dcity, _qty,_negotiate) {
       //alert(_productid +"s"+ _shopid)
       var url = "/SetSession/SetCartSession/";
       $.ajax({
@@ -2396,3 +2394,4 @@
 
 </body>
 </html>
+

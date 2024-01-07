@@ -7,7 +7,6 @@
   ViewBag.CountryID = new SelectList(db.CountryRegions, "ID", "Country");
   ViewBag.FeaturedProducts = db.Products.Where(p => p.Shop.ShopStatus == "Active" && p.ProductStatu.Status == "Available").OrderBy(p => p.ID).ToList().Take(78);
   int MobileLogo = (int)db.Settings.Select(s => s.LogoMobile).FirstOrDefault();
-  Getdata mydata = new Getdata();
 }
 
 
@@ -24,48 +23,7 @@
   <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/css/countrySelect.css">
 
 
-  <!-- Facebook share Open Graph Meta Tags with data- attributes -->
-  <meta property="og:url" content="https://xamagos.com">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Xamagos">
-  <meta property="og:description" content="Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link,
-                                          and have your products not only showcased but also advertised on Xamagos Radio. Buyers,
-                                          explore a wide variety of products all in one place,
-                                          ensuring that shopping is not only easy but also enjoyable and filled with exciting discoveries.
-                                          #Xamagos #XamagosRadio #ShopSmart">
-  <meta property="og:image" content="https://xamagos.com/Images/logoshare.png">
-  <!--End facebook share-->
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11212682445"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
 
-    gtag('config', 'AW-11212682445');
-  </script>
-  <!-- Event snippet for Purchase conversion page
-  In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
-  <script>
-    function gtag_report_conversion(url) {
-      var callback = function () {
-        if (typeof (url) != 'undefined') {
-          window.location = url;
-        }
-      };
-      gtag('event', 'conversion', {
-        'send_to': 'AW-11212682445/PdZ-CNTwoKkYEM3pz-Ip',
-        'transaction_id': '',
-        'event_callback': callback
-      });
-      return false;
-    }
-  </script>
-
-
-
-  <!-- Include the Facebook SDK -->
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 
   @*<link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
@@ -145,22 +103,9 @@
   <link rel="stylesheet" href="~/templates/assets/css/colors/blue.css" type="text/css">
   <link rel="stylesheet" href="~/templates/assets/css/responsive.css">
   <link href="~/templates/assets/css/NairaSign.css" rel="stylesheet" />
-  <link href="~/templates/assets/css/productstyle.css" rel="stylesheet" />
   <link href="~/Content/Panel.css" rel="stylesheet" />
   <link href="~/Content/Modal.css" rel="stylesheet" />
   <script src="~/Scripts/bootstrap.min.js"></script>
-  <!--Open link in webview externally-->
-  <script src="~/Scripts/openexternallinkwebview.js"></script>
-
-  <!--adsense-->
-  <!--ukor-->
-  @*<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9669074385116966"
-    crossorigin="anonymous"></script>*@
-  <!--tevinet-->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201891409068870"
-          crossorigin="anonymous"></script>
-
-  <!--adsense-->
   <!-- GOOGLE MAPS-->
   <!--Load the API from the specified URL
   * The async attribute allows the browser to render the page while the API loads
@@ -349,41 +294,8 @@
       /*linear-gradient( 85deg, rgba(0,0,0,0) 60%, #9f8fa4 60%), */
       linear-gradient(175deg, rgba(0,0,0,0) 70%, #74a6ae 70%);
     }
-
-    /* Styles for the popup container */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    /* Styles for the popup content */
-    .popup-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fefefe;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 80%;
-      max-height: 80%;
-    }
-
-    /* Styles for the close button */
-    .popup-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
   </style>
+
 
 </head>
 
@@ -393,37 +305,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-  <!--Container for external popup- for share-->
-  <!-- Modal -->
-  @*<div class="modal fade" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="externalLinkModalLabel">External Link Content</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
-          </div>
-        </div>
-      </div>
-    </div>*@
-  <!--End Container for external popup- for share-->
-  <div class="modal" id="externalLinkModal" tabindex="-1" role="dialog" aria-labelledby="externalLinkModalLabel" aria-hidden="true" style="width:50%;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="font-size:14px">Share</h5>
-        <button type="button" class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <iframe id="externalLinkFrame" frameborder="0" scrolling="auto"></iframe>
-      </div>
-    </div>
-
-    @*</div>*@
-  </div>
   <!-- The Modal -->
   <div id="myModalBackdrop" class="modal-backdrop">
 
@@ -434,19 +315,6 @@
     </div>
 
   </div>
-  <style>
-    .flex-container {
-      display: flex;
-      flex-direction: row; /* Arrange items vertically */
-    }
-
-    .item {
-      flex: 1; /* Distribute available space equally among items */
-      padding: 0px;
-      /*border: 1px solid #ddd;*/
-      margin: 0px;
-    }
-  </style>
 
   <div class="wrapper">
     <!-- Navbar -->
@@ -509,9 +377,9 @@
           <a href="#" style="color: white; margin-top: 10px">
             <i class="lni lni-arrow-left-circle" style="color:white;font-size:20px;font-weight:400" onclick="hideSearchBox();"></i>
           </a>
-          <input type="text" name="search" id="search" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
+          <input type="text" name="search" id="searchshop" required="required" class="form-control" style="height:38px;width:70%" placeholder="Search products, brands and categories" />
           <div class="input-group-append">
-            <button class="btn btn-common" type="submit" style="width:35px;" onclick="return validateSearchSubmit();">
+            <button class="btn btn-common" type="submit" style="width:35px;">
               <i class="fas fa-search"></i>
             </button>
           </div>
@@ -523,18 +391,18 @@
         <form class="form-inline m-lg-0" method="get" action="~/Home/Search" style="padding:10px;width:100%">
           @if (Request.QueryString["search"] != null)
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" name="search" type="text" value="@Request.QueryString["search"]" style="width:600px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" value="@Request.QueryString["search"]" style="width:800px;border-top-right-radius:0px;border-bottom-right-radius:0px;">
             <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
-              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;" onclick="return validateSearchSubmit();">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
                 <i class="fas fa-search"></i>
               </button>
             </div>
           }
           else
           {
-            <input class="form-control form-control-navbar" id="search" aria-label="Search" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+            <input class="form-control form-control-navbar" id="search" aria-label="Search" required="required" name="search" type="text" placeholder="Search products, brands and categories" style="width: 600px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
             <div class="input-group-append" style="color:white;font-size:11px;text-align:center">
-              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;" onclick="return validateSearchSubmit();">
+              <button class="btn btn-common" type="submit" style="height:38px;border-bottom-left-radius:0px;border-top-left-radius:0px;">
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -671,13 +539,13 @@
             {
               int UserID = (int)Session["UserID"];
               <li class="nav-item">
-                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut">
+                <a class="nav-link" data-toggle="dropdown" href="~/Products/OrderDetailsCheckOut/?id=@UserID">
                   <i class="fa fas fa-shopping-cart" style="font-size:20px;color:white;"></i>
                   <span class="badge badge-danger navbar-badge" style="font-size:8px;">@CountCartweb</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="background-color:#EEF0F2">
-                  <a href="~/Products/OrderDetailsCheckOut" class="dropdown-item">
+                  <a href="~/Products/OrderDetailsCheckOut/?id=@UserID" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
 
@@ -1063,9 +931,8 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#138699;color:white;">
       <!-- Brand Logo --><center>
-        @*<a href="~/Home/Index" class="brand-link">*@
-        <a href="~/Home/Index">
-          <img src="~/Images/logosquare.png" alt="XAMAGOS" style="height: 40px; width: 120px; margin-top: 20px;">
+        <a href="~/Home/Index" class="brand-link">
+          <img src="~/Images/logosquare.png" alt="XAMAGOS" style="height:50px;width:160px;">
           @*<img src="~/Images/logosquare.png" alt="XAMAGOS" style="height:60px;width:120px;border-radius:8px;">*@
           @*<img src="~/Images/logosquare.png" alt="Market Square247" style="opacity: .8;height:70px;width:70px;" class="img-circle elevation-5">*@
           @*<br style="margin-top:0px;" />
@@ -1090,30 +957,53 @@
             {
               //if (String.IsNullOrEmpty((string)Session["CustomerName"]))
               //{
-              @*<nav>
-                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item has-treeview">
-                      <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
+              <nav>
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                  <li class="nav-item has-treeview">
+                    @*<a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" data-toggle="modal" data-target="#myModalBackdrop" onclick="clearTextBox();">*@
+                    <a href="~/Account/Login" class="nav-link" style="opacity:.8" title="Login" id="loginSidebar">
 
-                        <i class="nav-icon fas fa-lock-open"></i>
-                        <pp>
-                          Login
-                        </pp>
-                      </a>
-                    </li>
+                      <i class="nav-icon fas fa-lock-open"></i>
+                      <pp>
+                        Login
+                      </pp>
+                    </a>
+                  </li>
+                  @*<li class="nav-item has-treeview">
+                        <a href="~/OnlineTrainings/application" class="nav-link" style="" title="Online Training">
+                            <i class="nav-icon fas fa-tram"></i>
+                            <pp>
+                                Online Training
+                            </pp>
+                        </a>
+                    </li>*@
+                  <li class="nav-item has-treeview">
+                    <a href="~/Users/Create?id=16797&v=1" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
+                      <i class="nav-icon fas fa-pencil-alt"></i>
+                      <pp>
+                        Sign Up
+                      </pp>
+                    </a>
+                  </li>
+                  @*<li class="nav-item has-treeview">
+                        <a href="~/Home/CustomerLogin" class="nav-link" style="opacity:.8">
+                            <i class="nav-icon fas fa-lock-open"></i>
+                            <pp>
+                                Buyer Login
+                            </pp>
+                        </a>
+                    </li>*@
+                  @*<li class="nav-item has-treeview">
+                        <a href="~/ShopCustomers/Create/?id=&v=1" class="nav-link" style="opacity:.8" title="Create Account">
+                            <i class="nav-icon fas fa-pencil-alt"></i>
+                            <pp>
+                                Create Account (Buyer)
+                            </pp>
+                        </a>
+                    </li>*@
 
-                    <li class="nav-item has-treeview">
-                      <a href="~/Users/Create?id=16797&v=1" class="nav-link" style="opacity:.8" title="Create Account" id="signUpSidebar">
-                        <i class="nav-icon fas fa-pencil-alt"></i>
-                        <pp>
-                          Sign Up
-                        </pp>
-                      </a>
-                    </li>
-
-
-                  </ul>
-                </nav>*@
+                </ul>
+              </nav>
 
               //}
 
@@ -1129,14 +1019,14 @@
                   @if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
                   {
 
-                    <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding/", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                    <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("" + Session["Name"], "AdminLanding/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;text-shadow: 3px 2px 5px red, 0 0 5px green" })
                   }
                   else
                   {
                     int UserID = (int)Session["UserID"];
                     if (db.Users.Find(UserID).EmailVerify == 1)
                     {
-                      <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard", "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
+                      <i class="nav-icon fas fa-user-circle" style="margin-left:15px;"></i> @Html.ActionLink("HI, " + Session["Name"], "Dashboard/" + Session["UserID"], "Users", routeValues: null, htmlAttributes: new { title = Session["Name"], @class = "img-circle elevation-5", @style = "color:white;font-size:10px;text-shadow: 3px 2px 5px red, 0 0 5px green" })
                     }
                   }
                   @*}*@
@@ -1151,7 +1041,7 @@
                     if (!string.IsNullOrEmpty((string)Session["username"]) && (string)Session["UserRole"] == "Super Admin" || (string)Session["UserRole"] == "Site Admin" || (string)Session["UserRole"] == "Marketer" || (string)Session["UserRole"] == "Delivery Agent")
                     {
                       <li class="nav-item">
-                        <a href="~/Users/AdminLanding" class="nav-link">
+                        <a href="~/Users/AdminLanding/@Session["UserID"]" class="nav-link">
                           <i class="nav-icon fas fa-tachometer-alt"></i>
                           <pp>
                             Dashboard
@@ -1162,7 +1052,7 @@
                     else
                     {
                       <li class="nav-item">
-                        <a href="~/Users/Dashboard" class="nav-link">
+                        <a href="~/Users/Dashboard/@Session["UserID"]" class="nav-link">
                           <i class="nav-icon fas fa-tachometer-alt"></i>
                           <pp>
                             Dashboard
@@ -1193,7 +1083,7 @@
                           {
                             <li style="margin-bottom:1px;padding-bottom:0px" class="nav-item">
 
-                              <a class="nav-link" style="font-size:10px" href="~/Shops/ShopDetails" title="Click here to go to @shop.Name shop" onclick="setObjectSession('ShopID',@shop.ID)">
+                              <a class="nav-link" style="font-size:10px" href="~/Shops/ShopDetails/@shop.ID" title="Click here to go to @shop.Name shop">
 
                                 <b> @shop.Name </b>
                                 @if (shop.ShopStatus == "Active")
@@ -1256,7 +1146,16 @@
               </a>
 
             </li>
+            <li class="nav-item has-treeview">
+              <a href="~/Home/Contact" class="nav-link" id="about">
+                <i class="nav-icon fas fa-info-circle"></i>
+                <pp>
+                  About
 
+                </pp>
+              </a>
+
+            </li>
 
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link" style="cursor:pointer;">
@@ -1276,7 +1175,7 @@
                   {
                     var image = @item1.Icon + ".png";
                     <li class="nav-item">
-                      <a class="nav-link" href="" onclick="setObjectSessionRedirect('ProductCategoryID',@item1.ID, 'ProductCategories/BrowseCategories/')">
+                      <a class="nav-link" href="~/ProductCategories/BrowseCategories/@item1.ID">
                         @*<i class="@item1.Icon"></i>*@
                         <img src="~/Images/Icons/@image" style="width:5%;"> @item1.Name
                       </a>
@@ -1292,12 +1191,12 @@
                 <pp>Product Finder</pp>
               </a>
             </li>
-            @*<li class="nav-item has-treeview">
-                <a href="~/Home/BargainMarket" class="nav-link" id="bargainmarket">
-                  <i class="nav-icon fas fa-adjust"></i>
-                  <pp>Bargain Market</pp>
-                </a>
-              </li>*@
+            <li class="nav-item has-treeview">
+              <a href="~/Home/BargainMarket" class="nav-link" id="bargainmarket">
+                <i class="nav-icon fas fa-adjust"></i>
+                <pp>Bargain Market</pp>
+              </a>
+            </li>
             <li class="nav-item has-treeview">
               <a href="~/Home/StoreLocator" class="nav-link" id="shoplocator">
                 <i class="nav-icon fas fa-map-marked-alt"></i>
@@ -1324,16 +1223,7 @@
                 <pp>Help</pp>
               </a>
             </li>
-            <li class="nav-item has-treeview">
-              <a href="~/Home/Contact" class="nav-link" id="about">
-                <i class="nav-icon fas fa-info-circle"></i>
-                <pp>
-                  About
 
-                </pp>
-              </a>
-
-            </li>
             @*<li class="nav-item has-treeview">
                   <a href="~/TrainingModules/Index?px=1" class="nav-link">
                       <i class="nav-icon fas fa-info-circle"></i>
@@ -1348,7 +1238,7 @@
 
             </li>
             <li class="nav-item has-treeview">
-              <a href="~/Home/Privacy" class="nav-link">
+              <a href="#" class="nav-link">
                 <i class="nav-icon far fa-circle text-warning"></i>
                 <pp>Privacy Policy</pp>
               </a>
@@ -1399,7 +1289,7 @@
         @*<div class="modal-dialog modal-dialog-centered">*@
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" style="font-size:14px">Donate to Support Xamagos</h5>
+            <h5 class="modal-title" style="font-size:14px">Donate to Support Market Square247</h5>
             <button type="button" class="close" data-dismiss="modal">×</button>
           </div>
           <div class="modal-body" id="donatebody">
@@ -1523,25 +1413,6 @@
 
 
     </div>
-
-
-
-    <!--<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2201891409068870"
-            crossorigin="anonymous"></script>-->
-    <!-- footerad -->
-    <!--<ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-2201891409068870"
-         data-ad-slot="2020807183"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>-->
-
-
-
-
     <footer class="main-footer" style="padding-top:0px!important;padding:0px;">
 
       @*<div class="container" style="margin-top:5px;">
@@ -1645,7 +1516,7 @@
               <div class="widget">
                 <ul class="mt-3 footer-social">
                   <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
-                  <li><a class="linkedin" target="_blank" href="https://www.instagram.com/xamagosmain"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
+                  <li><a class="instagram" target="_blank" href="https://www.instagram.com/xamagosmain"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
                   <li><a class="twitter" href="https://twitter.com/xamagos"><i class="lni-twitter-filled"></i></a></li>
                 </ul>
 
@@ -1662,9 +1533,7 @@
                   js = d.createElement(s); js.id = id;
                   js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
                   fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));
-
-              </script>
+                }(document, 'script', 'facebook-jssdk'));</script>
 
               <!-- Your share button code -->
 
@@ -1672,125 +1541,23 @@
                 <li>
                   @{
                     string referallink1 = "https://xamagos.com";
-                    string quoteText = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
-                        "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products." +
-                        " #Xamagos #XamagosRadio #ShopSmart";
                   }
                   <div class="fb-share-button"
-                       data-href="https://xamagos.com"
+                       data-href="@referallink1"
                        data-layout="button_count">
                   </div>
-                  @*<button onclick="shareOnFacebook()">Share on Facebook</button>*@
-
                 </li>
-                <li>
-                  @*<a href="https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText"
-                       title="Share on Twitter" class="external-link">
-                      <i class="lni-twitter-filled"></i>
-                    </a>*@
-                  <a href="#" onclick="openTwitterPopup('https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText')"
-                     title="Share on Twitter" class="external-link">
-                    <i class="lni-twitter-filled"></i>
-                  </a>
-
-                  <script>
-                    function openTwitterPopup(url) {
-                      // Specify the width and height for the popup window
-                      var width = 600;
-                      var height = 400;
-
-                      // Calculate the position of the popup to center it on the screen
-                      var left = (window.innerWidth - width) / 2;
-                      var top = (window.innerHeight - height) / 2;
-
-                      // Open the popup window
-                      window.open(url, 'twitterPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
-                    }
-                  </script>
-
-
-                </li>
+                <li><a class="twitter" href="http://twitter.com/share?url=https://xamagos.com/" title="share on twitter" target="_blank"><i class="lni-twitter-filled"></i></a></li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
                   <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
-                  @*<a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share"
-                       class="external-link">
-                      <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
-                    </a>*@
-                  <a href="#" class="external-link" onclick="shareOnWhatsApp()">
+                  <a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share" target="_blank">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
                   </a>
                 </li>
 
               </ul>
 
-              <script>
-                //WhatsApp share
-                function shareOnWhatsApp() {
-                  var message = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
-                    "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products all in one place, ensuring " +
-                    "that shopping is not only easy but also enjoyable and filled with exciting discoveries." +
-                    " #Xamagos #XamagosRadio #ShopSmart";;
-                  var url = 'https://xamagos.com';
-
-                  // Construct the WhatsApp URL
-                  var whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent(message + ' ' + url);
-                  // Open WhatsApp in a new window
-                  window.open(whatsappUrl);
-                }
-              </script>
-
-              <script>
-                // Ensure that the Facebook SDK is initialized
-                window.fbAsyncInit = function () {
-                  FB.init({
-                    appId: '952206692989397', // Replace with your Facebook App ID
-                    autoLogAppEvents: true,
-                    xfbml: true,
-                    version: 'v10.0'
-                  });
-                };
-
-                function shareOnFacebook() {
-                  // Define the content to be shared
-                  var shareContent = {
-                    method: 'share',
-                    href: 'https://xamagos.com',
-                    quote: 'Dive into a world of unique discoveries on Xamagos! Sellers, seize your ' +
-                      'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers, ' +
-                      'explore the best platform for a diverse array of products, all in one place.' +
-                      '#Xamagos #XamagosRadio #ShopSmart'
-                  };
-
-                  // Use the Facebook SDK to open the Share Dialog
-                  FB.ui(shareContent, function (response) {
-                    // Handle the response if needed
-                    console.log(response);
-                  });
-                }
-              </script>
-
-
-              @*<script>
-                  // WhatsApp share
-                  function shareOnWhatsApp() {
-                    var message = 'Hey, I am using Xamagos.';
-                    var url = 'https://xamagos.com';
-
-                    // Construct the WhatsApp URL
-                    var whatsappUrl = 'https://api.whatsapp.com/?text=' + encodeURIComponent(message + ' ' + url);
-
-                    // Check if the user is on a mobile device
-                    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-                    // Open WhatsApp in the system browser on mobile, or in a new window on other devices
-                    if (isMobile) {
-                      window.location.href = whatsappUrl; // Open in the system browser on mobile
-                    } else {
-                      window.open(whatsappUrl, '_blank'); // Open in a new window on other devices
-                    }
-                  }
-                </script>*@
 
 
               @*<p>Subscribe to our Newsletter.</p>*@
@@ -1832,14 +1599,14 @@
 
             <div class="col-lg-3 col-md-4 col-11">
 
-              <p style="font-size:12px;line-height:12px;text-align:left;margin-top:10px;">
-                <a href="https://play.google.com/store/apps/details?id=com.xamagos" target="_blank">
+              <p style="font-size:12px;line-height:12px;text-align:center;margin-top:5px;">
+                <a href="https://play.google.com/store/apps/details?id=com.marketsquare247.marketsquare247" target="_blank">
                   <img src="~/Images/download_android_on_google_play.jpg" style="color:#87DDFF;width:70px;height:30px;" />
                 </a>
 
               </p>
 
-              <p style="font-size: 12px; line-height: 12px; text-align: left; margin-top: 10px;">
+              <p style="font-size: 12px; line-height: 12px; text-align: center; margin-top: 5px;">
                 <a href="#">
                   <img src="~/Images/download_android_on_apple_app_store.jpg" style="color:#87DDFF;width:70px;height:30px;" />
                 </a>
@@ -1947,7 +1714,7 @@
     $.widget.bridge('uibutton', $.ui.button)
   </script>
   <!-- Bootstrap 4 -->
-  <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  @*<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>*@
   <!-- ChartJS -->
   <script src="~/plugins/chart.js/Chart.min.js"></script>
   <!-- Sparkline -->
@@ -2019,7 +1786,7 @@
         document.getElementById("bodyholder").style.padding = "2px";
 
         document.getElementById("displayonmobile_logo").style.display = "block";
-        document.getElementById("search").style.width = "60%";
+        document.getElementById("search").style.width = "100%";
         document.getElementById("search-form").style.display = "none";
         document.getElementById("search-nav-button").style.display = "block";
         document.getElementById("cart").style.display = "none";
@@ -2051,7 +1818,7 @@
         document.getElementById("bodyholder").style.padding = "2px";
         document.getElementById("welcomesidebar").style.padding = "0px";
         document.getElementById("displayonmobile_logo").style.display = "block";
-        document.getElementById("search").style.width = "80%";
+        document.getElementById("search").style.width = "100%";
 
 
       } else {
@@ -2118,71 +1885,26 @@
     });
   </script>
 
-  @*<script>
-      //HANDLE LINK CLICK
-      $(document).ready(function () {
-        $("a").click(function (e) {
-          e.preventDefault();
-          var href = $(this).attr("href");
-          if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null) {
-            window.location = href;
-            let timerInterval
-            Swal.fire({
-              title: '',
-              html: 'Loading... <b></b>',
-              timer: 10000,
-              ////timerProgressBar: true,
-              showConfirmButton: false,
-              showLoaderOnConfirm: true,
-              padding: '1em',
-              showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-              },
-              didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-                timerInterval = setInterval(() => {
-                  //b.textContent = Swal.getTimerLeft()
-                }, 100)
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                //$('#displaycshtml').load('/Account/Login');
-                console.log('I was closed by the timer')
-              }
-            })
-            return false;
-          }
-
-
-        });
-      });
-
-
-    </script>*@
-
   <script>
     //HANDLE LINK CLICK
     $(document).ready(function () {
       $("a").click(function (e) {
         e.preventDefault();
         var href = $(this).attr("href");
-
-        if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null && href != 'none') {
-          let timerInterval;
-
-          // Display loading dialog
+        if (href != "#") {
+          window.location = href;
+          let timerInterval
           Swal.fire({
             title: '',
-            html: 'Processing... <b></b>',
-            timerProgressBar: true,
+            html: 'Loading... <b></b>',
+            timer: 10000,
+            ////timerProgressBar: true,
             showConfirmButton: false,
             showLoaderOnConfirm: true,
             padding: '1em',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
             didOpen: () => {
               Swal.showLoading()
               const b = Swal.getHtmlContainer().querySelector('b')
@@ -2193,57 +1915,19 @@
             willClose: () => {
               clearInterval(timerInterval)
             }
-          });
-
-          // Load the new page
-          window.location = href;
-
-          // Stop loading once the new page has completely loaded
-          window.onload = function () {
-            Swal.close(); // Close the loading dialog
-          };
-
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              //$('#displaycshtml').load('/Account/Login');
+              console.log('I was closed by the timer')
+            }
+          })
           return false;
         }
 
+
       });
     });
-  </script>
-
-  <script>
-    // Define the function to handle the click event
-    function handleButtonClick() {
-      let timerInterval;
-
-      // Display loading dialog
-      Swal.fire({
-        title: '',
-        html: 'Processing... <b></b>',
-        timerProgressBar: true,
-        showConfirmButton: false,
-        showLoaderOnConfirm: true,
-        padding: '1em',
-        didOpen: () => {
-          Swal.showLoading()
-          const b = Swal.getHtmlContainer().querySelector('b')
-          timerInterval = setInterval(() => {
-            //b.textContent = Swal.getTimerLeft()
-          }, 100)
-        },
-        willClose: () => {
-          clearInterval(timerInterval)
-        }
-      });
-
-      // Load the new page
-      // (don't open)
-
-      // Stop loading once the new page has completely loaded
-      window.onload = function () {
-        Swal.close(); // Close the loading dialog
-      };
-    }
-
   </script>
 
   <!--Show search box on click of Search button on the menu bar-->
@@ -2279,7 +1963,7 @@
       $.ajax({
         url: url,
         data: { key: _key, value: _value },
-        cache: true,
+        cache: false,
         type: "POST",
         success: function (data) {
           //alert('Success');
@@ -2291,108 +1975,11 @@
     }
   </script>
 
-  <!--Set Session redirect-->
-  <script type="text/javascript">
-    function setObjectSessionRedirect(_key, _value, _href) {
-      var url = "/SetSession/SetObjectSession/";
-      $.ajax({
-        url: url,
-        data: { key: _key, value: _value },
-        cache: true,
-        type: "POST",
-        success: function (data) {
-          //alert('Success');
-          window.location.href = '../../' + _href;
-        },
-        error: function (reponse) {
-          alert("error : " + reponse);
-        }
-      });
-    }
-  </script>
-  <script type="text/javascript">
-    function setProductSession(_productid, _shopid) {
-      //alert(_productid +"s"+ _shopid)
-      var url = "/SetSession/SetProductSession/";
-      $.ajax({
-        url: url,
-        data: { shopid: _shopid, productid: _productid },
-        cache: false,
-        type: "POST",
-        success: function (data) {
-          window.location.href = "../../Products/ProductDetails";
-        },
-        error: function (reponse) {
-          alert("error : " + reponse);
-        }
-      });
-    }
-    function setSubProductSession(_productid, _shopid) {
-      //alert(_productid +"s"+ _shopid)
-      var url = "/SetSession/SetProductSession/";
-      $.ajax({
-        url: url,
-        data: { shopid: _shopid, productid: _productid },
-        cache: false,
-        type: "POST",
-        success: function (data) {
-          window.location.href = "../../ProductSubProducts/ProductSubitems";
-        },
-        error: function (reponse) {
-          alert("error : " + reponse);
-        }
-      });
-    }
 
-    function setSubProductDetailsSession(_productid, _shopid) {
-      //alert(_productid +"s"+ _shopid)
-      var url = "/SetSession/SetProductSession/";
-      $.ajax({
-        url: url,
-        data: { shopid: _shopid, productid: _productid },
-        cache: false,
-        type: "POST",
-        success: function (data) {
-          window.location.href = "../../Products/ProductDetailsSubitems";
-        },
-        error: function (reponse) {
-          alert("error : " + reponse);
-        }
-      });
-    }
-    function setCartSession(_productid, _shopid, _dcity, _qty, _negotiate) {
-      //alert(_productid +"s"+ _shopid)
-      var url = "/SetSession/SetCartSession/";
-      $.ajax({
-        url: url,
-        data: { shopid: _shopid, productid: _productid, dcity: _dcity, qty: _qty, negotiate: _negotiate },
-        cache: false,
-        type: "POST",
-        success: function (data) {
-          //window.location.href = "../../Products/ProductDetails";
-        },
-        error: function (reponse) {
-          alert("error : " + reponse);
-        }
-      });
-    }
-  </script>
 
-  <script>
-    function validateSearchSubmit() {
-      var search = document.getElementById("search").value;
-      if (search == '') {
-        $("#search").css("borderColor", "red");
-        $("#search").focus();
-        return false;
-      }
-      else {
-        handleButtonClick();
-      }
-    }
-  </script>
 
 
 
 </body>
 </html>
+
