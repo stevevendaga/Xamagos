@@ -28,7 +28,7 @@
   <meta property="og:url" content="https://xamagos.com">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Xamagos">
-  <meta property="og:description" content="Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link,
+  <meta property="og:description" content="Exciting News! Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link,
                                           and have your products not only showcased but also advertised on Xamagos Radio. Buyers,
                                           explore a wide variety of products all in one place,
                                           ensuring that shopping is not only easy but also enjoyable and filled with exciting discoveries.
@@ -1633,22 +1633,60 @@
                     Headquarter - <span class="block-title" style="font-size:15px">&nbsp; Nigeria@*#9, Suite 32, Divine Plaza, Opposite Oracle Driving School, Old Otukpo Road, Makurdi, Benue State -</span>*@
 
                   <h3 class="block-title" style="font-size:12px"> Connect With Us</h3>
-                  <ul class="mt-3 footer-social">
+                  <ul class="mt-3 footer-social" id="socialconnectmobile">
                     @{ var xamagos = "@xamagos";}
-                    <li><a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank"><img src="~/Images/youtube.jpeg" style="width:100px;" /></a></li>
-
+                    <li>
+                      <a class="facebook" href="https://www.youtube.com/@xamagos" target="_blank" style="cursor:pointer;">
+                        <img src="~/Images/youtube.jpeg" style="width:100px;" />
+                      </a>
+                      <!--Add for Desktop view open Popup-->
+                      @*<a class="facebook" onclick="openPopup('https://www.youtube.com/@xamagos')" href="#" target="_blank" style="cursor:pointer;">
+                          <img src="~/Images/youtube.jpeg" style="width:100px;" />
+                        </a>*@
+                    </li>
+                  </ul>
+                  <ul class="mt-3 footer-social" id="socialconnectdesktop">
+                    @{ var xamagos2 = "@xamagos";}
+                    <li>
+                      <!--Add for Desktop view open Popup-->
+                      <a class="facebook" onclick="openPopup('https://www.youtube.com/@xamagos2')" href="#" target="_blank" style="cursor:pointer;">
+                        <img src="~/Images/youtube.jpeg" style="width:100px;" />
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-11">
               <div class="widget">
-                <ul class="mt-3 footer-social">
-                  <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank"><i class="lni-facebook-filled"></i></a></li>
-                  <li><a class="linkedin" target="_blank" href="https://www.instagram.com/xamagosmain"><i class="lni-instagram-filled" style="color:red;background-color:white"></i></a></li>
-                  <li><a class="twitter" href="https://twitter.com/xamagos"><i class="lni-twitter-filled"></i></a></li>
+                <ul class="mt-3 footer-social" id="socialconnectmobile2">
+                  <li><a class="facebook" href="https://www.facebook.com/xamagos" target="_blank" style="cursor:pointer;"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="instagram" href="https://www.instagram.com/xamagosmain" target="_blank" style="cursor:pointer;">
+                    <img src="~/Images/instagramicon.png" style="width:36px;height:36px;" /></a></li>
+                  <li><a class="twitter" href="https://twitter.com/xamagos"><i class="lni-twitter-filled" style="cursor:pointer;"></i></a></li>
+                </ul>
+                <ul class="mt-3 footer-social" id="socialconnectdesktop2">
+                  <li><a class="facebook" onclick="openPopup('https://www.facebook.com/xamagos')" href="#" target="_blank" style="cursor:pointer;"><i class="lni-facebook-filled"></i></a></li>
+                  <li><a class="instagram" onclick="openPopup('https://www.instagram.com/xamagosmain')" href="#" target="_blank" style="cursor:pointer;">
+                <img src="~/Images/instagramicon.png" style="width:36px;height:36px;" />
+              </a></li>
+                  <li><a class="twitter" onclick="openPopup('https://twitter.com/xamagos')" href="#"><i class="lni-twitter-filled" style="cursor:pointer;"></i></a></li>
                 </ul>
 
+                <script>
+                  function openPopup(url) {
+                    // Specify the width and height for the popup window
+                    var width = 600;
+                    var height = 400;
+
+                    // Calculate the position of the popup to center it on the screen
+                    var left = (window.innerWidth - width) / 2;
+                    var top = (window.innerHeight - height) / 2;
+
+                    // Open the popup window
+                    window.open(url, 'PopupWindow', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+                  }
+                </script>
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-11">
@@ -1667,19 +1705,31 @@
               </script>
 
               <!-- Your share button code -->
+              @{
+                string referallink1 = "https://xamagos.com";
+                string quoteText = "Exciting News! Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
+                    "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products." +
+                    " #Xamagos #XamagosRadio #ShopSmart";
+              }
 
               <ul class="mt-4 footer-social">
                 <li>
-                  @{
-                    string referallink1 = "https://xamagos.com";
-                    string quoteText = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
-                        "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products." +
-                        " #Xamagos #XamagosRadio #ShopSmart";
-                  }
-                  <div class="fb-share-button"
-                       data-href="https://xamagos.com"
-                       data-layout="button_count">
-                  </div>
+
+                  <a class="fb-share-button facebook"
+                     id="facebook-share-desktop"
+                     data-layout="button_count"
+                     onclick="openPopup('https://web.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=https%3A%2F%2Fxamagos.com%2F&display=popup&ref=plugin&src=share_button')"
+                     href="#">
+                    <i class="lni-facebook-filled"></i>
+                  </a>
+
+                  <a class="fb-share-button facebook"
+                     data-layout="button_count"
+                     id="facebook-share-mobile"
+                     href="https://web.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=https%3A%2F%2Fxamagos.com%2F&display=popup&ref=plugin&src=share_button">
+                    <i class="lni-facebook-filled"></i>
+                  </a>
+
                   @*<button onclick="shareOnFacebook()">Share on Facebook</button>*@
 
                 </li>
@@ -1689,48 +1739,67 @@
                       <i class="lni-twitter-filled"></i>
                     </a>*@
                   <a href="#" onclick="openTwitterPopup('https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText')"
-                     title="Share on Twitter" class="external-link">
+                     id="twitter-share-desktop"
+                     title="share on twitter" class="external-link">
                     <i class="lni-twitter-filled"></i>
                   </a>
 
-                  <script>
-                    function openTwitterPopup(url) {
-                      // Specify the width and height for the popup window
-                      var width = 600;
-                      var height = 400;
-
-                      // Calculate the position of the popup to center it on the screen
-                      var left = (window.innerWidth - width) / 2;
-                      var top = (window.innerHeight - height) / 2;
-
-                      // Open the popup window
-                      window.open(url, 'twitterPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
-                    }
-                  </script>
-
+                  <a href="https://twitter.com/intent/tweet?url=@referallink1&text=@quoteText" target="_blank"
+                     id="twitter-share-mobile"
+                     title="share on twitter" class="external-link">
+                    <i class="lni-twitter-filled"></i>
+                  </a>
 
                 </li>
                 @*<li><a href=http://www.linkedin.com/shareArticle target="_blank"><i class="lni-linkedin"></i></a></li>
                   <li><a class="google-plus" href="#" target="_blank"><i class="lni-google-plus"></i></a></li>*@
                 <li>
                   @*<a href="https://api.whatsapp.com/send?text=@referallink1" data-action="share/whatsapp/share"
-                       class="external-link">
-                      <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
-                    </a>*@
-                  <a href="#" class="external-link" onclick="shareOnWhatsApp()">
+                     class="external-link">
                     <img src="~/Images/whatsapp.jfif" style="width:21px;height:21px;">
+                         </a>*@
+                  <a href="#" class="external-link" onclick="shareOnWhatsApp()" id="whatsapp-share-desktop">
+                    <img src="~/Images/whatsapp.jfif" style="width:30px;height:30px;">
                   </a>
-                </li>
 
+                  <script>
+                    var messageW = "Exciting News! Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
+                      "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products all in one place, ensuring " +
+                      "that shopping is not only easy but also enjoyable and filled with exciting discoveries." +
+                      " #Xamagos #XamagosRadio #ShopSmart";
+                    var referalLinkW = "https://xamagos.com";
+                    var encodedText = encodeURIComponent(messageW + ' ' + referalLinkW);
+                    var whatsappUrl = "https://api.whatsapp.com/send?text=" + encodedText;
+
+                    document.write('<a href="' + whatsappUrl + '" id="whatsapp-share-mobile" data-action="share/whatsapp/share" target="_blank"><img src="../Images/whatsapp.jfif" style="width:30px;height:30px;"></a>');
+                  </script>
+                </li>
+                <!--end share desktop-->
               </ul>
+
+
+              <script>
+                function openTwitterPopup(url) {
+                  // Specify the width and height for the popup window
+                  var width = 600;
+                  var height = 400;
+
+                  // Calculate the position of the popup to center it on the screen
+                  var left = (window.innerWidth - width) / 2;
+                  var top = (window.innerHeight - height) / 2;
+
+                  // Open the popup window
+                  window.open(url, 'twitterPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+                }
+              </script>
 
               <script>
                 //WhatsApp share
                 function shareOnWhatsApp() {
-                  var message = "Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
+                  var message = "Exciting News! Introducing Xamagos, where you can discover amazing treasures! Sellers, stand out with your exclusive store link, " +
                     "and have your products not only showcased but also advertised on Xamagos Radio.Buyers, explore a wide variety of products all in one place, ensuring " +
                     "that shopping is not only easy but also enjoyable and filled with exciting discoveries." +
-                    " #Xamagos #XamagosRadio #ShopSmart";;
+                    " #Xamagos #XamagosRadio #ShopSmart";
                   var url = 'https://xamagos.com';
 
                   // Construct the WhatsApp URL
@@ -1756,7 +1825,7 @@
                   var shareContent = {
                     method: 'share',
                     href: 'https://xamagos.com',
-                    quote: 'Dive into a world of unique discoveries on Xamagos! Sellers, seize your ' +
+                    quote: 'Exciting News! Dive into a world of unique discoveries on Xamagos! Sellers, seize your ' +
                       'spotlight with an exclusive store URL and showcase your products on Xamagos Radio! Buyers, ' +
                       'explore the best platform for a diverse array of products, all in one place.' +
                       '#Xamagos #XamagosRadio #ShopSmart'
@@ -2038,7 +2107,7 @@
       }
     }
 
-    var xy = window.matchMedia("(max-width: 780px)")
+    var xy = window.matchMedia("(max-width: 768px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
@@ -2062,10 +2131,55 @@
       }
     }
 
-    var xy = window.matchMedia("(max-width: 780px)")
+    var xy = window.matchMedia("(max-width: 768px)")
     myFunction(xy) // Call listener function at run time
     xy.addListener(myFunction) // Attach listener function on state changes
   </script>
+
+  <script type="text/javascript">
+    //INITIALIZED COUNTRIES DROPDOWN
+
+
+    function myFunction(xy) {
+      if (xy.matches) { // If media query matches
+        document.getElementById("facebook-share-mobile").style.display = "block";
+        document.getElementById("facebook-share-desktop").style.display = "none";
+
+        document.getElementById("twitter-share-mobile").style.display = "block";
+        document.getElementById("twitter-share-desktop").style.display = "none";
+
+        document.getElementById("whatsapp-share-mobile").style.display = "block";
+        document.getElementById("whatsapp-share-desktop").style.display = "none";
+
+        document.getElementById("socialconnectmobile").style.display = "block";
+        document.getElementById("socialconnectdesktop").style.display = "none";
+        document.getElementById("socialconnectmobile2").style.display = "block";
+        document.getElementById("socialconnectdesktop2").style.display = "none";
+
+        
+      } else {
+        document.getElementById("facebook-share-mobile").style.display = "none";
+        document.getElementById("facebook-share-desktop").style.display = "block";
+
+        document.getElementById("twitter-share-mobile").style.display = "none";
+        document.getElementById("twitter-share-desktop").style.display = "block";
+
+        document.getElementById("whatsapp-share-mobile").style.display = "none";
+        document.getElementById("whatsapp-share-desktop").style.display = "block";
+
+        document.getElementById("socialconnectmobile").style.display = "none";
+        document.getElementById("socialconnectdesktop").style.display = "block";
+        document.getElementById("socialconnectmobile2").style.display = "none";
+        document.getElementById("socialconnectdesktop2").style.display = "block";
+      }
+    }
+
+    var xy = window.matchMedia("(max-width: 768px)")
+    myFunction(xy) // Call listener function at run time
+    xy.addListener(myFunction) // Attach listener function on state changes
+  </script>
+
+  
   <style type="text/css">
     .ui-menu-item {
       /* background-color: #F0F0F0 !important;*/
@@ -2171,39 +2285,50 @@
       $("a").click(function (e) {
         e.preventDefault();
         var href = $(this).attr("href");
-
-        if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null && href != 'none') {
-          let timerInterval;
-
-          // Display loading dialog
-          Swal.fire({
-            title: '',
-            html: 'Processing... <b></b>',
-            timerProgressBar: true,
-            showConfirmButton: false,
-            showLoaderOnConfirm: true,
-            padding: '1em',
-            didOpen: () => {
-              Swal.showLoading()
-              const b = Swal.getHtmlContainer().querySelector('b')
-              timerInterval = setInterval(() => {
-                //b.textContent = Swal.getTimerLeft()
-              }, 100)
-            },
-            willClose: () => {
-              clearInterval(timerInterval)
-            }
-          });
-
+        if (href.includes('youtube.com') ||
+          href.includes('facebook.com') ||
+          href.includes('twitter.com') ||
+          href.includes('instagram.com') ||
+          href.includes('facebook.com/sharer') ||
+          href.includes('twitter.com/intent') ||
+          href.includes('api.whatsapp.com/send')) {
           // Load the new page
           window.location = href;
+        }
+        else {
+          if (typeof href !== 'undefined' && href !== "#" && href !== '' && href !== null && href != 'none') {
+            let timerInterval;
 
-          // Stop loading once the new page has completely loaded
-          window.onload = function () {
-            Swal.close(); // Close the loading dialog
-          };
+            // Display loading dialog
+            Swal.fire({
+              title: '',
+              html: 'Processing... <b></b>',
+              timerProgressBar: true,
+              showConfirmButton: false,
+              showLoaderOnConfirm: true,
+              padding: '1em',
+              didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                  //b.textContent = Swal.getTimerLeft()
+                }, 100)
+              },
+              willClose: () => {
+                clearInterval(timerInterval)
+              }
+            });
 
-          return false;
+            // Load the new page
+            window.location = href;
+
+            // Stop loading once the new page has completely loaded
+            window.onload = function () {
+              Swal.close(); // Close the loading dialog
+            };
+
+            return false;
+          }
         }
 
       });
