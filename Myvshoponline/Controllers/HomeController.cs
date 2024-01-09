@@ -191,7 +191,7 @@ namespace Myvshoponline.Controllers
         ViewBag.ProductCategoryID = new SelectList(db.ProductCategories, "ID", "Name");
         ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
 
-        var searchresult = db.Products.Where(s => s.Name.Contains(search) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
+        var searchresult = db.Products.Where(s => s.Name.Contains(search.Trim()) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active");
         return View(searchresult.ToList());
       }
       else
@@ -230,20 +230,23 @@ namespace Myvshoponline.Controllers
       ViewBag.LocationID = new SelectList(db.States, "ID", "Name");
       int NewCountryID = db.CountryRegions.Where(s => s.Country == CountryID).Select(s => s.ID).FirstOrDefault();
       string NewStateID = Convert.ToString(db.States.Where(s => s.Name == StateID).Select(s => s.ID).FirstOrDefault());
-      var searchresultNoState = db.Products
-                            .Where(s => (s.Name.Contains(item) || s.Name.StartsWith(item) || s.Name.EndsWith(item) || s.Name == item) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID))
-                            .ToList();
-      var searchresulWithState = db.Products
-                                .Where(s => (s.Name.Contains(item) || s.Name.StartsWith(item) || s.Name.EndsWith(item) || s.Name == item) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID))
-                                .ToList();
+     
       //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatusID == 1 && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID);
       //var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop .CountryID == NewCountryID && s.Shop.StateID == NewStateID);
-      if (StateID != "" || StateID!=null)
+      if (!string.IsNullOrEmpty(StateID))
       {
+                               
+        var searchresulWithState = db.Products
+                                  .Where(s => (s.Name.Contains(item.Trim()) || s.Name.StartsWith(item.Trim()) || s.Name.EndsWith(item.Trim()) || s.Name == item.Trim()) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID ))
+                                  .ToList();
         return View(searchresulWithState.ToList());
       }
       else
       {
+        var searchresultNoState = db.Products
+                           .Where(s => (s.Name.Contains(item.Trim()) || s.Name.StartsWith(item.Trim()) || s.Name.EndsWith(item.Trim()) || s.Name == item.Trim()) && (s.ProductStatusID == 1 && s.Shop.CountryID == NewCountryID)).ToList();
+
+
         return View(searchresultNoState.ToList());
       }
       
@@ -266,12 +269,12 @@ namespace Myvshoponline.Controllers
         string NewStateID = Convert.ToString(db.States.Where(s => s.Name == StateID).Select(s => s.ID).FirstOrDefault());
         if (CategoryName != "All Categories")
         {
-          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID && s.Negotiable == "Yes");
+          var searchresult = db.Products.Where(s => s.Name.Contains(item.Trim()) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.ProductCategoryID == ProductCategoryID && s.Shop.CountryID == NewCountryID && s.Shop.StateID == NewStateID && s.Negotiable == "Yes");
           return View(searchresult.ToList());
         }
         else
         {
-          var searchresult = db.Products.Where(s => s.Name.Contains(item) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.Shop.CountryID == NewCountryID && s.Negotiable == "Yes");
+          var searchresult = db.Products.Where(s => s.Name.Contains(item.Trim()) && s.ProductStatu.Status == "Available" && s.Shop.ShopStatus == "Active" && s.Shop.CountryID == NewCountryID && s.Negotiable == "Yes");
           return View(searchresult.ToList());
         }
       }

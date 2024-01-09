@@ -14,6 +14,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI;
 using System.Data.OleDb;
 using System.Xml;
+using System.Drawing.Imaging;
 
 namespace Myvshoponline.Controllers
 {
@@ -53,7 +54,7 @@ namespace Myvshoponline.Controllers
                 ViewBag.Shop = db.Shops.Where(s => s.ID == sid).ToList();
                 ViewBag.CompanyName = db.Shops.Where(s => s.ID == sid).Select(s => s.User.CompanyName).FirstOrDefault().ToUpper();
                 ViewBag.ShopName = db.Shops.Where(s => s.ID == sid).Select(s => s.Name).FirstOrDefault().ToUpper();
-                if (search != null && id != null && sid != null)
+                if (search != null && Session["ProductCategoryID"] != null && Session["ShopID"] != null)
                 {
                  ViewBag.search = search;
                  return View(products.Where(p => p.ProductCategoryID == id && p.ShopID == sid && p.ProductStatu.Status == "Available" && p.Shop.ShopStatus == "Active" && p.Name.Contains(search)).ToList());
@@ -797,65 +798,147 @@ namespace Myvshoponline.Controllers
             return Redirect("~/Products/ProductDetailsSubitems/" + subitemID + "?&sid=" + ShopID);
         }
 
+    //[HttpPost]
+    //public ActionResult Upload_Product_Picture_from_ViewProducts(HttpPostedFileBase[] files)
+    //{
+    //    int ShopID = Convert.ToInt32(Request.Form["ShopID"]);
+    //    int un_pub = Convert.ToInt32(Request.Form["un_pub"]);
+    //     int ProductID =Convert.ToInt32(Request.Form["ProductID"]);
+    //     string resizedImage = Request.Form["resizedImage"];
+    //    Random random = new Random();
+    //    //   Random generator = new Random();
+    //    int rand1 = random.Next(99999, 99999999);
+    //    int rand2 = random.Next(99999, 99999999);
+    //    StringBuilder builder = new StringBuilder();
+    //    int size = 550;
+    //    char ch;
+    //    for (int i = 0; i < size; i++)
+    //    {
+    //        ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+    //        ViewBag.Random = builder.Append(ch);
+    //    }
 
-        public ActionResult Upload_Product_Picture_from_ViewProducts(HttpPostedFileBase[] files, int ProductID)
+    //    int UserID = (int)Session["UserID"];
+    //    string ShopName = db.Shops.Find(ShopID).Name;
+    //    string businessname = db.Users.Find(UserID).CompanyName;
+    //    string hardtoken = db.Users.Find(UserID).HardToken;
+    //    string DocumentName = ProductID + ".jpg";
+    //    string efilepath;
+    //    foreach (HttpPostedFileBase file in files)
+    //    {
+    //        if (file != null)
+    //        {
+    //            efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + DocumentName);
+    //            string ext = Path.GetExtension(efilepath);
+
+    //                string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath) + ".jpg";
+    //                //newName = newName + ".jpg";
+    //                efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + newName);
+    //                  //if (!string.IsNullOrEmpty(resizedImage))
+    //                  //{
+    //                    // Decode base64 string and save the image
+    //                    byte[] imageBytes = Convert.FromBase64String(resizedImage.Split(',')[1]);
+    //                    using (MemoryStream ms = new MemoryStream(imageBytes))
+    //                    {
+    //                      using (System.Drawing.Image image = System.Drawing.Image.FromStream(ms))
+    //                      {
+    //                        // Save the resized image
+    //                        image.Save(efilepath, ImageFormat.Jpeg); // Change the format as needed
+    //                      }
+    //                    }
+    //                                  //    }
+    //                //  }
+    //                //  else
+    //                //  {
+    //                //    // If resizedImage is empty, save the original image
+    //                //    // file.SaveAs(efilepath);
+    //                //    // mydata.ResizePicture(efilepath);
+    //                //}
+
+    //                }
+
+    //    }
+    //    mydata.Update_ready_for_publishing_After_ImageUpload(ShopID, ProductID);
+    //    if (un_pub==1)
+    //    {
+    //        return Redirect("~/Products/ViewProducts/?un_pub=1");
+    //    }
+    //    else
+    //    {
+    //        return Redirect("~/Products/ViewProducts/?un_pub=0");
+    //    }
+    //}
+
+
+    public ActionResult Upload_Product_Picture_from_ViewProducts(HttpPostedFileBase[] files, int ProductID)
+    {
+      int ShopID = Convert.ToInt32(Session["ShopID"]);
+      int un_pub = Convert.ToInt32(Request.Form["un_pub"]);
+      string resizedImage = Request.Form["resizedImage"];
+      Random random = new Random();
+      //   Random generator = new Random();
+      int rand1 = random.Next(99999, 99999999);
+      int rand2 = random.Next(99999, 99999999);
+      StringBuilder builder = new StringBuilder();
+      int size = 550;
+      char ch;
+      for (int i = 0; i < size; i++)
+      {
+        ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+        ViewBag.Random = builder.Append(ch);
+      }
+
+      int UserID = (int)Session["UserID"];
+      string ShopName = db.Shops.Find(ShopID).Name;
+      string businessname = db.Users.Find(UserID).CompanyName;
+      string hardtoken = db.Users.Find(UserID).HardToken;
+      string DocumentName = ProductID + ".jpg";
+      string efilepath;
+      foreach (HttpPostedFileBase file in files)
+      {
+        if (file != null)
         {
-            int ShopID = Convert.ToInt32(Session["ShopID"]);
-            int un_pub = Convert.ToInt32(Request.Form["un_pub"]);
-            Random random = new Random();
-            //   Random generator = new Random();
-            int rand1 = random.Next(99999, 99999999);
-            int rand2 = random.Next(99999, 99999999);
-            StringBuilder builder = new StringBuilder();
-            int size = 550;
-            char ch;
-            for (int i = 0; i < size; i++)
-            {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
-                ViewBag.Random = builder.Append(ch);
-            }
+          efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + DocumentName);
+          string ext = Path.GetExtension(efilepath);
 
-            int UserID = (int)Session["UserID"];
-            string ShopName = db.Shops.Find(ShopID).Name;
-            string businessname = db.Users.Find(UserID).CompanyName;
-            string hardtoken = db.Users.Find(UserID).HardToken;
-            string DocumentName = ProductID + ".jpg";
-            string efilepath;
-            foreach (HttpPostedFileBase file in files)
-            {
-                if (file != null)
-                {
-                    efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + DocumentName);
-                    string ext = Path.GetExtension(efilepath);
+          //if file extension is supported, save file and update database
+          if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".ico")
+          {
+            string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
+            newName = newName + ".jpg";
+            efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + newName);
 
-                    //if file extension is supported, save file and update database
-                    if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".ico")
-                    {
-                        string newName = System.IO.Path.GetFileNameWithoutExtension(efilepath);
-                        newName = newName + ".jpg";
-                        efilepath = Server.MapPath("~/BusinessImages/" + businessname + hardtoken + "/" + ShopName + "/" + "\\" + newName);
-                        file.SaveAs(efilepath);
-                        mydata.ResizePicture(efilepath);
+           // Decode base64 string and save the image
+            byte[] imageBytes = Convert.FromBase64String(resizedImage.Split(',')[1]);
 
-                    }
-                }
+            using (MemoryStream ms = new MemoryStream(imageBytes))
+            {
+              using (System.Drawing.Image image = System.Drawing.Image.FromStream(ms))
+              {
+                // Save the resized image
+                image.Save(efilepath, ImageFormat.Jpeg); // Change the format as needed
+              }
+            }
+            //file.SaveAs(efilepath);
+            //mydata.ResizePicture(efilepath);
 
-            }
-            mydata.Update_ready_for_publishing_After_ImageUpload(ShopID, ProductID);
-            if (un_pub==1)
-            {
-                return Redirect("~/Products/ViewProducts/?id=" + ShopID +"&un_pub=1");
-            }
-            else
-            {
-                return Redirect("~/Products/ViewProducts/?id=" + ShopID + "&un_pub=0");
-            }
+          }
         }
 
+      }
+      mydata.Update_ready_for_publishing_After_ImageUpload(ShopID, ProductID);
+      if (un_pub == 1)
+      {
+        return Redirect("~/Products/ViewProducts/?un_pub=1");
+      }
+      else
+      {
+        return Redirect("~/Products/ViewProducts/?un_pub=0");
+      }
+    }
 
-
-        // GET: Products/Delete/5
-        public ActionResult Delete(int?id,int?un_pub)
+    // GET: Products/Delete/5
+    public ActionResult Delete(int?id,int?un_pub)
         {
           int sid = Convert.ToInt32(Session["ShopID"]);
           if (id != null)
